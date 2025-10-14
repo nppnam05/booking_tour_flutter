@@ -69,7 +69,10 @@ class _SelectDialogState extends State<SelectDialog> {
                     controller: _searchController,
                     hintText: 'Tìm ${state.title.toLowerCase()}',
                     onChanged: cubit.updateSearch,
-                    onClear: cubit.clearSearch,
+                    onClear: () {
+                      _searchController.clear();
+                      cubit.clearSearch();
+                    },
                   ),
                   const SizedBox(height: 12),
                   Expanded(

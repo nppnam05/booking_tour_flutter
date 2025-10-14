@@ -54,7 +54,7 @@ class _TestScreenState extends State<TestScreen> {
               },
             ),
 
-            CustomSelectPopup(
+            DropDownWidget(
               title: 'Hoạt động',
               options: [
                 'Quảng Ninh',
@@ -67,7 +67,7 @@ class _TestScreenState extends State<TestScreen> {
                 debugPrint('Đã chọn: $values');
               },
             ),
-            CustomSelectPopup(
+            DropDownWidget(
               title: 'Tỉnh Thành',
               options: const [
                 'Quảng Ninh',

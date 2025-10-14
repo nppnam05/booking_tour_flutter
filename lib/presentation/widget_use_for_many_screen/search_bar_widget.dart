@@ -19,8 +19,6 @@ class SearchBarWidget extends StatefulWidget {
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-  final FocusNode _focusNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
@@ -32,52 +30,45 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   void dispose() {
     widget.controller.removeListener(_update);
-    _focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _focusNode.unfocus();
-      },
+    return Container(
+      padding: const EdgeInsets.all(8),
       child: Container(
-        padding: const EdgeInsets.all(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Row(
-            children: [
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  focusNode: _focusNode,
-                  controller: widget.controller,
-                  onChanged: widget.onChanged,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                  decoration: InputDecoration(
-                    hintText: widget.hintText,
-                    hintStyle: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                    border: InputBorder.none,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                controller: widget.controller,
+                onChanged: widget.onChanged,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  hintStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
+                  border: InputBorder.none,
                 ),
               ),
-              if (widget.controller.text.isNotEmpty)
-                IconButton(
-                  onPressed: widget.onClear,
-                  icon: const Icon(Icons.close, size: 18),
-                )
-              else
-                const SizedBox(width: 12),
-            ],
-          ),
+            ),
+            if (widget.controller.text.isNotEmpty)
+              IconButton(
+                onPressed: widget.onClear,
+                icon: const Icon(Icons.close, size: 18),
+              )
+            else
+              const SizedBox(width: 12),
+          ],
         ),
       ),
     );
