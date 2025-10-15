@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/del
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/spiner_widget/dropdown_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/spiner_widget/select_dialog/select_dialog.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/spiner_widget/select_dialog/select_dialog_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

@@ -52,6 +52,7 @@ class _SelectDialogState extends State<SelectDialog> {
           final cubit = context.read<SelectCubit>();
 
           return AlertDialog(
+            backgroundColor: Color(0xFFFFFFFF),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -83,6 +84,8 @@ class _SelectDialogState extends State<SelectDialog> {
                         final selected = state.selected.contains(item);
                         return ListTile(
                           title: Text(item),
+                          tileColor:
+                              selected ? Colors.green.withOpacity(0.2) : null,
                           trailing:
                               selected
                                   ? const Icon(Icons.check, color: Colors.green)

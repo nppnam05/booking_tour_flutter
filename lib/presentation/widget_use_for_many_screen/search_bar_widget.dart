@@ -5,6 +5,7 @@ class SearchBarWidget extends StatefulWidget {
   final VoidCallback onClear;
   final ValueChanged<String>? onChanged;
   final String hintText;
+  final double borderRadius;
 
   const SearchBarWidget({
     super.key,
@@ -12,6 +13,7 @@ class SearchBarWidget extends StatefulWidget {
     required this.onClear,
     this.onChanged,
     this.hintText = 'Tìm kiếm lịch trình',
+    this.borderRadius = 24,
   });
 
   @override
@@ -40,7 +42,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           border: Border.all(color: Colors.grey.shade300),
         ),
         child: Row(
