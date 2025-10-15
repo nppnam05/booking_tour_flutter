@@ -1,7 +1,7 @@
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/spiner_widget/select_dialog/select_dialog_cubit.dart';
 import 'package:equatable/equatable.dart';
 
-class SelectState extends Equatable {
+class SelectDialogState extends Equatable {
   final String title;
   final List<String> allOptions;
   final List<String> filteredOptions;
@@ -9,7 +9,7 @@ class SelectState extends Equatable {
   final String searchText;
   final SelectMode mode;
 
-  const SelectState({
+  const SelectDialogState({
     this.title = '',
     this.allOptions = const [],
     this.filteredOptions = const [],
@@ -18,7 +18,7 @@ class SelectState extends Equatable {
     this.mode = SelectMode.single,
   });
 
-  SelectState copyWith({
+  SelectDialogState copyWith({
     String? title,
     List<String>? allOptions,
     List<String>? filteredOptions,
@@ -26,7 +26,7 @@ class SelectState extends Equatable {
     String? searchText,
     SelectMode? mode,
   }) {
-    return SelectState(
+    return SelectDialogState(
       title: title ?? this.title,
       allOptions: allOptions ?? this.allOptions,
       filteredOptions: filteredOptions ?? this.filteredOptions,

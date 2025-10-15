@@ -4,14 +4,14 @@ import 'select_dialog_state.dart';
 
 enum SelectMode { single, multiple }
 
-class SelectCubit extends Cubit<SelectState> {
-  SelectCubit({
+class SelectDialogCubit extends Cubit<SelectDialogState> {
+  SelectDialogCubit({
     required String title,
     required List<String> options,
     required SelectMode mode,
     List<String> initialSelected = const [],
   }) : super(
-         SelectState(
+         SelectDialogState(
            title: title,
            allOptions: options,
            filteredOptions: options,

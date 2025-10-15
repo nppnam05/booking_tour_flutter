@@ -41,16 +41,15 @@ class _SelectDialogState extends State<SelectDialog> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create:
-          (_) => SelectCubit(
+          (_) => SelectDialogCubit(
             title: widget.title,
             options: widget.options,
             mode: widget.mode,
             initialSelected: widget.initialSelected,
           ),
-      child: BlocBuilder<SelectCubit, SelectState>(
+      child: BlocBuilder<SelectDialogCubit, SelectDialogState>(
         builder: (context, state) {
-          final cubit = context.read<SelectCubit>();
-
+          final cubit = context.read<SelectDialogCubit>();
           return AlertDialog(
             backgroundColor: Color(0xFFFFFFFF),
             shape: RoundedRectangleBorder(
@@ -82,48 +81,43 @@ class _SelectDialogState extends State<SelectDialog> {
                   ),
                   const SizedBox(height: 12),
                   Expanded(
-                    child: ClipRect(
-                      clipBehavior: Clip.hardEdge,
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        clipBehavior: Clip.hardEdge,
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: state.filteredOptions.length,
-                        itemBuilder: (context, index) {
-                          final item = state.filteredOptions[index];
-                          final selected = state.selected.contains(item);
-                          return Material(
-                            color:
-                                selected
-                                    ? Colors.green.withOpacity(0.2)
-                                    : Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                cubit.toggleItem(item);
-                                if (widget.mode == SelectMode.single) {
-                                  Navigator.pop(context, [item]);
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 16,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Text(item)),
-                                    if (selected)
-                                      const Icon(
-                                        Icons.check,
-                                        color: Colors.green,
-                                      ),
-                                  ],
-                                ),
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: state.filteredOptions.length,
+                      itemBuilder: (context, index) {
+                        final item = state.filteredOptions[index];
+                        final selected = state.selected.contains(item);
+                        return Material(
+                          color:
+                              selected
+                                  ? Colors.green.withOpacity(0.2)
+                                  : Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              cubit.toggleItem(item);
+                              if (widget.mode == SelectMode.single) {
+                                Navigator.pop(context, [item]);
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(child: Text(item)),
+                                  if (selected)
+                                    const Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                    ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   if (widget.mode == SelectMode.multiple) ...[
