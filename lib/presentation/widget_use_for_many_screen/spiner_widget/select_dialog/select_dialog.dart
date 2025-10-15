@@ -56,6 +56,8 @@ class _SelectDialogState extends State<SelectDialog> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
+            titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            contentPadding: EdgeInsets.zero,
             title: Text(
               'Chọn ${state.title}',
               textAlign: TextAlign.center,
@@ -63,13 +65,16 @@ class _SelectDialogState extends State<SelectDialog> {
             ),
             content: SizedBox(
               width: double.maxFinite,
-              height: 340,
+              height: 400,
               child: Column(
                 children: [
+                  const Divider(height: 1, color: Colors.grey),
+                  const SizedBox(height: 12),
                   SearchBarWidget(
                     controller: _searchController,
                     hintText: 'Tìm ${state.title.toLowerCase()}',
                     onChanged: cubit.updateSearch,
+                    borderRadius: 8,
                     onClear: () {
                       _searchController.clear();
                       cubit.clearSearch();
@@ -77,55 +82,92 @@ class _SelectDialogState extends State<SelectDialog> {
                   ),
                   const SizedBox(height: 12),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: state.filteredOptions.length,
-                      itemBuilder: (context, index) {
-                        final item = state.filteredOptions[index];
-                        final selected = state.selected.contains(item);
-                        return ListTile(
-                          title: Text(item),
-                          tileColor:
-                              selected ? Colors.green.withOpacity(0.2) : null,
-                          trailing:
-                              selected
-                                  ? const Icon(Icons.check, color: Colors.green)
-                                  : null,
-                          onTap: () {
-                            cubit.toggleItem(item);
-                            if (widget.mode == SelectMode.single) {
-                              Navigator.pop(context, [item]);
-                            }
-                          },
-                        );
-                      },
+                    child: ClipRect(
+                      clipBehavior: Clip.hardEdge,
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        clipBehavior: Clip.hardEdge,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: state.filteredOptions.length,
+                        itemBuilder: (context, index) {
+                          final item = state.filteredOptions[index];
+                          final selected = state.selected.contains(item);
+                          return Material(
+                            color:
+                                selected
+                                    ? Colors.green.withOpacity(0.2)
+                                    : Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                cubit.toggleItem(item);
+                                if (widget.mode == SelectMode.single) {
+                                  Navigator.pop(context, [item]);
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: Text(item)),
+                                    if (selected)
+                                      const Icon(
+                                        Icons.check,
+                                        color: Colors.green,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  if (widget.mode == SelectMode.multiple)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                          ),
-                          onPressed:
-                              () => Navigator.pop(context, state.selected),
-                          child: const Text('Xác nhận'),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                          ),
-                          onPressed:
-                              () => Navigator.pop(
-                                context,
-                                widget.initialSelected,
+                  if (widget.mode == SelectMode.multiple) ...[
+                    const SizedBox(height: 12),
+                    const Divider(height: 1, color: Colors.grey),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                          child: const Text('Hủy'),
-                        ),
-                      ],
+                            ),
+                            onPressed:
+                                () => Navigator.pop(context, state.selected),
+                            child: const Text('Xác nhận'),
+                          ),
+                          const SizedBox(width: 12),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed:
+                                () => Navigator.pop(
+                                  context,
+                                  widget.initialSelected,
+                                ),
+                            child: const Text('Hủy'),
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(height: 12),
+                  ],
                 ],
               ),
             ),
