@@ -1,3 +1,6 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/widget/dialog_hoat_dong.dart';
 import 'package:flutter/material.dart';
 
 class HoatDongScreen extends StatefulWidget {
@@ -31,42 +34,47 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
+          icon: const Icon(Icons.menu, color: AppColors.white),
           onPressed: () {
             //TODO: trở về màn hình trước
           },
         ),
-        title: const Text('Hoạt Động', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF23A892),
+        title: const Text(
+          'Hoạt Động',
+          style: TextStyle(color: AppColors.white),
+        ),
+        backgroundColor: AppColors.button,
         centerTitle: true,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: GestureDetector(
         onTap: () {
           _focusNode.unfocus();
         },
         child: Container(
-          color: Colors.white,
+          color: AppColors.white,
           child: Column(
             children: [
               Expanded(
                 child: Container(
-                  color: Colors.grey.shade200,
+                  color: AppColors.secondary.withOpacity(0.2),
                   child: ListView.builder(
                     itemCount: activities.length,
                     itemBuilder: (context, index) {
                       return Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey.shade200),
+                          color: AppColors.white,
+                          border: Border.all(
+                            color: AppColors.secondary.withOpacity(0.2),
+                          ),
                         ),
                         child: ListTile(
                           title: Text(
                             activities[index],
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: AppFonts.fontSize16,
                             ),
                           ),
                           onTap: () {
@@ -80,24 +88,32 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
               ),
 
               Container(
-                color: Colors.white,
+                color: AppColors.white,
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: ElevatedButton(
                   onPressed: () {
-                    //TODO: Xử lý khi nhấn nút Thêm
+                    DialogHoatDong.show(
+                      context: context,
+                      title: "Thêm hoạt động",
+                      content: "Hoạt động",
+                      showInput: true,
+                      onConfirm: (text) {
+                        //TODO: Xử lý khi xác nhận thêm hoạt động với text nhập vào
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF23A892),
+                    backgroundColor: AppColors.button,
                     padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                     textStyle: TextStyle(
-                      fontSize: 16,
+                      fontSize: AppFonts.fontSize16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: Text("Thêm", style: TextStyle(color: Colors.white)),
+                  child: Text("Thêm", style: TextStyle(color: AppColors.white)),
                 ),
               ),
             ],

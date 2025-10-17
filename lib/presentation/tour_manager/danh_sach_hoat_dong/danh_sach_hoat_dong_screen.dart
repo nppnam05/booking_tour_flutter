@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_dia_diem_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/sua_dia_diem_hoat_dong/sua_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
@@ -38,29 +40,29 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
+          icon: const Icon(Icons.menu, color: AppColors.white),
           onPressed: () {
             //TODO: trở về màn hình trước
           },
         ),
         title: const Text(
           'Danh Sách Hoạt Động',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: AppColors.white),
         ),
-        backgroundColor: Color(0xFF23A892),
+        backgroundColor: AppColors.button,
         centerTitle: true,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: GestureDetector(
         onTap: () {
           _focusNode.unfocus();
         },
         child: Container(
-          color: Colors.white,
+          color: AppColors.white,
           child: Column(
             children: [
               Container(
-                color: Color(0xFF23A892).withOpacity(0.2),
+                color: AppColors.button.withOpacity(0.2),
                 child: Padding(
                   padding: EdgeInsets.only(top: 16.0, left: 8),
                   child: Column(
@@ -75,7 +77,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                               Text(
                                 "Tên địa danh:",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: AppFonts.fontSize16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -86,7 +88,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                             child: Text(
                               "Bà nà hill",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: AppFonts.fontSize16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -104,7 +106,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                               Text(
                                 "Tỉnh thành:",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: AppFonts.fontSize16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -115,7 +117,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                             child: Text(
                               "Đà nẵng",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: AppFonts.fontSize16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -136,18 +138,20 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                   onClear: _controller.clear,
                 ),
               ),
-              Container(height: 12, color: Colors.grey.shade200),
+              const SizedBox(height: 12),
               Expanded(
                 child: Container(
-                  color: Colors.grey.shade200,
+                  color: AppColors.secondary.withOpacity(0.2),
                   child: ListView.builder(
                     itemCount: activities.length,
                     itemBuilder: (context, index) {
                       return Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey.shade200),
+                          color: AppColors.white,
+                          border: Border.all(
+                            color: AppColors.secondary.withOpacity(0.2),
+                          ),
                         ),
                         child: ListTile(
                           leading: Icon(Icons.location_on),
@@ -155,7 +159,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                             activities[index],
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: AppFonts.fontSize16,
                             ),
                           ),
                           onTap: () {
@@ -187,7 +191,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF23A892),
+                    backgroundColor: AppColors.button,
                     padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -197,7 +201,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: Text("Thêm", style: TextStyle(color: Colors.white)),
+                  child: Text("Thêm", style: TextStyle(color: AppColors.white)),
                 ),
               ),
             ],
