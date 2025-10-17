@@ -1,8 +1,7 @@
-import 'package:booking_tour_flutter/presentation/tour_manager/quanlychuyendi/tour_manager_screen.dart';
 import 'package:flutter/material.dart';
 
-class MenuScreen extends StatelessWidget {
-  const MenuScreen({super.key});
+class DrawerBar extends StatelessWidget {
+  const DrawerBar({super.key});
 
   @override
   Widget build(BuildContext context) {

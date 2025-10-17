@@ -1,6 +1,6 @@
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/menu_tour_manager/menu_screen.dart';
+import 'package:booking_tour_flutter/presentation/widget/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/quanlychuyendi/tour_manager_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class RouteManager {
   static final routes = <String, WidgetBuilder>{
     RouteName.home: (context) => HomeScreen(),
     RouteName.profile: (context) => ProfileScreen(),
-    RouteName.menu: (context) => MenuScreen(),
+    RouteName.menu: (context) => DrawerBar(),
     RouteName.tour_manager: (context) => TourManagerScreen(),
   };
 }

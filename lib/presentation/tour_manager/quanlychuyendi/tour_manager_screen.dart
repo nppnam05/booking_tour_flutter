@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/presentation/tour_manager/menu_tour_manager/menu_screen.dart';
+import 'package:booking_tour_flutter/presentation/widget/drawer_bar.dart';
 import 'package:flutter/material.dart';
 
 class  TourManagerScreen extends StatelessWidget{
@@ -11,7 +11,7 @@ class  TourManagerScreen extends StatelessWidget{
         title: Text("Quản lý chuyến đi", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
         backgroundColor: const Color(0xFF23A892),
       ),
-      drawer: const MenuScreen(),
+      drawer: const DrawerBar(),
       body: Text("aa"),
     );
   }
