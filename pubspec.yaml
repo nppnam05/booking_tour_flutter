@@ -48,6 +48,7 @@ dependencies:
   injectable_generator: ^2.9.0
   retrofit_generator: ^10.0.6
   dartz: ^0.10.1
+  awesome_dialog: ^3.3.0
 
 dev_dependencies:
   flutter_test:

@@ -1,56 +1,112 @@
 import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
-class DialogNoti extends StatelessWidget {
-  final String title;
-  final String content;
-  final VoidCallback onConfirm;
-  final String confirmText;
-  final String cancelText;
-  final Color confirmButtonColor;
-  final Color cancelButtonColor;
+class DialogNoti {
+  /// dialog thông báo đơn giản
+  static Future<void> showInfo({
+    required BuildContext context,
+    required String title,
+    required String message,
+    String buttonText = 'OK',
+    VoidCallback? onOk,
+    DialogType dialogType = DialogType.info,
+    AnimType animType = AnimType.scale,
+  }) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: dialogType,
+      animType: animType,
+      title: title,
+      desc: message,
+      btnOkText: buttonText,
+      btnOkOnPress: onOk,
+    ).show();
+  }
 
-  const DialogNoti({
-    super.key,
-    required this.title,
-    required this.content,
-    required this.onConfirm,
-    this.confirmText = 'Xác nhận',
-    this.cancelText = 'Hủy',
-    this.confirmButtonColor = const Color.fromARGB(255, 15, 157, 134), 
-    this.cancelButtonColor = Colors.red,
-  });
+  /// dialog xác nhận
+  static Future<bool?> showConfirm({
+    required BuildContext context,
+    required String title,
+    required String message,
+    String confirmText = 'Xác nhận',
+    String cancelText = 'Hủy',
+    VoidCallback? onConfirm,
+    VoidCallback? onCancel,
+    DialogType dialogType = DialogType.warning,
+    AnimType animType = AnimType.scale,
+  }) async {
+    final result = await AwesomeDialog(
+      context: context,
+      dialogType: dialogType,
+      animType: animType,
+      title: title,
+      desc: message,
+      btnOkText: confirmText,
+      btnCancelText: cancelText,
+      btnOkOnPress: onConfirm,
+      btnCancelOnPress: onCancel,
+    ).show();
+    return result;
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      content: Text(
-        content,
-        style: const TextStyle(fontSize: 16),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            cancelText,
-            style: TextStyle(color: cancelButtonColor),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            onConfirm();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: confirmButtonColor,
-          ),
-          child: Text(confirmText, style: const TextStyle(color: Colors.white),
-        ),
-        ),
-      ],
-    );
+  static Future<void> showError({
+    required BuildContext context,
+    required String title,
+    required String message,
+    String buttonText = 'Đóng',
+    VoidCallback? onOk,
+  }) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.scale,
+      title: title,
+      desc: message,
+      btnOkText: buttonText,
+      btnOkOnPress: onOk,
+    ).show();
+  }
+
+  // dialog thành công
+  static Future<void> showSuccess({
+    required BuildContext context,
+    required String title,
+    required String message,
+    String buttonText = 'OK',
+    VoidCallback? onOk,
+  }) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.scale,
+      title: title,
+      desc: message,
+      btnOkText: buttonText,
+      btnOkOnPress: onOk,
+    ).show();
+  }
+
+  ///dialog cảnh báo
+  static Future<bool?> showWarning({
+    required BuildContext context,
+    required String title,
+    required String message,
+    String confirmText = 'Tiếp tục',
+    String cancelText = 'Hủy',
+    VoidCallback? onConfirm,
+    VoidCallback? onCancel,
+  }) async {
+    final result = await AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      animType: AnimType.scale,
+      title: title,
+      desc: message,
+      btnOkText: confirmText,
+      btnCancelText: cancelText,
+      btnOkOnPress: onConfirm,
+      btnCancelOnPress: onCancel,
+    ).show();
+    return result;
   }
 }
