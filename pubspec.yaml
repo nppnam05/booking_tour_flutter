@@ -49,6 +49,7 @@ dependencies:
   retrofit_generator: ^10.0.6
   dartz: ^0.10.1
   awesome_dialog: ^3.3.0
+  image_picker: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -63,8 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '964809557211',
     projectId: 'bookingtourflutter-bafe8',
     storageBucket: 'bookingtourflutter-bafe8.firebasestorage.app',
-    androidClientId: '964809557211-a8p4s4uq5aljc3spohpatn1o8v150sc6.apps.googleusercontent.com',
-    iosClientId: '964809557211-k6tp4h4cde7rinqk11nddl4n1qm708pt.apps.googleusercontent.com',
+    androidClientId:
+        '964809557211-a8p4s4uq5aljc3spohpatn1o8v150sc6.apps.googleusercontent.com',
+    iosClientId:
+        '964809557211-k6tp4h4cde7rinqk11nddl4n1qm708pt.apps.googleusercontent.com',
     iosBundleId: 'com.example.bookingTourFlutter',
   );
 }
