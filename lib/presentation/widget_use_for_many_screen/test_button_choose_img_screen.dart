@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/spiner_widget/dropdown_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/spiner_widget/select_dialog/select_dialog_cubit.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/multi_select_dropdown_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -19,6 +19,25 @@ class _TestScreenState extends State<TestScreen> {
   XFile? selectedImage;
   List<String> selectedProvinces = [];
   final TextEditingController _controller = TextEditingController();
+
+  XFile? singleImage;
+  List<XFile> selectedImages = [];
+
+  String? selectedProvince;
+  List<String> selectedMultipleProvinces = [];
+
+  final List<String> provinces = [
+    'Hà Nội',
+    'TP. Hồ Chí Minh',
+    'Đà Nẵng',
+    'Hải Phòng',
+    'Cần Thơ',
+    'An Giang',
+    'Bà Rịa - Vũng Tàu',
+    'Bắc Giang',
+    'Bắc Kạn',
+    'Bạc Liêu',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,21 +45,103 @@ class _TestScreenState extends State<TestScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (selectedImage != null)
-              Image.file(File(selectedImage!.path), height: 200),
-            SizedBox(height: 20),
             PickImageButton(
-              text: 'Chọn Ảnh',
-              onImagePicked: (image) {
-                if (image != null) {
-                  setState(() => selectedImage = image);
-                }
+              text: 'Chọn ảnh đại diện',
+              allowMultiple: false,
+              onImagesPicked: (images) {
+                setState(() {
+                  singleImage = images.isNotEmpty ? images.first : null;
+                });
               },
             ),
-            SizedBox(height: 20),
+
+            PickImageButton(
+              text: 'Chọn nhiều ảnh',
+              allowMultiple: true,
+              maxImages: 3,
+              onImagesPicked: (images) {
+                setState(() {
+                  selectedImages = images;
+                });
+              },
+            ),
+
+            if (singleImage != null) ...[
+              const SizedBox(height: 20),
+              Container(
+                height: 200,
+                width: 200,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(File(singleImage!.path), fit: BoxFit.cover),
+                ),
+              ),
+            ],
+
+            if (selectedImages.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: selectedImages.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(
+                          File(selectedImages[index].path),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 20),
+            DropDownWidget<String>(
+              title: 'Tỉnh/Thành phố',
+              options: provinces,
+              itemToString: (province) => province,
+              value: selectedProvince,
+              onChanged: (province) {
+                setState(() {
+                  selectedProvince = province;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            MultiSelectDropdownWidget<String>(
+              title: 'Tỉnh/Thành phố',
+              options: provinces,
+              itemToString: (province) => province,
+              initialValues: selectedMultipleProvinces,
+              onChanged: (provinces) {
+                setState(() {
+                  selectedMultipleProvinces = provinces;
+                });
+              },
+            ),
+
+            const SizedBox(height: 20),
+
             DeleteButtonWidget(
               onDelete: () {
-                //TODO: truyền 1 cái callback vào để xóa gì đó
+                setState(() {
+                  singleImage = null;
+                  selectedImages.clear();
+                  selectedProvince = null;
+                  selectedMultipleProvinces.clear();
+                });
               },
             ),
 
@@ -51,39 +152,6 @@ class _TestScreenState extends State<TestScreen> {
               },
               onClear: () {
                 _controller.clear();
-              },
-            ),
-
-            DropDownWidget(
-              title: 'Hoạt động',
-              options: [
-                'Quảng Ninh',
-                'Hồ Chí Minh',
-                'Vũng Tàu',
-                'Hà Nội',
-                'Huế',
-                "Đà Nẵng",
-                'Bình Dương',
-                'Cần Thơ',
-              ],
-              onChanged: (values) {
-                debugPrint('Đã chọn: $values');
-              },
-            ),
-            DropDownWidget(
-              title: 'Tỉnh Thành',
-              options: const [
-                'Quảng Ninh',
-                'Hồ Chí Minh',
-                'Vũng Tàu',
-                'Hà Nội',
-                'Huế',
-                'Đà Nẵng',
-                'Bình Dương',
-              ],
-              mode: SelectMode.multiple,
-              onChanged: (values) {
-                setState(() => selectedProvinces = values);
               },
             ),
           ],

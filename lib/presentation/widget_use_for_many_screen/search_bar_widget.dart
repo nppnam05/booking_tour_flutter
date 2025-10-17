@@ -57,7 +57,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   hintText: widget.hintText,
                   hintStyle: const TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: Colors.grey,
                   ),
                   border: InputBorder.none,
                 ),

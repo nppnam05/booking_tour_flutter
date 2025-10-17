@@ -5,21 +5,29 @@ import 'pick_image_button_cubit.dart';
 import 'pick_image_button_state.dart';
 
 class PickImageButton extends StatelessWidget {
-  final Function(XFile?) onImagePicked;
+  final Function(List<XFile>) onImagesPicked;
   final ImageSource source;
   final String text;
+  final bool allowMultiple;
+  final int maxImages;
 
   const PickImageButton({
     super.key,
-    required this.onImagePicked,
+    required this.onImagesPicked,
     this.source = ImageSource.gallery,
     this.text = 'Chọn Ảnh',
+    this.allowMultiple = false,
+    this.maxImages = 3,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PickImageButtonCubit(),
+      create:
+          (context) => PickImageButtonCubit(
+            allowMultiple: allowMultiple,
+            maxImages: maxImages,
+          ),
       child: BlocConsumer<PickImageButtonCubit, PickImageButtonState>(
         listener: (context, state) {
           if (state.error != null) {
@@ -27,8 +35,8 @@ class PickImageButton extends StatelessWidget {
               context,
             ).showSnackBar(SnackBar(content: Text(state.error!)));
           }
-          if (!state.picking && state.file != null) {
-            onImagePicked(state.file);
+          if (!state.picking && state.files.isNotEmpty) {
+            onImagesPicked(state.files);
           }
         },
         builder: (context, state) {
