@@ -6,7 +6,6 @@ import 'pick_image_button_state.dart';
 
 class PickImageButton extends StatelessWidget {
   final Function(List<XFile>) onImagesPicked;
-  final ImageSource source;
   final String text;
   final bool allowMultiple;
   final int maxImages;
@@ -14,7 +13,6 @@ class PickImageButton extends StatelessWidget {
   const PickImageButton({
     super.key,
     required this.onImagesPicked,
-    this.source = ImageSource.gallery,
     this.text = 'Chọn Ảnh',
     this.allowMultiple = false,
     this.maxImages = 3,
@@ -42,7 +40,7 @@ class PickImageButton extends StatelessWidget {
         builder: (context, state) {
           final cubit = context.read<PickImageButtonCubit>();
           return ElevatedButton(
-            onPressed: () => cubit.pickImage(source),
+            onPressed: () => cubit.pickImage(),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF23A892),
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),

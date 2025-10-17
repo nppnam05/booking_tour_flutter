@@ -4,7 +4,6 @@ import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/del
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/multi_select_dropdown_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -58,7 +57,6 @@ class _TestScreenState extends State<TestScreen> {
             PickImageButton(
               text: 'Chọn nhiều ảnh',
               allowMultiple: true,
-              maxImages: 3,
               onImagesPicked: (images) {
                 setState(() {
                   selectedImages = images;
@@ -120,20 +118,6 @@ class _TestScreenState extends State<TestScreen> {
               },
             ),
             const SizedBox(height: 20),
-            MultiSelectDropdownWidget<String>(
-              title: 'Tỉnh/Thành phố',
-              options: provinces,
-              itemToString: (province) => province,
-              initialValues: selectedMultipleProvinces,
-              onChanged: (provinces) {
-                setState(() {
-                  selectedMultipleProvinces = provinces;
-                });
-              },
-            ),
-
-            const SizedBox(height: 20),
-
             DeleteButtonWidget(
               onDelete: () {
                 setState(() {

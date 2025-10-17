@@ -13,40 +13,31 @@ class PickImageButtonCubit extends Cubit<PickImageButtonState> {
         ),
       );
 
-  Future<void> pickImage(ImageSource source) async {
+  Future<void> pickImage() async {
     emit(state.copyWith(picking: true, error: null));
-    try {
-      if (state.allowMultiple) {
-        final List<XFile> images = await _picker.pickMultiImage();
-        if (images.isNotEmpty) {
-          final remainingSlots = state.maxImages - state.files.length;
-          if (remainingSlots > 0) {
-            final imagesToAdd = images.take(remainingSlots).toList();
-            final newFiles = [...state.files, ...imagesToAdd];
-            emit(state.copyWith(picking: false, files: newFiles, error: null));
-          } else {
-            emit(
-              state.copyWith(
-                picking: false,
-                error: 'Đã đạt giới hạn tối đa ${state.maxImages} ảnh',
-              ),
-            );
-          }
-        } else {
-          emit(state.copyWith(picking: false));
-        }
+
+    if (state.allowMultiple) {
+      final int limit = state.maxImages - state.files.length;
+      final int pickLimit = limit > 0 ? limit : state.maxImages;
+      final List<XFile> images = await _picker.pickMultiImage(limit: pickLimit);
+      if (images.isNotEmpty) {
+        final List<XFile> imagesToAdd = images.take(pickLimit).toList();
+
+        final List<XFile> newFiles =
+            limit > 0 ? <XFile>[...state.files, ...imagesToAdd] : imagesToAdd;
+        emit(state.copyWith(picking: false, files: newFiles, error: null));
       } else {
-        final XFile? image = await _picker.pickImage(source: source);
-        emit(
-          state.copyWith(
-            picking: false,
-            files: image != null ? [image] : [],
-            error: null,
-          ),
-        );
+        emit(state.copyWith(picking: false));
       }
-    } catch (e) {
-      emit(state.copyWith(picking: false, error: 'Lỗi chọn ảnh: $e'));
+    } else {
+      final image = await _picker.pickImage(source: ImageSource.gallery);
+      emit(
+        state.copyWith(
+          picking: false,
+          files: image != null ? [image] : [],
+          error: null,
+        ),
+      );
     }
   }
 

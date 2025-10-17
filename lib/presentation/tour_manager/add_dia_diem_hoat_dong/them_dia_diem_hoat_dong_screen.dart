@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_hoat_dong_screen.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
 import 'package:flutter/material.dart';
 
 class ThemDiaDiemHoatDongScreen extends StatefulWidget {
@@ -10,7 +11,18 @@ class ThemDiaDiemHoatDongScreen extends StatefulWidget {
 }
 
 class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
-  List<String> selectedProvinces = [];
+  final List<String> provinces = [
+    'Hà Nội',
+    'TP. Hồ Chí Minh',
+    'Đà Nẵng',
+    'Hải Phòng',
+    'Cần Thơ',
+    'An Giang',
+    'Bà Rịa - Vũng Tàu',
+    'Bắc Giang',
+    'Bắc Kạn',
+    'Bạc Liêu',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,10 +30,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => DanhSachHoatDongScreen()),
-            );
+            Navigator.pushNamed(context, '/danh-sach-hoat-dong');
           },
         ),
         title: const Text(
@@ -43,19 +52,10 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
             padding: const EdgeInsets.all(8.0),
             // child: DropDownWidget(
             //   title: 'Danh Sách Hoạt Động',
-            //   options: const [
-            //     'Quảng Ninh',
-            //     'Hồ Chí Minh',
-            //     'Vũng Tàu',
-            //     'Hà Nội',
-            //     'Huế',
-            //     'Đà Nẵng',
-            //     'Bình Dương',
-            //   ],
-            //   mode: SelectMode.multiple,
+
             //   onChanged: (values) {
-            //     setState(() => selectedProvinces = values);
-            //   },
+            //     setState(() => provinces = values);
+            //   }, options: [], itemToString: (Object ) {  },
             // ),
           ),
           Spacer(),
