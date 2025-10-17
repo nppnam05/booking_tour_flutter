@@ -8,13 +8,10 @@ class  TourManagerScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-              onTap: () => { Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen()))},
-              child: Icon(Icons.menu),
-            ),
         title: Text("Quản lý chuyến đi", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
         backgroundColor: const Color(0xFF23A892),
       ),
+      drawer: const MenuScreen(),
       body: Text("aa"),
     );
   }

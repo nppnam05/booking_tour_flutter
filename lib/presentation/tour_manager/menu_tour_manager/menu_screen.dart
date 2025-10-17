@@ -6,17 +6,12 @@ class MenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('BooKing Tour', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25),),
-        backgroundColor: const Color(0xFF23A892),
-      ),
-      body: Padding(padding: EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
-        children: <Widget> [
-          // Menu chuyển màn hình Tour Manager
-          ListTile(onTap: () => { Navigator.push(context, MaterialPageRoute(builder: (context) => TourManagerScreen())) }, leading: Icon(Icons.route),title: Text("Chuyến đi"),),
+    return Drawer(
+      child: ListView(
+        children:<Widget>[
+          DrawerHeader(decoration: BoxDecoration(color: Color(0xFF23A892)), 
+          child: Text('BooKing Tour', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25),)),
+          ListTile(onTap: () => { print("haha") }, leading: Icon(Icons.route),title: Text("Chuyến đi"),),
           ListTile(onTap: () => { print("haha")}, leading: Icon(Icons.calendar_today),title: Text("Lịch trình"),),
           ListTile(onTap: () => { print("hehe")}, leading: Icon(Icons.person_pin_circle),title: Text("Phân công"),),
           ListTile(onTap: () => { print("Hello")}, leading: Icon(Icons.place_outlined),title: Text("Địa danh"),),
@@ -24,7 +19,6 @@ class MenuScreen extends StatelessWidget {
           ListTile(onTap: () => { print("Hello")}, leading: Icon(Icons.local_taxi),title: Text("Địa điểm hoạt động"),),
         ],
       ),
-      ) 
-    );
+      );
   }
 }
