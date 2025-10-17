@@ -1,5 +1,7 @@
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/menu_tour_manager/menu_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/quanlychuyendi/tour_manager_screen.dart';
 import 'package:flutter/material.dart';
 
 class RouteName {
@@ -7,6 +9,8 @@ class RouteName {
 
   static final home = "home";
   static final profile = "profile";
+  static final menu = "menu";
+  static final tour_manager = "tour_manager";
 }
 
 class RouteManager {
@@ -15,5 +19,7 @@ class RouteManager {
   static final routes = <String, WidgetBuilder>{
     RouteName.home: (context) => HomeScreen(),
     RouteName.profile: (context) => ProfileScreen(),
+    RouteName.menu: (context) => MenuScreen(),
+    RouteName.tour_manager: (context) => TourManagerScreen(),
   };
 }
