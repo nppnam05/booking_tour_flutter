@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DialogNoti {
-  /// Dialog xác nhận đơn giản (không có danh sách)
-  /// Trả về true nếu xác nhận, false nếu hủy/đóng
+  
   static Future<bool> confirm({
     required BuildContext context,
     required String title,
@@ -14,13 +13,14 @@ class DialogNoti {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => _ConfirmDialog(
-        title: title,
-        message: message,
-        highlightPhrases: highlightPhrases,
-        confirmText: confirmText,
-        cancelText: cancelText,
-      ),
+      builder:
+          (ctx) => _ConfirmDialog(
+            title: title,
+            message: message,
+            highlightPhrases: highlightPhrases,
+            confirmText: confirmText,
+            cancelText: cancelText,
+          ),
     );
     return result ?? false;
   }
@@ -84,19 +84,18 @@ class _ConfirmDialog extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   const SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   _pillButton(
                     label: cancelText,
                     background: const Color(0xFFD64545),
                     onPressed: () => Navigator.of(context).pop(false),
                   ),
-                  const SizedBox( width:  12 ,),
+                  const SizedBox(width: 12),
                   _pillButton(
                     label: confirmText,
                     background: const Color(0xFF2EAD66),
                     onPressed: () => Navigator.of(context).pop(true),
                   ),
-                 
                 ],
               ),
             ),
@@ -139,9 +138,9 @@ class _ConfirmDialog extends StatelessWidget {
       return Text(
         message,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
+          fontWeight: FontWeight.w500,
+          color: Colors.black87,
+        ),
         textAlign: TextAlign.left,
       );
     }
@@ -149,10 +148,11 @@ class _ConfirmDialog extends StatelessWidget {
     final spans = <TextSpan>[];
     String remaining = message;
 
-    TextStyle normal = Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ) ??
+    TextStyle normal =
+        Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.w500,
+          color: Colors.black87,
+        ) ??
         const TextStyle();
     TextStyle highlight = normal.copyWith(
       color: const Color(0xFFD64545),
@@ -176,14 +176,14 @@ class _ConfirmDialog extends StatelessWidget {
         break;
       } else {
         if (nearestIndex > 0) {
-          spans.add(TextSpan(
-            text: remaining.substring(0, nearestIndex),
-            style: normal,
-          ));
+          spans.add(
+            TextSpan(text: remaining.substring(0, nearestIndex), style: normal),
+          );
         }
         spans.add(TextSpan(text: nearestPhrase, style: highlight));
-        remaining =
-            remaining.substring(nearestIndex + (nearestPhrase?.length ?? 0));
+        remaining = remaining.substring(
+          nearestIndex + (nearestPhrase?.length ?? 0),
+        );
       }
     }
 

@@ -16,16 +16,17 @@ class DialogHelper {
     return showDialog<T>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => SelectionDialog<T>(
-        title: title,
-        items: items,
-        display: display,
-        searchHint: searchHint,
-        confirmText: confirmText,
-        cancelText: cancelText,
-        isMultiSelect: false,
-        preSelectedItems: initial == null ? const [] : [initial],
-      ),
+      builder:
+          (_) => SelectionDialog<T>(
+            title: title,
+            items: items,
+            display: display,
+            searchHint: searchHint,
+            confirmText: confirmText,
+            cancelText: cancelText,
+            isMultiSelect: false,
+            preSelectedItems: initial == null ? const [] : [initial],
+          ),
     );
   }
 
@@ -42,19 +43,18 @@ class DialogHelper {
     final result = await showDialog<List<T>>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => SelectionDialog<T>(
-        title: title,
-        items: items,
-        display: display,
-        searchHint: searchHint,
-        confirmText: confirmText,
-        cancelText: cancelText,
-        isMultiSelect: true,
-        preSelectedItems: initial,
-      ),
+      builder:
+          (_) => SelectionDialog<T>(
+            title: title,
+            items: items,
+            display: display,
+            searchHint: searchHint,
+            confirmText: confirmText,
+            cancelText: cancelText,
+            isMultiSelect: true,
+            preSelectedItems: initial,
+          ),
     );
     return result ?? <T>[];
   }
 }
-
-

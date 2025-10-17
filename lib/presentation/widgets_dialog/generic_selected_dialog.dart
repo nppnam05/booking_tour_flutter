@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class SelectionDialog<T> extends StatefulWidget {
   final String title;
   final List<T> items;
@@ -48,11 +49,12 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
   void _onSearchChanged() {
     final query = _searchController.text.trim().toLowerCase();
     setState(() {
-      _filteredItems = query.isEmpty
-          ? List<T>.from(widget.items)
-          : widget.items
-              .where((e) => widget.display(e).toLowerCase().contains(query))
-              .toList(growable: false);
+      _filteredItems =
+          query.isEmpty
+              ? List<T>.from(widget.items)
+              : widget.items
+                  .where((e) => widget.display(e).toLowerCase().contains(query))
+                  .toList(growable: false);
     });
   }
 
@@ -64,7 +66,9 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
     setState(() {
       if (widget.isMultiSelect) {
         if (_isSelected(item)) {
-          _selected.removeWhere((e) => widget.display(e) == widget.display(item));
+          _selected.removeWhere(
+            (e) => widget.display(e) == widget.display(item),
+          );
         } else {
           _selected.add(item);
         }
@@ -114,8 +118,10 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: widget.searchHint,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   filled: true,
                   fillColor: const Color(0xFFF6F7F8),
                   border: OutlineInputBorder(
@@ -171,10 +177,7 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
                               ),
                             ),
                             if (selected)
-                              const Icon(
-                                Icons.check,
-                                color: Color(0xFF2EAD66),
-                              ),
+                              const Icon(Icons.check, color: Color(0xFF2EAD66)),
                           ],
                         ),
                       ),
@@ -201,15 +204,15 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
                   _pillButton(
                     label: widget.confirmText,
                     background: const Color(0xFF2EAD66),
-                    onPressed: _selected.isEmpty
-                        ? null
-                        : () {
-                            if (widget.isMultiSelect) {
-                              Navigator.of(context).pop<List<T>>(_selected);
-                            } else {
-                              Navigator.of(context).pop<T>(_selected.first);
-                            }
-                          },
+                    onPressed: () {
+                      if (widget.isMultiSelect) {
+                        Navigator.of(context).pop<List<T>>(_selected);
+                      } else {
+                        Navigator.of(
+                          context,
+                        ).pop<T>(_selected.isEmpty ? null : _selected.first);
+                      }
+                    },
                   ),
                 ],
               ),
