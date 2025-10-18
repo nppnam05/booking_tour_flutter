@@ -9,12 +9,11 @@ void main() async {
   //set
   // Khởi tạo binding trước
   WidgetsFlutterBinding.ensureInitialized();
+
   configureInjectable();
 
   // init firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
 }
