@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
+import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
@@ -27,6 +28,7 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
   // gom các widget lại
   Widget columnOfWidget() {
     return Column(
@@ -41,13 +43,30 @@ class LoginScreen extends StatelessWidget {
 
         Column(
           children: [
-            notToggleInputField(_controllerEmail, "Email", Colors.grey.shade100),
+            notToggleInputField(
+              _controllerEmail,
+              "Email",
+              Colors.grey.shade100,
+            ),
             const SizedBox(height: 12),
-            ToggleInputField(controller: _controllerPassword, text: "Email",color:  Colors.grey.shade100),
+            ToggleInputField(
+              controller: _controllerPassword,
+              text: "Mật khẩu",
+              color: Colors.grey.shade100,
+            ),
           ],
         ),
 
-        const SizedBox(height: 50),
+        const SizedBox(height: 20),
+
+        customButton(
+          onPressed: () {
+            print("Đăng nhập EEEEEEEEEEEEEEEEE");
+          },
+          text: "Đăng nhập",
+        ),
+
+        const SizedBox(height: 20),
 
         Column(
           children: [
@@ -69,7 +88,9 @@ class LoginScreen extends StatelessWidget {
             Text("Chưa có tài khoản? "),
             GestureDetector(
               onTap: () {
-                print(_controllerEmail.text + " asdasd " + _controllerPassword.text);
+                print(
+                  _controllerEmail.text + " asdasd " + _controllerPassword.text,
+                );
               },
               child: const Padding(
                 // Nên dùng Padding để tạo khoảng đệm cho vùng click

@@ -1,6 +1,7 @@
-import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_cubit.dart';
-import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
+import 'package:booking_tour_flutter/presentation/auth/register/cubit/register_cubit.dart';
+import 'package:booking_tour_flutter/presentation/auth/register/cubit/register_state.dart';
+import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterScreen extends StatelessWidget {
-  final _cubit = LoginCubit()..syncPost();
+  final _cubit = RegisterCubit()..syncPost();
 
   final TextEditingController controllerTenNguoiDung = TextEditingController();
   final TextEditingController controllerSoDienThoai = TextEditingController();
@@ -22,7 +23,7 @@ class RegisterScreen extends StatelessWidget {
       create: (context) => _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text(NameOfScreen.register),),
-        body: BlocBuilder<LoginCubit, LoginState>(
+        body: BlocBuilder<RegisterCubit, RegisterState>(
           bloc: _cubit,
           builder:
               (context, state) =>
@@ -41,7 +42,7 @@ class RegisterScreen extends StatelessWidget {
           style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
 
-        const SizedBox(height: 50),
+        const SizedBox(height: 30),
 
         Column(
           children: [
@@ -64,46 +65,41 @@ class RegisterScreen extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 50),
+        const SizedBox(height: 10,),
+
+        customButton(
+          onPressed: () {
+            print("Đăng nhập EEEEEEEEEEEEEEEEE");
+          },
+          text: "Tiếp theo",
+        ),
+
+        const SizedBox(height: 20),
+
+
+        Column(
+          children: [
+            textDangNhap()
+          ],
+        )
 
       ],
     );
   }
 
-  Widget textDangKiQuenMatKhau() {
+  Widget textDangNhap() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Chưa có tài khoản? "),
-            GestureDetector(
-              onTap: () {
-                print("Dang ky ngay");
-              },
-              child: const Padding(
-                // Nên dùng Padding để tạo khoảng đệm cho vùng click
-                padding: EdgeInsets.all(4.0),
-                child: const Text(
-                  "Đăng ký ngay",
-                  style: TextStyle(
-                    color: Color(0xFF0822AB),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+       Text("Đã có tài khoản? "),
         GestureDetector(
           onTap: () {
-            print("Quên mật khẩu");
+            print("Đăng nhập ngay");
           },
           child: const Padding(
             // Nên dùng Padding để tạo khoảng đệm cho vùng click
             padding: EdgeInsets.all(4.0),
             child: const Text(
-              "Quên mật khẩu",
+              "Đăng nhập ngay",
               style: TextStyle(
                 color: Color(0xFF0822AB),
                 fontWeight: FontWeight.bold,

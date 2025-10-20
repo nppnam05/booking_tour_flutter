@@ -1,0 +1,102 @@
+import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_state.dart';
+import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
+import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
+import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field.dart';
+import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class AuthOtpScreen extends StatelessWidget {
+  final _cubit = AuthOtpCubit()..syncPost();
+
+  final TextEditingController _controllerOTP = TextEditingController();
+
+  // final settings = ModalRoute.of(context)!.settings;
+
+  // final args = settings.arguments as Map<String, dynamic>;
+  // final String email = args['email'] as String;
+  final String email = "nam@gmail.com";
+  final String nameScreem = "Quên mật khẩu";
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _cubit,
+      child: Scaffold(
+        appBar: AppBar(),
+        body: BlocBuilder<AuthOtpCubit, AuthOtpState>(
+          bloc: _cubit,
+          builder:
+              (context, state) =>
+                  Center(child: wrappedOutside(context, columnOfWidget())),
+        ),
+      ),
+    );
+  }
+
+  // gom các widget lại
+  Widget columnOfWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const SizedBox(height: 50),
+        Text(
+          nameScreem,
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        ),
+
+        const SizedBox(height: 40),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Mã xác thực sẽ được gửi đến"),
+                Text(
+                  nameScreem == NameOfScreen.forgetPassword
+                      ? maskEmail(email)
+                      : email,
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 20),
+
+        notToggleInputField(_controllerOTP, "Mã OTP", Colors.grey.shade100),
+
+        const SizedBox(height: 20,),
+
+        Row(
+          children: [
+            customButton(onPressed: () {
+
+            }, text: "Gửi lại mã xác thực", colorText: Color(0xFF229784))
+          ],
+        )
+      ],
+    );
+  }
+
+
+  String maskEmail(String email) {
+    int atIndex = email.indexOf('@');
+
+    String firstChar = email.substring(0, 1);
+    String domain = email.substring(atIndex);
+
+    int length = email.substring(1, atIndex).length;
+
+    String start = "";
+    for (int i = 0; i < length; ++i) {
+      start += "*";
+    }
+
+    return firstChar + start + domain;
+  }
+}
