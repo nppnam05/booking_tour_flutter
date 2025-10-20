@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       navigatorKey: AppNavigator.navigatorKey,
       routes: RouteManager.routes,
-      initialRoute: RouteName.tour_manager,
+      initialRoute: RouteName.chiTietLichTrinh,
     );
   }
 }

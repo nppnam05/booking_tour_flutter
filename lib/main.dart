@@ -9,6 +9,7 @@ void main() async {
   //set
   // Khởi tạo binding trước
   WidgetsFlutterBinding.ensureInitialized();
+
   configureInjectable();
 
   // init firebase
