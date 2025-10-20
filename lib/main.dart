@@ -1,5 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/trip/schedule_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -24,7 +26,7 @@ class _App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Booking Tour Flutter',
       theme: ThemeData(useMaterial3: true),
-      home: const TripScreen(),
+      home: const ScheduleTourguideScreen(),
     );
   }
 }

@@ -5,8 +5,8 @@ class Trip {
   final String imageUrl;
 
   Trip({
-    required this.title, 
-    required this.location, 
+    required this.title,
+    required this.location,
     required this.price,
     required this.imageUrl,
   });
