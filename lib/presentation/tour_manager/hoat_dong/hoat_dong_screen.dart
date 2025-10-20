@@ -78,7 +78,14 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
                             ),
                           ),
                           onTap: () {
-                            //TODO: Xử lý khi nhấn vào hoạt động
+                            DialogHoatDong.show(
+                              context: context,
+                              title: "Sửa hoạt động",
+                              showInput: true,
+                              onConfirm: (text) {
+                                //TODO: Xử lý khi xác nhận sửa hoạt động với text nhập vào
+                              },
+                            );
                           },
                         ),
                       );
@@ -95,7 +102,6 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
                     DialogHoatDong.show(
                       context: context,
                       title: "Thêm hoạt động",
-                      content: "Hoạt động",
                       showInput: true,
                       onConfirm: (text) {
                         //TODO: Xử lý khi xác nhận thêm hoạt động với text nhập vào

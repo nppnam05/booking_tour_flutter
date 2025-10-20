@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:flutter/material.dart';
 
 class DropDownWidget<T> extends StatefulWidget {
@@ -32,29 +34,34 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             widget.title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+              fontSize: AppFonts.fontSize16,
+              fontWeight: AppFonts.fontWeight500,
+            ),
           ),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade400),
+            border: Border.all(color: AppColors.secondary.withOpacity(0.4)),
             borderRadius: BorderRadius.circular(8),
-            color: Colors.white,
+            color: AppColors.white,
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
+              dropdownColor: AppColors.white,
               value: widget.value,
               hint: Text(
                 widget.hintText ?? 'Chọn ${widget.title.toLowerCase()}',
               ),
               isExpanded: true,
-              items: widget.options.map((T item) {
-                return DropdownMenuItem<T>(
-                  value: item,
-                  child: Text(widget.itemToString(item)),
-                );
-              }).toList(),
+              items:
+                  widget.options.map((T item) {
+                    return DropdownMenuItem<T>(
+                      value: item,
+                      child: Text(widget.itemToString(item)),
+                    );
+                  }).toList(),
               onChanged: widget.onChanged,
             ),
           ),

@@ -1,10 +1,8 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:flutter/material.dart';
 
 class DialogHoatDong extends StatefulWidget {
   final String title;
-  final String content;
   final String? cancelText;
   final String? confirmText;
   final ValueChanged<String>? onConfirm;
@@ -17,7 +15,6 @@ class DialogHoatDong extends StatefulWidget {
   const DialogHoatDong({
     super.key,
     required this.title,
-    required this.content,
     this.cancelText,
     this.confirmText,
     this.onCancel,
@@ -34,7 +31,6 @@ class DialogHoatDong extends StatefulWidget {
   static Future<bool?> show({
     required BuildContext context,
     required String title,
-    required String content,
     String? cancelText,
     String? confirmText,
     VoidCallback? onCancel,
@@ -52,7 +48,6 @@ class DialogHoatDong extends StatefulWidget {
       builder:
           (context) => DialogHoatDong(
             title: title,
-            content: content,
             cancelText: cancelText,
             confirmText: confirmText,
             onCancel: onCancel,
@@ -98,14 +93,6 @@ class _DialogHoatDongState extends State<DialogHoatDong> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.content,
-              style: const TextStyle(
-                fontSize: AppFonts.fontSize16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
             if (widget.showInput) ...[
               const SizedBox(height: 12),
               TextField(
