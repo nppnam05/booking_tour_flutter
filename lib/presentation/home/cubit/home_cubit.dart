@@ -9,6 +9,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> syncPost() async {
     var result = await bookingRepository.getPost();
+    
     result.fold((failure) {}, (posts) {
       emit(state.copyWith(posts: posts));
     });
