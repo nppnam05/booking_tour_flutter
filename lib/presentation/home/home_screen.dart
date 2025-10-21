@@ -28,14 +28,14 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   SliverList.builder(
-                    itemCount: state.posts.length,
+                    itemCount: state.activities.length,
                     itemBuilder: (context, index) {
-                      final post = state.posts[index];
+                      final activity = state.activities[index];
                       return Row(
                         children: [
-                          Text(post.title),
+                          Text(activity.id.toString()),
                           SizedBox(width: 10),
-                          Text(post.body),
+                          Text(activity.action),
                         ],
                       );
                     },
@@ -47,4 +47,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

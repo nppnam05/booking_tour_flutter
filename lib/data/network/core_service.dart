@@ -1,4 +1,6 @@
+import 'package:booking_tour_flutter/data/reponse/activity_response.dart';
 import 'package:booking_tour_flutter/data/reponse/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/reponse/rest_response.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -13,4 +15,10 @@ abstract class CoreService {
 
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
+
+  @GET("/Activity")
+  Future<RestResponse> getActivities({
+    @Query("orderBy") String sortBy = "Action",
+    @Query("SortBy") String order = "ASC",
+  });
 }
