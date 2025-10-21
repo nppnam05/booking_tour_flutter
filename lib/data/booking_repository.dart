@@ -21,6 +21,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
 
   Future<Either<Failure, List<Activity>>> getActivities({
+    int? locationActivityId,
     String sortBy = "action",
     String order = "ASC",
   });
@@ -28,7 +29,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Province>>> getProvinces();
 
   Future<Either<Failure, List<Place>>> getPlaces({
-    required int provinceId,
+    List<int> provinceIds = const [],
     String sortBy = "Name",
     String order = "ASC",
   });
@@ -60,6 +61,7 @@ class BookingRepositoryImp implements BookingRepository {
 
   @override
   Future<Either<Failure, List<Activity>>> getActivities({
+    int? locationActivityId,
     String sortBy = "action",
     String order = "ASC",
   }) async {
@@ -100,13 +102,13 @@ class BookingRepositoryImp implements BookingRepository {
 
   @override
   Future<Either<Failure, List<Place>>> getPlaces({
-    required int provinceId,
+    List<int> provinceIds = const [],
     String sortBy = "Name",
     String order = "ASC",
   }) async {
     try {
       var responses = await _coreService.getPlaces(
-        provinceId: provinceId,
+        provinceId: provinceIds.join(","),
         sortBy: sortBy,
         order: order,
       );

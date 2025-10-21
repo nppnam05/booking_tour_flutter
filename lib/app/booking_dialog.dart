@@ -29,8 +29,12 @@ class BookingDialog {
     );
   }
 
-  static Future<Activity?> selectSingleActivity() async {
-    var result = await _repository.getActivities();
+  static Future<Activity?> selectSingleActivity({
+    int? locationActivityId,
+  }) async {
+    var result = await _repository.getActivities(
+      locationActivityId: locationActivityId,
+    );
 
     result.fold(
       (failure) {
@@ -49,8 +53,10 @@ class BookingDialog {
     );
   }
 
-  static Future<Place?> selectSinglePlace({required int provinceId}) async {
-    var result = await _repository.getPlaces(provinceId: provinceId);
+  static Future<Place?> selectSinglePlace({
+    List<int> provinceIds = const [],
+  }) async {
+    var result = await _repository.getPlaces(provinceIds: provinceIds);
 
     result.fold(
       (failure) {

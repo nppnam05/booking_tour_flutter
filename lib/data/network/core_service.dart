@@ -19,6 +19,7 @@ abstract class CoreService {
 
   @GET("/Activity")
   Future<RestResponse> getActivities({
+    @Query("locationActivityId") int? locationActivityId,
     @Query("orderBy") String sortBy = "Action",
     @Query("sortBy") String order = "ASC",
   });
@@ -28,7 +29,7 @@ abstract class CoreService {
 
   @GET("/Place")
   Future<RestResponse> getPlaces({
-    @Query("locationId") required int provinceId,
+    @Query("locationIds") required String provinceId,
     @Query("orderBy") String sortBy = "Name",
     @Query("sortBy") String order = "ASC",
   });

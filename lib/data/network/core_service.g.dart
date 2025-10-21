@@ -54,14 +54,17 @@ class _CoreService implements CoreService {
 
   @override
   Future<RestResponse> getActivities({
+    int? locationActivityId,
     String sortBy = "Action",
     String order = "ASC",
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
+      r'locationActivityId': locationActivityId,
       r'orderBy': sortBy,
       r'sortBy': order,
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<RestResponse>(
@@ -114,13 +117,13 @@ class _CoreService implements CoreService {
 
   @override
   Future<RestResponse> getPlaces({
-    required int provinceId,
+    required String provinceId,
     String sortBy = "Name",
     String order = "ASC",
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'locationId': provinceId,
+      r'locationIds': provinceId,
       r'orderBy': sortBy,
       r'sortBy': order,
     };

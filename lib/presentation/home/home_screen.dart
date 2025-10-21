@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: ElevatedButton(
                       onPressed: () {
-                        BookingDialog.selectSingleActivity();
+                        BookingDialog.selectSingleActivity(locationActivityId: 1);
                       },
                       child: Text("select activity"),
                     ),
@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: ElevatedButton(
                       onPressed: () {
-                        BookingDialog.selectSinglePlace(provinceId: 1);
+                        BookingDialog.selectSinglePlace(provinceIds: [1, 2]);
                       },
                       child: Text("select place"),
                     ),
