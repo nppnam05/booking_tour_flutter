@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class ToggleInputField extends StatefulWidget {
@@ -20,7 +21,9 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        
         Text(widget.text, style: TextStyle(fontWeight: FontWeight.bold)),
+
         const SizedBox(height: 8.0),
 
         TextField(
@@ -33,13 +36,15 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
             filled: true,
             fillColor: widget.color,
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 15,
+              horizontal: 10,
+              vertical: 10,
             ),
 
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none,
+              borderSide: const BorderSide(
+                color: AppColors.borderTextInputColor
+              )
             ),
 
             hintText: widget.text,
@@ -51,6 +56,8 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
                 _obscureText ? Icons.visibility_off : Icons.visibility,
                 color: Colors.grey,
               ),
+
+              
               onPressed: () {
                 // Đảo ngược trạng thái khi click
                 setState(() {

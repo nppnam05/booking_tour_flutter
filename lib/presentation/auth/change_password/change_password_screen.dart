@@ -1,8 +1,12 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/cubit/change_password_cubit.dart';
-import 'package:booking_tour_flutter/presentation/auth/change_password/cubit/change_password_sate.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
+import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,46 +22,59 @@ class ChangePasswordScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        body: BlocBuilder<ChangePasswordCubit, ChangePasswordSate>(
-          bloc: _cubit,
-          builder:
-              (context, state) =>
-                  Center(child: wrappedOutside(context, columnOfWidget())),
-        ),
+        appBar: AppBar(backgroundColor: AppColors.scaffoldBackgroundColor),
+        body: Center(child: wrappedOutside(context, columnOfWidget())),
       ),
     );
   }
 
   // gom các widget lại
   Widget columnOfWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          NameOfScreen.changePassword,
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-        ),
+    final context = AppNavigator.currentContext;
 
-        const SizedBox(height: 50),
-
-        Column(
-          children: [
-            ToggleInputField(
-              controller: _controllerFirstPassword,
-              text: "Mật khẩu mới",
-              color: Colors.grey.shade100,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            NameOfScreen.changePassword,
+            style: TextStyle(
+              fontSize: AppFonts.fontSize32,
+              fontFamily: AppFonts.fontFamily,
+              fontWeight: AppFonts.fontWeight500,
+              color: AppColors.textPrimary,
             ),
-            const SizedBox(height: 12),
-            ToggleInputField(
-              controller: _controllerPassword,
-              text: "Mật khẩu",
-              color: Colors.grey.shade100,
-            ),
-          ],
-        ),
+          ),
 
-        const SizedBox(height: 50),
-      ],
+          const SizedBox(height: 50),
+
+          Column(
+            children: [
+              ToggleInputField(
+                controller: _controllerFirstPassword,
+                text: "Mật khẩu mới",
+                color: Colors.grey.shade100,
+              ),
+              const SizedBox(height: 12),
+              ToggleInputField(
+                controller: _controllerPassword,
+                text: "Mật khẩu",
+                color: Colors.grey.shade100,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 50),
+
+          customButton(
+            onPressed: () {
+              Navigator.pushNamed(context, RouteName.login);
+            },
+            text: "Xác nhận",
+          ),
+        ],
+      ),
     );
   }
 }

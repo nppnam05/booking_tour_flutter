@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/register/cubit/register_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/register/cubit/register_state.dart';
@@ -22,75 +24,91 @@ class RegisterScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        appBar: AppBar(title: Text(NameOfScreen.register),),
-        body: BlocBuilder<RegisterCubit, RegisterState>(
-          bloc: _cubit,
-          builder:
-              (context, state) =>
-                  Center(child: wrappedOutside(context, columnOfWidget())),
-        ),
+        appBar: AppBar(backgroundColor: AppColors.scaffoldBackgroundColor),
+        body: Center(child: wrappedOutside(context, columnOfWidget())),
       ),
     );
   }
+
   // gom các widget lại
   Widget columnOfWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          NameOfScreen.register,
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            NameOfScreen.register,
+            style: TextStyle(
+              fontSize: AppFonts.fontSize32,
+              fontFamily: AppFonts.fontFamily,
+              fontWeight: AppFonts.fontWeight500,
+              color: AppColors.textPrimary,
+            ),
+          ),
 
-        const SizedBox(height: 30),
+          const SizedBox(height: 30),
 
-        Column(
-          children: [
-            notToggleInputField(controllerTenNguoiDung, "Tên người dùng", Colors.grey.shade100),
-            const SizedBox(height: 12),
+          Column(
+            children: [
+              notToggleInputField(
+                controllerTenNguoiDung,
+                "Tên người dùng",
+                Colors.grey.shade100,
+              ),
+              const SizedBox(height: 12),
 
-            notToggleInputField(controllerSoDienThoai, "Số điện thoại", Colors.grey.shade100),
-            const SizedBox(height: 12),
+              notToggleInputField(
+                controllerSoDienThoai,
+                "Số điện thoại",
+                Colors.grey.shade100,
+              ),
+              const SizedBox(height: 12),
 
-            notToggleInputField(controllerEmail, "Email", Colors.grey.shade100),
-            const SizedBox(height: 12),
+              notToggleInputField(
+                controllerEmail,
+                "Email",
+                Colors.grey.shade100,
+              ),
+              const SizedBox(height: 12),
 
-            
-            
-            ToggleInputField(controller: controllerPassword, text: "Mật khẩu", color: Colors.grey.shade100),
-            const SizedBox(height: 12),
+              ToggleInputField(
+                controller: controllerPassword,
+                text: "Mật khẩu",
+                color: Colors.grey.shade100,
+              ),
+              const SizedBox(height: 12),
 
-             ToggleInputField(controller: controllerNhapLai, text: "Nhập lại mật khẩu", color: Colors.grey.shade100),
-            const SizedBox(height: 12),
-          ],
-        ),
+              ToggleInputField(
+                controller: controllerNhapLai,
+                text: "Nhập lại mật khẩu",
+                color: Colors.grey.shade100,
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
 
-        const SizedBox(height: 10,),
+          const SizedBox(height: 10),
 
-        customButton(
-          onPressed: () {
-            print("Đăng nhập EEEEEEEEEEEEEEEEE");
-          },
-          text: "Tiếp theo",
-        ),
+          customButton(
+            onPressed: () {
+              print("Đăng nhập EEEEEEEEEEEEEEEEE");
+            },
+            text: "Tiếp theo",
+          ),
 
-        const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-
-        Column(
-          children: [
-            textDangNhap()
-          ],
-        )
-
-      ],
+          Column(children: [textDangNhap()]),
+        ],
+      ),
     );
   }
 
   Widget textDangNhap() {
     return Column(
       children: [
-       Text("Đã có tài khoản? "),
+        Text("Đã có tài khoản? "),
         GestureDetector(
           onTap: () {
             print("Đăng nhập ngay");
