@@ -1,18 +1,32 @@
-import 'package:booking_tour_flutter/app.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
+import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/trip/schedule_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 
+
 void main() async {
-  //set
-  // Khởi tạo binding trước
   WidgetsFlutterBinding.ensureInitialized();
   configureInjectable();
 
   // init firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const MyApp());
+  runApp(const _App());
+}
+
+class _App extends StatelessWidget {
+  const _App();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Booking Tour Flutter',
+      theme: ThemeData(useMaterial3: true),
+      home: const ScheduleTourguideScreen(),
+    );
+  }
 }
