@@ -18,7 +18,7 @@ abstract class CoreService {
   Future<List<FakePostResponse>> getPost();
 
   @GET(
-    "http://tt1220-001-site1.ntempurl.com/Activity?orderBy=Action&sortBy=ASC",
+    RouteApi.getActivities,
   )
   Future<RestResponse> getActivities({
     @Query("locationActivityId") int? locationActivityId,

@@ -195,7 +195,7 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
               Icon(Icons.event_note, size: 64, color: Colors.grey),
               SizedBox(height: 16),
               Text(
-                'Chưa có hoạt động nào',
+                'Không có hoạt động nào',
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
             ],
@@ -308,7 +308,7 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
           (context) => AlertDialog(
             title: const Text('Xác nhận xóa'),
             content: Text(
-              'Bạn có chắc chắn muốn xóa hoạt động "${activity.action}"?',
+              'Bạn có muốn xóa hoạt động "${activity.action}"?',
             ),
             actions: [
               TextButton(
