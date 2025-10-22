@@ -2,10 +2,10 @@ import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:booking_tour_flutter/models/activity.dart';
-import 'package:booking_tour_flutter/models/location_activity.dart';
-import 'package:booking_tour_flutter/models/place.dart';
-import 'package:booking_tour_flutter/models/province.dart';
+import 'package:booking_tour_flutter/domain/activity.dart';
+import 'package:booking_tour_flutter/domain/location_activity.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/province.dart';
 
 class BookingDialog {
   static final _repository = getIt<BookingRepository>();

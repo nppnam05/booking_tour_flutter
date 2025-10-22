@@ -1,7 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
-Widget notToggleInputField(
+Widget notToggleInputFieldNotIcon(
   TextEditingController controller,
   String text,
   Color color,
@@ -9,7 +9,6 @@ Widget notToggleInputField(
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      
       Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
 
       const SizedBox(height: 8.0),
@@ -31,9 +30,6 @@ Widget notToggleInputField(
           ),
 
           hintText: text,
-
-          //  Biểu tượng người dùng
-          suffixIcon: const Icon(Icons.person_outline, color: Colors.grey),
         ),
       ),
     ],

@@ -1,5 +1,5 @@
 
-import '../models/trip.dart';
+import '../domain/trip.dart';
 
 abstract class TripState {}
 

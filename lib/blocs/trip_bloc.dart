@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/trip.dart';
+import '../domain/trip.dart';
 import 'trip_event.dart';
 import 'trip_state.dart';
 
