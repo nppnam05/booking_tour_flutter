@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/theme_manager.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
@@ -28,7 +29,7 @@ class _App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Booking Tour Flutter',
       navigatorKey: AppNavigator.navigatorKey,
-      theme: ThemeData(useMaterial3: true),
+      theme: AppThemes.lightTheme,
       routes: RouteManager.routes,
       initialRoute: RouteName.home,
     );

@@ -16,10 +16,11 @@ class AppThemes {
 
     // AppBar
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.white,
-      foregroundColor: AppColors.textPrimary,
+      backgroundColor: AppColors.backgroundAppBarTheme,
+      foregroundColor: AppColors.white,
       elevation: 0,
       centerTitle: true,
+      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     ),
 
     // Text Theme
@@ -46,7 +47,7 @@ class AppThemes {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
-        textStyle: AppFonts.text16,
+        textStyle: AppFonts.text16.copyWith(color: AppColors.white),
       ),
     ),
 
