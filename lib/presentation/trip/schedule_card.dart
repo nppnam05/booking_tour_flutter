@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/schedule.dart';
+import '../../domain/schedule.dart';
 
 class ScheduleCard extends StatelessWidget {
   final Schedule trip;

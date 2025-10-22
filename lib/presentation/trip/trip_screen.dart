@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/trip_bloc.dart';
 import '../../blocs/trip_event.dart';
 import '../../blocs/trip_state.dart';
-import '../../models/trip.dart';
+import '../../domain/trip.dart';
 import '../../presentation/widgets_dialog/dialog_noti.dart';
 import 'trip_card.dart';
 

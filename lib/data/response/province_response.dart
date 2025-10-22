@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/models/province.dart';
+import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'province_response.g.dart';

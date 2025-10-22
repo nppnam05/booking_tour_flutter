@@ -1,6 +1,6 @@
-import 'package:booking_tour_flutter/data/reponse/province_response.dart';
-import 'package:booking_tour_flutter/models/place.dart';
-import 'package:booking_tour_flutter/models/province.dart';
+import 'package:booking_tour_flutter/data/response/province_response.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'place_response.g.dart';

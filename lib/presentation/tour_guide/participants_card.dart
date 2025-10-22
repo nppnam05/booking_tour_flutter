@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:booking_tour_flutter/models/participants.dart';
+import 'package:booking_tour_flutter/domain/participants.dart';
 
 class ParticipantCard extends StatelessWidget {
   final Participant participant;
