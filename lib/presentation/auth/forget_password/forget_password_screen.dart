@@ -5,7 +5,7 @@ import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/auth/forget_password/cubit/forget_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
-import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field.dart';
+import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field_ic.dart';
 import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +48,7 @@ class ForgetPasswordScreen extends StatelessWidget {
 
           const SizedBox(height: 50),
 
-          notToggleInputField(_controllerEmail, "Email", Colors.grey.shade100),
+          notToggleInputFieldNotIcon(_controllerEmail, "Email", Colors.grey.shade100),
 
           const SizedBox(height: 30),
 

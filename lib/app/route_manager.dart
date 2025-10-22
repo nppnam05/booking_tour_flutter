@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/forget_password/forget_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/register/register_screen.dart';
@@ -27,6 +28,7 @@ class RouteName {
   static final forgetPassword = "forget_password";
   static final authOtp = "auth_otp";
   static final changePassword = "change_password";
+  static final authOtpChangePassword = "auth_otp_change_password";
 }
 
 class RouteManager {
@@ -45,5 +47,6 @@ class RouteManager {
     RouteName.forgetPassword: (context) => ForgetPasswordScreen(),
     RouteName.authOtp: (context) => AuthOtpScreen(),
     RouteName.changePassword: (context) => ChangePasswordScreen(),
+    RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
   };
 }

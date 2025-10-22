@@ -8,7 +8,7 @@ import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AuthOtpScreen extends StatelessWidget {
+class AuthOtpChangePasswordScreen extends StatelessWidget {
   final _cubit = AuthOtpCubit()..syncPost();
 
   final time = 59;
