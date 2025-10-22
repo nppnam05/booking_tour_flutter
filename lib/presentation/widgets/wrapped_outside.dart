@@ -17,7 +17,7 @@ Widget wrappedOutside(BuildContext context, Widget column) {
 
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withAlpha(76),
+          color: Colors.grey.withAlpha(150),
           spreadRadius: 5,
           blurRadius: 10,
           offset: const Offset(0, 3),
