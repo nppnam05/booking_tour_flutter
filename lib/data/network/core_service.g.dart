@@ -52,6 +52,33 @@ class _CoreService implements CoreService {
     return _value;
   }
 
+  @override
+  Future<ActivityResponse> getActivities(String action) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'action': action};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ActivityResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'http://tt1220-001-site1.ntempurl.com/Activity?orderBy=h&sortBy=ASC',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ActivityResponse _value;
+    try {
+      _value = ActivityResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

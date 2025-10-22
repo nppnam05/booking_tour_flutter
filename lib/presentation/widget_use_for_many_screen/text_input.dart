@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../app/dependency_injection/theme/app_color.dart';
 
 class TextInput extends StatelessWidget {
@@ -7,6 +6,7 @@ class TextInput extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
+  final String? Function(String?)? validator;
 
   const TextInput({
     super.key,
@@ -14,6 +14,7 @@ class TextInput extends StatelessWidget {
     required this.hintText,
     this.controller,
     this.onChanged,
+    this.validator,
   });
 
   @override
@@ -35,6 +36,7 @@ class TextInput extends StatelessWidget {
         TextFormField(
           controller: controller,
           onChanged: onChanged,
+          validator: validator,
           decoration: InputDecoration(
             hintText: hintText,
             contentPadding: const EdgeInsets.symmetric(
@@ -47,6 +49,14 @@ class TextInput extends StatelessWidget {
                 color: AppColors.secondary,
                 width: 1.0,
               ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4.0),
+              borderSide: const BorderSide(color: Colors.red, width: 1.0),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4.0),
+              borderSide: const BorderSide(color: Colors.red, width: 2.0),
             ),
           ),
         ),

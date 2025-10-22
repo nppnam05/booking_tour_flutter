@@ -9,6 +9,7 @@ class DropDownWidget<T> extends StatefulWidget {
   final ValueChanged<T?> onChanged;
   final T? value;
   final String? hintText;
+  final String? Function(T?)? validator;
 
   const DropDownWidget({
     super.key,
@@ -18,6 +19,7 @@ class DropDownWidget<T> extends StatefulWidget {
     required this.onChanged,
     this.value,
     this.hintText,
+    this.validator,
   });
 
   @override
@@ -25,6 +27,8 @@ class DropDownWidget<T> extends StatefulWidget {
 }
 
 class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
+  String? errorText;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,31 +44,57 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
             ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.secondary.withOpacity(0.4)),
-            borderRadius: BorderRadius.circular(8),
-            color: AppColors.white,
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<T>(
-              dropdownColor: AppColors.white,
-              value: widget.value,
-              hint: Text(
-                widget.hintText ?? 'Chọn ${widget.title.toLowerCase()}',
-              ),
-              isExpanded: true,
-              items:
-                  widget.options.map((T item) {
-                    return DropdownMenuItem<T>(
-                      value: item,
-                      child: Text(widget.itemToString(item)),
-                    );
-                  }).toList(),
-              onChanged: widget.onChanged,
-            ),
-          ),
+        FormField<T>(
+          validator: widget.validator,
+          builder: (FormFieldState<T> state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color:
+                          state.hasError
+                              ? Colors.red
+                              : AppColors.secondary.withOpacity(0.4),
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.white,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<T>(
+                      dropdownColor: AppColors.white,
+                      value: widget.value,
+                      hint: Text(
+                        widget.hintText ?? 'Chọn ${widget.title.toLowerCase()}',
+                      ),
+                      isExpanded: true,
+                      items:
+                          widget.options.map((T item) {
+                            return DropdownMenuItem<T>(
+                              value: item,
+                              child: Text(widget.itemToString(item)),
+                            );
+                          }).toList(),
+                      onChanged: (T? value) {
+                        widget.onChanged(value);
+                        state.didChange(value);
+                      },
+                    ),
+                  ),
+                ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12, top: 8),
+                    child: Text(
+                      state.errorText ?? '',
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ],
     );

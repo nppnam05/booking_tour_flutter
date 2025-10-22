@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/data/network/router.dart';
+import 'package:booking_tour_flutter/data/reponse/activity_response.dart';
 import 'package:booking_tour_flutter/data/reponse/fake_post_response.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -13,4 +15,7 @@ abstract class CoreService {
 
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
+
+  @GET(RouteApi.getActivity)
+  Future<ActivityResponse> getActivities(@Query("action") String action);
 }

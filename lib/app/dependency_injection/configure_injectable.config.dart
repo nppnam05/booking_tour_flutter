@@ -16,6 +16,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import '../../data/booking_repository.dart' as _i249;
 import '../../data/network/core_service.dart' as _i849;
 import '../../data/network/dio/dio_manager.dart' as _i967;
+import '../../data/repository/booking_repository.dart' as _i361;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 _i174.GetIt $initGetIt(
@@ -27,6 +28,9 @@ _i174.GetIt $initGetIt(
   final dioManager = _$DioManager();
   gh.factory<_i361.Dio>(() => dioManager.createDio());
   gh.factory<_i849.CoreService>(() => _i849.CoreService(gh<_i361.Dio>()));
+  gh.lazySingleton<_i361.BookingRepository>(
+    () => _i361.BookingRepositoryImp(gh<_i849.CoreService>()),
+  );
   gh.singleton<_i249.BookingRepository>(
     () => _i249.BookingRepositoryImp(gh<_i849.CoreService>()),
   );
