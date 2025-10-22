@@ -1,12 +1,10 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/widget/dialog_hoat_dong.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/cubit/hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/cubit/hoat_dong_state.dart';
-import 'package:booking_tour_flutter/models/activity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class HoatDongScreen extends StatefulWidget {
   const HoatDongScreen({super.key});
@@ -18,6 +16,7 @@ class HoatDongScreen extends StatefulWidget {
 class _HoatDongScreenState extends State<HoatDongScreen> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  final _cubit = HoatDongCubit();
 
   @override
   void initState() {
@@ -28,16 +27,14 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();
+    _cubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-              HoatDongCubit(GetIt.instance<BookingRepository>())
-                ..loadActivities(),
+    return BlocProvider.value(
+      value: _cubit..loadActivities(),
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -56,6 +53,14 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
         backgroundColor: AppColors.white,
         body: BlocConsumer<HoatDongCubit, HoatDongState>(
           listener: (context, state) {
+            if (state is HoatDongSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }
             if (state is HoatDongError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -63,14 +68,6 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
                   backgroundColor: Colors.red,
                 ),
               );
-            } else if (state is HoatDongSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              context.read<HoatDongCubit>().clearSuccess();
             }
           },
           builder: (context, state) {
@@ -84,32 +81,6 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
                   children: [
                     if (state is HoatDongLoading)
                       const LinearProgressIndicator(),
-
-                    if (state is HoatDongLoaded && state.error != null)
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        color: Colors.red.withOpacity(0.1),
-                        child: Row(
-                          children: [
-                            Icon(Icons.error, color: Colors.red),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                state.error!,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close, color: Colors.red),
-                              onPressed: () {
-                                context.read<HoatDongCubit>().clearError();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-
                     Expanded(
                       child: Container(
                         color: AppColors.secondary.withOpacity(0.2),
@@ -160,30 +131,6 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state is HoatDongError) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(
-              state.message,
-              style: const TextStyle(color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                context.read<HoatDongCubit>().loadActivities();
-              },
-              child: const Text('Thử lại'),
-            ),
-          ],
-        ),
-      );
-    }
-
     if (state is HoatDongLoaded) {
       final activities = state.activities;
 
@@ -205,9 +152,10 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
 
       return RefreshIndicator(
         onRefresh: () async {
-          await context.read<HoatDongCubit>().refreshActivities();
+          await _cubit.refreshActivities();
         },
         child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: activities.length,
           itemBuilder: (context, index) {
             final activity = activities[index];
@@ -307,9 +255,7 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
       builder:
           (context) => AlertDialog(
             title: const Text('Xác nhận xóa'),
-            content: Text(
-              'Bạn có muốn xóa hoạt động "${activity.action}"?',
-            ),
+            content: Text('Bạn có muốn xóa hoạt động "${activity.action}"?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),

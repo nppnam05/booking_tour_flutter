@@ -1,5 +1,5 @@
+import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:equatable/equatable.dart';
-import 'package:booking_tour_flutter/models/activity.dart';
 
 abstract class HoatDongState extends Equatable {
   const HoatDongState();
@@ -70,10 +70,7 @@ class HoatDongSuccess extends HoatDongState {
   final String message;
   final List<Activity> activities;
 
-  const HoatDongSuccess({
-    required this.message,
-    required this.activities,
-  });
+  const HoatDongSuccess({required this.message, required this.activities});
 
   @override
   List<Object?> get props => [message, activities];

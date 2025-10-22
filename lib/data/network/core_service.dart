@@ -1,7 +1,7 @@
-import 'package:booking_tour_flutter/data/response/activity_response.dart';
+import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
-import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
+import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -17,14 +17,15 @@ abstract class CoreService {
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
 
-  @GET(
-    RouteApi.getActivities,
-  )
+  @GET("/Activity")
   Future<RestResponse> getActivities({
     @Query("locationActivityId") int? locationActivityId,
     @Query("orderBy") String sortBy = "Action",
     @Query("sortBy") String order = "ASC",
   });
+
+  @POST("/Activity")
+  Future<AddActivityResponse> addActivity(@Body() AddActivityRequest request);
 
   @GET("/Location")
   Future<RestResponse> getProvinces();

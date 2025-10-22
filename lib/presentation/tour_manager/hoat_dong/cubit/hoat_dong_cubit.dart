@@ -1,54 +1,64 @@
+import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:booking_tour_flutter/models/activity.dart';
+import 'package:get_it/get_it.dart';
 import 'hoat_dong_state.dart';
 
 class HoatDongCubit extends Cubit<HoatDongState> {
-  final BookingRepository _repository;
+  static final _repository = GetIt.instance<BookingRepository>();
 
-  HoatDongCubit(this._repository) : super(HoatDongInitial());
+  HoatDongCubit() : super(HoatDongInitial());
 
   // Lấy danh sách hoạt động
   Future<void> loadActivities() async {
     emit(HoatDongLoading());
 
-    final result = await _repository.getActivities();
+    try {
+      final result = await _repository.getActivities();
 
-    result.fold(
-      (failure) => emit(HoatDongError(message: failure.message)),
-      (activities) => emit(HoatDongLoaded(activities: activities)),
-    );
+      result.fold(
+        (failure) => emit(HoatDongError(message: failure.message)),
+        (activities) => emit(HoatDongLoaded(activities: activities)),
+      );
+    } catch (e) {
+      emit(
+        HoatDongError(message: 'Có lỗi xảy ra khi tải danh sách hoạt động: $e'),
+      );
+    }
   }
 
+  // Thêm hoạt động mới
   Future<void> addActivity(String action) async {
     if (state is! HoatDongLoaded) return;
 
     final currentState = state as HoatDongLoaded;
-    emit(currentState.copyWith(isLoading: true, error: null));
+    emit(currentState.copyWith(isLoading: true));
 
     try {
-      // TODO: Thêm API call để tạo activity mới
-      // Hiện tại chỉ thêm vào danh sách local
-      final newActivity = Activity(
-        id: DateTime.now().millisecondsSinceEpoch, // Temporary ID
-        action: action,
-      );
+      final result = await _repository.postActivity(action);
 
-      final updatedActivities = [...currentState.activities, newActivity];
-      emit(
-        HoatDongSuccess(
-          message: 'Thêm hoạt động thành công',
-          activities: updatedActivities,
-        ),
+      result.fold(
+        (failure) {
+          emit(HoatDongError(message: failure.message));
+          emit(currentState.copyWith(isLoading: false));
+        },
+        (activities) async {
+          emit(
+            HoatDongSuccess(
+              message: 'Thêm hoạt động thành công',
+              activities: currentState.activities,
+            ),
+          );
+          await loadActivities();
+        },
       );
-
-      await Future.delayed(const Duration(milliseconds: 500));
-      await loadActivities();
     } catch (e) {
+      emit(HoatDongError(message: 'Có lỗi xảy ra khi thêm hoạt động: $e'));
       emit(currentState.copyWith(isLoading: false));
     }
   }
 
+  // Cập nhật hoạt động
   Future<void> updateActivity(int activityId, String newAction) async {
     if (state is! HoatDongLoaded) return;
 
@@ -72,14 +82,19 @@ class HoatDongCubit extends Cubit<HoatDongState> {
           activities: updatedActivities,
         ),
       );
-
       await Future.delayed(const Duration(milliseconds: 500));
       await loadActivities();
     } catch (e) {
-      emit(currentState.copyWith(isLoading: false));
+      emit(
+        currentState.copyWith(
+          isLoading: false,
+          error: 'Có lỗi xảy ra khi cập nhật hoạt động: $e',
+        ),
+      );
     }
   }
 
+  // Xóa hoạt động
   Future<void> deleteActivity(int activityId) async {
     if (state is! HoatDongLoaded) return;
 
@@ -100,17 +115,30 @@ class HoatDongCubit extends Cubit<HoatDongState> {
           activities: updatedActivities,
         ),
       );
+
+      // Sau khi thành công, load lại danh sách
       await Future.delayed(const Duration(milliseconds: 500));
       await loadActivities();
     } catch (e) {
-      emit(currentState.copyWith(isLoading: false));
+      emit(
+        currentState.copyWith(
+          isLoading: false,
+          error: 'Có lỗi xảy ra khi xóa hoạt động: $e',
+        ),
+      );
     }
   }
 
+  // Làm mới danh sách
   Future<void> refreshActivities() async {
-    await loadActivities();
+    try {
+      await loadActivities();
+    } catch (e) {
+      emit(HoatDongError(message: 'Lỗi khi tải lại danh sách: $e'));
+    }
   }
 
+  // Xóa thông báo lỗi
   void clearError() {
     if (state is HoatDongLoaded) {
       final currentState = state as HoatDongLoaded;
@@ -118,6 +146,7 @@ class HoatDongCubit extends Cubit<HoatDongState> {
     }
   }
 
+  // Xóa thông báo thành công
   void clearSuccess() {
     if (state is HoatDongSuccess) {
       final successState = state as HoatDongSuccess;

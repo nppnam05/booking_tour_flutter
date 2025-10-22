@@ -54,7 +54,7 @@ class RouteManager {
     RouteName.themLichTrinh: (context) => ThemLichTrinhScreen(),
     RouteName.chiTietLichTrinh: (context) => ChiTietTrinhScreen(),
     RouteName.test: (context) => TestScreen(),
-    RouteName.danhSachHoatDong: (context) => DanhSachHoatDongScreen(),
+    //RouteName.danhSachHoatDong: (context) => DanhSachHoatDongScreen(),
     RouteName.themDiaDiemHoatDong: (context) => ThemDiaDiemHoatDongScreen(),
     RouteName.suaDiaDiemHoatDong: (context) => SuaDiaDiemHoatDongScreen(),
     RouteName.hoatDong: (context) => HoatDongScreen(),
@@ -64,6 +64,6 @@ class RouteManager {
     RouteName.authOtp: (context) => AuthOtpScreen(),
     RouteName.changePassword: (context) => ChangePasswordScreen(),
     RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
-    RouteName.addTour: (context) => AddTourScreen()
+    RouteName.addTour: (context) => AddTourScreen(),
   };
 }
