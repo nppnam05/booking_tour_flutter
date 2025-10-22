@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+import '../presentation/widgets_dialog/generic_selected_dialog.dart';
+
+class DialogHelper {
+  /// Single select: returns T?
+  static Future<T?> selectOne<T>({
+    required BuildContext context,
+    required String title,
+    required List<T> items,
+    required String Function(T item) display,
+    String searchHint = 'Tìm địa điểm',
+    String confirmText = 'Xác nhận',
+    String cancelText = 'Hủy',
+    T? initial,
+  }) async {
+    return showDialog<T>(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (_) => SelectionDialog<T>(
+            title: title,
+            items: items,
+            display: display,
+            searchHint: searchHint,
+            confirmText: confirmText,
+            cancelText: cancelText,
+            isMultiSelect: false,
+            preSelectedItems: initial == null ? const [] : [initial],
+          ),
+    );
+  }
+
+  static Future<List<T>> selectMany<T>({
+    required BuildContext context,
+    required String title,
+    required List<T> items,
+    required String Function(T item) display,
+    String searchHint = 'Tìm địa điểm',
+    String confirmText = 'Xác nhận',
+    String cancelText = 'Hủy',
+    List<T> initial = const [],
+  }) async {
+    final result = await showDialog<List<T>>(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (_) => SelectionDialog<T>(
+            title: title,
+            items: items,
+            display: display,
+            searchHint: searchHint,
+            confirmText: confirmText,
+            cancelText: cancelText,
+            isMultiSelect: true,
+            preSelectedItems: initial,
+          ),
+    );
+    return result ?? <T>[];
+  }
+}

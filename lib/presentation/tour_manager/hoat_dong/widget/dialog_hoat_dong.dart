@@ -11,6 +11,7 @@ class DialogHoatDong extends StatefulWidget {
   final bool showCancelButton;
   final bool showInput;
   final String? hintText;
+  final String? initialValue;
 
   const DialogHoatDong({
     super.key,
@@ -23,6 +24,7 @@ class DialogHoatDong extends StatefulWidget {
     this.showCancelButton = true,
     this.showInput = false,
     this.hintText,
+    this.initialValue,
   });
 
   @override
@@ -41,6 +43,7 @@ class DialogHoatDong extends StatefulWidget {
     bool showCancelButton = true,
     bool showInput = false,
     String? hintText,
+    String? initialValue,
   }) {
     return showDialog<bool>(
       context: context,
@@ -56,6 +59,7 @@ class DialogHoatDong extends StatefulWidget {
             showCancelButton: showCancelButton,
             showInput: showInput,
             hintText: hintText,
+            initialValue: initialValue,
           ),
     );
   }
@@ -67,7 +71,7 @@ class _DialogHoatDongState extends State<DialogHoatDong> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    _controller = TextEditingController(text: widget.initialValue ?? '');
   }
 
   @override

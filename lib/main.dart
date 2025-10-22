@@ -1,18 +1,34 @@
-import 'package:booking_tour_flutter/app.dart';
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/theme_manager.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  //set
-  // Khởi tạo binding trước
   WidgetsFlutterBinding.ensureInitialized();
+
   configureInjectable();
 
   // init firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const MyApp());
+  runApp(const _App());
+}
+
+class _App extends StatelessWidget {
+  const _App();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Booking Tour Flutter',
+      navigatorKey: AppNavigator.navigatorKey,
+      theme: AppThemes.lightTheme,
+      routes: RouteManager.routes,
+      initialRoute: RouteName.hoatDong,
+    );
+  }
 }

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 class AppColors {
   AppColors._();
   static const primary = Color(0xFF42B1F5);
@@ -29,4 +31,7 @@ class AppColors {
   static const Color warning = Color(0xFFE4E178);
   static const Color success = Color(0xFF98DB7B);
   static const Color button = Color(0xFF23A892);
+  static const Color delete = Colors.red;
+
+  static const Color backgroundAppBarTheme = Color(0xFF23A892);
 }
