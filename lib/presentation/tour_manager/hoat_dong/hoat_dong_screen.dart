@@ -255,7 +255,7 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
       builder:
           (context) => AlertDialog(
             title: const Text('Xác nhận xóa'),
-            content: Text('Bạn có muốn xóa hoạt động "${activity.action}"?'),
+            content: Text('Bạn có muốn xóa hoạt động ${activity.action}?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -264,7 +264,7 @@ class _HoatDongScreenState extends State<HoatDongScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  context.read<HoatDongCubit>().deleteActivity(activity.id);
+                  _cubit.deleteActivity(activity.id);
                 },
                 child: const Text('Xóa', style: TextStyle(color: Colors.red)),
               ),

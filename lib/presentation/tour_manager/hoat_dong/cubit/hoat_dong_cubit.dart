@@ -1,4 +1,3 @@
-import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -34,28 +33,23 @@ class HoatDongCubit extends Cubit<HoatDongState> {
     final currentState = state as HoatDongLoaded;
     emit(currentState.copyWith(isLoading: true));
 
-    try {
-      final result = await _repository.postActivity(action);
+    final result = await _repository.postActivity(action);
 
-      result.fold(
-        (failure) {
-          emit(HoatDongError(message: failure.message));
-          emit(currentState.copyWith(isLoading: false));
-        },
-        (activities) async {
-          emit(
-            HoatDongSuccess(
-              message: 'Thêm hoạt động thành công',
-              activities: currentState.activities,
-            ),
-          );
-          await loadActivities();
-        },
-      );
-    } catch (e) {
-      emit(HoatDongError(message: 'Có lỗi xảy ra khi thêm hoạt động: $e'));
-      emit(currentState.copyWith(isLoading: false));
-    }
+    result.fold(
+      (failure) {
+        emit(HoatDongError(message: failure.message));
+        emit(currentState.copyWith(isLoading: false));
+      },
+      (activities) async {
+        emit(
+          HoatDongSuccess(
+            message: 'Thêm hoạt động thành công',
+            activities: currentState.activities,
+          ),
+        );
+        await loadActivities();
+      },
+    );
   }
 
   // Cập nhật hoạt động
@@ -65,33 +59,22 @@ class HoatDongCubit extends Cubit<HoatDongState> {
     final currentState = state as HoatDongLoaded;
     emit(currentState.copyWith(isLoading: true, error: null));
 
-    try {
-      // TODO: Thêm API call để cập nhật activity
-      // Hiện tại chỉ cập nhật danh sách local
-      final updatedActivities =
-          currentState.activities.map((activity) {
-            if (activity.id == activityId) {
-              return Activity(id: activity.id, action: newAction);
-            }
-            return activity;
-          }).toList();
+    final result = await _repository.putActivity(activityId, newAction);
 
-      emit(
-        HoatDongSuccess(
-          message: 'Cập nhật hoạt động thành công',
-          activities: updatedActivities,
-        ),
-      );
-      await Future.delayed(const Duration(milliseconds: 500));
-      await loadActivities();
-    } catch (e) {
-      emit(
-        currentState.copyWith(
-          isLoading: false,
-          error: 'Có lỗi xảy ra khi cập nhật hoạt động: $e',
-        ),
-      );
-    }
+    result.fold(
+      (failure) {
+        emit(currentState.copyWith(isLoading: false, error: failure.message));
+      },
+      (activities) async {
+        emit(
+          HoatDongSuccess(
+            message: 'Cập nhật hoạt động thành công',
+            activities: currentState.activities,
+          ),
+        );
+        await loadActivities();
+      },
+    );
   }
 
   // Xóa hoạt động
@@ -101,41 +84,32 @@ class HoatDongCubit extends Cubit<HoatDongState> {
     final currentState = state as HoatDongLoaded;
     emit(currentState.copyWith(isLoading: true, error: null));
 
-    try {
-      // TODO: Thêm API call để xóa activity
-      // Hiện tại chỉ xóa khỏi danh sách local
-      final updatedActivities =
-          currentState.activities
-              .where((activity) => activity.id != activityId)
-              .toList();
+    final result = await _repository.deleteActivity(activityId);
 
-      emit(
-        HoatDongSuccess(
-          message: 'Xóa hoạt động thành công',
-          activities: updatedActivities,
-        ),
-      );
-
-      // Sau khi thành công, load lại danh sách
-      await Future.delayed(const Duration(milliseconds: 500));
-      await loadActivities();
-    } catch (e) {
-      emit(
-        currentState.copyWith(
-          isLoading: false,
-          error: 'Có lỗi xảy ra khi xóa hoạt động: $e',
-        ),
-      );
-    }
+    result.fold(
+      (failure) {
+        emit(HoatDongError(message: "Không thể xóa hoạt động"));
+        emit(currentState.copyWith(isLoading: false));
+      },
+      (success) async {
+        if (success) {
+          emit(
+            HoatDongSuccess(
+              message: 'Xóa hoạt động thành công',
+              activities: currentState.activities,
+            ),
+          );
+          await loadActivities();
+        } else {
+          emit(currentState.copyWith(isLoading: false, error: 'Xóa thất bại'));
+        }
+      },
+    );
   }
 
   // Làm mới danh sách
   Future<void> refreshActivities() async {
-    try {
-      await loadActivities();
-    } catch (e) {
-      emit(HoatDongError(message: 'Lỗi khi tải lại danh sách: $e'));
-    }
+    await loadActivities();
   }
 
   // Xóa thông báo lỗi

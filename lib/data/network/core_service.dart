@@ -1,7 +1,10 @@
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -26,6 +29,14 @@ abstract class CoreService {
 
   @POST("/Activity")
   Future<AddActivityResponse> addActivity(@Body() AddActivityRequest request);
+
+  @PUT("/Activity")
+  Future<PutActivityResponse> updateActivity(
+    @Body() FixActivityRequest request,
+  );
+
+  @DELETE("/Activity/{id}")
+  Future<DeleteActivityResponse> deleteActivity(@Path("id") int id);
 
   @GET("/Location")
   Future<RestResponse> getProvinces();
