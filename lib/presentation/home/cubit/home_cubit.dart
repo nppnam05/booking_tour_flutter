@@ -5,12 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   static final bookingRepository = getIt<BookingRepository>();
-  HomeCubit() : super(HomeState(posts: []));
+  HomeCubit() : super(HomeState(activities: []));
 
   Future<void> syncPost() async {
-    var result = await bookingRepository.getPost();
-    result.fold((failure) {}, (posts) {
-      emit(state.copyWith(posts: posts));
+    var result = await bookingRepository.getActivities();
+
+    result.fold((failure) {}, (activities) {
+      emit(state.copyWith(activities: activities));
     });
   }
 }
