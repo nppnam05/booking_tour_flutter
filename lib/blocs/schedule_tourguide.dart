@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/schedule_tourguide.dart';
+import '../domain/schedule_tourguide.dart';
 import '../blocs/schedule_tourguide_sate.dart';
 import '../presentation/tour_guide/participants_screen.dart';
 

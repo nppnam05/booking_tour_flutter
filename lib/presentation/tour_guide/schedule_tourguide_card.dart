@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/schedule_tourguide.dart';
+import '../../domain/schedule_tourguide.dart';
 import '../tour_guide/participants_screen.dart';
 
 class ScheduleTourguideCard extends StatelessWidget {

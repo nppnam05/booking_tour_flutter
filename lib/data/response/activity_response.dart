@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/models/activity.dart';
+import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'activity_response.g.dart';

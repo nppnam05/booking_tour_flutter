@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/models/participants.dart';
+import 'package:booking_tour_flutter/domain/participants.dart';
 
 abstract class ParticipantsState {}
 
