@@ -23,7 +23,9 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        body: Center(child: wrappedOutside(context, columnOfWidget())),
+        body: SingleChildScrollView(
+          child: Center(child: wrappedOutside(context, columnOfWidget())),
+        ),
       ),
     );
   }
@@ -59,7 +61,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 12),
               ToggleInputField(
                 controller: _controllerPassword,
-                text: "Mật khẩu",
+                title: "Mật khẩu",
                 color: Colors.grey.shade100,
               ),
             ],
@@ -104,7 +106,6 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(fontWeight: AppFonts.fontWeight700),
             ),
             InkWell(
-
               // qua màn Đăng ký
               onTap: () {
                 Navigator.pushNamed(context, RouteName.register);
@@ -124,7 +125,6 @@ class LoginScreen extends StatelessWidget {
         ),
 
         InkWell(
-
           // qua màn quên mật khẩu
           onTap: () {
             Navigator.pushNamed(context, RouteName.forgetPassword);
