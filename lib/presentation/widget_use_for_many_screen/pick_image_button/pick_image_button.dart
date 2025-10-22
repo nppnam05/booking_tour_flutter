@@ -9,6 +9,7 @@ class PickImageButton extends StatelessWidget {
   final String text;
   final bool allowMultiple;
   final int maxImages;
+  final PickImageButtonCubit? cubit;
 
   const PickImageButton({
     super.key,
@@ -16,16 +17,19 @@ class PickImageButton extends StatelessWidget {
     this.text = 'Chọn Ảnh',
     this.allowMultiple = false,
     this.maxImages = 3,
+    this.cubit,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create:
-          (context) => PickImageButtonCubit(
-            allowMultiple: allowMultiple,
-            maxImages: maxImages,
-          ),
+          (context) =>
+              cubit ??
+              PickImageButtonCubit(
+                allowMultiple: allowMultiple,
+                maxImages: maxImages,
+              ),
       child: BlocConsumer<PickImageButtonCubit, PickImageButtonState>(
         listener: (context, state) {
           if (state.error != null) {
