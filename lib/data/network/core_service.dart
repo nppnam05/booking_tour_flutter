@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/data/reponse/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/reponse/location_response.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -13,4 +14,7 @@ abstract class CoreService {
 
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
+
+  @GET("/Location")
+  Future<List<LocationResponse>> getLocations();
 }

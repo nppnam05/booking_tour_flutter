@@ -9,10 +9,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.grey),
       navigatorKey: AppNavigator.navigatorKey,
       routes: RouteManager.routes,
-      initialRoute: RouteName.chiTietLichTrinh,
+      initialRoute: RouteName.danhSachLichTrinh,
     );
   }
 }
