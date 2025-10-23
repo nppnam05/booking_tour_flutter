@@ -16,5 +16,5 @@ abstract class CoreService {
   Future<List<FakePostResponse>> getPost();
 
   @GET("/Location")
-  Future<List<LocationResponse>> getLocations();
+  Future<LocationListResponse> getLocations();
 }

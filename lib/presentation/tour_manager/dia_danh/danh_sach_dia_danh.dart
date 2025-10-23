@@ -37,10 +37,10 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
           centerTitle: true,
         ),
         drawer: DrawerBar(),
+        
         body: BlocBuilder<DiaDanhCubit, DiaDanhState>(
+          bloc: _cubit, 
           builder: (context, state) {
-            final danhSachTinhThanh = state.locations;
-            print("danh sach ${danhSachTinhThanh.length}");
             return Column(
               children: [
                 Container(
@@ -51,7 +51,7 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       _buildSearch(),
-                      _buildTinhThanh(danhSachTinhThanh),
+                      _buildTinhThanh(state.locations, state.selectedLocation, (value){context.read<DiaDanhCubit>().selectLocation(value);} ),
                     ],
                   ),
                 ),
@@ -61,6 +61,7 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: danhSachDiaDanh.length,
                       itemBuilder: (context, index) {
+                        
                         final tour = danhSachDiaDanh[index];
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12),
@@ -100,18 +101,16 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTinhThanh(List<Location> danhSachTinhThanh) {
-    String? selectedProvince;
+  Widget _buildTinhThanh(List<Location> danhSachTinhThanh,Location? selectedProvince, ValueChanged<Location?> onChanged) {
 
     return Padding(
       padding: EdgeInsetsGeometry.all(12),
       child: DropDownWidget(
         title: "Tỉnh",
         options: danhSachTinhThanh,
+        value: selectedProvince,
         itemToString: (item) => item.name,
-        onChanged: (value) {
-          selectedProvince = value!.name;
-        },
+        onChanged: onChanged,
       ),
     );
   }

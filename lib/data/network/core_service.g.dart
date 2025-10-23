@@ -53,12 +53,12 @@ class _CoreService implements CoreService {
   }
 
   @override
-  Future<List<LocationResponse>> getLocations() async {
+  Future<LocationListResponse> getLocations() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<LocationResponse>>(
+    final _options = _setStreamType<LocationListResponse>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -68,16 +68,10 @@ class _CoreService implements CoreService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<LocationResponse> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late LocationListResponse _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) =>
-                    LocationResponse.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = LocationListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

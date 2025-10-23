@@ -3,7 +3,17 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'location_response.g.dart';
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
+class LocationListResponse {
+  final List<LocationResponse>? data;
+
+  LocationListResponse({this.data});
+
+  factory LocationListResponse.fromJson(Map<String, dynamic> json) =>
+      _$LocationListResponseFromJson(json);
+}
+
+@JsonSerializable()
 class LocationResponse {
   @JsonKey(name: "id")
   final int? locationId;
@@ -17,6 +27,13 @@ class LocationResponse {
   factory LocationResponse.fromJson(Map<String, dynamic> json) =>
       _$LocationResponseFromJson(json);
 
+}
+
+extension LocationResponseDataMap on LocationListResponse {
+  List<Location> map() {
+    var list = data?.map((i) => i.map()).toList() ?? [];
+    return list;
+  }
 }
 
 extension LocationResponseMap on LocationResponse{

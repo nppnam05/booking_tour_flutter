@@ -38,10 +38,8 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       
       var response = await _coreService.getLocations();
-      
-      return Right(response.map((respons) => respons.map()).toList());
+      return Right(response.map());
     } catch (e) {
-      print("hihi");
       return Left(ErrorHandler.handle(e).failure);
     }
   }
