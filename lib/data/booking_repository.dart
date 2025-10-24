@@ -11,6 +11,7 @@ import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/add_place_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:dartz/dartz.dart';
 
@@ -46,6 +47,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Activity>>> postActivity(String action);
   Future<Either<Failure, List<Activity>>> putActivity(int id, String action);
   Future<Either<Failure, bool>> deleteActivity(int id);
+  Future<Either<Failure, Place>> addPlace(AddPlaceRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -53,6 +55,16 @@ class BookingRepositoryImp implements BookingRepository {
   final CoreService _coreService;
 
   BookingRepositoryImp(this._coreService);
+
+  @override
+  Future<Either<Failure, Place>> addPlace(AddPlaceRequest request) async {
+    try {
+      final response = await _coreService.addPlace(request.toJson());
+      return Right(response.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 
   @override
   Future<Either<Failure, bool>> deleteActivity(int id) async {

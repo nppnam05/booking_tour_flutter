@@ -9,6 +9,7 @@ part 'place_response.g.dart';
 class PlaceResponse {
   int? id;
   String? name;
+  @JsonKey(name: 'location')
   ProvinceResponse? province;
 
   PlaceResponse({this.id, this.name, this.province});

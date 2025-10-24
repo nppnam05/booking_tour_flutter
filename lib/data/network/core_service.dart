@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
@@ -55,4 +56,7 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
+
+  @POST("/Place")
+  Future<PlaceResponse> addPlace(@Body() Map<String, dynamic> request);
 }

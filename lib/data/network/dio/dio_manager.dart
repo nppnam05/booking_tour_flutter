@@ -17,7 +17,7 @@ class HTTPValue {
 abstract class DioManager {
   @factoryMethod
   Dio createDio() {
-    final timeout = Duration(seconds: 1);
+    final timeout = Duration(seconds: 10);
 
     final dio = Dio();
 
