@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/cubit/auth_otp_change_password_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/otp_input.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthOtpChangePasswordScreen extends StatelessWidget {
-  final _cubit = AuthOtpCubit()..syncPost();
+  final _cubit = AuthOtpChangePasswordCubit()..syncPost();
 
   final time = 59;
 
