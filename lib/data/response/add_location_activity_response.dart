@@ -1,17 +1,17 @@
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'location_activity_response.g.dart';
+part 'add_location_activity_response.g.dart';
 
 @JsonSerializable()
-class LocationActivityResponse {
+class AddLocationActivityResponse {
   int? id;
   String? name;
   PlaceActivityResponse? place;
 
-  LocationActivityResponse({this.id, this.name, this.place});
+  AddLocationActivityResponse({this.id, this.name, this.place});
 
-  factory LocationActivityResponse.fromJson(Map<String, dynamic> json) =>
-      _$LocationActivityResponseFromJson(json);
+  factory AddLocationActivityResponse.fromJson(Map<String, dynamic> json) =>
+      _$AddLocationActivityResponseFromJson(json);
 }
 
 @JsonSerializable()
@@ -37,7 +37,7 @@ class LocationResponse {
       _$LocationResponseFromJson(json);
 }
 
-extension LocationActivityResponseMapper on LocationActivityResponse {
+extension AddLocationActivityResponseMapper on AddLocationActivityResponse {
   LocationActivity map() {
     return LocationActivity(
       id: id ?? 0,

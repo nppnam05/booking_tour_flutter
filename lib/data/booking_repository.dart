@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/add_location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
@@ -11,6 +12,7 @@ import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_place_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:dartz/dartz.dart';
@@ -29,7 +31,7 @@ abstract class BookingRepository {
     String order = "ASC",
   });
 
-  Future<Either<Failure, List<Province>>> getProvinces();
+  Future<Either<Failure, List<Activities>>> getProvinces();
 
   Future<Either<Failure, List<Place>>> getPlaces({
     List<int> provinceIds = const [],
@@ -48,6 +50,9 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Activity>>> putActivity(int id, String action);
   Future<Either<Failure, bool>> deleteActivity(int id);
   Future<Either<Failure, Place>> addPlace(AddPlaceRequest request);
+  Future<Either<Failure, AddLocationActivityResponse>> addLocationActivities(
+    AddLocationActivityRequest request,
+  );
 }
 
 @Singleton(as: BookingRepository)
@@ -55,6 +60,18 @@ class BookingRepositoryImp implements BookingRepository {
   final CoreService _coreService;
 
   BookingRepositoryImp(this._coreService);
+
+  @override
+  Future<Either<Failure, AddLocationActivityResponse>> addLocationActivities(
+    AddLocationActivityRequest request,
+  ) async {
+    try {
+      final response = await _coreService.addLocationActivities(request);
+      return Right(response);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 
   @override
   Future<Either<Failure, Place>> addPlace(AddPlaceRequest request) async {
@@ -141,7 +158,7 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<Province>>> getProvinces() async {
+  Future<Either<Failure, List<Activities>>> getProvinces() async {
     try {
       var responses = await _coreService.getProvinces();
       var data = responses.data as List<dynamic>;

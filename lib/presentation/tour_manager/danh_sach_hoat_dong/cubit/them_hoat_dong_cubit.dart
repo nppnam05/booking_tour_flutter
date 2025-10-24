@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:booking_tour_flutter/domain/requests/add_place_request.dart';
+import 'package:booking_tour_flutter/domain/activity.dart';
+import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'them_hoat_dong_state.dart';
@@ -10,7 +11,7 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
   Future<void> loadProvinces() async {
     emit(state.copyWith(status: ThemHoatDongStatus.loadingProvinces));
     try {
-      final result = await bookingRepository.getProvinces();
+      final result = await bookingRepository.getActivities();
 
       result.fold(
         (failure) => emit(
@@ -19,10 +20,11 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
             error: failure.message,
           ),
         ),
-        (provinces) => emit(
+        (activities) => emit(
           state.copyWith(
             status: ThemHoatDongStatus.initial,
-            provinces: provinces ?? [],
+            activities: activities,
+            filteredActivities: activities,
           ),
         ),
       );
@@ -33,11 +35,22 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
     }
   }
 
-  Future<void> themHoatDong(String tenDiaDiem, int tinhThanhId) async {
+  Future<void> themHoatDong(
+    String tenDiaDiem,
+    int placeId,
+    List<Activity> selectedActivities,
+  ) async {
     emit(state.copyWith(status: ThemHoatDongStatus.loadingAdd));
     try {
-      final result = await bookingRepository.addPlace(
-        AddPlaceRequest(name: tenDiaDiem, locationId: tinhThanhId),
+      final activityIds =
+          selectedActivities.map((activity) => activity.id).toList();
+
+      final result = await bookingRepository.addLocationActivities(
+        AddLocationActivityRequest(
+          name: tenDiaDiem,
+          placeId: placeId,
+          activityIds: activityIds,
+        ),
       );
 
       result.fold(
@@ -47,12 +60,38 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
             error: failure.message,
           ),
         ),
-        (place) => emit(state.copyWith(status: ThemHoatDongStatus.success)),
+        (locationActivity) =>
+            emit(state.copyWith(status: ThemHoatDongStatus.success)),
       );
     } catch (e) {
       emit(
         state.copyWith(status: ThemHoatDongStatus.failure, error: e.toString()),
       );
     }
+  }
+
+  void searchActivities(String query) {
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          searchQuery: query,
+          filteredActivities: state.activities,
+        ),
+      );
+    } else {
+      final filtered =
+          state.activities
+              .where(
+                (activity) =>
+                    activity.action.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
+
+      emit(state.copyWith(searchQuery: query, filteredActivities: filtered));
+    }
+  }
+
+  void clearSearch() {
+    emit(state.copyWith(searchQuery: '', filteredActivities: state.activities));
   }
 }

@@ -14,7 +14,7 @@ class ProvinceResponse {
 }
 
 extension ProvinceResponseMapper on ProvinceResponse {
-  Province map() {
-    return Province(id: id ?? 0, name: name ?? "");
+  Activities map() {
+    return Activities(id: id ?? 0, name: name ?? "");
   }
 }

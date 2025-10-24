@@ -5,9 +5,9 @@ class BkButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String title;
   final Color? backgroundColor;
-
   final TextStyle? textStyle;
   final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
 
   const BkButton({
     super.key,
@@ -16,6 +16,7 @@ class BkButton extends StatelessWidget {
     this.backgroundColor = AppColors.backgroundAppBarTheme,
     this.textStyle,
     this.padding,
+    this.borderRadius,
   });
 
   @override
@@ -25,6 +26,9 @@ class BkButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         padding: padding,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius ?? 8),
+        ),
       ),
       child: Text(title, style: textStyle),
     );

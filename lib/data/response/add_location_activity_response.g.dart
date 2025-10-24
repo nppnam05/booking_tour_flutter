@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'location_activity_response.dart';
+part of 'add_location_activity_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LocationActivityResponse _$LocationActivityResponseFromJson(
+AddLocationActivityResponse _$AddLocationActivityResponseFromJson(
   Map<String, dynamic> json,
-) => LocationActivityResponse(
+) => AddLocationActivityResponse(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
   place:
@@ -19,8 +19,8 @@ LocationActivityResponse _$LocationActivityResponseFromJson(
           ),
 );
 
-Map<String, dynamic> _$LocationActivityResponseToJson(
-  LocationActivityResponse instance,
+Map<String, dynamic> _$AddLocationActivityResponseToJson(
+  AddLocationActivityResponse instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,

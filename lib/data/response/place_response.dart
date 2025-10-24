@@ -23,7 +23,7 @@ extension PlaceResponseMapper on PlaceResponse {
     return Place(
       id: id ?? 0,
       name: name ?? "",
-      province: province?.map() ?? Province(id: 0, name: ""),
+      province: province?.map() ?? Activities(id: 0, name: ""),
     );
   }
 }

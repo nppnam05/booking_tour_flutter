@@ -1,19 +1,23 @@
-import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'danh_sach_hoat_dong_state.dart';
 
 class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
-  DanhSachHoatDongCubit() : super(const DanhSachHoatDongState()) {
-    getDanhSachHoatDong();
+  DanhSachHoatDongCubit({int? placeId}) : super(const DanhSachHoatDongState()) {
+    getDanhSachHoatDong(placeId: placeId);
   }
 
-  Future<void> getDanhSachHoatDong() async {
+  Future<void> getDanhSachHoatDong({int? placeId}) async {
     emit(state.copyWith(status: DanhSachHoatDongStatus.loading));
     try {
       final bookingRepository = GetIt.instance<BookingRepository>();
-      final result = await bookingRepository.getPlaces();
+      // Hard code placeId = 1 để dễ sửa sau này, hoặc sử dụng placeId được truyền vào
+      final finalPlaceId = placeId ?? 1;
+      final result = await bookingRepository.getLocationActivities(
+        placeId: finalPlaceId,
+      );
       result.fold(
         (failure) => emit(
           state.copyWith(
@@ -21,10 +25,10 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
             error: failure.message,
           ),
         ),
-        (places) => emit(
+        (locationActivities) => emit(
           state.copyWith(
             status: DanhSachHoatDongStatus.success,
-            danhSachHoatDong: places,
+            danhSachHoatDong: locationActivities,
           ),
         ),
       );
@@ -38,11 +42,15 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
     }
   }
 
-  Future<void> suaHoatDong(String tenDiaDiem, String tinhThanh) async {
+  Future<void> suaHoatDong(
+    String tenHoatDong,
+    String tenDiaDiem,
+    String tinhThanh,
+  ) async {
     emit(state.copyWith(status: DanhSachHoatDongStatus.loading));
     try {
-      final selectedPlace = state.selectedPlace;
-      if (selectedPlace == null) {
+      final selectedLocationActivity = state.selectedLocationActivity;
+      if (selectedLocationActivity == null) {
         emit(
           state.copyWith(
             status: DanhSachHoatDongStatus.failure,
@@ -52,7 +60,7 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
         return;
       }
 
-      // TODO: Implement API call to update place
+      // TODO: Implement API call to update location activity
       await getDanhSachHoatDong();
     } catch (e) {
       emit(
@@ -64,37 +72,11 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
     }
   }
 
-  Future<void> xoaHoatDong() async {
-    emit(state.copyWith(status: DanhSachHoatDongStatus.loading));
-    try {
-      final selectedPlace = state.selectedPlace;
-      if (selectedPlace == null) {
-        emit(
-          state.copyWith(
-            status: DanhSachHoatDongStatus.failure,
-            error: 'Không tìm thấy dữ liệu để xóa',
-          ),
-        );
-        return;
-      }
-
-      // TODO: Implement API call to delete place
-      await getDanhSachHoatDong();
-    } catch (e) {
-      emit(
-        state.copyWith(
-          status: DanhSachHoatDongStatus.failure,
-          error: e.toString(),
-        ),
-      );
-    }
+  void setLocationActivitySelected(LocationActivity locationActivity) {
+    emit(state.copyWith(selectedLocationActivity: locationActivity));
   }
 
-  void setPlaceSelected(Place place) {
-    emit(state.copyWith(selectedPlace: place));
-  }
-
-  void clearPlaceSelected() {
-    emit(state.copyWith(selectedPlace: null));
+  void clearLocationActivitySelected() {
+    emit(state.copyWith(selectedLocationActivity: null));
   }
 }

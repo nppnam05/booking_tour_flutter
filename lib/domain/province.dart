@@ -1,6 +1,6 @@
-class Province {
+class Activities {
   int id;
   String name;
 
-  Province({required this.id, required this.name});
+  Activities({required this.id, required this.name});
 }

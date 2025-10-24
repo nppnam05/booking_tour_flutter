@@ -60,6 +60,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                     color: Colors.grey,
                   ),
                   border: InputBorder.none,
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
               ),
             ),

@@ -1,35 +1,35 @@
-import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:equatable/equatable.dart';
 
 enum DanhSachHoatDongStatus { initial, loading, success, failure }
 
 class DanhSachHoatDongState extends Equatable {
-  final List<Place> danhSachHoatDong;
+  final List<LocationActivity> danhSachHoatDong;
   final DanhSachHoatDongStatus status;
   final String? error;
-  final Place? selectedPlace;
+  final LocationActivity? selectedLocationActivity;
 
   const DanhSachHoatDongState({
     this.danhSachHoatDong = const [],
     this.status = DanhSachHoatDongStatus.initial,
     this.error,
-    this.selectedPlace,
+    this.selectedLocationActivity,
   });
 
   DanhSachHoatDongState copyWith({
-    List<Place>? danhSachHoatDong,
+    List<LocationActivity>? danhSachHoatDong,
     DanhSachHoatDongStatus? status,
     String? error,
-    Place? selectedPlace,
+    LocationActivity? selectedLocationActivity,
   }) {
     return DanhSachHoatDongState(
       danhSachHoatDong: danhSachHoatDong ?? this.danhSachHoatDong,
       status: status ?? this.status,
       error: error ?? this.error,
-      selectedPlace: selectedPlace ?? this.selectedPlace,
+      selectedLocationActivity: selectedLocationActivity ?? this.selectedLocationActivity,
     );
   }
 
   @override
-  List<Object?> get props => [danhSachHoatDong, status, error, selectedPlace];
+  List<Object?> get props => [danhSachHoatDong, status, error, selectedLocationActivity];
 }

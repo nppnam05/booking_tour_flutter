@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../app/dependency_injection/theme/app_color.dart';
 
 class TextInput extends StatelessWidget {
-  final String labelText;
+  final String? labelText;
   final String hintText;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
@@ -10,7 +10,7 @@ class TextInput extends StatelessWidget {
 
   const TextInput({
     super.key,
-    required this.labelText,
+    this.labelText,
     required this.hintText,
     this.controller,
     this.onChanged,
@@ -25,7 +25,7 @@ class TextInput extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            labelText,
+            labelText ?? '',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
