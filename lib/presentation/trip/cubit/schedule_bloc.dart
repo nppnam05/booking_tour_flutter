@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/schedule.dart';
+import '../../../domain/schedule.dart';
 
 // Events
 abstract class ScheduleEvent {}

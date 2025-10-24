@@ -31,7 +31,7 @@ class _App extends StatelessWidget {
       navigatorKey: AppNavigator.navigatorKey,
       theme: AppThemes.lightTheme,
       routes: RouteManager.routes,
-      initialRoute: RouteName.home,
+      initialRoute: RouteName.tripList,
     );
   }
 }

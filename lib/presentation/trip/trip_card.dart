@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/trip.dart';
+import '../../domain/trip.dart';
 
 class TripCard extends StatelessWidget {
   final Trip trip;
@@ -28,7 +28,7 @@ class TripCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                trip.imageUrl,
+                trip.tourImages,
                 width: 100,
                 height: 80,
                 fit: BoxFit.cover,
@@ -57,7 +57,7 @@ class TripCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Địa điểm: ${trip.location}',
+                    'Địa điểm: ${trip.province.name}',
                     style: TextStyle(
                       fontSize: 14, fontWeight : FontWeight.bold,
                       color: Colors.grey[600],

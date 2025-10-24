@@ -1,36 +1,29 @@
+import 'package:booking_tour_flutter/presentation/trip/cubit/trip_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/trip_bloc.dart';
-import '../../blocs/trip_event.dart';
-import '../../blocs/trip_state.dart';
-import '../../models/trip.dart';
-import '../../presentation/widgets_dialog/dialog_noti.dart';
-import 'trip_card.dart';
+import 'package:booking_tour_flutter/presentation/trip/cubit/trip_state.dart';
+import 'package:booking_tour_flutter/presentation/trip/trip_card.dart';
+import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 
 class TripScreen extends StatelessWidget {
-  const TripScreen({Key? key}) : super(key: key);
+  final _cubit = TripCubit()..loadTrips();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TripBloc()..add(LoadTrips()),
+      create: (_) => _cubit,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Quản lý chuyến đi'),
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              // TODO: Mở drawer menu
-              print('Mở menu');
-            },
-          ),
         ),
-        body: BlocBuilder<TripBloc, TripState>(
+        body: BlocBuilder<TripCubit, TripState>(
+          bloc: _cubit,
           builder: (context, state) {
             if (state is TripLoaded) {
               return ListView(
-                children: state.trips.map<TripCard>((trip) {
+                children: state.trips.map((trip) {
                   return TripCard(
                     trip: trip,
                     onDelete: () async {
@@ -41,7 +34,7 @@ class TripScreen extends StatelessWidget {
                         highlightPhrases: ['xóa chuyến đi'],
                       );
                       if (confirmed) {
-                        context.read<TripBloc>().add(DeleteTrip(trip));
+                        _cubit.deleteTrip(trip);
                       }
                     },
                     onView: () {
@@ -51,13 +44,16 @@ class TripScreen extends StatelessWidget {
                 }).toList(),
               );
             }
+
+            if (state is TripError) {
+              return Center(child: Text('Lỗi: ${state.message}'));
+            }
+
             return Center(child: CircularProgressIndicator());
           },
         ),
-        floatingActionButton: 
-         FloatingActionButton.extended(
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // TODO: Chuyển sang màn hình thêm chuyến đi
             print('Thêm chuyến đi');
           },
           backgroundColor: Colors.teal,

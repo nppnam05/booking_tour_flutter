@@ -16,6 +16,7 @@ class AppColors {
 
   static const backgroundDisable = Color(0xFFB1B1B1);
   static const gray = Color(0xFF8A8A8A);
+  static final Color lightGrey = Colors.grey.shade500;
 
   //Theme color
   static const scaffoldBackgroundColor = Color(0xFFF1F1F1);

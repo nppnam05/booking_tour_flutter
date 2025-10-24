@@ -1,7 +1,7 @@
-import 'package:booking_tour_flutter/data/reponse/activity_response.dart';
-import 'package:booking_tour_flutter/data/reponse/fake_post_response.dart';
-import 'package:booking_tour_flutter/data/reponse/place_response.dart';
-import 'package:booking_tour_flutter/data/reponse/rest_response.dart';
+import 'package:booking_tour_flutter/data/response/activity_response.dart';
+import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/response/place_response.dart';
+import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -40,5 +40,15 @@ abstract class CoreService {
     @Query("orderBy") String sortBy = "Name",
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
+  });
+  @GET("/Tour")
+  Future<RestResponse> getTrips({
+    @Query("sortBy") String sortBy = "Title",
+    @Query("orderBy") String order = "ASC",
+    @Query("filter") String? filter,
+  });
+  @DELETE("/Tour/{id}")
+  Future<void> deleteTrip({
+    @Path("id")  required int  id ,
   });
 }

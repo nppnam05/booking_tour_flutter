@@ -1,18 +1,20 @@
 import 'dart:ffi';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
-import 'package:booking_tour_flutter/data/reponse/activity_response.dart';
-import 'package:booking_tour_flutter/data/reponse/location_activity_response.dart';
-import 'package:booking_tour_flutter/data/reponse/place_response.dart';
-import 'package:booking_tour_flutter/data/reponse/province_response.dart';
-import 'package:booking_tour_flutter/models/activity.dart';
-import 'package:booking_tour_flutter/models/location_activity.dart';
-import 'package:booking_tour_flutter/models/place.dart';
-import 'package:booking_tour_flutter/models/province.dart';
+import 'package:booking_tour_flutter/data/response/activity_response.dart';
+import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/place_response.dart';
+import 'package:booking_tour_flutter/data/response/province_response.dart';
+import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
+import 'package:booking_tour_flutter/domain/activity.dart';
+import 'package:booking_tour_flutter/domain/location_activity.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:dartz/dartz.dart';
 
 import 'package:booking_tour_flutter/data/network/core_service.dart';
-import 'package:booking_tour_flutter/data/reponse/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -39,6 +41,14 @@ abstract class BookingRepository {
     String sortBy = "Name",
     String order = "ASC",
     String? filter,
+  });
+  Future<Either<Failure, List<Trip>>> getTrips({
+    String sortBy = "Title",
+    String order = "ASC",
+    String? filter,
+  });
+  Future<Either<Failure,void>> deleteTrip({
+    required int id,
   });
 }
 
@@ -124,6 +134,7 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
+
   @override
   Future<Either<Failure, List<LocationActivity>>> getLocationActivities({
     required int placeId,
@@ -147,6 +158,41 @@ class BookingRepositoryImp implements BookingRepository {
           locationActivityResponses.map((response) => response.map()).toList();
 
       return Right(locationActivities);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  @override
+  Future<Either<Failure,List<Trip>>> getTrips({
+    String sortBy = "Title",
+    String order = "ASC",
+    String? filter,
+  }) async {
+    try {
+      var responses = await _coreService.getTrips(
+        sortBy: sortBy,
+        order: order,
+        filter: filter,
+      );
+      var data = responses.data as List<dynamic>;
+      var tripResponses = data.map(
+        (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var trips = tripResponses.map((response) => response.map()).toList();
+      return Right(trips);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  @override
+  Future<Either<Failure,void>> deleteTrip({
+    required int id,
+  }) async {
+    try {
+      await _coreService.deleteTrip(
+        id: id,
+      );
+      return Right(null);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
