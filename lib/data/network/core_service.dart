@@ -49,6 +49,9 @@ abstract class CoreService {
   });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({
-    @Path("id")  required int  id ,
+    @Path("id") required int id,
   });
+
+  @GET("/Assignment")
+  Future<RestResponse> getAssignments();
 }

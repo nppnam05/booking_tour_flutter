@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:booking_tour_flutter/presentation/trip/cubit/trip_state.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_card.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 
 class TripScreen extends StatelessWidget {
   final _cubit = TripCubit()..loadTrips();
@@ -17,51 +18,90 @@ class TripScreen extends StatelessWidget {
           title: Text('Quản lý chuyến đi'),
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ),
         ),
-        body: BlocBuilder<TripCubit, TripState>(
-          bloc: _cubit,
-          builder: (context, state) {
-            if (state is TripLoaded) {
-              return ListView(
-                children: state.trips.map((trip) {
-                  return TripCard(
-                    trip: trip,
-                    onDelete: () async {
-                      final confirmed = await DialogNoti.confirm(
-                        context: context,
-                        title: 'Xác nhận xóa',
-                        message: 'Bạn có chắc muốn xóa chuyến đi này?',
-                        highlightPhrases: ['xóa chuyến đi'],
-                      );
-                      if (confirmed) {
-                        _cubit.deleteTrip(trip);
-                      }
-                    },
-                    onView: () {
-                      // TODO: Chuyển sang màn hình chi tiết chuyến đi
-                    },
-                  );
-                }).toList(),
-              );
-            }
+        drawer: DrawerBar(),
+        body: Column(
+          children: [
+            // ListView chiếm phần còn lại
+            Expanded(
+              child: BlocBuilder<TripCubit, TripState>(
+                bloc: _cubit,
+                builder: (context, state) {
+                  if (state is TripLoaded) {
+                    return ListView(
+                      padding: EdgeInsets.all(8),
+                      children: state.trips.map((trip) {
+                        return TripCard(
+                          trip: trip,
+                          onDelete: () async {
+                            final confirmed = await DialogNoti.confirm(
+                              context: context,
+                              title: 'Xác nhận xóa',
+                              message: 'Bạn có chắc muốn xóa chuyến đi này?',
+                              highlightPhrases: ['xóa chuyến đi'],
+                            );
+                            if (confirmed) {
+                              _cubit.deleteTrip(trip);
+                            }
+                          },
+                          onView: () {
+                            // TODO: Chuyển sang màn hình chi tiết chuyến đi
+                          },
+                        );
+                      }).toList(),
+                    );
+                  }
 
-            if (state is TripError) {
-              return Center(child: Text('Lỗi: ${state.message}'));
-            }
+                  if (state is TripError) {
+                    return Center(child: Text('Lỗi: ${state.message}'));
+                  }
 
-            return Center(child: CircularProgressIndicator());
-          },
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+            // Nút thêm chuyến đi cố định ở dưới
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.grey[100]!,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  print('Thêm chuyến đi');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                icon: Icon(Icons.add),
+                label: Text(
+                  'Thêm Chuyến đi',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            print('Thêm chuyến đi');
-          },
-          backgroundColor: Colors.teal,
-          foregroundColor: Colors.white,
-          icon: Icon(Icons.add),
-          label: Text('Thêm Chuyến đi'),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

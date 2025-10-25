@@ -1,12 +1,15 @@
+
 import 'dart:ffi';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
+import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
+import 'package:booking_tour_flutter/domain/assignment.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
@@ -47,9 +50,11 @@ abstract class BookingRepository {
     String order = "ASC",
     String? filter,
   });
-  Future<Either<Failure,void>> deleteTrip({
+  Future<Either<Failure, void>> deleteTrip({
     required int id,
   });
+
+  Future<Either<Failure, List<Assignment>>> getAssignments();
 }
 
 @Singleton(as: BookingRepository)
@@ -185,7 +190,7 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
   @override
-  Future<Either<Failure,void>> deleteTrip({
+  Future<Either<Failure, void>> deleteTrip({
     required int id,
   }) async {
     try {
@@ -194,6 +199,35 @@ class BookingRepositoryImp implements BookingRepository {
       );
       return Right(null);
     } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Assignment>>> getAssignments() async {
+    try {
+      var responses = await _coreService.getAssignments();
+      print('=== DEBUG Assignment Response ===');
+      print('Response data: ${responses.data}');
+
+      var data = responses.data as List<dynamic>;
+      print('Data length: ${data.length}');
+
+      if (data.isNotEmpty) {
+        print('First item: ${data.first}');
+      }
+
+      var assignmentResponses = data.map(
+        (json) => AssignmentResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var assignments = assignmentResponses.map((response) => response.map()).toList();
+
+      print('Assignments count: ${assignments.length}');
+      return Right(assignments);
+    } catch (e, stackTrace) {
+      print('=== ERROR in getAssignments ===');
+      print('Error: $e');
+      print('StackTrace: $stackTrace');
       return Left(ErrorHandler.handle(e).failure);
     }
   }

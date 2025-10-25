@@ -38,7 +38,7 @@ class ScheduleTourguideScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: ScheduleTourguideCard(trip: schedule),
+                    child: ScheduleTourguideCard(scheduleTourguide: schedule),
                   );
                 },
               );
