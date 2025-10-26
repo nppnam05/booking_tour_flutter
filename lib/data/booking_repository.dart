@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
@@ -14,7 +13,6 @@ import 'package:dartz/dartz.dart';
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
-import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class BookingRepository {
