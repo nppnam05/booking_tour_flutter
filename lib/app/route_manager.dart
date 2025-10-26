@@ -56,8 +56,6 @@ class RouteManager {
     RouteName.test: (context) => TestScreen(),
     RouteName.danhSachHoatDong: (context) => DanhSachHoatDongScreen(),
     RouteName.themDiaDiemHoatDong: (context) => ThemDiaDiemHoatDongScreen(),
-    RouteName.suaDiaDiemHoatDong: (context) => SuaDiaDiemHoatDongScreen(),
-
     RouteName.hoatDong: (context) => HoatDongScreen(),
     RouteName.login: (context) => LoginScreen(),
     RouteName.register: (context) => RegisterScreen(),
