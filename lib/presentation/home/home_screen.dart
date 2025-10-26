@@ -1,4 +1,6 @@
 import 'package:booking_tour_flutter/app/app_navigator.dart';
+import 'package:booking_tour_flutter/app/booking_dialog.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/home/cubit/home_cubit.dart';
 import 'package:booking_tour_flutter/presentation/home/cubit/home_state.dart';
@@ -27,15 +29,47 @@ class HomeScreen extends StatelessWidget {
                       child: Text("profile"),
                     ),
                   ),
+                  SliverToBoxAdapter(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        BookingDialog.selectMultiProvince();
+                      },
+                      child: Text("select provinces"),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        BookingDialog.selectSingleActivity(locationActivityId: 1);
+                      },
+                      child: Text("select activity"),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        BookingDialog.selectSinglePlace(provinceIds: [1, 2]);
+                      },
+                      child: Text("select place"),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        BookingDialog.selectSingleLocationActivity(placeId: 1);
+                      },
+                      child: Text("select location activity"),
+                    ),
+                  ),
                   SliverList.builder(
-                    itemCount: state.posts.length,
+                    itemCount: state.activities.length,
                     itemBuilder: (context, index) {
-                      final post = state.posts[index];
+                      final activity = state.activities[index];
                       return Row(
                         children: [
-                          Text(post.title),
+                          Text(activity.id.toString()),
                           SizedBox(width: 10),
-                          Text(post.body),
+                          Text(activity.action),
                         ],
                       );
                     },
@@ -47,4 +81,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

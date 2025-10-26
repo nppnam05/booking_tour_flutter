@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 class AppColors {
   AppColors._();
   static const primary = Color(0xFF42B1F5);
@@ -14,6 +16,7 @@ class AppColors {
 
   static const backgroundDisable = Color(0xFFB1B1B1);
   static const gray = Color(0xFF8A8A8A);
+  static final Color lightGrey = Colors.grey.shade500;
 
   //Theme color
   static const scaffoldBackgroundColor = Color(0xFFF1F1F1);
@@ -29,4 +32,7 @@ class AppColors {
   static const Color warning = Color(0xFFE4E178);
   static const Color success = Color(0xFF98DB7B);
   static const Color button = Color(0xFF23A892);
+  static const Color delete = Colors.red;
+
+  static const Color backgroundAppBarTheme = Color(0xFF23A892);
 }

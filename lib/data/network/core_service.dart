@@ -1,5 +1,7 @@
-import 'package:booking_tour_flutter/data/reponse/fake_post_response.dart';
-import 'package:booking_tour_flutter/data/reponse/location_response.dart';
+import 'package:booking_tour_flutter/data/response/activity_response.dart';
+import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/response/place_response.dart';
+import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -15,6 +17,44 @@ abstract class CoreService {
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
 
+  @GET("/Activity")
+  Future<RestResponse> getActivities({
+    @Query("locationActivityId") int? locationActivityId,
+    @Query("orderBy") String sortBy = "Action",
+    @Query("sortBy") String order = "ASC",
+  });
+
   @GET("/Location")
-  Future<LocationListResponse> getLocations();
+  Future<RestResponse> getProvinces();
+
+  @GET("/Place")
+  Future<RestResponse> getPlaces({
+    @Query("locationIds") required String provinceId,
+    @Query("orderBy") String sortBy = "Name",
+    @Query("sortBy") String order = "ASC",
+  });
+
+  @GET("/LocationActivity")
+  Future<RestResponse> getLocationActivity({
+    @Query("placeId") required int placeId,
+    @Query("orderBy") String sortBy = "Name",
+    @Query("sortBy") String order = "ASC",
+    @Query("filter") String? filter,
+  });
+
+  // PUT
+  @PUT("/Place")
+  Future<RestResponse> updatePlace(
+    @Body() Map<String, dynamic> body,
+  );
+
+  // POST
+  @POST("/Place")
+  Future<RestResponse> createPlace(
+    @Body() Map<String, dynamic> body,
+  );
+  
+  // DELETE
+  @DELETE("/Place/{id}")
+  Future<RestResponse> deletePlace(@Path("id") int placeId);
 }
