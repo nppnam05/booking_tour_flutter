@@ -8,11 +8,14 @@ import 'them_hoat_dong_state.dart';
 class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
   ThemHoatDongCubit() : super(const ThemHoatDongState());
   final bookingRepository = GetIt.instance<BookingRepository>();
-  Future<void> loadProvinces() async {
-    emit(state.copyWith(status: ThemHoatDongStatus.loadingProvinces));
+  
+  Future<void> loadActivities() async {
+    if (isClosed) return;
+    emit(state.copyWith(status: ThemHoatDongStatus.loading));
     try {
       final result = await bookingRepository.getActivities();
 
+      if (isClosed) return;
       result.fold(
         (failure) => emit(
           state.copyWith(
@@ -29,6 +32,7 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
         ),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(
         state.copyWith(status: ThemHoatDongStatus.failure, error: e.toString()),
       );
@@ -40,6 +44,7 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
     int placeId,
     List<Activity> selectedActivities,
   ) async {
+    if (isClosed) return;
     emit(state.copyWith(status: ThemHoatDongStatus.loadingAdd));
     try {
       final activityIds =
@@ -53,6 +58,7 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
         ),
       );
 
+      if (isClosed) return;
       result.fold(
         (failure) => emit(
           state.copyWith(
@@ -64,6 +70,7 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
             emit(state.copyWith(status: ThemHoatDongStatus.success)),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(
         state.copyWith(status: ThemHoatDongStatus.failure, error: e.toString()),
       );

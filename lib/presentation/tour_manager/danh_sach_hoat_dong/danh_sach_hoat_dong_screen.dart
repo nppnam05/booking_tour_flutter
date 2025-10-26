@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_state.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/sua_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
@@ -197,8 +198,24 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
             fontSize: AppFonts.fontSize16,
           ),
         ),
+        onTap: () => _navigateToEditScreen(locationActivity),
       ),
     );
+  }
+
+  Future<void> _navigateToEditScreen(LocationActivity locationActivity) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SuaDiaDiemHoatDongScreen(
+          locationActivity: locationActivity,
+        ),
+      ),
+    );
+
+    if (mounted && result == true) {
+      _cubit.getDanhSachHoatDong();
+    }
   }
 
   Future<void> _navigateToAddScreen() async {
@@ -211,23 +228,6 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
       _cubit.getDanhSachHoatDong();
     }
   }
-
-  // Future<void> _navigateToEditScreen(LocationActivity locationActivity) async {
-  //   _cubit.setLocationActivitySelected(locationActivity);
-  //   final result = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder:
-  //           (context) => BlocProvider.value(
-  //             value: _cubit,
-  //             child: const Text("SuaXoaDiaDiemHoatDongScreen(),"),
-  //           ),
-  //     ),
-  //   );
-  //   if (mounted) {
-  //     _cubit.getDanhSachHoatDong();
-  //   }
-  // }
 
   Widget _buildHeaderInfo(LocationActivity locationActivity) {
     return Container(

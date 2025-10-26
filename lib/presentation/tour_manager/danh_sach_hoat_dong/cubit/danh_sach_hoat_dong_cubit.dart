@@ -13,8 +13,8 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
     emit(state.copyWith(status: DanhSachHoatDongStatus.loading));
     try {
       final bookingRepository = GetIt.instance<BookingRepository>();
-      // Hard code placeId = 1 để dễ sửa sau này, hoặc sử dụng placeId được truyền vào
-      final finalPlaceId = placeId ?? 1;
+      // Hard code placeId = 1
+      final finalPlaceId = placeId ?? 2;
       final result = await bookingRepository.getLocationActivities(
         placeId: finalPlaceId,
       );
@@ -42,41 +42,11 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
     }
   }
 
-  Future<void> suaHoatDong(
-    String tenHoatDong,
-    String tenDiaDiem,
-    String tinhThanh,
-  ) async {
-    emit(state.copyWith(status: DanhSachHoatDongStatus.loading));
-    try {
-      final selectedLocationActivity = state.selectedLocationActivity;
-      if (selectedLocationActivity == null) {
-        emit(
-          state.copyWith(
-            status: DanhSachHoatDongStatus.failure,
-            error: 'Không tìm thấy dữ liệu để chỉnh sửa',
-          ),
-        );
-        return;
-      }
-
-      // TODO: Implement API call to update location activity
-      await getDanhSachHoatDong();
-    } catch (e) {
-      emit(
-        state.copyWith(
-          status: DanhSachHoatDongStatus.failure,
-          error: e.toString(),
-        ),
-      );
-    }
+  void clearSearch() {
+    emit(state.copyWith(searchQuery: '', filteredActivities: state.activities));
   }
 
-  void setLocationActivitySelected(LocationActivity locationActivity) {
+  void setLocationActivity(LocationActivity locationActivity) {
     emit(state.copyWith(selectedLocationActivity: locationActivity));
-  }
-
-  void clearLocationActivitySelected() {
-    emit(state.copyWith(selectedLocationActivity: null));
   }
 }

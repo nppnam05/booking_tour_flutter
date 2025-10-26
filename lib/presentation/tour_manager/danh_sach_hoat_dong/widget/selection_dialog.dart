@@ -2,6 +2,8 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/them_hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/them_hoat_dong_state.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/sua_hoat_dong_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/sua_hoat_dong_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +16,7 @@ class SelectionDialog<T> extends StatefulWidget {
   final String Function(T)? itemSearchText;
   final String title;
   final String searchHint;
-  final ThemHoatDongCubit? cubit;
+  final dynamic cubit;
 
   const SelectionDialog({
     super.key,
@@ -77,6 +79,27 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
   void _confirmSelection() {
     widget.onItemsChanged(_tempSelectedItems);
     Navigator.pop(context);
+  }
+
+  Widget _buildItemsListWithCubit() {
+    if (widget.cubit != null) {
+      if (widget.cubit is ThemHoatDongCubit) {
+        return BlocBuilder<ThemHoatDongCubit, ThemHoatDongState>(
+          bloc: widget.cubit as ThemHoatDongCubit,
+          builder: (context, state) {
+            return _buildItemsList(state.filteredActivities.cast<T>());
+          },
+        );
+      } else if (widget.cubit is SuaHoatDongCubit) {
+        return BlocBuilder<SuaHoatDongCubit, SuaHoatDongState>(
+          bloc: widget.cubit as SuaHoatDongCubit,
+          builder: (context, state) {
+            return _buildItemsList(state.filteredActivities.cast<T>());
+          },
+        );
+      }
+    }
+    return _buildItemsList(widget.allItems);
   }
 
   Widget _buildItemsList(List<T> items) {
@@ -172,36 +195,31 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
               controller: _searchController,
               onChanged: (query) {
                 if (widget.cubit != null) {
-                  widget.cubit!.searchActivities(query);
+                  if (widget.cubit is ThemHoatDongCubit) {
+                    (widget.cubit as ThemHoatDongCubit).searchActivities(query);
+                  } else if (widget.cubit is SuaHoatDongCubit) {
+                    (widget.cubit as SuaHoatDongCubit).searchActivities(query);
+                  }
                 }
               },
               onClear: () {
                 _searchController.clear();
                 if (widget.cubit != null) {
-                  widget.cubit!.clearSearch();
+                  if (widget.cubit is ThemHoatDongCubit) {
+                    (widget.cubit as ThemHoatDongCubit).clearSearch();
+                  } else if (widget.cubit is SuaHoatDongCubit) {
+                    (widget.cubit as SuaHoatDongCubit).clearSearch();
+                  }
                 }
               },
             ),
             const SizedBox(height: 16),
 
             // Items list
-            Expanded(
-              child:
-                  widget.cubit != null
-                      ? BlocBuilder<ThemHoatDongCubit, ThemHoatDongState>(
-                        bloc: widget.cubit,
-                        builder: (context, state) {
-                          return _buildItemsList(
-                            state.filteredActivities.cast<T>(),
-                          );
-                        },
-                      )
-                      : _buildItemsList(widget.allItems),
-            ),
+            Expanded(child: _buildItemsListWithCubit()),
 
             const SizedBox(height: 16),
 
-            // Action buttons - nằm bên phải với line trên
             Column(
               children: [
                 Container(height: 1, color: AppColors.secondary),
