@@ -5,16 +5,20 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'place_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class PlaceResponse {
   int? id;
   String? name;
+  @JsonKey(name: 'location')
   ProvinceResponse? province;
 
+  
   PlaceResponse({this.id, this.name, this.province});
-
+  
   factory PlaceResponse.fromJson(Map<String, dynamic> json) =>
       _$PlaceResponseFromJson(json);
+      
+  Map<String, dynamic> toJson() => _$PlaceResponseToJson(this);
 }
 
 extension PlaceResponseMapper on PlaceResponse {

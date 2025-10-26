@@ -9,15 +9,14 @@ class HTTPHeader {
 
 class HTTPValue {
   static final String contentJson = "application/json";
-  static final String baseURL = "http://10.27.17.133:8080/";
-  // static final String baseURL = "http://tt1220-001-site1.ntempurl.com";
+  static final String baseURL = "http://tt1220-001-site1.ntempurl.com";
 }
 
 @module
 abstract class DioManager {
   @factoryMethod
   Dio createDio() {
-    final timeout = Duration(seconds: 1);
+    final timeout = Duration(seconds: 15);
 
     final dio = Dio();
 

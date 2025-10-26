@@ -41,4 +41,20 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
+
+  // PUT
+  @PUT("/Place")
+  Future<RestResponse> updatePlace(
+    @Body() Map<String, dynamic> body,
+  );
+
+  // POST
+  @POST("/Place")
+  Future<RestResponse> createPlace(
+    @Body() Map<String, dynamic> body,
+  );
+  
+  // DELETE
+  @DELETE("/Place/{id}")
+  Future<RestResponse> deletePlace(@Path("id") int placeId);
 }
