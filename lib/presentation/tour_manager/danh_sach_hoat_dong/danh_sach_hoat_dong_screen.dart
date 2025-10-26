@@ -212,23 +212,6 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
     }
   }
 
-  // Future<void> _navigateToEditScreen(LocationActivity locationActivity) async {
-  //   _cubit.setLocationActivitySelected(locationActivity);
-  //   final result = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder:
-  //           (context) => BlocProvider.value(
-  //             value: _cubit,
-  //             child: const Text("SuaXoaDiaDiemHoatDongScreen(),"),
-  //           ),
-  //     ),
-  //   );
-  //   if (mounted) {
-  //     _cubit.getDanhSachHoatDong();
-  //   }
-  // }
-
   Widget _buildHeaderInfo(LocationActivity locationActivity) {
     return Container(
       color: AppColors.button.withOpacity(0.2),

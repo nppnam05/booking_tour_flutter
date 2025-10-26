@@ -10,7 +10,6 @@ import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_dong_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/sua_xoa_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh.dart';
@@ -56,7 +55,6 @@ class RouteManager {
     RouteName.test: (context) => TestScreen(),
     RouteName.danhSachHoatDong: (context) => DanhSachHoatDongScreen(),
     RouteName.themDiaDiemHoatDong: (context) => ThemDiaDiemHoatDongScreen(),
-    // RouteName.suaDiaDiemHoatDong: (context) => const SuaDiaDiemHoatDongScreen(),
     RouteName.hoatDong: (context) => HoatDongScreen(),
     RouteName.login: (context) => LoginScreen(),
     RouteName.register: (context) => RegisterScreen(),

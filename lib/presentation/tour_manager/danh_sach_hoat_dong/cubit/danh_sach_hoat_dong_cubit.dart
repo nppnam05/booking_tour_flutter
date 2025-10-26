@@ -14,7 +14,7 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
     try {
       final bookingRepository = GetIt.instance<BookingRepository>();
       // Hard code placeId = 1 để dễ sửa sau này, hoặc sử dụng placeId được truyền vào
-      final finalPlaceId = placeId ?? 1;
+      final finalPlaceId = placeId ?? 2;
       final result = await bookingRepository.getLocationActivities(
         placeId: finalPlaceId,
       );

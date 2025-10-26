@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/domain/location.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -11,10 +12,11 @@ class ProvinceResponse {
 
   factory ProvinceResponse.fromJson(Map<String, dynamic> json) =>
       _$ProvinceResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ProvinceResponseToJson(this);
 }
 
 extension ProvinceResponseMapper on ProvinceResponse {
-  Activities map() {
-    return Activities(id: id ?? 0, name: name ?? "");
+  Province map() {
+    return Province(id: id ?? 0, name: name ?? "");
   }
 }

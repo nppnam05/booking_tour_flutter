@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/them_hoat_dong_cubit.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/them_hoat_dong_state.dart';
+import 'package:booking_tour_flutter/domain/location_activity.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/sua_hoat_dong_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/sua_hoat_dong_state.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/widget/multi_selector.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/widget/selection_dialog.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/text_input.dart';
@@ -10,33 +13,45 @@ import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ThemDiaDiemHoatDongScreen extends StatefulWidget {
-  const ThemDiaDiemHoatDongScreen({super.key});
+class SuaDiaDiemHoatDongScreen extends StatefulWidget {
+  final LocationActivity? locationActivity;
+
+  const SuaDiaDiemHoatDongScreen({super.key, this.locationActivity});
 
   @override
-  State<ThemDiaDiemHoatDongScreen> createState() =>
-      _ThemDiaDiemHoatDongScreenState();
+  State<SuaDiaDiemHoatDongScreen> createState() =>
+      _SuaDiaDiemHoatDongScreenState();
 }
 
-class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
+class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _tenDiaDiemController = TextEditingController();
-  final TextEditingController _tinhThanhController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   List<Activity> _selectedActivities = [];
-  late final ThemHoatDongCubit _cubit;
+  late final SuaHoatDongCubit _cubit;
+  late final StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
-    _cubit = ThemHoatDongCubit();
-    _cubit.loadProvinces();
+    _cubit = SuaHoatDongCubit();
+
+    if (widget.locationActivity != null) {
+      _tenDiaDiemController.text = widget.locationActivity!.name;
+      
+      // Chỉ load tất cả activities, không có pre-selected items
+      // Người dùng sẽ tự chọn lại
+      _cubit.loadActivities();
+      _subscription = _cubit.stream.listen((_) {}); // Empty subscription
+    } else {
+      _cubit.loadActivities();
+      _subscription = _cubit.stream.listen((_) {}); // Empty subscription
+    }
   }
 
   @override
   void dispose() {
+    _subscription.cancel();
     _tenDiaDiemController.dispose();
-    _tinhThanhController.dispose();
     _cubit.close();
     super.dispose();
   }
@@ -45,26 +60,26 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _cubit,
-      child: BlocListener<ThemHoatDongCubit, ThemHoatDongState>(
+      child: BlocListener<SuaHoatDongCubit, SuaHoatDongState>(
         listener: (context, state) {
-          if (state.status == ThemHoatDongStatus.success) {
+          if (state.status) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Thêm địa điểm hoạt động thành công'),
+                content: Text('Cập nhật địa điểm hoạt động thành công'),
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context);
-          } else if (state.status == ThemHoatDongStatus.failure) {
+            Navigator.pop(context, true);
+          } else if (state.error != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Lỗi: ${state.error ?? "Có lỗi xảy ra"}'),
+                content: Text('Lỗi: ${state.error}'),
                 backgroundColor: Colors.red,
               ),
             );
           }
         },
-        child: BlocBuilder<ThemHoatDongCubit, ThemHoatDongState>(
+        child: BlocBuilder<SuaHoatDongCubit, SuaHoatDongState>(
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
@@ -73,7 +88,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
                   onPressed: () => Navigator.pop(context),
                 ),
                 title: const Text(
-                  'Thêm Địa Điểm Hoạt Động',
+                  'Sửa Địa Điểm Hoạt Động',
                   style: TextStyle(color: AppColors.white),
                 ),
                 backgroundColor: AppColors.button,
@@ -135,22 +150,15 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
                               );
                             },
                             hintText: 'Chọn các hoạt động',
-                            enabled:
-                                state.status !=
-                                ThemHoatDongStatus.loadingProvinces,
+                            enabled: true,
                           ),
                         ],
                       ),
 
                       Center(
                         child: BkButton(
-                          onPressed: () {
-                            if (state.status == ThemHoatDongStatus.loadingAdd) {
-                              return;
-                            }
-                            _handleAdd();
-                          },
-                          title: 'Thêm',
+                          onPressed: () => _handleUpdate(),
+                          title: 'Cập nhật',
                           backgroundColor: AppColors.button,
                           textStyle: const TextStyle(
                             fontSize: AppFonts.fontSize16,
@@ -175,7 +183,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
     );
   }
 
-  void _handleAdd() {
+  void _handleUpdate() {
     if (_formKey.currentState!.validate()) {
       if (_selectedActivities.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -187,9 +195,10 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
         return;
       }
 
-      _cubit.themHoatDong(
-        _tenDiaDiemController.text.trim(),
-        2, // placeId hardcode = 1
+      final placeId = widget.locationActivity?.place.id ?? 1;
+      _cubit.suaHoatDong(
+        _tenDiaDiemController.text,
+        placeId,
         _selectedActivities,
       );
     }

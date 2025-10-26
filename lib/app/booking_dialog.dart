@@ -10,14 +10,14 @@ import 'package:booking_tour_flutter/domain/province.dart';
 class BookingDialog {
   static final _repository = getIt<BookingRepository>();
 
-  static Future<List<Activities>?> selectMultiProvince() async {
+  static Future<List<Province>?> selectMultiProvince() async {
     var result = await _repository.getProvinces();
     result.fold(
       (failure) {
         throw Exception(failure.message);
       },
       (provinces) {
-        return DialogHelper.selectMany<Activities>(
+        return DialogHelper.selectMany<Province>(
           context: AppNavigator.navigatorKey.currentState!.context,
           title: "Chọn tỉnh thành",
           items: provinces,

@@ -31,7 +31,7 @@ abstract class BookingRepository {
     String order = "ASC",
   });
 
-  Future<Either<Failure, List<Activities>>> getProvinces();
+  Future<Either<Failure, List<Province>>> getProvinces();
 
   Future<Either<Failure, List<Place>>> getPlaces({
     List<int> provinceIds = const [],
@@ -158,7 +158,7 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<Activities>>> getProvinces() async {
+  Future<Either<Failure, List<Province>>> getProvinces() async {
     try {
       var responses = await _coreService.getProvinces();
       var data = responses.data as List<dynamic>;

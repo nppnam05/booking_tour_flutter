@@ -1,11 +1,11 @@
 import 'package:booking_tour_flutter/data/response/province_response.dart';
+import 'package:booking_tour_flutter/domain/location.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
-import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'place_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class PlaceResponse {
   int? id;
   String? name;
@@ -16,6 +16,8 @@ class PlaceResponse {
 
   factory PlaceResponse.fromJson(Map<String, dynamic> json) =>
       _$PlaceResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlaceResponseToJson(this);
 }
 
 extension PlaceResponseMapper on PlaceResponse {
@@ -23,7 +25,7 @@ extension PlaceResponseMapper on PlaceResponse {
     return Place(
       id: id ?? 0,
       name: name ?? "",
-      province: province?.map() ?? Activities(id: 0, name: ""),
+      location: Location(id: province?.id ?? 0, name: province?.name ?? ""),
     );
   }
 }

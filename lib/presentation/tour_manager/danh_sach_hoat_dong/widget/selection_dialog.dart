@@ -14,7 +14,7 @@ class SelectionDialog<T> extends StatefulWidget {
   final String Function(T)? itemSearchText;
   final String title;
   final String searchHint;
-  final ThemHoatDongCubit? cubit;
+  final dynamic cubit;
 
   const SelectionDialog({
     super.key,
