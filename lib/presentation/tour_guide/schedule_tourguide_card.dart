@@ -3,9 +3,9 @@ import '../../domain/schedule_tourguide.dart';
 import '../tour_guide/participants_screen.dart';
 
 class ScheduleTourguideCard extends StatelessWidget {
-  final ScheduleTourguide trip;
+  final ScheduleTourguide scheduleTourguide;
 
-  const ScheduleTourguideCard({Key? key, required this.trip}) : super(key: key);
+  const ScheduleTourguideCard({Key? key, required this.scheduleTourguide}) : super(key: key);
 
   String _formatDate(DateTime d) {
     final two = (int n) => n.toString().padLeft(2, '0');
@@ -18,7 +18,7 @@ class ScheduleTourguideCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => ParticipantsScreen(schedule: trip)),
+          MaterialPageRoute(builder: (_) => ParticipantsScreen(schedule: scheduleTourguide)),
         );
       },
       child: Card(
@@ -34,7 +34,7 @@ class ScheduleTourguideCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  trip.imageUrl,
+                  scheduleTourguide.imageUrl,
                   width: 110,
                   height: 80,
                   fit: BoxFit.cover,
@@ -55,7 +55,7 @@ class ScheduleTourguideCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            '${_formatDate(trip.startDate)} - ${_formatDate(trip.endDate)}',
+                            '${_formatDate(scheduleTourguide.startDate)} - ${_formatDate(scheduleTourguide.endDate)}',
                             style: const TextStyle(fontSize: 14 , fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -66,7 +66,7 @@ class ScheduleTourguideCard extends StatelessWidget {
 
                     const SizedBox(height: 8),
                     Text(
-                      trip.idSchedule,
+                      scheduleTourguide.idSchedule,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class ScheduleTourguideCard extends StatelessWidget {
 
                     const SizedBox(height: 4),
                     Text(
-                      trip.location,
+                      scheduleTourguide.location,
                       style: const TextStyle(
                         fontSize:14,
                         fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class ScheduleTourguideCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      trip.quantity.toString(),
+                      scheduleTourguide.quantity.toString(),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

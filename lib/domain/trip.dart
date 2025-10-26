@@ -1,13 +1,20 @@
+
+import 'dart:ffi';
+
+import 'package:booking_tour_flutter/domain/province.dart';
+
 class Trip {
+  final int id;
   final String title;
-  final String location;
+  final Province province;
   final int price;
-  final String imageUrl;
+  final String tourImages;
 
   Trip({
+    required this.id,
     required this.title,
-    required this.location,
+    required this.province,
     required this.price,
-    required this.imageUrl,
+    required this.tourImages,
   });
 }

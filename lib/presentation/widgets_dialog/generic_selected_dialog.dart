@@ -59,16 +59,14 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
   }
 
   bool _isSelected(T item) {
-    return _selected.any((e) => widget.display(e) == widget.display(item));
+    return _selected.contains(item);
   }
 
   void _toggleSelection(T item) {
     setState(() {
       if (widget.isMultiSelect) {
         if (_isSelected(item)) {
-          _selected.removeWhere(
-            (e) => widget.display(e) == widget.display(item),
-          );
+          _selected.remove(item);
         } else {
           _selected.add(item);
         }
