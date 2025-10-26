@@ -14,7 +14,7 @@ class ParticipantsCubit extends Cubit<ParticipantsState> {
         avatarUrl: 'https://www.pinterest.com/pin/26317979068631760/',
       ),
       Participant(
-        name: 'Tình',
+        name: 'Nhật',
         quantity: 5,
         phoneNumber: '0158587555',
         avatarUrl: 'https://www.pinterest.com/pin/26317979068631760/',

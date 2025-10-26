@@ -22,7 +22,7 @@ class ScheduleTourguideCard extends StatelessWidget {
         );
       },
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.only(left: 8, right: 16, top: 8, bottom: 8),
         color: const Color(0xFFE0F2F1),
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -33,15 +33,30 @@ class ScheduleTourguideCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  scheduleTourguide.imageUrl,
-                  width: 110,
-                  height: 80,
-                  fit: BoxFit.cover,
-                ),
+                child: scheduleTourguide.tourImages.isEmpty
+                    ? Container(
+                        width: 110,
+                        height: 80,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.image, color: Colors.grey),
+                      )
+                    : Image.network(
+                        scheduleTourguide.tourImages,
+                        width: 110,
+                        height: 80,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 110,
+                            height: 80,
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.image, color: Colors.grey),
+                          );
+                        },
+                      ),
               ),
               const SizedBox(width: 12),
-              Flexible(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -49,41 +64,41 @@ class ScheduleTourguideCard extends StatelessWidget {
                       children: [
                         const Icon(
                           Icons.calendar_today,
-                          size: 16,
+                          size: 14,
                           color: Colors.black54,
                         ),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             '${_formatDate(scheduleTourguide.startDate)} - ${_formatDate(scheduleTourguide.endDate)}',
-                            style: const TextStyle(fontSize: 14 , fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                            maxLines: 2,
                           ),
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 8),
                     Text(
-                      scheduleTourguide.idSchedule,
+                      "Mã: ${scheduleTourguide.idSchedule}",
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 4),
                     Text(
                       scheduleTourguide.location,
                       style: const TextStyle(
-                        fontSize:14,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     Text(
-                      scheduleTourguide.quantity.toString(),
+                      "SL: ${scheduleTourguide.quantity}",
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

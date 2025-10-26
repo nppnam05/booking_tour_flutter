@@ -27,9 +27,9 @@ class AssignmentCard extends StatelessWidget {
             // Hình ảnh
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: assignment.tourImageDTOs.isNotEmpty
+              child: assignment.tourImages.isNotEmpty
                   ? Image.network(
-                      assignment.tourImageDTOs,
+                      assignment.tourImages,
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
@@ -75,7 +75,7 @@ class AssignmentCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          assignment.placeNameDTOs.name,
+                          assignment.placeNames.name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,

@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
@@ -13,6 +14,7 @@ import 'package:booking_tour_flutter/domain/assignment.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:dartz/dartz.dart';
 
@@ -55,6 +57,10 @@ abstract class BookingRepository {
   });
 
   Future<Either<Failure, List<Assignment>>> getAssignments();
+
+  Future<Either<Failure, List<ScheduleTourguide>>> getSchedulesByStaff({
+    required int staffId,
+  });
 }
 
 @Singleton(as: BookingRepository)
@@ -226,6 +232,28 @@ class BookingRepositoryImp implements BookingRepository {
       return Right(assignments);
     } catch (e, stackTrace) {
       print('=== ERROR in getAssignments ===');
+      print('Error: $e');
+      print('StackTrace: $stackTrace');
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleTourguide>>> getSchedulesByStaff({
+    required int staffId,
+  }) async {
+    try {
+      var responses = await _coreService.getGuidesByStaff(staffId: staffId);
+      var data = responses.data as List<dynamic>;
+
+      var scheduleResponses = data.map(
+        (json) => ScheduleTourguideResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var schedules = scheduleResponses.map((response) => response.map()).toList();
+
+      return Right(schedules);
+    } catch (e, stackTrace) {
+      print('=== ERROR in getSchedulesByStaff ===');
       print('Error: $e');
       print('StackTrace: $stackTrace');
       return Left(ErrorHandler.handle(e).failure);

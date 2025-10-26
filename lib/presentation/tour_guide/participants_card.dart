@@ -26,8 +26,8 @@ class ParticipantCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Tên KH: ${participant.name}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text('SL: ${participant.quantity}'),
-                  Text('SDT: ${participant.phoneNumber}'),
+                  Text('SL: ${participant.quantity}',style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('SDT: ${participant.phoneNumber}',style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
             ),

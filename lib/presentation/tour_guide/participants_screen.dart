@@ -36,14 +36,14 @@ class ParticipantsScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'Mã: ${state.scheduleCode}',
+                          '${state.scheduleCode}',
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           '${_formatDate(state.startDate)} - ${_formatDate(state.endDate)}',
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ],

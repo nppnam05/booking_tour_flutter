@@ -5,13 +5,13 @@ class ScheduleTourguide {
   final String idSchedule;
   final String location;
   final int quantity;
-  final String imageUrl;
+  final String tourImages;
   ScheduleTourguide({
     required this.startDate,
     required this.endDate,
     required this.idSchedule,
     required this.quantity,
-    required this.imageUrl,
+    required this.tourImages,
     required this.location,
   });
 }

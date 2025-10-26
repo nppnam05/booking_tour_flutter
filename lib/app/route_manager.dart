@@ -6,6 +6,7 @@ import 'package:booking_tour_flutter/presentation/auth/register/register_screen.
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_dia_diem_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/assignment_screen.dart';
@@ -45,6 +46,7 @@ class RouteName {
   static final assignment = "assignment";
   static final addTour = "addTour";
   static final tripList = "tripList";
+  static  final scheduleTourguide = "scheduleTourguide";
 }
 
 class RouteManager {
@@ -71,6 +73,7 @@ class RouteManager {
     RouteName.addTour: (context) => AddTourScreen(),
     RouteName.tripList: (context)=> TripScreen(),
     RouteName.assignment: (context)=> AssignmentScreen(),
+    RouteName.scheduleTourguide: (context)=> ScheduleTourguideScreen(),
     
   };
 }

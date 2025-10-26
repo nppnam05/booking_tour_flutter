@@ -9,16 +9,16 @@ part 'assignment_response.g.dart';
 class AssignmentResponse {
   int? idSchedule;
   String? titleTour;
-  List<String>? tourImageDTOs;
+  List<String>? tourImages;
   List<String>? nameLocations;
-  List<String>? placeNameDTOs;
+  List<String>? placeNames;
 
   AssignmentResponse({
     this.idSchedule,
     this.titleTour,
-    this.tourImageDTOs,
+    this.tourImages,
     this.nameLocations,
-    this.placeNameDTOs,
+    this.placeNames,
   });
 
   factory AssignmentResponse.fromJson(Map<String, dynamic> json) =>
@@ -27,26 +27,26 @@ class AssignmentResponse {
 
 extension AssignmentResponseMapper on AssignmentResponse {
   Assignment map() {
-    final firstImage = (tourImageDTOs != null && tourImageDTOs!.isNotEmpty)
-        ? tourImageDTOs!.first
+    final firstImage = (tourImages != null && tourImages!.isNotEmpty)
+        ? tourImages!.first
         : '';
 
     final firstLocation = (nameLocations != null && nameLocations!.isNotEmpty)
         ? nameLocations!.first
         : '';
-    final placesText = (placeNameDTOs != null && placeNameDTOs!.isNotEmpty)
-        ? placeNameDTOs!.join(', ')
+    final placesText = (placeNames != null && placeNames!.isNotEmpty)
+        ? placeNames!.join(', ')
         : '';
 
     return Assignment(
       titleTour: titleTour ?? "",
-      placeNameDTOs: Place(
+      placeNames: Place(
         id: 0,
         name: placesText,
         province: Province(id: 0, name: firstLocation),
       ),
       nameLocations: Province(id: 0, name: firstLocation),
-      tourImageDTOs: firstImage,
+      tourImages: firstImage,
     );
   }
 }

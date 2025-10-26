@@ -54,4 +54,9 @@ abstract class CoreService {
 
   @GET("/Assignment")
   Future<RestResponse> getAssignments();
+
+  @GET("/Guide/ByStaff/{staffId}")
+  Future<RestResponse> getGuidesByStaff({
+    @Path("staffId") required int staffId,
+  });
 }
