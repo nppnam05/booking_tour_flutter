@@ -49,7 +49,7 @@ class _TestScreenState extends State<TestScreen> {
               allowMultiple: false,
               onImagesPicked: (images) {
                 setState(() {
-                  singleImage = images.isNotEmpty ? images.first : null;
+                  // singleImage = images.isNotEmpty ? images.first : null;
                 });
               },
             ),
@@ -59,7 +59,7 @@ class _TestScreenState extends State<TestScreen> {
               allowMultiple: true,
               onImagesPicked: (images) {
                 setState(() {
-                  selectedImages = images;
+                  // selectedImages = images;
                 });
               },
             ),

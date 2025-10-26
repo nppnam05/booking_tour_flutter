@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/bk_image.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/nullable_image.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
@@ -35,7 +36,7 @@ class ImageList extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: Stack(
                     children: [
-                      _buildImage(images[i]),
+                      BkImage(image: images[i]),
                       Positioned(
                         right: 0,
                         top: 0,
@@ -61,33 +62,6 @@ class ImageList extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildImage(Either<File, String> image) {
-    return image.fold(
-      (file) {
-        return Image.file(
-          file,
-          fit: BoxFit.fill,
-          width: 100,
-          height: 80,
-          errorBuilder: (context, error, stackTrace) {
-            return NullableImage();
-          },
-        );
-      },
-      (url) {
-        return Image.network(
-          url,
-          fit: BoxFit.fill,
-          width: 100,
-          height: 80,
-          errorBuilder: (context, error, stackTrace) {
-            return NullableImage();
-          },
-        );
-      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_error_fields.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/validate_state.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,7 +130,7 @@ class AddTourCubit extends Cubit<AddTourState> {
     return;
   }
 
-  void setImages(List<File> images) {
+  void setImages(List<Either<File, String>> images) {
     emit(state.copyWith(images: images));
   }
 

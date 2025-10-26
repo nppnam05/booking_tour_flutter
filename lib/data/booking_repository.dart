@@ -49,7 +49,7 @@ abstract class BookingRepository {
   Future<Either<Failure, Tour>> createTour({
     required CTTour tour,
     required List<CTDayOfTour> dayOfTours,
-    required List<File> images,
+    required List<Either<File, String>> images,
   });
 }
 
@@ -168,7 +168,7 @@ class BookingRepositoryImp implements BookingRepository {
   Future<Either<Failure, Tour>> createTour({
     required CTTour tour,
     required List<CTDayOfTour> dayOfTours,
-    required List<File> images,
+    required List<Either<File, String>> images,
   }) async {
     try {
       var createDayOfTourRequests =
@@ -177,12 +177,25 @@ class BookingRepositoryImp implements BookingRepository {
       createTourRequest.day = createDayOfTourRequests.length;
       createTourRequest.dayOfTours = createDayOfTourRequests;
 
-      var futureImages =
-          images.map((image) => AppEncodeHelper.toBase64String(image)).toList();
+      List<Future<String>> futureImages = [];
+      List<String> retainImages = [];
+      images.forEach((image) {
+        image.fold(
+          (file) {
+            var futureImage = AppEncodeHelper.toBase64String(file);
+            futureImages.add(futureImage);
+          },
+          (url) {
+            retainImages.add(url);
+          },
+        );
+      });
+
       var encodeImages = await Future.wait(futureImages);
 
       createTourRequest.tourImages = encodeImages;
 
+      //TODO: write api to receive ratainImage and file
       var response = await _coreService.createTour(createTourRequest);
       var json = response.data as Map<String, dynamic>;
       var tourResult = Tour(

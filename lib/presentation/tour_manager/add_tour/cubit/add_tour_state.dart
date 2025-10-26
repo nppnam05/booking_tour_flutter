@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/validate_state.dart';
+import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
@@ -13,7 +14,7 @@ class AddTourState {
   final List<CTDayOfTour> daysOfTour;
   final int selectedDayOfTour;
   final List<Province> provinces;
-  final List<File> images;
+  final List<Either<File, String>> images;
   late final ValidateState validateState;
 
   AddTourState({
@@ -33,7 +34,7 @@ class AddTourState {
     List<CTDayOfTour>? daysOfTour,
     int? selectedDayOfTour,
     List<Province>? provinces,
-    List<File>? images,
+    List<Either<File, String>>? images,
     ValidateState? validateState,
   }) {
     return AddTourState(

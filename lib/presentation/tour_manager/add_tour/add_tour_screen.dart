@@ -51,38 +51,40 @@ class AddTourScreen extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: ImageButtons(
-                      pickImageCubit: _pickImageCubit,
-                      onDeleteAllPressed: () {
-                        _pickImageCubit.clearAllImages();
+                    child: BlocListener<
+                      PickImageButtonCubit,
+                      PickImageButtonState
+                    >(
+                      bloc: _pickImageCubit,
+                      listener: (context, state) {
+                        List<Either<File, String>> files =
+                            state.files
+                                .map<Either<File, String>>(
+                                  (i) => i.fold(
+                                    (file) =>
+                                        left<File, String>(File(file.path)),
+                                    (url) => right<File, String>(url),
+                                  ),
+                                )
+                                .toList();
+                        _addTourCubit.setImages(files);
                       },
+                      child: ImageButtons(
+                        pickImageCubit: _pickImageCubit,
+                        onDeleteAllPressed: () {
+                          _pickImageCubit.clearAllImages();
+                        },
+                      ),
                     ),
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: BlocConsumer<
-                    PickImageButtonCubit,
-                    PickImageButtonState
-                  >(
-                    bloc: _pickImageCubit,
-                    listener: (context, state) {
-                      var files = state.files.map((i) => File(i.path)).toList();
-                      _addTourCubit.setImages(files);
-                    },
-                    builder: (context, state) {
-                      var files =
-                          state.files
-                              .map((i) => File(i.path))
-                              .map((i) => left<File, String>(i))
-                              .toList();
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ImageList(
-                          onImageDelete: (i) => _pickImageCubit.removeImage(i),
-                          images: files,
-                        ),
-                      );
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ImageList(
+                      onImageDelete: (i) => _pickImageCubit.removeImage(i),
+                      images: state.images,
+                    ),
                   ),
                 ),
                 SliverToBoxAdapter(
