@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/data/request/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
@@ -41,4 +42,9 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
+
+  @POST("/Tour")
+  Future<RestResponse> createTour(
+    @Body() CreateTourRequest request
+  );
 }

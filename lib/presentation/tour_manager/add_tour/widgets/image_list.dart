@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/nullable_image.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
 
 class ImageList extends StatelessWidget {
-  final List<File> images;
+  final List<Either<File, String>> images;
   final Function(int i) onImageDelete;
 
   const ImageList({
@@ -19,7 +20,8 @@ class ImageList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Quản lý chuyến đi"),
+        Text("Quản lý ảnh (${images.length}/5)"),
+        Visibility(visible: images.isEmpty, child: SizedBox(height: 20)),
         Visibility(visible: images.isNotEmpty, child: SizedBox(height: 10)),
         Visibility(
           visible: images.isNotEmpty,
@@ -33,15 +35,7 @@ class ImageList extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: Stack(
                     children: [
-                      Image.file(
-                        images[i],
-                        fit: BoxFit.fill,
-                        width: 100,
-                        height: 80,
-                        errorBuilder: (context, error, stackTrace) {
-                          return NullableImage();
-                        },
-                      ),
+                      _buildImage(images[i]),
                       Positioned(
                         right: 0,
                         top: 0,
@@ -67,6 +61,33 @@ class ImageList extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildImage(Either<File, String> image) {
+    return image.fold(
+      (file) {
+        return Image.file(
+          file,
+          fit: BoxFit.fill,
+          width: 100,
+          height: 80,
+          errorBuilder: (context, error, stackTrace) {
+            return NullableImage();
+          },
+        );
+      },
+      (url) {
+        return Image.network(
+          url,
+          fit: BoxFit.fill,
+          width: 100,
+          height: 80,
+          errorBuilder: (context, error, stackTrace) {
+            return NullableImage();
+          },
+        );
+      },
     );
   }
 }

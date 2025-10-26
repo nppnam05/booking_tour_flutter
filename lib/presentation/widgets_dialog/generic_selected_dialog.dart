@@ -198,13 +198,17 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
                   _pillButton(
                     label: widget.cancelText,
                     background: const Color(0xFFD64545),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      Navigator.of(context).pop();
+                    }
                   ),
                   const SizedBox(width: 12),
                   _pillButton(
                     label: widget.confirmText,
                     background: const Color(0xFF2EAD66),
                     onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
                       if (widget.isMultiSelect) {
                         Navigator.of(context).pop<List<T>>(_selected);
                       } else {

@@ -1,4 +1,6 @@
 import 'dart:ffi';
+import 'dart:io';
+import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
@@ -6,9 +8,12 @@ import 'package:booking_tour_flutter/data/response/location_activity_response.da
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
+import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
+import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
 import 'package:dartz/dartz.dart';
 
 import 'package:booking_tour_flutter/data/network/core_service.dart';
@@ -40,6 +45,12 @@ abstract class BookingRepository {
     String order = "ASC",
     String? filter,
   });
+
+  Future<Either<Failure, Tour>> createTour({
+    required CTTour tour,
+    required List<CTDayOfTour> dayOfTours,
+    required List<File> images,
+  });
 }
 
 @Singleton(as: BookingRepository)
@@ -67,6 +78,7 @@ class BookingRepositoryImp implements BookingRepository {
   }) async {
     try {
       var responses = await _coreService.getActivities(
+        locationActivityId: locationActivityId,
         sortBy: sortBy,
         order: order,
       );
@@ -147,6 +159,42 @@ class BookingRepositoryImp implements BookingRepository {
           locationActivityResponses.map((response) => response.map()).toList();
 
       return Right(locationActivities);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Tour>> createTour({
+    required CTTour tour,
+    required List<CTDayOfTour> dayOfTours,
+    required List<File> images,
+  }) async {
+    try {
+      var createDayOfTourRequests =
+          dayOfTours.map((i) => i.mapToRequest()).toList();
+      var createTourRequest = tour.mapToRequest();
+      createTourRequest.day = createDayOfTourRequests.length;
+      createTourRequest.dayOfTours = createDayOfTourRequests;
+
+      var futureImages =
+          images.map((image) => AppEncodeHelper.toBase64String(image)).toList();
+      var encodeImages = await Future.wait(futureImages);
+
+      createTourRequest.tourImages = encodeImages;
+
+      var response = await _coreService.createTour(createTourRequest);
+      var json = response.data as Map<String, dynamic>;
+      var tourResult = Tour(
+        imageUrl: "",
+        location: "",
+        description: "",
+        startDate: "",
+        endDate: "",
+        maxCapacity: 1,
+      );
+
+      return Right(tourResult);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
