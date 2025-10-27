@@ -64,8 +64,7 @@ class ScheduleAssignmentScreen extends StatelessWidget {
   Widget listSchedule(List<ScheduleAssignment> schedules) {
     return ListView.builder(
       shrinkWrap: true, // Cho phép ListView co lại theo nội dung
-      physics:
-          NeverScrollableScrollPhysics(), // Vô hiệu hóa cuộn bên trong ListView
+      physics: NeverScrollableScrollPhysics(), // Vô hiệu hóa cuộn bên trong ListView
       itemCount: schedules.length,
       itemBuilder: (context, index) {
         var schedule = schedules[index];
@@ -85,7 +84,7 @@ class ScheduleAssignmentScreen extends StatelessWidget {
     String endDay = "${schedule.endDate.day}/${schedule.endDate.month}/${schedule.endDate.year}";
 
     return InkWell(
-      onTap: () {
+      onTap: () async {
         final cubit = context.read<TourGuideAssignmentCubit>();
 
         // đẩy id qua cubit của màn đích
@@ -93,12 +92,14 @@ class ScheduleAssignmentScreen extends StatelessWidget {
 
         cubit.loadData();
 
-        Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => TourGuideAssignmentScreen(cubit: cubit),
           ),
         );
+
+        _cubit.loadData(1);
       },
       child: Container(
         padding: EdgeInsets.all(16.0),
