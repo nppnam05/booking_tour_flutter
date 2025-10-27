@@ -24,7 +24,6 @@ class SuaDiaDiemHoatDongScreen extends StatefulWidget {
 class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _tenDiaDiemController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
   List<Activity> _selectedActivities = [];
   late final SuaHoatDongCubit _cubit;
 
@@ -42,7 +41,6 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
   @override
   void dispose() {
     _tenDiaDiemController.dispose();
-    _focusNode.dispose();
     _cubit.close();
     super.dispose();
   }
@@ -88,7 +86,10 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
               ),
               backgroundColor: AppColors.white,
               body: GestureDetector(
-                onTap: () => _focusNode.unfocus(),
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
                 child: Form(
                   key: _formKey,
                   child: Padding(

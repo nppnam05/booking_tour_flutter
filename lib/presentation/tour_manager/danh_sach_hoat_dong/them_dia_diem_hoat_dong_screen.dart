@@ -22,7 +22,6 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
   final TextEditingController _tenDiaDiemController = TextEditingController();
   final TextEditingController _tinhThanhController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final FocusNode _focusNode = FocusNode();
 
   List<Activity> _selectedActivities = [];
   late final ThemHoatDongCubit _cubit;
@@ -38,7 +37,6 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
   void dispose() {
     _tenDiaDiemController.dispose();
     _tinhThanhController.dispose();
-    _focusNode.dispose();
     _cubit.close();
     super.dispose();
   }
@@ -76,7 +74,10 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
               ),
               backgroundColor: AppColors.white,
               body: GestureDetector(
-                onTap: () => _focusNode.unfocus(),
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
                 child: Form(
                   key: _formKey,
                   child: Padding(
