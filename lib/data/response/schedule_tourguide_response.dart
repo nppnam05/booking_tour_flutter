@@ -5,7 +5,7 @@ part 'schedule_tourguide_response.g.dart';
 
 @JsonSerializable()
 class ScheduleTourguideResponse {
-  ScheduleResponse? schedule;
+  ScheduleTourGuideResponse? schedule;
   TourResponse? tour;
 
   ScheduleTourguideResponse({
@@ -18,14 +18,16 @@ class ScheduleTourguideResponse {
 }
 
 @JsonSerializable()
-class ScheduleResponse {
+class ScheduleTourGuideResponse {
+  int? id;
   String? startDate;
   String? endDate;
   int? maxSlot;
   String? code;
   TourResponse? tour;
 
-  ScheduleResponse({
+  ScheduleTourGuideResponse({
+    this.id,
     this.startDate,
     this.endDate,
     this.maxSlot,
@@ -33,8 +35,8 @@ class ScheduleResponse {
     this.tour,
   });
 
-  factory ScheduleResponse.fromJson(Map<String, dynamic> json) =>
-      _$ScheduleResponseFromJson(json);
+  factory ScheduleTourGuideResponse.fromJson(Map<String, dynamic> json) =>
+      _$ScheduleTourGuideResponseFromJson(json);
 }
 
 @JsonSerializable()
@@ -76,8 +78,9 @@ extension ScheduleTourguideResponseMapper on ScheduleTourguideResponse {
 
     String idSchedule = schedule?.code ?? "N/A";
     int quantity = schedule?.maxSlot ?? 0;
-
+    int id = schedule?.id ?? 0;
     return ScheduleTourguide(
+      id: id ,
       startDate: startDate,
       endDate: endDate,
       idSchedule: idSchedule,

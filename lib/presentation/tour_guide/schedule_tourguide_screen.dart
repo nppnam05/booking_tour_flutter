@@ -1,4 +1,5 @@
-import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide.dart';
+
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_sate.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_card.dart';

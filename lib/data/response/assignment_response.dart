@@ -2,27 +2,49 @@ import 'package:booking_tour_flutter/domain/assignment.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 part 'assignment_response.g.dart';
-
 @JsonSerializable()
 class AssignmentResponse {
-  int? idSchedule;
-  String? titleTour;
-  List<String>? tourImages;
-  List<String>? nameLocations;
-  List<String>? placeNames;
+  final int? id;
+  final String? title;
+  final List<String>? tourImages;
+  final List<LocationResponse>? locations;
+  final List<PlaceResponse>? places;
 
   AssignmentResponse({
-    this.idSchedule,
-    this.titleTour,
+    this.id,
+    this.title,
     this.tourImages,
-    this.nameLocations,
-    this.placeNames,
+    this.locations,
+    this.places,
   });
 
   factory AssignmentResponse.fromJson(Map<String, dynamic> json) =>
       _$AssignmentResponseFromJson(json);
+}
+
+// Thêm response cho Location và Place
+@JsonSerializable()
+class LocationResponse {
+  final int id;
+  final String name;
+
+  LocationResponse({required this.id, required this.name});
+
+  factory LocationResponse.fromJson(Map<String, dynamic> json) =>
+      _$LocationResponseFromJson(json);
+}
+
+@JsonSerializable()
+class PlaceResponse {
+  final int id;
+  final String name;
+  final LocationResponse? location;
+
+  PlaceResponse({required this.id, required this.name, this.location});
+
+  factory PlaceResponse.fromJson(Map<String, dynamic> json) =>
+      _$PlaceResponseFromJson(json);
 }
 
 extension AssignmentResponseMapper on AssignmentResponse {
@@ -31,21 +53,22 @@ extension AssignmentResponseMapper on AssignmentResponse {
         ? tourImages!.first
         : '';
 
-    final firstLocation = (nameLocations != null && nameLocations!.isNotEmpty)
-        ? nameLocations!.first
+    final firstLocation = (locations != null && locations!.isNotEmpty)
+        ? locations!.first.name
         : '';
-    final placesText = (placeNames != null && placeNames!.isNotEmpty)
-        ? placeNames!.join(', ')
+        
+    final placesText = (places != null && places!.isNotEmpty)
+        ? places!.map((p) => p.name).join(', ')
         : '';
 
     return Assignment(
-      titleTour: titleTour ?? "",
+      title: title ?? "",
       placeNames: Place(
         id: 0,
         name: placesText,
         province: Province(id: 0, name: firstLocation),
       ),
-      nameLocations: Province(id: 0, name: firstLocation),
+      locations: Province(id: 0, name: firstLocation),
       tourImages: firstImage,
     );
   }

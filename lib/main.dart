@@ -30,7 +30,7 @@ class _App extends StatelessWidget {
       navigatorKey: AppNavigator.navigatorKey,
       theme: AppThemes.lightTheme,
       routes: RouteManager.routes,
-      initialRoute: RouteName.ScheduleTourmanager,
+      initialRoute: RouteName.scheduleTourguide,
     );
   }
 }

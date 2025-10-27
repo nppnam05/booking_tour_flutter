@@ -52,10 +52,14 @@ abstract class CoreService {
     @Path("id") required int id,
   });
 
-  @GET("/Assignment")
-  Future<RestResponse> getAssignments();
+  @GET("/Tour")
+  Future<RestResponse> getAssignments({
+    @Query("sortBy") String sortBy = "Title",
+    @Query("orderBy") String order = "ASC",
+    @Query("filter") String? filter,
+  });
 
-  @GET("/Guide/ByStaff/{staffId}")
+  @GET("/Guide/schedule/{staffId}")
   Future<RestResponse> getGuidesByStaff({
     @Path("staffId") required int staffId,
   });
@@ -67,4 +71,8 @@ abstract class CoreService {
 Future<RestResponse> deleteScheduleById({
   @Path("id") required int id,
 });
+@GET("/UserCompletedSchedule/{scheduleId}")
+  Future<RestResponse> getUserCompletedSchedule({
+    @Path("scheduleId") required int scheduleId,
+  });
 }

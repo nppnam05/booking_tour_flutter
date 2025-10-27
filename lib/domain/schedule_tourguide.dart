@@ -1,5 +1,6 @@
 
 class ScheduleTourguide {
+  final int id;
   final DateTime startDate;
   final DateTime endDate;
   final String idSchedule;
@@ -7,6 +8,7 @@ class ScheduleTourguide {
   final int quantity;
   final String tourImages;
   ScheduleTourguide({
+    required   this.id,
     required this.startDate,
     required this.endDate,
     required this.idSchedule,

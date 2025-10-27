@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -6,6 +7,7 @@ import 'package:booking_tour_flutter/presentation/auth/register/register_screen.
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_dia_diem_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
@@ -50,6 +52,7 @@ class RouteName {
   static final tripList = "tripList";
   static  final scheduleTourguide = "scheduleTourguide";
   static final ScheduleTourmanager = "scheduleTourmanager";
+  static final participants = "participants";
 }
 
 class RouteManager {
@@ -78,5 +81,10 @@ class RouteManager {
     RouteName.assignment: (context)=> AssignmentScreen(),
     RouteName.scheduleTourguide: (context)=> ScheduleTourguideScreen(),
     RouteName.ScheduleTourmanager: (context)=> ScheduleTourmanagerScreen(),
+    RouteName.participants: (context) {
+  final schedule = ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;
+  return ParticipantsScreen(schedule: schedule);
+},
+
   };
 }

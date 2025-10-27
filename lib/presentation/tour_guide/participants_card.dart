@@ -18,16 +18,33 @@ class ParticipantCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage(participant.avatarUrl),
+              backgroundImage: NetworkImage(participant.avatarPath),
+              onBackgroundImageError: (exception, stackTrace) {
+                // Handle image load error
+              },
+              child: participant.avatarPath.isEmpty
+                  ? const Icon(Icons.person, size: 30)
+                  : null,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Tên KH: ${participant.name}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text('SL: ${participant.quantity}',style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text('SDT: ${participant.phoneNumber}',style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    'Tên KH: ${participant.name}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'SL: ${participant.quantity}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'SDT: ${participant.phoneNumber}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
                 ],
               ),
             ),
