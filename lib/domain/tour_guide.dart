@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 
 class TourGuide {

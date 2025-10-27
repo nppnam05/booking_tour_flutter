@@ -11,13 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentScreen extends StatelessWidget {
-  final _cubit = TourGuideAssignmentCubit()..syncPost(idschedule: 2);
+  late final TourGuideAssignmentCubit _cubit;
+
   final TextEditingController _controllerSearch = TextEditingController();
+
+  TourGuideAssignmentScreen({
+    super.key,
+    required TourGuideAssignmentCubit cubit,
+  }) {
+    _cubit = cubit;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _cubit,
+    
+    return BlocProvider<TourGuideAssignmentCubit>.value(
+      value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text('Phân công hướng dẫn viên')),
         body: columnOfWidget(),
@@ -242,15 +251,15 @@ class TourGuideAssignmentScreen extends StatelessWidget {
 
           // Checkbox
           Checkbox(
-            value:  tourGuide.ischecked,
+            value: tourGuide.ischecked,
             onChanged: (bool? value) {
               onCheckChanged(value);
             },
-          
+
             activeColor: Colors.black,
-          
+
             checkColor: Colors.white,
-          
+
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
             ),

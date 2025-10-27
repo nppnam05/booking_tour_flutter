@@ -49,7 +49,7 @@ class RouteName {
   static final authOtp = "auth_otp";
   static final changePassword = "change_password";
   static final authOtpChangePassword = "auth_otp_change_password";
-  static final assignment = "assignment";  static final tourGuideAssignment = "tour_guide_assignment";
+  static final assignment = "assignment";  
   static final scheduleAssignment = "schedule_assignment";
 
   static final addTour = "addTour";
@@ -83,7 +83,6 @@ class RouteManager {
     RouteName.authOtp: (context) => AuthOtpScreen(),
     RouteName.changePassword: (context) => ChangePasswordScreen(),
     RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
-    RouteName.tourGuideAssignment: (context) => TourGuideAssignmentScreen(),
     RouteName.scheduleAssignment: (context) => ScheduleAssignmentScreen(),
     RouteName.danhSachDiaDanh: (context) => DanhSachDiaDanhScreen(),
     RouteName.themDiaDanh: (context) => ThemDiaDanhScreen(),
