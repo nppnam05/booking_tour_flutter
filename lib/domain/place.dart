@@ -7,4 +7,5 @@ class Place {
   Province province;
 
   Place({required this.id, required this.name, required this.province});
+
 }

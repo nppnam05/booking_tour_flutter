@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/presentation/tour_manager/add_dia_diem_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/sua_dia_diem_hoat_dong/sua_dia_diem_hoat_dong_screen.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -37,12 +38,6 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            //TODO: trở về màn hình trước
-          },
-        ),
         title: const Text(
           'Danh Sách Hoạt Động',
           style: TextStyle(color: Colors.white),
@@ -51,6 +46,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
+      drawer: DrawerBar(),
       body: GestureDetector(
         onTap: () {
           _focusNode.unfocus();

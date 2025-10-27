@@ -20,12 +20,12 @@ class DeleteButtonWidget extends StatelessWidget {
       onPressed: onDelete,
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor ?? Colors.red,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w500),
       ),
     );
   }

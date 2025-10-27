@@ -47,7 +47,7 @@ class _TimePickerFieldState extends State<TimePickerFieldWidget>{
           },
           child: Container(
             width: 130,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.grey,width: 1.5),
