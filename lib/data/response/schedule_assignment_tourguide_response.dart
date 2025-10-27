@@ -1,6 +1,5 @@
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart'
     as schedule;
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'schedule_assignment_tourguide_response.g.dart';

@@ -42,7 +42,9 @@ class TourGuideAssignmentScreen extends StatelessWidget {
           controller: _controllerSearch,
           onClear: () {
             _controllerSearch.clear();
+            _cubit.searchTourGuides('');
           },
+          onChanged: (value) => _cubit.searchTourGuides(value),
           hintText: "Tìm kiếm nhân viên ...",
         ),
 
@@ -89,7 +91,7 @@ class TourGuideAssignmentScreen extends StatelessWidget {
       TourGuideAssignmentState,
       List<TourGuide>
     >(
-      selector: (state) => state.tourGuides,
+      selector: (state) => state.tourGuidesSearch,
       builder: (context, tourGuides) {
         if (tourGuides.isEmpty) {
           return Center(child: Text('No tour guides available'));
@@ -239,28 +241,19 @@ class TourGuideAssignmentScreen extends StatelessWidget {
           ),
 
           // Checkbox
-          BlocSelector<
-            TourGuideAssignmentCubit,
-            TourGuideAssignmentState,
-            bool
-          >(
-            selector: (state) => tourGuide.ischecked,
-            builder: (context, isChecked) {
-              return Checkbox(
-                value: isChecked,
-                onChanged: (bool? value) {
-                  onCheckChanged(value);
-                },
-
-                activeColor: Colors.black,
-
-                checkColor: Colors.white,
-
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              );
+          Checkbox(
+            value:  tourGuide.ischecked,
+            onChanged: (bool? value) {
+              onCheckChanged(value);
             },
+          
+            activeColor: Colors.black,
+          
+            checkColor: Colors.white,
+          
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
           ),
         ],
       ),

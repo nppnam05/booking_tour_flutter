@@ -73,9 +73,7 @@ abstract class BookingRepository {
     required int locationId,
   });
 
-  Future<Either<Failure, Place>> deletePlace({
-    required int id,
-  });
+  Future<Either<Failure, Place>> deletePlace({required int id});
 }
 
 @Singleton(as: BookingRepository)
@@ -213,10 +211,7 @@ class BookingRepositoryImp implements BookingRepository {
     required int locationId,
   }) async {
     try {
-      final body = {
-        "name": name,
-        "locationId": locationId,
-      };
+      final body = {"name": name, "locationId": locationId};
       final response = await _coreService.createPlace(body);
       final data = response.data as Map<String, dynamic>;
       final placeResponse = PlaceResponse.fromJson(data);
@@ -225,15 +220,15 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
   @override
   Future<Either<Failure, Place>> deletePlace({required int id}) async {
-    try{
+    try {
       final response = await _coreService.deletePlace(id);
       final data = response.data as Map<String, dynamic>;
       final placeResponse = PlaceResponse.fromJson(data);
       return Right(placeResponse.map());
-    }catch (e) {
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
@@ -309,11 +304,9 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       var response = await _coreService.checkAssignment(scheduleId, tourGuides);
 
-      if (response.hashCode == 200) {
-        return Right(true);
-      } else {
-        return Left(ErrorHandler.handle("").failure);
-      }
+      bool success = response.data as bool;
+
+      return Right(success);
     } catch (e, stackTrace) {
       return Left(ErrorHandler.handle(e).failure);
     }
