@@ -7,6 +7,7 @@ import 'package:booking_tour_flutter/data/response/location_activity_response.da
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
@@ -15,6 +16,7 @@ import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_place_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
 import 'package:dartz/dartz.dart';
 
 import 'package:booking_tour_flutter/data/network/core_service.dart';
@@ -53,6 +55,8 @@ abstract class BookingRepository {
   Future<Either<Failure, AddLocationActivityResponse>> addLocationActivities(
     AddLocationActivityRequest request,
   );
+  Future<Either<Failure, UpdateLocationActivitiesResponse>>
+  updateLocationActivities(UpdateLocationActivities request);
 }
 
 @Singleton(as: BookingRepository)
@@ -60,6 +64,16 @@ class BookingRepositoryImp implements BookingRepository {
   final CoreService _coreService;
 
   BookingRepositoryImp(this._coreService);
+
+  Future<Either<Failure, UpdateLocationActivitiesResponse>>
+  updateLocationActivities(UpdateLocationActivities request) async {
+    try {
+      final response = await _coreService.updateLocationActivities(request);
+      return Right(response);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 
   @override
   Future<Either<Failure, AddLocationActivityResponse>> addLocationActivities(

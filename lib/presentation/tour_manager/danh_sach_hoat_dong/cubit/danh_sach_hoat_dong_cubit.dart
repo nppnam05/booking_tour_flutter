@@ -11,35 +11,26 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
 
   Future<void> getDanhSachHoatDong({int? placeId}) async {
     emit(state.copyWith(status: DanhSachHoatDongStatus.loading));
-    try {
-      final bookingRepository = GetIt.instance<BookingRepository>();
-      // Hard code placeId = 1
-      final finalPlaceId = placeId ?? 2;
-      final result = await bookingRepository.getLocationActivities(
-        placeId: finalPlaceId,
-      );
-      result.fold(
-        (failure) => emit(
-          state.copyWith(
-            status: DanhSachHoatDongStatus.failure,
-            error: failure.message,
-          ),
-        ),
-        (locationActivities) => emit(
-          state.copyWith(
-            status: DanhSachHoatDongStatus.success,
-            danhSachHoatDong: locationActivities,
-          ),
-        ),
-      );
-    } catch (e) {
-      emit(
+    final bookingRepository = GetIt.instance<BookingRepository>();
+    // Hard code placeId = 1
+    final finalPlaceId = placeId ?? 2;
+    final result = await bookingRepository.getLocationActivities(
+      placeId: finalPlaceId,
+    );
+    result.fold(
+      (failure) => emit(
         state.copyWith(
           status: DanhSachHoatDongStatus.failure,
-          error: e.toString(),
+          error: failure.message,
         ),
-      );
-    }
+      ),
+      (locationActivities) => emit(
+        state.copyWith(
+          status: DanhSachHoatDongStatus.success,
+          danhSachHoatDong: locationActivities,
+        ),
+      ),
+    );
   }
 
   void clearSearch() {

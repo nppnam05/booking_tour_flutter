@@ -22,6 +22,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
   final TextEditingController _tenDiaDiemController = TextEditingController();
   final TextEditingController _tinhThanhController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FocusNode _focusNode = FocusNode();
 
   List<Activity> _selectedActivities = [];
   late final ThemHoatDongCubit _cubit;
@@ -37,6 +38,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
   void dispose() {
     _tenDiaDiemController.dispose();
     _tinhThanhController.dispose();
+    _focusNode.dispose();
     _cubit.close();
     super.dispose();
   }
@@ -55,13 +57,6 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
               ),
             );
             Navigator.pop(context);
-          } else if (state.status == ThemHoatDongStatus.failure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Lỗi: ${state.error ?? "Có lỗi xảy ra"}'),
-                backgroundColor: Colors.red,
-              ),
-            );
           }
         },
         child: BlocBuilder<ThemHoatDongCubit, ThemHoatDongState>(
@@ -80,89 +75,97 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
                 centerTitle: true,
               ),
               backgroundColor: AppColors.white,
-              body: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextInput(
-                            controller: _tenDiaDiemController,
-                            hintText: 'Nhập tên địa điểm',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Vui lòng nhập tên địa điểm';
+              body: GestureDetector(
+                onTap: () => _focusNode.unfocus(),
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextInput(
+                              controller: _tenDiaDiemController,
+                              hintText: 'Nhập tên địa điểm',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập tên địa điểm';
+                                }
+                                return null;
+                              },
+                              labelText: 'Tên địa điểm hoạt động',
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Danh sách hoạt động',
+                              style: TextStyle(
+                                fontSize: AppFonts.fontSize16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            MultiSelector<Activity>(
+                              selectedItems: _selectedActivities,
+                              onItemsChanged: (activities) {
+                                setState(() {
+                                  _selectedActivities = activities;
+                                });
+                              },
+                              itemDisplayText: (activity) => activity.action,
+                              dialogBuilder: (
+                                context,
+                                selectedItems,
+                                onItemsChanged,
+                              ) {
+                                return BlocProvider.value(
+                                  value: _cubit,
+                                  child: SelectionDialog<Activity>(
+                                    allItems: state.activities,
+                                    selectedItems: selectedItems,
+                                    onItemsChanged: onItemsChanged,
+                                    itemDisplayText:
+                                        (activity) => activity.action,
+                                    title: 'Chọn hoạt động',
+                                    searchHint: 'Tìm kiếm hoạt động...',
+                                  ),
+                                );
+                              },
+                              hintText: 'Chọn các hoạt động',
+                              enabled:
+                                  state.status != ThemHoatDongStatus.loading,
+                            ),
+                          ],
+                        ),
+
+                        Center(
+                          child: BkButton(
+                            onPressed: () {
+                              if (state.status ==
+                                  ThemHoatDongStatus.loadingAdd) {
+                                return;
                               }
-                              return null;
+                              _handleAdd();
                             },
-                            labelText: 'Tên địa điểm hoạt động',
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Danh sách hoạt động',
-                            style: TextStyle(
+                            title: 'Thêm',
+                            backgroundColor: AppColors.button,
+                            textStyle: const TextStyle(
                               fontSize: AppFonts.fontSize16,
                               fontWeight: FontWeight.bold,
+                              color: AppColors.white,
                             ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                            borderRadius: 8,
                           ),
-                          const SizedBox(height: 8),
-                          MultiSelector<Activity>(
-                            selectedItems: _selectedActivities,
-                            onItemsChanged: (activities) {
-                              setState(() {
-                                _selectedActivities = activities;
-                              });
-                            },
-                            itemDisplayText: (activity) => activity.action,
-                            dialogBuilder: (
-                              context,
-                              selectedItems,
-                              onItemsChanged,
-                            ) {
-                              return SelectionDialog<Activity>(
-                                allItems: state.activities,
-                                selectedItems: selectedItems,
-                                onItemsChanged: onItemsChanged,
-                                itemDisplayText: (activity) => activity.action,
-                                title: 'Chọn hoạt động',
-                                searchHint: 'Tìm kiếm hoạt động...',
-                                cubit: _cubit,
-                              );
-                            },
-                            hintText: 'Chọn các hoạt động',
-                            enabled: state.status != ThemHoatDongStatus.loading,
-                          ),
-                        ],
-                      ),
-
-                      Center(
-                        child: BkButton(
-                          onPressed: () {
-                            if (state.status == ThemHoatDongStatus.loadingAdd) {
-                              return;
-                            }
-                            _handleAdd();
-                          },
-                          title: 'Thêm',
-                          backgroundColor: AppColors.button,
-                          textStyle: const TextStyle(
-                            fontSize: AppFonts.fontSize16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 16,
-                          ),
-                          borderRadius: 8,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

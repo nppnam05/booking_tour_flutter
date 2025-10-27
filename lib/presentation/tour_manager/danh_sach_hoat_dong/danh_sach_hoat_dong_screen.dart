@@ -4,7 +4,6 @@ import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_state.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/sua_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
@@ -56,18 +55,9 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
               ),
               backgroundColor: AppColors.button,
               centerTitle: true,
-              // actions: [
-              //   IconButton(
-              //     icon: const Icon(Icons.edit, color: AppColors.white),
-              //     onPressed: () => _showEditOptions(context),
-              //   ),
-              // ],
             ),
             backgroundColor: AppColors.white,
-            body:
-                state.status == DanhSachHoatDongStatus.loading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _buildBody(state),
+            body: _buildBody(state),
           );
         },
       ),
@@ -89,89 +79,47 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                 hintText: 'Tìm kiếm...',
                 controller: _controller,
                 onClear: _controller.clear,
+                focusNode: _focusNode,
               ),
             ),
             const SizedBox(height: 12),
             Expanded(
               child: Container(
                 color: AppColors.secondary.withOpacity(0.2),
-                child:
-                    state.danhSachHoatDong.isEmpty
-                        ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.location_off,
-                                size: 64,
-                                color: AppColors.secondary.withOpacity(0.5),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Chưa có hoạt động nào',
-                                style: TextStyle(
-                                  fontSize: AppFonts.fontSize16,
-                                  color: AppColors.secondary.withOpacity(0.7),
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              Center(
-                                child: BkButton(
-                                  onPressed: () => _navigateToAddScreen(),
-                                  title: 'Thêm hoạt động',
-                                  backgroundColor: AppColors.button,
-                                  textStyle: const TextStyle(
-                                    fontSize: AppFonts.fontSize16,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.white,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  borderRadius: 8,
-                                ),
-                              ),
-                            ],
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: state.danhSachHoatDong.length,
+                        itemBuilder: (context, index) {
+                          final locationActivity =
+                              state.danhSachHoatDong[index];
+                          return _buildListItem(locationActivity);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16, top: 16),
+                      child: Center(
+                        child: BkButton(
+                          onPressed: () => _navigateToAddScreen(),
+                          title: 'Thêm hoạt động',
+                          backgroundColor: AppColors.button,
+                          textStyle: const TextStyle(
+                            fontSize: AppFonts.fontSize16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white,
                           ),
-                        )
-                        : Column(
-                          children: [
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: state.danhSachHoatDong.length,
-                                itemBuilder: (context, index) {
-                                  final locationActivity =
-                                      state.danhSachHoatDong[index];
-                                  return _buildListItem(locationActivity);
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 16,
-                                top: 16,
-                              ),
-                              child: Center(
-                                child: BkButton(
-                                  onPressed: () => _navigateToAddScreen(),
-                                  title: 'Thêm hoạt động',
-                                  backgroundColor: AppColors.button,
-                                  textStyle: const TextStyle(
-                                    fontSize: AppFonts.fontSize16,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.white,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                    vertical: 16,
-                                  ),
-                                  borderRadius: 8,
-                                ),
-                              ),
-                            ),
-                          ],
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                          borderRadius: 8,
                         ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -204,13 +152,10 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
   }
 
   Future<void> _navigateToEditScreen(LocationActivity locationActivity) async {
-    final result = await Navigator.push(
+    final result = await Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => SuaDiaDiemHoatDongScreen(
-          locationActivity: locationActivity,
-        ),
-      ),
+      RouteName.suaDiaDiemHoatDong,
+      arguments: locationActivity,
     );
 
     if (mounted && result == true) {

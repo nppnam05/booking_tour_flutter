@@ -6,6 +6,7 @@ class SearchBarWidget extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final String hintText;
   final double borderRadius;
+  final FocusNode? focusNode;
 
   const SearchBarWidget({
     super.key,
@@ -14,6 +15,7 @@ class SearchBarWidget extends StatefulWidget {
     this.onChanged,
     this.hintText = 'Tìm kiếm lịch trình',
     this.borderRadius = 24,
+    this.focusNode,
   });
 
   @override
@@ -51,6 +53,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             Expanded(
               child: TextField(
                 controller: widget.controller,
+                focusNode: widget.focusNode,
                 onChanged: widget.onChanged,
                 style: const TextStyle(fontWeight: FontWeight.w600),
                 decoration: InputDecoration(
@@ -60,6 +63,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                     color: Colors.grey,
                   ),
                   border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
                 ),

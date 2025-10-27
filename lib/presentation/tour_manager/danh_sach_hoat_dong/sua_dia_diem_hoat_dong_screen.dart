@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
@@ -26,32 +24,25 @@ class SuaDiaDiemHoatDongScreen extends StatefulWidget {
 class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _tenDiaDiemController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   List<Activity> _selectedActivities = [];
   late final SuaHoatDongCubit _cubit;
-  late final StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
     _cubit = SuaHoatDongCubit();
+    _cubit.loadActivities();
 
     if (widget.locationActivity != null) {
       _tenDiaDiemController.text = widget.locationActivity!.name;
-      
-      // Chỉ load tất cả activities, không có pre-selected items
-      // Người dùng sẽ tự chọn lại
-      _cubit.loadActivities();
-      _subscription = _cubit.stream.listen((_) {}); // Empty subscription
-    } else {
-      _cubit.loadActivities();
-      _subscription = _cubit.stream.listen((_) {}); // Empty subscription
     }
   }
 
   @override
   void dispose() {
-    _subscription.cancel();
     _tenDiaDiemController.dispose();
+    _focusNode.dispose();
     _cubit.close();
     super.dispose();
   }
@@ -70,7 +61,8 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
               ),
             );
             Navigator.pop(context, true);
-          } else if (state.error != null) {
+          }
+          if (state.error != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Lỗi: ${state.error}'),
@@ -95,84 +87,90 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
                 centerTitle: true,
               ),
               backgroundColor: AppColors.white,
-              body: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextInput(
-                            controller: _tenDiaDiemController,
-                            hintText: 'Nhập tên địa điểm',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Vui lòng nhập tên địa điểm';
-                              }
-                              return null;
-                            },
-                            labelText: 'Tên địa điểm hoạt động',
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Danh sách hoạt động',
-                            style: TextStyle(
+              body: GestureDetector(
+                onTap: () => _focusNode.unfocus(),
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextInput(
+                              controller: _tenDiaDiemController,
+                              hintText: 'Nhập tên địa điểm',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập tên địa điểm';
+                                }
+                                return null;
+                              },
+                              labelText: 'Tên địa điểm hoạt động',
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Danh sách hoạt động',
+                              style: TextStyle(
+                                fontSize: AppFonts.fontSize16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            MultiSelector<Activity>(
+                              selectedItems: _selectedActivities,
+                              onItemsChanged: (activities) {
+                                setState(() {
+                                  _selectedActivities = activities;
+                                });
+                              },
+                              itemDisplayText: (activity) => activity.action,
+                              dialogBuilder: (
+                                context,
+                                selectedItems,
+                                onItemsChanged,
+                              ) {
+                                return BlocProvider.value(
+                                  value: _cubit,
+                                  child: SelectionDialog<Activity>(
+                                    allItems: state.activities,
+                                    selectedItems: selectedItems,
+                                    onItemsChanged: onItemsChanged,
+                                    itemDisplayText:
+                                        (activity) => activity.action,
+                                    title: 'Chọn hoạt động',
+                                    searchHint: 'Tìm kiếm hoạt động...',
+                                  ),
+                                );
+                              },
+                              hintText: 'Chọn các hoạt động',
+                              enabled: true,
+                            ),
+                          ],
+                        ),
+
+                        Center(
+                          child: BkButton(
+                            onPressed: () => _handleUpdate(),
+                            title: 'Cập nhật',
+                            backgroundColor: AppColors.button,
+                            textStyle: const TextStyle(
                               fontSize: AppFonts.fontSize16,
                               fontWeight: FontWeight.bold,
+                              color: AppColors.white,
                             ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                            borderRadius: 8,
                           ),
-                          const SizedBox(height: 8),
-                          MultiSelector<Activity>(
-                            selectedItems: _selectedActivities,
-                            onItemsChanged: (activities) {
-                              setState(() {
-                                _selectedActivities = activities;
-                              });
-                            },
-                            itemDisplayText: (activity) => activity.action,
-                            dialogBuilder: (
-                              context,
-                              selectedItems,
-                              onItemsChanged,
-                            ) {
-                              return SelectionDialog<Activity>(
-                                allItems: state.activities,
-                                selectedItems: selectedItems,
-                                onItemsChanged: onItemsChanged,
-                                itemDisplayText: (activity) => activity.action,
-                                title: 'Chọn hoạt động',
-                                searchHint: 'Tìm kiếm hoạt động...',
-                                cubit: _cubit,
-                              );
-                            },
-                            hintText: 'Chọn các hoạt động',
-                            enabled: true,
-                          ),
-                        ],
-                      ),
-
-                      Center(
-                        child: BkButton(
-                          onPressed: () => _handleUpdate(),
-                          title: 'Cập nhật',
-                          backgroundColor: AppColors.button,
-                          textStyle: const TextStyle(
-                            fontSize: AppFonts.fontSize16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 16,
-                          ),
-                          borderRadius: 8,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -197,6 +195,7 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
 
       final placeId = widget.locationActivity?.place.id ?? 1;
       _cubit.suaHoatDong(
+        widget.locationActivity!.id,
         _tenDiaDiemController.text,
         placeId,
         _selectedActivities,

@@ -5,9 +5,11 @@ import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
+import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -62,6 +64,11 @@ abstract class CoreService {
   @POST("/LocationActivity")
   Future<AddLocationActivityResponse> addLocationActivities(
     @Body() AddLocationActivityRequest request,
+  );
+
+  @PUT("/LocationActivity")
+  Future<UpdateLocationActivitiesResponse> updateLocationActivities(
+    @Body() UpdateLocationActivities request,
   );
 
   @POST("/Place")

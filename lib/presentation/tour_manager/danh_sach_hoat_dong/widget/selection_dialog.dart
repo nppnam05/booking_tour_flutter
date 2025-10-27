@@ -5,6 +5,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/sua_hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/sua_hoat_dong_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +17,6 @@ class SelectionDialog<T> extends StatefulWidget {
   final String Function(T)? itemSearchText;
   final String title;
   final String searchHint;
-  final dynamic cubit;
 
   const SelectionDialog({
     super.key,
@@ -27,7 +27,6 @@ class SelectionDialog<T> extends StatefulWidget {
     required this.title,
     required this.searchHint,
     this.itemSearchText,
-    this.cubit,
   });
 
   @override
@@ -82,39 +81,30 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
   }
 
   Widget _buildItemsListWithCubit() {
-    if (widget.cubit != null) {
-      if (widget.cubit is ThemHoatDongCubit) {
-        return BlocBuilder<ThemHoatDongCubit, ThemHoatDongState>(
-          bloc: widget.cubit as ThemHoatDongCubit,
-          builder: (context, state) {
-            return _buildItemsList(state.filteredActivities.cast<T>());
-          },
-        );
-      } else if (widget.cubit is SuaHoatDongCubit) {
+    try {
+      final cubit = context.read<ThemHoatDongCubit>();
+      return BlocBuilder<ThemHoatDongCubit, ThemHoatDongState>(
+        bloc: cubit,
+        builder: (context, state) {
+          return _buildItemsList(state.filteredActivities.cast<T>());
+        },
+      );
+    } catch (e) {
+      try {
+        final cubit = context.read<SuaHoatDongCubit>();
         return BlocBuilder<SuaHoatDongCubit, SuaHoatDongState>(
-          bloc: widget.cubit as SuaHoatDongCubit,
+          bloc: cubit,
           builder: (context, state) {
             return _buildItemsList(state.filteredActivities.cast<T>());
           },
         );
+      } catch (e) {
+        return _buildItemsList(widget.allItems);
       }
     }
-    return _buildItemsList(widget.allItems);
   }
 
   Widget _buildItemsList(List<T> items) {
-    if (items.isEmpty) {
-      return Center(
-        child: Text(
-          'Không có mục nào',
-          style: TextStyle(
-            fontSize: AppFonts.fontSize16,
-            color: AppColors.secondary,
-          ),
-        ),
-      );
-    }
-
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -132,11 +122,6 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
                       ? AppColors.button
                       : AppColors.secondary.withOpacity(0.3),
             ),
-            borderRadius: BorderRadius.circular(8),
-            color:
-                isSelected
-                    ? AppColors.button.withOpacity(0.1)
-                    : AppColors.white,
           ),
           child: ListTile(
             title: Text(
@@ -148,7 +133,7 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
             ),
             trailing:
                 isSelected
-                    ? const Icon(Icons.check_circle, color: AppColors.button)
+                    ? const Icon(Icons.check, color: AppColors.button)
                     : const Icon(
                       Icons.radio_button_unchecked,
                       color: AppColors.secondary,
@@ -194,28 +179,30 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
               hintText: widget.searchHint,
               controller: _searchController,
               onChanged: (query) {
-                if (widget.cubit != null) {
-                  if (widget.cubit is ThemHoatDongCubit) {
-                    (widget.cubit as ThemHoatDongCubit).searchActivities(query);
-                  } else if (widget.cubit is SuaHoatDongCubit) {
-                    (widget.cubit as SuaHoatDongCubit).searchActivities(query);
-                  }
+                try {
+                  final cubit = context.read<ThemHoatDongCubit>();
+                  cubit.searchActivities(query);
+                } catch (e) {
+                  try {
+                    final cubit = context.read<SuaHoatDongCubit>();
+                    cubit.searchActivities(query);
+                  } catch (e) {}
                 }
               },
               onClear: () {
                 _searchController.clear();
-                if (widget.cubit != null) {
-                  if (widget.cubit is ThemHoatDongCubit) {
-                    (widget.cubit as ThemHoatDongCubit).clearSearch();
-                  } else if (widget.cubit is SuaHoatDongCubit) {
-                    (widget.cubit as SuaHoatDongCubit).clearSearch();
-                  }
+                try {
+                  final cubit = context.read<ThemHoatDongCubit>();
+                  cubit.clearSearch();
+                } catch (e) {
+                  try {
+                    final cubit = context.read<SuaHoatDongCubit>();
+                    cubit.clearSearch();
+                  } catch (e) {}
                 }
               },
             ),
             const SizedBox(height: 16),
-
-            // Items list
             Expanded(child: _buildItemsListWithCubit()),
 
             const SizedBox(height: 16),
@@ -241,21 +228,7 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
                       child: const Text('Hủy'),
                     ),
                     const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: _confirmSelection,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.button,
-                        foregroundColor: AppColors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('Chọn'),
-                    ),
+                    BkButton(onPressed: _confirmSelection, title: "Chọn"),
                   ],
                 ),
               ],

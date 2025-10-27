@@ -1,4 +1,3 @@
-import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class BkTextfield extends StatelessWidget {
@@ -7,7 +6,13 @@ class BkTextfield extends StatelessWidget {
   final Color? fillColor;
   final String hint;
 
-  const BkTextfield({super.key, required this.controller, required this.title, this.fillColor, required this.hint});
+  const BkTextfield({
+    super.key,
+    required this.controller,
+    required this.title,
+    this.fillColor,
+    required this.hint,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +26,9 @@ class BkTextfield extends StatelessWidget {
 
         TextField(
           controller: controller,
-          decoration: const InputDecoration().applyDefaults(
-            Theme.of(context).inputDecorationTheme
-          ).copyWith(
-            hintText: hint,
-            fillColor: fillColor
-          )
+          decoration: const InputDecoration()
+              .applyDefaults(Theme.of(context).inputDecorationTheme)
+              .copyWith(hintText: hint, fillColor: fillColor),
         ),
       ],
     );

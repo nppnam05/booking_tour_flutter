@@ -8,35 +8,28 @@ import 'them_hoat_dong_state.dart';
 class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
   ThemHoatDongCubit() : super(const ThemHoatDongState());
   final bookingRepository = GetIt.instance<BookingRepository>();
-  
+
   Future<void> loadActivities() async {
     if (isClosed) return;
     emit(state.copyWith(status: ThemHoatDongStatus.loading));
-    try {
-      final result = await bookingRepository.getActivities();
+    final result = await bookingRepository.getActivities();
 
-      if (isClosed) return;
-      result.fold(
-        (failure) => emit(
-          state.copyWith(
-            status: ThemHoatDongStatus.failure,
-            error: failure.message,
-          ),
+    if (isClosed) return;
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          status: ThemHoatDongStatus.failure,
+          error: failure.message,
         ),
-        (activities) => emit(
-          state.copyWith(
-            status: ThemHoatDongStatus.initial,
-            activities: activities,
-            filteredActivities: activities,
-          ),
+      ),
+      (activities) => emit(
+        state.copyWith(
+          status: ThemHoatDongStatus.initial,
+          activities: activities,
+          filteredActivities: activities,
         ),
-      );
-    } catch (e) {
-      if (isClosed) return;
-      emit(
-        state.copyWith(status: ThemHoatDongStatus.failure, error: e.toString()),
-      );
-    }
+      ),
+    );
   }
 
   Future<void> themHoatDong(
@@ -46,35 +39,28 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
   ) async {
     if (isClosed) return;
     emit(state.copyWith(status: ThemHoatDongStatus.loadingAdd));
-    try {
-      final activityIds =
-          selectedActivities.map((activity) => activity.id).toList();
+    final activityIds =
+        selectedActivities.map((activity) => activity.id).toList();
 
-      final result = await bookingRepository.addLocationActivities(
-        AddLocationActivityRequest(
-          name: tenDiaDiem,
-          placeId: placeId,
-          activityIds: activityIds,
-        ),
-      );
+    final result = await bookingRepository.addLocationActivities(
+      AddLocationActivityRequest(
+        name: tenDiaDiem,
+        placeId: placeId,
+        activityIds: activityIds,
+      ),
+    );
 
-      if (isClosed) return;
-      result.fold(
-        (failure) => emit(
-          state.copyWith(
-            status: ThemHoatDongStatus.failure,
-            error: failure.message,
-          ),
+    if (isClosed) return;
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          status: ThemHoatDongStatus.failure,
+          error: failure.message,
         ),
-        (locationActivity) =>
-            emit(state.copyWith(status: ThemHoatDongStatus.success)),
-      );
-    } catch (e) {
-      if (isClosed) return;
-      emit(
-        state.copyWith(status: ThemHoatDongStatus.failure, error: e.toString()),
-      );
-    }
+      ),
+      (locationActivity) =>
+          emit(state.copyWith(status: ThemHoatDongStatus.success)),
+    );
   }
 
   void searchActivities(String query) {

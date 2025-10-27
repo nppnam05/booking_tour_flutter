@@ -1,6 +1,6 @@
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
-import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'sua_hoat_dong_state.dart';
@@ -9,32 +9,24 @@ class SuaHoatDongCubit extends Cubit<SuaHoatDongState> {
   SuaHoatDongCubit() : super(const SuaHoatDongState());
   final bookingRepository = GetIt.instance<BookingRepository>();
 
-  Future<void> loadActivities({int? locationActivityId, List<Activity>? initialSelectedActivities}) async {
+  Future<void> loadActivities() async {
     if (isClosed) return;
     try {
-      // Luôn luôn load TẤT CẢ activities
-      final allActivitiesResult = await bookingRepository.getActivities();
-      
-      if (isClosed) return;
+      final result = await bookingRepository.getActivities();
 
-      allActivitiesResult.fold(
-        (failure) => emit(state.copyWith(activities: [])),
-        (allActivities) {
-          // Nếu có initial selected activities, dùng nó luôn
-          final selected = initialSelectedActivities ?? [];
-          
-          emit(
-            state.copyWith(
-              activities: allActivities,
-              filteredActivities: allActivities,
-              selectedActivities: selected,
-            ),
-          );
-        },
+      if (isClosed) return;
+      result.fold(
+        (failure) => emit(state.copyWith(error: failure.message)),
+        (activities) => emit(
+          state.copyWith(
+            activities: activities,
+            filteredActivities: activities,
+          ),
+        ),
       );
     } catch (e) {
       if (isClosed) return;
-      emit(state.copyWith(activities: []));
+      emit(state.copyWith(error: e.toString()));
     }
   }
 
@@ -43,52 +35,50 @@ class SuaHoatDongCubit extends Cubit<SuaHoatDongState> {
   }
 
   Future<void> suaHoatDong(
+    int locationActivityId,
     String name,
     int placeId,
     List<Activity> selectedActivities,
   ) async {
     if (isClosed) return;
-    try {
-      final activityIds =
-          selectedActivities.map((activity) => activity.id).toList();
+    final activityIds =
+        selectedActivities.map((activity) => activity.id).toList();
 
-      final result = await bookingRepository.addLocationActivities(
-        AddLocationActivityRequest(
-          name: name,
-          placeId: placeId,
-          activityIds: activityIds,
-        ),
-      );
+    final request = UpdateLocationActivities(
+      id: locationActivityId,
+      placeId: placeId,
+      name: name,
+      activityIds: activityIds,
+    );
 
-      if (isClosed) return;
-      result.fold(
-        (failure) => emit(state.copyWith(error: failure.message)),
-        (locationActivity) => emit(state.copyWith(status: true)),
-      );
-    } catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(error: e.toString()));
-    }
+    final result = await bookingRepository.updateLocationActivities(request);
+
+    if (isClosed) return;
+    result.fold(
+      (failure) {
+        emit(state.copyWith(error: failure.message));
+      },
+      (response) {
+        emit(state.copyWith(status: true));
+      },
+    );
   }
 
   void searchActivities(String query) {
-    // Lấy từ toàn bộ activities, không phải từ filteredActivities
     final allActivities = state.activities;
-    
+
     if (query.isEmpty) {
       emit(
-        state.copyWith(
-          searchQuery: query,
-          filteredActivities: allActivities,
-        ),
+        state.copyWith(searchQuery: query, filteredActivities: allActivities),
       );
     } else {
-      final filtered = allActivities
-          .where(
-            (activity) =>
-                activity.action.toLowerCase().contains(query.toLowerCase()),
-          )
-          .toList();
+      final filtered =
+          allActivities
+              .where(
+                (activity) =>
+                    activity.action.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
 
       emit(state.copyWith(searchQuery: query, filteredActivities: filtered));
     }
