@@ -11,9 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThemDiaDiemHoatDongScreen extends StatefulWidget {
-  final int? placeId;
-
-  const ThemDiaDiemHoatDongScreen({super.key, this.placeId});
+  const ThemDiaDiemHoatDongScreen({super.key});
 
   @override
   State<ThemDiaDiemHoatDongScreen> createState() =>
@@ -24,7 +22,8 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
   final TextEditingController _tenDiaDiemController = TextEditingController();
   final TextEditingController _tinhThanhController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  late final int placeId;
+  bool _isInitialized = false;
   List<Activity> _selectedActivities = [];
   late final ThemHoatDongCubit _cubit;
 
@@ -33,6 +32,15 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
     super.initState();
     _cubit = ThemHoatDongCubit();
     _cubit.loadActivities();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      placeId = ModalRoute.of(context)!.settings.arguments as int;
+      _isInitialized = true;
+    }
   }
 
   @override
@@ -56,7 +64,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
         },
         child: BlocBuilder<ThemHoatDongCubit, ThemHoatDongState>(
@@ -193,7 +201,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
 
       _cubit.themHoatDong(
         _tenDiaDiemController.text.trim(),
-        widget.placeId ?? 2,
+        placeId,
         _selectedActivities,
       );
     }

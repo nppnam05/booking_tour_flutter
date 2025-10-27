@@ -7,7 +7,6 @@ import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sac
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/list_danh_sach_dia_danh.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/search_bar_new.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/generic_selected_dialog.dart';
@@ -17,6 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DanhSachDiaDanhScreen extends StatelessWidget {
   final _cubit = DiaDanhCubit()..syncProvinces();
   final TextEditingController _searchController = TextEditingController();
+
+  DanhSachDiaDanhScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
           bloc: _cubit,
           builder: (context, state) {
             final cubit = context.read<DiaDanhCubit>();
-            var danhSachDiaDanh = state.filteredPlaces ?? state.places ?? [];
+            var danhSachDiaDanh = state.filteredPlaces ?? state.places;
             return Column(
               children: [
                 Container(
@@ -46,11 +47,14 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                     children: [
                       _buildSearch(context),
 
-                      _buildTinhThanh(context, state.provinces, state.selectedProvince, (
-                        value,
-                      ) {
-                        cubit.selectProvinces(value);
-                      }),
+                      _buildTinhThanh(
+                        context,
+                        state.provinces,
+                        state.selectedProvince,
+                        (value) {
+                          cubit.selectProvinces(value);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -138,31 +142,41 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
       padding: EdgeInsetsGeometry.all(12),
       child: InkWell(
         onTap: () async {
-          final Province? result = await showDialog(context: context,
-          builder: (_) => SelectionDialog<Province>
-          (title: "Chọn Tỉnh", items: danhSachTinhThanh, display: (p) => p.name,isMultiSelect: false,preSelectedItems: selectedProvince!= null? [selectedProvince] :[], ));
-          if (result != null) {onChanged(result);}        
+          final Province? result = await showDialog(
+            context: context,
+            builder:
+                (_) => SelectionDialog<Province>(
+                  title: "Chọn Tỉnh",
+                  items: danhSachTinhThanh,
+                  display: (p) => p.name,
+                  isMultiSelect: false,
+                  preSelectedItems:
+                      selectedProvince != null ? [selectedProvince] : [],
+                ),
+          );
+          if (result != null) {
+            onChanged(result);
+          }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: AppColors.secondary),
-          borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+            border: Border.all(color: AppColors.secondary),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              selectedProvince?.name ?? "Chọn tỉnh",
-              style: AppFonts.text16,
-            ),
-            const Icon(Icons.arrow_drop_down),
-          ],
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedProvince?.name ?? "Chọn tỉnh",
+                style: AppFonts.text16,
+              ),
+              const Icon(Icons.arrow_drop_down),
+            ],
+          ),
         ),
-        ),
-      )
-       
+      ),
     );
   }
 
@@ -182,4 +196,3 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
     );
   }
 }
-

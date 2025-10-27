@@ -12,9 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuaDiaDiemHoatDongScreen extends StatefulWidget {
-  final LocationActivity? locationActivity;
-
-  const SuaDiaDiemHoatDongScreen({super.key, this.locationActivity});
+  const SuaDiaDiemHoatDongScreen({super.key});
 
   @override
   State<SuaDiaDiemHoatDongScreen> createState() =>
@@ -26,15 +24,24 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
   final TextEditingController _tenDiaDiemController = TextEditingController();
   List<Activity> _selectedActivities = [];
   late final SuaHoatDongCubit _cubit;
+  late final LocationActivity locationActivity;
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
     _cubit = SuaHoatDongCubit();
     _cubit.loadActivities();
+  }
 
-    if (widget.locationActivity != null) {
-      _tenDiaDiemController.text = widget.locationActivity!.name;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      locationActivity =
+          ModalRoute.of(context)!.settings.arguments as LocationActivity;
+      _tenDiaDiemController.text = locationActivity.name;
+      _isInitialized = true;
     }
   }
 
@@ -194,9 +201,10 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
         return;
       }
 
-      final placeId = widget.locationActivity?.place.id ?? 2;
+      final placeId = locationActivity.place.id;
+
       _cubit.suaHoatDong(
-        widget.locationActivity!.id,
+        locationActivity.id,
         _tenDiaDiemController.text,
         placeId,
         _selectedActivities,

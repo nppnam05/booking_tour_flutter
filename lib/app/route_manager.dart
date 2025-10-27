@@ -1,4 +1,3 @@
-import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -64,11 +63,7 @@ class RouteManager {
     RouteName.test: (context) => TestScreen(),
     RouteName.danhSachHoatDong: (context) => DanhSachHoatDongScreen(),
     RouteName.themDiaDiemHoatDong: (context) => ThemDiaDiemHoatDongScreen(),
-    RouteName.suaDiaDiemHoatDong: (context) {
-      final args =
-          ModalRoute.of(context)!.settings.arguments as LocationActivity?;
-      return SuaDiaDiemHoatDongScreen(locationActivity: args);
-    },
+    RouteName.suaDiaDiemHoatDong: (context) => SuaDiaDiemHoatDongScreen(),
     RouteName.hoatDong: (context) => HoatDongScreen(),
     RouteName.login: (context) => LoginScreen(),
     RouteName.register: (context) => RegisterScreen(),

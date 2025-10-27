@@ -13,6 +13,7 @@ class DanhSachHoatDongState extends Equatable {
   final List<Activity> activities;
   final List<Activity> filteredActivities;
   final String searchQuery;
+  final int? placeId;
 
   const DanhSachHoatDongState({
     this.danhSachHoatDong = const [],
@@ -23,6 +24,7 @@ class DanhSachHoatDongState extends Equatable {
     this.activities = const [],
     this.filteredActivities = const [],
     this.searchQuery = '',
+    this.placeId,
   });
 
   DanhSachHoatDongState copyWith({
@@ -34,6 +36,7 @@ class DanhSachHoatDongState extends Equatable {
     List<Activity>? activities,
     List<Activity>? filteredActivities,
     String? searchQuery,
+    int? placeId,
   }) {
     return DanhSachHoatDongState(
       danhSachHoatDong: danhSachHoatDong ?? this.danhSachHoatDong,
@@ -44,9 +47,10 @@ class DanhSachHoatDongState extends Equatable {
       activities: activities ?? this.activities,
       filteredActivities: filteredActivities ?? this.filteredActivities,
       searchQuery: searchQuery ?? this.searchQuery,
+      placeId: placeId ?? this.placeId,
     );
   }
 
   @override
-  List<Object?> get props => [danhSachHoatDong, originalDanhSachHoatDong, status, error, selectedLocationActivity, activities, filteredActivities, searchQuery];
+  List<Object?> get props => [danhSachHoatDong, originalDanhSachHoatDong, status, error, selectedLocationActivity, activities, filteredActivities, searchQuery, placeId];
 }

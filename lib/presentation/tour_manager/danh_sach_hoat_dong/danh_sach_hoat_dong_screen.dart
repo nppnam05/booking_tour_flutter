@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
@@ -10,9 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DanhSachHoatDongScreen extends StatefulWidget {
-  final int? placeId;
-
-  const DanhSachHoatDongScreen({super.key, this.placeId});
+  const DanhSachHoatDongScreen({super.key});
 
   @override
   State<DanhSachHoatDongScreen> createState() => _DanhSachHoatDongScreenState();
@@ -22,11 +21,22 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   late final DanhSachHoatDongCubit _cubit;
+  late final Place place;
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _cubit = DanhSachHoatDongCubit(placeId: widget.placeId);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      place = ModalRoute.of(context)!.settings.arguments as Place;
+      _cubit = DanhSachHoatDongCubit(placeId: place.id);
+      _isInitialized = true;
+    }
   }
 
   @override
@@ -173,9 +183,10 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
     final result = await Navigator.pushNamed(
       context,
       RouteName.themDiaDiemHoatDong,
+      arguments: place.id,
     );
 
-    if (mounted) {
+    if (mounted && result == true) {
       _cubit.getDanhSachHoatDong();
     }
   }
