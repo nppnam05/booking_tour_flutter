@@ -24,7 +24,9 @@ class RegisterScreen extends StatelessWidget {
       create: (context) => _cubit,
       child: Scaffold(
         appBar: AppBar(backgroundColor: AppColors.scaffoldBackgroundColor),
-        body: Center(child: wrappedOutside(context, columnOfWidget())),
+        body: SingleChildScrollView(
+          child: Center(child: wrappedOutside(context, columnOfWidget())),
+        ),
       ),
     );
   }
@@ -73,14 +75,14 @@ class RegisterScreen extends StatelessWidget {
 
               ToggleInputField(
                 controller: controllerPassword,
-                text: "Mật khẩu",
+                title: "Mật khẩu",
                 color: Colors.grey.shade100,
               ),
               const SizedBox(height: 12),
 
               ToggleInputField(
                 controller: controllerNhapLai,
-                text: "Nhập lại mật khẩu",
+                title: "Nhập lại mật khẩu",
                 color: Colors.grey.shade100,
               ),
               const SizedBox(height: 12),

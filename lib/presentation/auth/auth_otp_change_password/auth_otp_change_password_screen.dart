@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/cubit/auth_otp_change_password_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/otp_input.dart';
@@ -9,18 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthOtpChangePasswordScreen extends StatelessWidget {
-  final _cubit = AuthOtpCubit()..syncPost();
+  final _cubit = AuthOtpChangePasswordCubit()..syncPost();
 
   final time = 59;
 
   final TextEditingController _controllerOTP = TextEditingController();
-
-  // final settings = ModalRoute.of(context)!.settings;
-
-  // final args = settings.arguments as Map<String, dynamic>;
-  // final String email = args['email'] as String;
   final String email = "nam@gmail.com";
-  final String nameScreem = "Quên mật khẩu";
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +37,7 @@ class AuthOtpChangePasswordScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 50),
           Text(
-            nameScreem,
+            NameOfScreen.forgetPassword,
             style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
 
@@ -55,12 +50,17 @@ class AuthOtpChangePasswordScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Mã xác thực sẽ được gửi đến", style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold)),
                   Text(
-                    nameScreem == NameOfScreen.forgetPassword
-                        ? maskEmail(email)
-                        : email,
-                        style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+                    "Mã xác thực sẽ được gửi đến",
+                    style: AppFonts.text14.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    maskEmail(email),
+                    style: AppFonts.text14.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -71,12 +71,15 @@ class AuthOtpChangePasswordScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Mã OTP", style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold)),
-              Text("$time s")
+              Text(
+                "Mã OTP",
+                style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+              ),
+              Text("$time s"),
             ],
           ),
 
-          const SizedBox(height: 5,),
+          const SizedBox(height: 5),
 
           OtpInputWidget(
             controller: _controllerOTP,
@@ -87,24 +90,11 @@ class AuthOtpChangePasswordScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: customButton(
-                  onPressed: () {},
-                  text: "Gửi lại mã",
-                  colorText: AppColors.black,
-                  colorButton: const Color(0xFFB9B9B9),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-
-              Expanded(
-                child: customButton(onPressed: () {}, text: "Xác nhận"),
-              ),
-            ],
+          customButton(
+            onPressed: () {},
+            text: "Gửi lại mã",
+            colorText: AppColors.white,
+            colorButton: AppColors.button,
           ),
         ],
       ),

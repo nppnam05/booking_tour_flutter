@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
+import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -43,6 +45,8 @@ class RouteName {
   static final authOtp = "auth_otp";
   static final changePassword = "change_password";
   static final authOtpChangePassword = "auth_otp_change_password";
+  static final tourGuideAssignment = "tour_guide_assignment";
+
   static final addTour = "addTour";
 
   static final danhSachDiaDanh = "danh_sach_dia_danh";
@@ -72,6 +76,7 @@ class RouteManager {
     RouteName.changePassword: (context) => ChangePasswordScreen(),
     RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
     RouteName.addTour: (context) => AddTourScreen(),
+    RouteName.tourGuideAssignment: (context) => TourGuideAssignmentScreen(),
     RouteName.danhSachDiaDanh: (context) => DanhSachDiaDanhScreen(),
     RouteName.themDiaDanh: (context) => ThemDiaDanhScreen(),
     RouteName.suaDiaDanh: (context) => SuaDiaDanhScreen(),
