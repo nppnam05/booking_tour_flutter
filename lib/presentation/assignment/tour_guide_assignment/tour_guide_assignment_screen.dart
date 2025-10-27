@@ -160,7 +160,7 @@ class TourGuideAssignmentScreen extends StatelessWidget {
                       const Icon(
                         Icons.person_outline,
                         size: 30,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
 
                       const SizedBox(width: 14),
@@ -179,7 +179,7 @@ class TourGuideAssignmentScreen extends StatelessWidget {
                   // Mã nhân viên
                   Row(
                     children: [
-                      const Icon(Icons.code, size: 30, color: Colors.black54),
+                      const Icon(Icons.code, size: 30, color: Colors.black),
 
                       const SizedBox(width: 14),
 
