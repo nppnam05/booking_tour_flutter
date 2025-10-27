@@ -14,6 +14,8 @@ import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_tourmanager_card.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_tourmanager_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/sua_dia_diem_hoat_dong/sua_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
@@ -47,6 +49,7 @@ class RouteName {
   static final addTour = "addTour";
   static final tripList = "tripList";
   static  final scheduleTourguide = "scheduleTourguide";
+  static final ScheduleTourmanager = "scheduleTourmanager";
 }
 
 class RouteManager {
@@ -74,6 +77,6 @@ class RouteManager {
     RouteName.tripList: (context)=> TripScreen(),
     RouteName.assignment: (context)=> AssignmentScreen(),
     RouteName.scheduleTourguide: (context)=> ScheduleTourguideScreen(),
-    
+    RouteName.ScheduleTourmanager: (context)=> ScheduleTourmanagerScreen(),
   };
 }

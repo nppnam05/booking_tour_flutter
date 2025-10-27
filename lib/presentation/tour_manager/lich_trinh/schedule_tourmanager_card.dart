@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../domain/schedule.dart';
+import '../../../domain/schedule_tourmanager.dart';
 
-class ScheduleCard extends StatelessWidget {
-  final Schedule trip;
+class ScheduleTourmanagerCard extends StatelessWidget {
+  final ScheduleTourmanager shedule_tour_manager;
   final VoidCallback onDelete;
 
-  const ScheduleCard({
-    required this.trip,
+  const ScheduleTourmanagerCard({
+    required this.shedule_tour_manager,
     required this.onDelete,
   });
 
@@ -34,10 +34,19 @@ class ScheduleCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    trip.imageUrl,
+                    
+          "http://tt1220-001-site1.ntempurl.com/images/https://dalattrongtoi.com/media/images/uploaded/2/2016_01_23/post/da-lat-thanh-pho-cua-nhung-giac-mo-3.jpg",
                     width: 110,
-                    height: 80,
+                    height: 80, 
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 110,
+                        height: 80,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.image, color: Colors.grey),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -50,14 +59,14 @@ class ScheduleCard extends StatelessWidget {
                           const Icon(Icons.calendar_today, size: 16, color: Colors.black87),
                           const SizedBox(width: 6),
                           Text(
-                            _formatDate(trip.startDate),
+                            _formatDate(shedule_tour_manager.startDate),
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(width: 8),
                           const Icon(Icons.arrow_right_alt, color: Colors.purple),
                           const SizedBox(width: 8),
                           Text(
-                            _formatDate(trip.endDate),
+                            _formatDate(shedule_tour_manager.endDate),
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                         ],
@@ -69,7 +78,7 @@ class ScheduleCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              trip.location,
+                              shedule_tour_manager.tour.province.name.isNotEmpty ? shedule_tour_manager.tour.province.name : "" ,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(fontWeight: FontWeight.w600),
@@ -84,7 +93,7 @@ class ScheduleCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              trip.title,
+                              shedule_tour_manager.tour.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -96,7 +105,7 @@ class ScheduleCard extends StatelessWidget {
                         children: [
                           const Icon(Icons.group, size: 16, color: Colors.blue),
                           const SizedBox(width: 6),
-                          Text('Tối đa: ${trip.capacity}')
+                          Text('Tối đa: ${shedule_tour_manager.maxSlot}')
                         ],
                       ),
                     ],
@@ -123,3 +132,4 @@ class ScheduleCard extends StatelessWidget {
     );
   }
 }
+

@@ -59,4 +59,12 @@ abstract class CoreService {
   Future<RestResponse> getGuidesByStaff({
     @Path("staffId") required int staffId,
   });
+
+    @GET("/Schedule")
+  Future<RestResponse> getAllSchedules();
+
+  @DELETE("/Schedule/{id}")
+Future<RestResponse> deleteScheduleById({
+  @Path("id") required int id,
+});
 }
