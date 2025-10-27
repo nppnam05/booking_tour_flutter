@@ -15,12 +15,7 @@ class AuthOtpScreen extends StatelessWidget {
 
   final TextEditingController _controllerOTP = TextEditingController();
 
-  // final settings = ModalRoute.of(context)!.settings;
-
-  // final args = settings.arguments as Map<String, dynamic>;
-  // final String email = args['email'] as String;
   final String email = "nam@gmail.com";
-  final String nameScreem = "Quên mật khẩu";
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +37,7 @@ class AuthOtpScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 50),
           Text(
-            nameScreem,
+            NameOfScreen.otpAuthentication,
             style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
 
@@ -55,12 +50,17 @@ class AuthOtpScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Mã xác thực sẽ được gửi đến", style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold)),
                   Text(
-                    nameScreem == NameOfScreen.forgetPassword
-                        ? maskEmail(email)
-                        : email,
-                        style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+                    "Mã xác thực sẽ được gửi đến",
+                    style: AppFonts.text14.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    email,
+                    style: AppFonts.text14.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -71,12 +71,15 @@ class AuthOtpScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Mã OTP", style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold)),
-              Text("$time s")
+              Text(
+                "Mã OTP",
+                style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+              ),
+              Text("$time s"),
             ],
           ),
 
-          const SizedBox(height: 5,),
+          const SizedBox(height: 5),
 
           OtpInputWidget(
             controller: _controllerOTP,
@@ -87,43 +90,14 @@ class AuthOtpScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: customButton(
-                  onPressed: () {},
-                  text: "Gửi lại mã",
-                  colorText: AppColors.black,
-                  colorButton: const Color(0xFFB9B9B9),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-
-              Expanded(
-                child: customButton(onPressed: () {}, text: "Xác nhận"),
-              ),
-            ],
+          customButton(
+            onPressed: () {},
+            text: "Gửi lại mã",
+            colorText: AppColors.white,
+            colorButton: AppColors.button,
           ),
         ],
       ),
     );
-  }
-
-  String maskEmail(String email) {
-    int atIndex = email.indexOf('@');
-
-    String firstChar = email.substring(0, 1);
-    String domain = email.substring(atIndex);
-
-    int length = email.substring(1, atIndex).length;
-
-    String start = "";
-    for (int i = 0; i < length; ++i) {
-      start += "*";
-    }
-
-    return firstChar + start + domain;
   }
 }
