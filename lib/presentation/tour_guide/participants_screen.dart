@@ -1,5 +1,5 @@
-import 'package:booking_tour_flutter/blocs/participants_bloc.dart';
-import 'package:booking_tour_flutter/blocs/participants_sate.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/participants_bloc.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/participants_sate.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

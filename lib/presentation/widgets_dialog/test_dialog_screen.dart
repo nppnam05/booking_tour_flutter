@@ -47,7 +47,7 @@ class _TestDialogScreenState extends State<TestDialogScreen> {
       display: (s) => s,
       // initial: const ['Tắm biển', 'Leo núi'],
     );
-    _showSnack('SelectionDialog multi => ${picked.join(', ')}');
+    _showSnack('SelectionDialog multi => ${picked?.join(', ')}');
   }
 
   @override

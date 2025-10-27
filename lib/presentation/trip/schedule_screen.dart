@@ -1,7 +1,7 @@
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/schedule_bloc.dart'; // Đổi tên file nếu cần
+import 'cubit/schedule_bloc.dart'; // Đổi tên file nếu cần
 import '../../presentation/widgets_dialog/dialog_noti.dart';
 import 'schedule_card.dart';
 

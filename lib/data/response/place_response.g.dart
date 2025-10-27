@@ -10,7 +10,7 @@ PlaceResponse _$PlaceResponseFromJson(Map<String, dynamic> json) =>
     PlaceResponse(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
-      province:
+      location:
           json['location'] == null
               ? null
               : ProvinceResponse.fromJson(
@@ -22,5 +22,5 @@ Map<String, dynamic> _$PlaceResponseToJson(PlaceResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'location': instance.province?.toJson(),
+      'location': instance.location?.toJson(),
     };
