@@ -1,3 +1,7 @@
+import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
 import 'package:booking_tour_flutter/presentation/trip/cubit/trip_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +57,8 @@ class TripScreen extends StatelessWidget {
                             }
                           },
                           onView: () {
-                            // TODO: Chuyển sang màn hình chi tiết chuyến đi
+                            context.read<AddTourCubit>().setState(trip.toAddTourState());
+                            Navigator.pushNamed(context, RouteName.updateTour);
                           },
                         );
                       }).toList(),
@@ -83,7 +88,7 @@ class TripScreen extends StatelessWidget {
               ),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  print('Thêm chuyến đi');
+                  Navigator.pushNamed(context, RouteName.addTour);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,

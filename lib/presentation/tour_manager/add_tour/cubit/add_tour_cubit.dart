@@ -53,6 +53,14 @@ class AddTourCubit extends Cubit<AddTourState> {
     _setupValidator();
   }
 
+  void setState(AddTourState state) {
+    emit(state);
+  }
+
+  void setId(int id) {
+    emit(state.copyWith(id: id));
+  }
+
   void rebuild() async {
     emit(state.copyWith());
   }
@@ -99,6 +107,77 @@ class AddTourCubit extends Cubit<AddTourState> {
 
   void setProvinces(List<Province> provinces) {
     emit(state.copyWith(provinces: provinces));
+    correctAllDayActivity();
+  }
+
+  void setImages(List<Either<File, String>> images) {
+    emit(state.copyWith(images: images));
+  }
+
+  void resetState() {
+    emit(
+      AddTourState(
+        daysOfTour: [CTDayOfTour()],
+        selectedDayOfTour: 0,
+        tour: CTTour(),
+        provinces: [],
+        images: [],
+        validateState: ValidateState(errors: {}, isValidated: false)
+      ),
+    );
+  }
+
+  void correctAllDayActivity() {
+    for (var dayOfTour in state.daysOfTour) {
+      for (var dayActivity in dayOfTour.dayActivities) {
+        _correctDayActivityHelper(dayActivity);
+      }
+    }
+
+    emit(state.copyWith());
+  }
+
+  void correctDayActivity(CTDayActivity day) {
+    _correctDayActivityHelper(day);
+
+    emit(state.copyWith());
+  }
+
+  void _correctDayActivityHelper(CTDayActivity day) {
+    _correctPlace(day);
+    _correctLocationActivity(day);
+    _correctActivity(day);
+  }
+
+  void _correctPlace(CTDayActivity day) {
+    if (!state.provinces.contains(day.place?.province)) {
+      day.place = null;
+    }
+
+    if (day.place == null) {
+      day.locationActivity = null;
+      day.activity = null;
+    }
+  }
+
+  void _correctLocationActivity(CTDayActivity day) {
+    if (day.locationActivity?.place != day.place) {
+      day.locationActivity = null;
+    }
+
+    if (day.locationActivity == null) {
+      day.activity = null;
+    }
+  }
+
+  void _correctActivity(CTDayActivity day) {
+    if (day.locationActivity == null) {
+      return;
+    }
+
+    if (!day.locationActivity!.activities.contains(day.activity)) {
+      day.activity = null;
+    }
   }
 
   Future<void> add() async {
@@ -130,8 +209,34 @@ class AddTourCubit extends Cubit<AddTourState> {
     return;
   }
 
-  void setImages(List<Either<File, String>> images) {
-    emit(state.copyWith(images: images));
+  Future<void> update() async {
+    validate();
+
+    if (state.validateState.errors.isNotEmpty) {
+      return;
+    }
+
+    var result = await _repository.updateTour(
+      id: state.id!,
+      tour: state.tour,
+      dayOfTours: state.daysOfTour,
+      images: state.images,
+    );
+
+    result.fold(
+      (failure) {
+        ScaffoldMessenger.of(
+          AppNavigator.currentContext,
+        ).showSnackBar(SnackBar(content: Text("failure")));
+      },
+      (tour) {
+        ScaffoldMessenger.of(
+          AppNavigator.currentContext,
+        ).showSnackBar(SnackBar(content: Text("success")));
+      },
+    );
+
+    return;
   }
 
   void validate() {

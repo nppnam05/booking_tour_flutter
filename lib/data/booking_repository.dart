@@ -1,4 +1,3 @@
-
 import 'dart:ffi';
 import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
@@ -55,13 +54,18 @@ abstract class BookingRepository {
     String order = "ASC",
     String? filter,
   });
-  Future<Either<Failure, void>> deleteTrip({
-    required int id,
-  });
+  Future<Either<Failure, void>> deleteTrip({required int id});
 
   Future<Either<Failure, List<Assignment>>> getAssignments();
 
-  Future<Either<Failure, Tour>> createTour({
+  Future<Either<Failure, Trip>> createTour({
+    required CTTour tour,
+    required List<CTDayOfTour> dayOfTours,
+    required List<Either<File, String>> images,
+  });
+
+  Future<Either<Failure, Trip>> updateTour({
+    required int id,
     required CTTour tour,
     required List<CTDayOfTour> dayOfTours,
     required List<Either<File, String>> images,
@@ -151,7 +155,6 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
-
   @override
   Future<Either<Failure, List<LocationActivity>>> getLocationActivities({
     required int placeId,
@@ -179,8 +182,9 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
   @override
-  Future<Either<Failure,List<Trip>>> getTrips({
+  Future<Either<Failure, List<Trip>>> getTrips({
     String sortBy = "Title",
     String order = "ASC",
     String? filter,
@@ -201,14 +205,11 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
   @override
-  Future<Either<Failure, void>> deleteTrip({
-    required int id,
-  }) async {
+  Future<Either<Failure, void>> deleteTrip({required int id}) async {
     try {
-      await _coreService.deleteTrip(
-        id: id,
-      );
+      await _coreService.deleteTrip(id: id);
       return Right(null);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
@@ -232,7 +233,8 @@ class BookingRepositoryImp implements BookingRepository {
       var assignmentResponses = data.map(
         (json) => AssignmentResponse.fromJson(json as Map<String, dynamic>),
       );
-      var assignments = assignmentResponses.map((response) => response.map()).toList();
+      var assignments =
+          assignmentResponses.map((response) => response.map()).toList();
 
       print('Assignments count: ${assignments.length}');
       return Right(assignments);
@@ -245,7 +247,7 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, Tour>> createTour({
+  Future<Either<Failure, Trip>> createTour({
     required CTTour tour,
     required List<CTDayOfTour> dayOfTours,
     required List<Either<File, String>> images,
@@ -253,7 +255,7 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       var createDayOfTourRequests =
           dayOfTours.map((i) => i.mapToRequest()).toList();
-      var createTourRequest = tour.mapToRequest();
+      var createTourRequest = tour.mapToCreateRequest();
       createTourRequest.day = createDayOfTourRequests.length;
       createTourRequest.dayOfTours = createDayOfTourRequests;
 
@@ -278,16 +280,53 @@ class BookingRepositoryImp implements BookingRepository {
       //TODO: write api to receive ratainImage and file
       var response = await _coreService.createTour(createTourRequest);
       var json = response.data as Map<String, dynamic>;
-      var tourResult = Tour(
-        imageUrl: "",
-        location: "",
-        description: "",
-        startDate: "",
-        endDate: "",
-        maxCapacity: 1,
-      );
+      var trip = TripManagerResponse.fromJson(json).map();
 
-      return Right(tourResult);
+      return Right(trip);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Trip>> updateTour({
+    required int id,
+    required CTTour tour,
+    required List<CTDayOfTour> dayOfTours,
+    required List<Either<File, String>> images,
+  }) async {
+    try {
+      var createDayOfTourRequests =
+          dayOfTours.map((i) => i.mapToRequest()).toList();
+
+      List<Future<String>> futureImages = [];
+      List<String> retainImages = [];
+      images.forEach((image) {
+        image.fold(
+          (file) {
+            var futureImage = AppEncodeHelper.toBase64String(file);
+            futureImages.add(futureImage);
+          },
+          (url) {
+            retainImages.add(url);
+          },
+        );
+      });
+
+      var encodeImages = await Future.wait(futureImages);
+
+      var updateTourRequest = tour.mapToUpdateRequest();
+      updateTourRequest.id = id;
+      updateTourRequest.day = createDayOfTourRequests.length;
+      updateTourRequest.dayOfTours = createDayOfTourRequests;
+      updateTourRequest.tourImages = encodeImages;
+      updateTourRequest.retainImages = retainImages;
+
+      var response = await _coreService.updateTour(updateTourRequest);
+      var json = response.data as Map<String, dynamic>;
+      var trip = TripManagerResponse.fromJson(json).map();
+
+      return Right(trip);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

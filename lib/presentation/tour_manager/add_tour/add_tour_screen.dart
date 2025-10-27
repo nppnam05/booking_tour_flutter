@@ -17,18 +17,27 @@ import 'package:booking_tour_flutter/presentation/widgets/bk_textfield.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinput/pinput.dart';
 
 class AddTourScreen extends StatelessWidget {
-  final _pickImageCubit = PickImageButtonCubit(
-    allowMultiple: true,
-    maxImages: 5,
-  );
-  final _addTourCubit = AddTourCubit();
+  late final AddTourCubit _addTourCubit;
+  final VoidCallback onSave;
   final TextEditingController _tourNameController = TextEditingController();
   final TextEditingController _tourDescController = TextEditingController();
   final TextEditingController _tourPriceController = TextEditingController();
   final TextEditingController _tourPercentController = TextEditingController();
-  AddTourScreen({super.key});
+  final bool isAllowChangeAmountDays;
+  final String title;
+
+  AddTourScreen({
+    super.key,
+    this.isAllowChangeAmountDays = true,
+    required this.title,
+    required this.onSave,
+    required AddTourCubit addTourCubit,
+  }) {
+    _addTourCubit = addTourCubit;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +46,21 @@ class AddTourScreen extends StatelessWidget {
         value: _addTourCubit,
         child: BlocBuilder<AddTourCubit, AddTourState>(
           builder: (context, state) {
+            _tourNameController.setText(state.tour.tourName);
+            _tourDescController.setText(state.tour.description);
+            _tourPriceController.setText(state.tour.price);
+            _tourPercentController.setText(state.tour.percent);
+
             return CustomScrollView(
               slivers: [
-                SliverAppBar(title: Text("Thêm chuyến đi")),
+                SliverAppBar(title: Text(title)),
                 SliverToBoxAdapter(
                   child: NullableImage(
                     isShowError: state.isValidated,
                     errorMessage: state.getErrorMessage(
                       AddTourErrorFields.tourImages,
                     ),
+                    image: state.images.firstOrNull,
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -55,7 +70,7 @@ class AddTourScreen extends StatelessWidget {
                       PickImageButtonCubit,
                       PickImageButtonState
                     >(
-                      bloc: _pickImageCubit,
+                      bloc: context.read<PickImageButtonCubit>(),
                       listener: (context, state) {
                         List<Either<File, String>> files =
                             state.files
@@ -70,9 +85,9 @@ class AddTourScreen extends StatelessWidget {
                         _addTourCubit.setImages(files);
                       },
                       child: ImageButtons(
-                        pickImageCubit: _pickImageCubit,
+                        pickImageCubit: context.read<PickImageButtonCubit>(),
                         onDeleteAllPressed: () {
-                          _pickImageCubit.clearAllImages();
+                          context.read<PickImageButtonCubit>().clearAllImages();
                         },
                       ),
                     ),
@@ -82,7 +97,7 @@ class AddTourScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ImageList(
-                      onImageDelete: (i) => _pickImageCubit.removeImage(i),
+                      onImageDelete: (i) => context.read<PickImageButtonCubit>().removeImage(i),
                       images: state.images,
                     ),
                   ),
@@ -187,6 +202,7 @@ class AddTourScreen extends StatelessWidget {
                       top: 10,
                     ),
                     child: CreateDayOfTourField(
+                      isAllowChangeAmountDay: isAllowChangeAmountDays,
                       isValidated: state.isValidated,
                       getError: state.getErrorMessage,
                       dayOfTours: state.daysOfTour,
@@ -204,12 +220,7 @@ class AddTourScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 100,
                     child: Center(
-                      child: BkButton(
-                        onPressed: () {
-                          _addTourCubit.add();
-                        },
-                        title: "Lưu",
-                      ),
+                      child: BkButton(onPressed: onSave, title: "Lưu"),
                     ),
                   ),
                 ),

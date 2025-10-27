@@ -36,7 +36,7 @@ class ImageList extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: Stack(
                     children: [
-                      BkImage(image: images[i]),
+                      BkImage(image: images[i], width: 100, height: 80),
                       Positioned(
                         right: 0,
                         top: 0,

@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/validate_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,7 @@ import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 
 class AddTourState {
+  final int? id;
   final CTTour tour;
   final List<CTDayOfTour> daysOfTour;
   final int selectedDayOfTour;
@@ -18,6 +20,7 @@ class AddTourState {
   late final ValidateState validateState;
 
   AddTourState({
+    this.id,
     required this.tour,
     required this.daysOfTour,
     required this.selectedDayOfTour,
@@ -30,6 +33,7 @@ class AddTourState {
   }
 
   AddTourState copyWith({
+    int? id,
     CTTour? tour,
     List<CTDayOfTour>? daysOfTour,
     int? selectedDayOfTour,
@@ -38,6 +42,7 @@ class AddTourState {
     ValidateState? validateState,
   }) {
     return AddTourState(
+      id: id ?? this.id,
       tour: tour ?? this.tour,
       daysOfTour: daysOfTour ?? this.daysOfTour,
       selectedDayOfTour: selectedDayOfTour ?? this.selectedDayOfTour,
@@ -52,4 +57,21 @@ class AddTourState {
   }
 
   bool get isValidated => validateState.isValidated;
+}
+
+extension TripToStateMapper on Trip {
+  AddTourState toAddTourState() {
+    var tour = this.maptoCTTour();
+    var daysOfTour = this.dayOfTours.map((i) => i.mapToCTDayOfTour()).toList();
+    var images = this.tourImages.map((i) => right<File, String>(i)).toList();
+
+    return AddTourState(
+      id: this.id,
+      tour: tour,
+      daysOfTour: daysOfTour,
+      selectedDayOfTour: 0,
+      provinces: provinces,
+      images: images,
+    );
+  }
 }

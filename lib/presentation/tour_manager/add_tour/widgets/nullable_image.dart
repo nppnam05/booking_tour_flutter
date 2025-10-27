@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/bk_image.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 class NullableImage extends StatelessWidget {
   final bool isShowError;
   final String? errorMessage;
-  const NullableImage({super.key, this.isShowError = false, this.errorMessage});
+  final Either<File, String>? image;
+  const NullableImage({super.key, this.isShowError = false, this.errorMessage, this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +19,14 @@ class NullableImage extends StatelessWidget {
       children: [
         ConstrainedBox(
           constraints: BoxConstraints.expand(
-            width: double.infinity,
             height: 250,
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Stack(children: [emptyImage(context)]),
+            child: Stack(children: [
+              emptyImage(context),
+              BkImage(image: image, width: double.infinity, height: double.infinity,),
+              ]),
           ),
         ),
 

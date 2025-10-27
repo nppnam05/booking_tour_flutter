@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/data/request/create_day_of_tour_request.dart';
+import 'package:booking_tour_flutter/data/request/tour/create_day_of_tour_request.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'create_tour_request.g.dart';

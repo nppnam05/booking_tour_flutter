@@ -5,19 +5,22 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 class BkImage extends StatelessWidget {
-  final Either<File, String> image;
+  final Either<File, String>? image;
+  final double? width; 
+  final double? height;
 
-  const BkImage({super.key, required this.image});
+  const BkImage({super.key, required this.image, this.width, this.height});
 
   @override
   Widget build(BuildContext context) {
-    return image.fold(
+    if (image == null) return SizedBox();
+    return image!.fold(
       (file) {
         return Image.file(
           file,
           fit: BoxFit.fill,
-          width: 100,
-          height: 80,
+          width: width,
+          height: height,
           errorBuilder: (context, error, stackTrace) {
             return NullableImage();
           },
@@ -27,8 +30,8 @@ class BkImage extends StatelessWidget {
         return Image.network(
           url,
           fit: BoxFit.fill,
-          width: 100,
-          height: 80,
+          width: width,
+          height: height,
           errorBuilder: (context, error, stackTrace) {
             return NullableImage();
           },

@@ -17,18 +17,15 @@ class TripCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-      
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                trip.tourImages,
+                trip.tourImages.firstOrNull ?? "",
                 width: 100,
                 height: 80,
                 fit: BoxFit.cover,
@@ -57,9 +54,10 @@ class TripCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Địa điểm: ${trip.province.name}',
+                    'Địa điểm: ${trip.provinces.join(", ")}',
                     style: TextStyle(
-                      fontSize: 14, fontWeight : FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                       color: Colors.grey[600],
                     ),
                   ),
@@ -85,7 +83,10 @@ class TripCard extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                         ),
                         child: Text('Xóa', style: TextStyle(fontSize: 12)),
                       ),
@@ -98,9 +99,15 @@ class TripCard extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                         ),
-                        child: Text('Xem chi tiết', style: TextStyle(fontSize: 12)),
+                        child: Text(
+                          'Xem chi tiết',
+                          style: TextStyle(fontSize: 12),
+                        ),
                       ),
                     ],
                   ),

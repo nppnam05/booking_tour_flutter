@@ -4,14 +4,12 @@ import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 
 class DayActivity {
-  DateTime dateTime; 
-  Place place; 
-  LocationActivity locationActivity; 
+  DateTime dateTime;
+  LocationActivity locationActivity;
   Activity activity;
 
   DayActivity({
     required this.dateTime,
-    required this.place,
     required this.locationActivity,
     required this.activity,
   });

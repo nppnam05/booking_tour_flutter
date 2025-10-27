@@ -1,4 +1,5 @@
-import 'package:booking_tour_flutter/data/request/create_tour_request.dart';
+import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
+import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
@@ -49,15 +50,14 @@ abstract class CoreService {
     @Query("filter") String? filter,
   });
   @DELETE("/Tour/{id}")
-  Future<void> deleteTrip({
-    @Path("id") required int id,
-  });
+  Future<void> deleteTrip({@Path("id") required int id});
 
   @GET("/Assignment")
   Future<RestResponse> getAssignments();
 
   @POST("/Tour")
-  Future<RestResponse> createTour(
-    @Body() CreateTourRequest request
-  );
+  Future<RestResponse> createTour(@Body() CreateTourRequest request);
+
+  @PUT("/Tour")
+  Future<RestResponse> updateTour(@Body() UpdateTourRequest request);
 }

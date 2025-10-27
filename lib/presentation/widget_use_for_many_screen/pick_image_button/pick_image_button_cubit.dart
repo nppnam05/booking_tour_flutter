@@ -14,6 +14,10 @@ class PickImageButtonCubit extends Cubit<PickImageButtonState> {
         ),
       );
 
+  void setImages(List<Either<XFile, String>> images){
+    emit(state.copyWith(files: images));
+  }
+
   Future<void> pickImage() async {
     emit(state.copyWith(picking: true, error: null));
 

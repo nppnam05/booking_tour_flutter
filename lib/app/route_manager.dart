@@ -8,6 +8,8 @@ import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_dia_diem_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/real_add_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/update_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/assignment_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_dong_screen.dart';
@@ -44,6 +46,7 @@ class RouteName {
   static final authOtpChangePassword = "auth_otp_change_password";
   static final assignment = "assignment";
   static final addTour = "addTour";
+  static final updateTour = "updateTour";
   static final tripList = "tripList";
 }
 
@@ -68,9 +71,9 @@ class RouteManager {
     RouteName.authOtp: (context) => AuthOtpScreen(),
     RouteName.changePassword: (context) => ChangePasswordScreen(),
     RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
-    RouteName.addTour: (context) => AddTourScreen(),
-    RouteName.tripList: (context)=> TripScreen(),
-    RouteName.assignment: (context)=> AssignmentScreen(),
-    
+    RouteName.addTour: (context) => RealAddTourScreen(),
+    RouteName.tripList: (context) => TripScreen(),
+    RouteName.assignment: (context) => AssignmentScreen(),
+    RouteName.updateTour: (context) => UpdateTourScreen(),
   };
 }

@@ -85,7 +85,7 @@ class CreateActivityDayField extends StatelessWidget {
                   padding: 0,
                   onChange: (place) {
                     thisActivity.place = place;
-                    context.read<AddTourCubit>().rebuild();
+                    context.read<AddTourCubit>().correctDayActivity(thisActivity);
                   },
                   place: thisActivity.place,
                   provinceIds: provinceIds,
@@ -102,7 +102,7 @@ class CreateActivityDayField extends StatelessWidget {
                   padding: 0,
                   onChange: (locationActivity) {
                     thisActivity.locationActivity = locationActivity;
-                    context.read<AddTourCubit>().rebuild();
+                    context.read<AddTourCubit>().correctDayActivity(thisActivity);
                   },
                   locationActivity: thisActivity.locationActivity,
                   placeId: thisActivity.place?.id,
@@ -119,6 +119,7 @@ class CreateActivityDayField extends StatelessWidget {
                   padding: 0,
                   onChange: (activity) {
                     thisActivity.activity = activity;
+                    context.read<AddTourCubit>().correctDayActivity(thisActivity);
                   },
                   activity: thisActivity.activity,
                   locationActivityId: thisActivity.locationActivity?.id,

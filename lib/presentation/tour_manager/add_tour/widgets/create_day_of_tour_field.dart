@@ -18,11 +18,13 @@ class CreateDayOfTourField extends StatelessWidget {
   final bool isValidated;
   final List<CTDayOfTour> dayOfTours;
   final int selectedDay;
+  final bool isAllowChangeAmountDay;
 
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   CreateDayOfTourField({
     super.key,
+    this.isAllowChangeAmountDay = true,
     required this.dayOfTours,
     required this.selectedDay,
     required this.getError,
@@ -52,14 +54,17 @@ class CreateDayOfTourField extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Spacer(),
-              BkButton(
-                onPressed: () {
-                  context.read<AddTourCubit>().addDayOfTour();
-                },
-                title: "Thêm ngày",
+              Visibility(
+                visible: isAllowChangeAmountDay,
+                child: BkButton(
+                  onPressed: () {
+                    context.read<AddTourCubit>().addDayOfTour();
+                  },
+                  title: "Thêm ngày",
+                ),
               ),
               Visibility(
-                visible: dayOfTours.length > 1,
+                visible: isAllowChangeAmountDay && dayOfTours.length > 1,
                 child: BkButton(
                   onPressed: () {
                     context.read<AddTourCubit>().removeDayOfTour();
@@ -84,7 +89,7 @@ class CreateDayOfTourField extends StatelessWidget {
             onChange: (value) => dayOfTours[selectedDay].title = value,
             isShowError: isValidated,
             errorMessage: getError(
-              sprintf(AddTourErrorFields.dayOfTourTitle, [selectedDay])
+              sprintf(AddTourErrorFields.dayOfTourTitle, [selectedDay]),
             ),
           ),
           SizedBox(height: 10),
@@ -95,7 +100,7 @@ class CreateDayOfTourField extends StatelessWidget {
             onChange: (value) => dayOfTours[selectedDay].description = value,
             isShowError: isValidated,
             errorMessage: getError(
-              sprintf(AddTourErrorFields.dayOfTourDescription, [selectedDay])
+              sprintf(AddTourErrorFields.dayOfTourDescription, [selectedDay]),
             ),
           ),
 
