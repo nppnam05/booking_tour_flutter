@@ -78,7 +78,13 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
               child: SearchBarWidget(
                 hintText: 'Tìm kiếm...',
                 controller: _controller,
-                onClear: _controller.clear,
+                onChanged: (query) {
+                  _cubit.searchLocationActivities(query);
+                },
+                onClear: () {
+                  _controller.clear();
+                  _cubit.clearSearch();
+                },
                 focusNode: _focusNode,
               ),
             ),

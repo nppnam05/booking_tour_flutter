@@ -28,13 +28,34 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
         state.copyWith(
           status: DanhSachHoatDongStatus.success,
           danhSachHoatDong: locationActivities,
+          originalDanhSachHoatDong: locationActivities,
         ),
       ),
     );
   }
 
+  void searchLocationActivities(String query) {
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          searchQuery: '',
+          danhSachHoatDong: state.originalDanhSachHoatDong,
+        ),
+      );
+    } else {
+      final filtered =
+          state.originalDanhSachHoatDong
+              .where(
+                (activity) =>
+                    activity.name.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
+      emit(state.copyWith(searchQuery: query, danhSachHoatDong: filtered));
+    }
+  }
+
   void clearSearch() {
-    emit(state.copyWith(searchQuery: '', filteredActivities: state.activities));
+    getDanhSachHoatDong();
   }
 
   void setLocationActivity(LocationActivity locationActivity) {

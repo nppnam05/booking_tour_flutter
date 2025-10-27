@@ -6,6 +6,7 @@ enum DanhSachHoatDongStatus { initial, loading, success, failure }
 
 class DanhSachHoatDongState extends Equatable {
   final List<LocationActivity> danhSachHoatDong;
+  final List<LocationActivity> originalDanhSachHoatDong;
   final DanhSachHoatDongStatus status;
   final String? error;
   final LocationActivity? selectedLocationActivity;
@@ -15,6 +16,7 @@ class DanhSachHoatDongState extends Equatable {
 
   const DanhSachHoatDongState({
     this.danhSachHoatDong = const [],
+    this.originalDanhSachHoatDong = const [],
     this.status = DanhSachHoatDongStatus.initial,
     this.error,
     this.selectedLocationActivity,
@@ -25,6 +27,7 @@ class DanhSachHoatDongState extends Equatable {
 
   DanhSachHoatDongState copyWith({
     List<LocationActivity>? danhSachHoatDong,
+    List<LocationActivity>? originalDanhSachHoatDong,
     DanhSachHoatDongStatus? status,
     String? error,
     LocationActivity? selectedLocationActivity,
@@ -34,6 +37,7 @@ class DanhSachHoatDongState extends Equatable {
   }) {
     return DanhSachHoatDongState(
       danhSachHoatDong: danhSachHoatDong ?? this.danhSachHoatDong,
+      originalDanhSachHoatDong: originalDanhSachHoatDong ?? this.originalDanhSachHoatDong,
       status: status ?? this.status,
       error: error ?? this.error,
       selectedLocationActivity: selectedLocationActivity ?? this.selectedLocationActivity,
@@ -44,5 +48,5 @@ class DanhSachHoatDongState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [danhSachHoatDong, status, error, selectedLocationActivity, activities, filteredActivities, searchQuery];
+  List<Object?> get props => [danhSachHoatDong, originalDanhSachHoatDong, status, error, selectedLocationActivity, activities, filteredActivities, searchQuery];
 }

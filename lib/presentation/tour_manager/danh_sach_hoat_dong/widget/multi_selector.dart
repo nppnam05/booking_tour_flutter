@@ -88,7 +88,6 @@ class MultiSelector<T> extends StatelessWidget {
                         fontSize: AppFonts.fontSize14,
                         fontWeight: FontWeight.w500,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
