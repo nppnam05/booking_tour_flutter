@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:booking_tour_flutter/domain/location.dart';
+import 'package:booking_tour_flutter/domain/province.dart';
 
 class Place {
   int id;
   String name;
-  Location location;
+  Province? province;
 
-  Place({required this.id, required this.name, required this.location});
+  Place({required this.id, required this.name, this.province});
 }

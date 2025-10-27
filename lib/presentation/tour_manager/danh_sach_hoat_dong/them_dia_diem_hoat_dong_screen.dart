@@ -193,7 +193,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
 
       _cubit.themHoatDong(
         _tenDiaDiemController.text.trim(),
-        widget.placeId ?? 1,
+        widget.placeId ?? 2,
         _selectedActivities,
       );
     }

@@ -1,0 +1,159 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/cubit/sua_dia_danh_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/cubit/sua_dia_danh_state.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
+import 'package:booking_tour_flutter/presentation/widgets_dialog/generic_selected_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class SuaDiaDanhScreen extends StatelessWidget {
+  SuaDiaDanhScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final place = ModalRoute.of(context)!.settings.arguments as Place;
+
+    return BlocProvider(
+      create: (_) => SuaDiaDanhCubit(place: place),
+      child: _SuaDiaDanhView(place: place),
+    );
+  }
+}
+
+class _SuaDiaDanhView extends StatelessWidget {
+  final Place place;
+  _SuaDiaDanhView({required this.place});
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<SuaDiaDanhCubit>();
+    final nameController = TextEditingController(text: place.name);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(style: AppFonts.textWhite, "Sửa Địa Danh"),
+        backgroundColor: AppColors.button,
+        centerTitle: true,
+      ),
+      body: BlocConsumer<SuaDiaDanhCubit, SuaDiaDanhState>(
+        listener:
+            (context, state) => {
+              if (state.successMessage != null)
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.successMessage!)),
+                  ),
+                  Navigator.pop(context, true),
+                },
+              if (state.error != null)
+                {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.error!))),
+                },
+            },
+        builder: (context, state) {
+          return Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: AppColors.gray),
+                ),
+                child: Column(
+                  children: [
+                    _buildTinhThanh(context, cubit, state.provinces, state.province),
+                    _buildTenDiaDanh(cubit, nameController),
+                  ],
+                ),
+              ),
+              const Spacer(),
+
+              DeleteButtonWidget(
+                onDelete: () {
+                  if (!state.isLoading) {
+                    cubit.updatePlace(place.id);
+                  }
+                },
+                text: "Lưu",
+                textColor: Colors.white,
+                backgroundColor: AppColors.button,
+              ),
+              SizedBox(height: 50),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildTinhThanh(
+  BuildContext context,
+  SuaDiaDanhCubit cubit,
+  List<Province> provinces,
+  Province? selectedProvince,
+) {
+  return Padding(
+    padding: const EdgeInsets.all(12),
+    child: InkWell(
+      onTap: () async {
+        final Province? result = await showDialog<Province>(
+          context: context,
+          builder: (_) => SelectionDialog<Province>(
+            title: "Chọn Tỉnh",
+            items: provinces,
+            display: (p) => p.name,
+            isMultiSelect: false,
+            preSelectedItems: selectedProvince != null ? [selectedProvince] : [],
+          ),
+        );
+
+        if (result != null) {
+          cubit.setProvince(result);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: AppColors.secondary),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              selectedProvince?.name ?? "Chọn tỉnh",
+              style: AppFonts.text16,
+            ),
+            const Icon(Icons.arrow_drop_down),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+
+  Widget _buildTenDiaDanh(
+    SuaDiaDanhCubit cubit,
+    TextEditingController nameController,
+  ) {
+    return Padding(
+      padding: EdgeInsets.all(12),
+      child: notIconToggleInputField(
+        onChanged: (i) {
+          cubit.setName(i);
+        },
+        nameController,
+        "Tên địa danh",
+        AppColors.gray,
+      ),
+    );
+  }
+}

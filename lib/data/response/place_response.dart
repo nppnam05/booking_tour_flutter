@@ -1,5 +1,4 @@
 import 'package:booking_tour_flutter/data/response/province_response.dart';
-import 'package:booking_tour_flutter/domain/location.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -22,10 +21,6 @@ class PlaceResponse {
 
 extension PlaceResponseMapper on PlaceResponse {
   Place map() {
-    return Place(
-      id: id ?? 0,
-      name: name ?? "",
-      location: Location(id: province?.id ?? 0, name: province?.name ?? ""),
-    );
+    return Place(id: id ?? 0, name: name ?? "", province: province?.map());
   }
 }

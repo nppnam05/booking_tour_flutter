@@ -1,4 +1,3 @@
-import 'package:booking_tour_flutter/domain/location.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
 

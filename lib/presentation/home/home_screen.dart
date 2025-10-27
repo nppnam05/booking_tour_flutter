@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: Text("home")),
         body: BlocBuilder<HomeCubit, HomeState>(
-          bloc: _cubit,
+          bloc: _cubit, 
           builder:
               (context, state) => CustomScrollView(
                 slivers: [

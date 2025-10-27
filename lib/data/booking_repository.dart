@@ -48,6 +48,19 @@ abstract class BookingRepository {
     String? filter,
   });
 
+  Future<Either<Failure, Place>> updatePlace({
+    required int id,
+    required String name,
+    required int locationId,
+  });
+
+  Future<Either<Failure, Place>> createPlace({
+    required String name,
+    required int locationId,
+  });
+
+  Future<Either<Failure, Place>> deletePlace({required int id});
+
   Future<Either<Failure, List<Activity>>> postActivity(String action);
   Future<Either<Failure, List<Activity>>> putActivity(int id, String action);
   Future<Either<Failure, bool>> deleteActivity(int id);
@@ -179,6 +192,7 @@ class BookingRepositoryImp implements BookingRepository {
       var provinceResponses = data.map(
         (json) => ProvinceResponse.fromJson(json as Map<String, dynamic>),
       );
+
       var provinces =
           provinceResponses.map((response) => response.map()).toList();
 
@@ -235,6 +249,52 @@ class BookingRepositoryImp implements BookingRepository {
           locationActivityResponses.map((response) => response.map()).toList();
 
       return Right(locationActivities);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Place>> updatePlace({
+    required int id,
+    required String name,
+    required int locationId,
+  }) async {
+    try {
+      final body = {"id": id, "name": name, "locationId": locationId};
+
+      final response = await _coreService.updatePlace(body);
+      final data = response.data as Map<String, dynamic>;
+      final placeResponse = PlaceResponse.fromJson(data);
+      return Right(placeResponse.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Place>> createPlace({
+    required String name,
+    required int locationId,
+  }) async {
+    try {
+      final body = {"name": name, "locationId": locationId};
+      final response = await _coreService.createPlace(body);
+      final data = response.data as Map<String, dynamic>;
+      final placeResponse = PlaceResponse.fromJson(data);
+      return Right(placeResponse.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Place>> deletePlace({required int id}) async {
+    try {
+      final response = await _coreService.deletePlace(id);
+      final data = response.data as Map<String, dynamic>;
+      final placeResponse = PlaceResponse.fromJson(data);
+      return Right(placeResponse.map());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

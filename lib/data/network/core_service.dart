@@ -61,6 +61,18 @@ abstract class CoreService {
     @Query("filter") String? filter,
   });
 
+  // PUT
+  @PUT("/Place")
+  Future<RestResponse> updatePlace(@Body() Map<String, dynamic> body);
+
+  // POST
+  @POST("/Place")
+  Future<RestResponse> createPlace(@Body() Map<String, dynamic> body);
+
+  // DELETE
+  @DELETE("/Place/{id}")
+  Future<RestResponse> deletePlace(@Path("id") int placeId);
+
   @POST("/LocationActivity")
   Future<AddLocationActivityResponse> addLocationActivities(
     @Body() AddLocationActivityRequest request,

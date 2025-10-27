@@ -1,5 +1,4 @@
 import 'package:booking_tour_flutter/app/app_navigator.dart';
-import 'package:booking_tour_flutter/app/dependency_injection/theme/theme_manager.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -10,10 +9,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppThemes.lightTheme,
+      theme: ThemeData(primarySwatch: Colors.grey),
       navigatorKey: AppNavigator.navigatorKey,
       routes: RouteManager.routes,
-      initialRoute: RouteName.danhSachHoatDong,
+      initialRoute: RouteName.hoatDong,
     );
   }
 }
