@@ -11,8 +11,21 @@ LocationActivityResponse _$LocationActivityResponseFromJson(
 ) => LocationActivityResponse(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
+  place:
+      json['place'] == null
+          ? null
+          : PlaceResponse.fromJson(json['place'] as Map<String, dynamic>),
+  activities:
+      (json['activities'] as List<dynamic>?)
+          ?.map((e) => ActivityResponseData.fromJson(e as Map<String, dynamic>))
+          .toList(),
 );
 
 Map<String, dynamic> _$LocationActivityResponseToJson(
   LocationActivityResponse instance,
-) => <String, dynamic>{'id': instance.id, 'name': instance.name};
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'place': instance.place,
+  'activities': instance.activities,
+};
