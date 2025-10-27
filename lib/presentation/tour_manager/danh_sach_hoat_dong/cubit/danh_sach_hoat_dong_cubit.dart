@@ -12,7 +12,6 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
   Future<void> getDanhSachHoatDong({int? placeId}) async {
     emit(state.copyWith(status: DanhSachHoatDongStatus.loading));
     final bookingRepository = GetIt.instance<BookingRepository>();
-    // Hard code placeId = 1
     final finalPlaceId = placeId ?? 2;
     final result = await bookingRepository.getLocationActivities(
       placeId: finalPlaceId,

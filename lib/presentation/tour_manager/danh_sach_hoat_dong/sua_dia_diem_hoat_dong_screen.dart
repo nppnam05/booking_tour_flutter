@@ -194,7 +194,7 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
         return;
       }
 
-      final placeId = widget.locationActivity?.place.id ?? 1;
+      final placeId = widget.locationActivity?.place.id ?? 2;
       _cubit.suaHoatDong(
         widget.locationActivity!.id,
         _tenDiaDiemController.text,

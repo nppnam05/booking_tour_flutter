@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThemDiaDiemHoatDongScreen extends StatefulWidget {
-  const ThemDiaDiemHoatDongScreen({super.key});
+  final int? placeId;
+
+  const ThemDiaDiemHoatDongScreen({super.key, this.placeId});
 
   @override
   State<ThemDiaDiemHoatDongScreen> createState() =>
@@ -191,7 +193,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
 
       _cubit.themHoatDong(
         _tenDiaDiemController.text.trim(),
-        2, // placeId hardcode = 1
+        widget.placeId ?? 1,
         _selectedActivities,
       );
     }
