@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.grey),
       navigatorKey: AppNavigator.navigatorKey,
       routes: RouteManager.routes,
-      initialRoute: RouteName.tourGuideAssignment,
+      initialRoute: RouteName.hoatDong,
     );
   }
 }
