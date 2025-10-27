@@ -62,7 +62,8 @@ class RouteManager {
     RouteName.danhSachHoatDong: (context) => DanhSachHoatDongScreen(),
     RouteName.themDiaDiemHoatDong: (context) => ThemDiaDiemHoatDongScreen(),
     RouteName.suaDiaDiemHoatDong: (context) {
-      final args = ModalRoute.of(context)!.settings.arguments as LocationActivity?;
+      final args =
+          ModalRoute.of(context)!.settings.arguments as LocationActivity?;
       return SuaDiaDiemHoatDongScreen(locationActivity: args);
     },
     RouteName.hoatDong: (context) => HoatDongScreen(),
