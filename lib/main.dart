@@ -1,14 +1,13 @@
 import 'package:booking_tour_flutter/app.dart';
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  //set
-  // Khởi tạo binding trước
   WidgetsFlutterBinding.ensureInitialized();
+
   configureInjectable();
 
   // init firebase

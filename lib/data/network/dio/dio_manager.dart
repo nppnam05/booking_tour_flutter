@@ -9,14 +9,14 @@ class HTTPHeader {
 
 class HTTPValue {
   static final String contentJson = "application/json";
-  static final String baseURL = "https://jsonplaceholder.typicode.com";
+  static final String baseURL = "http://tt1220-001-site1.ntempurl.com";
 }
 
 @module
 abstract class DioManager {
   @factoryMethod
   Dio createDio() {
-    final timeout = Duration(seconds: 1);
+    final timeout = Duration(seconds: 15);
 
     final dio = Dio();
 
