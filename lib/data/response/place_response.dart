@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'place_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class PlaceResponse {
   int? id;
   String? name;
@@ -15,6 +15,8 @@ class PlaceResponse {
 
   factory PlaceResponse.fromJson(Map<String, dynamic> json) =>
       _$PlaceResponseFromJson(json);
+      
+  Map<String, dynamic> toJson() => _$PlaceResponseToJson(this);
 }
 
 extension PlaceResponseMapper on PlaceResponse {

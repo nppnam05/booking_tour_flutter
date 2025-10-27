@@ -1,0 +1,45 @@
+class ScheduleAssignmentTourguide {
+  final int id;
+  final int tourId;
+  final DateTime startDate;
+  final DateTime endDate;
+  final int maxSlot;
+  final String code;
+
+  final Tour tour;
+
+  ScheduleAssignmentTourguide({
+    required this.id,
+    required this.tourId,
+    required this.startDate,
+    required this.endDate,
+    required this.code,
+    required this.maxSlot,
+    required this.tour,
+  });
+
+  static ScheduleAssignmentTourguide empty() {
+    return ScheduleAssignmentTourguide(
+      id: 0,
+      tourId: 0,
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
+      code: '',
+      maxSlot: 0,
+      tour: Tour(title: '', locations: []),
+    );
+  }
+}
+
+class Tour {
+  final String title;
+  final List<Location> locations;
+  Tour({required this.title, required this.locations});
+}
+
+
+class Location {
+  final String name;
+
+  Location({required this.name});
+}

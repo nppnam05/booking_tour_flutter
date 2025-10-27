@@ -17,7 +17,6 @@ import 'package:booking_tour_flutter/presentation/widgets/bk_textfield.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pinput/pinput.dart';
 
 class AddTourScreen extends StatelessWidget {
   late final AddTourCubit _addTourCubit;
@@ -46,10 +45,10 @@ class AddTourScreen extends StatelessWidget {
         value: _addTourCubit,
         child: BlocBuilder<AddTourCubit, AddTourState>(
           builder: (context, state) {
-            _tourNameController.setText(state.tour.tourName);
-            _tourDescController.setText(state.tour.description);
-            _tourPriceController.setText(state.tour.price);
-            _tourPercentController.setText(state.tour.percent);
+            _tourNameController.text  = state.tour.tourName;
+            _tourDescController.text = state.tour.description;
+            _tourPriceController.text = state.tour.price;
+            _tourPercentController.text = state.tour.percent;
 
             return CustomScrollView(
               slivers: [

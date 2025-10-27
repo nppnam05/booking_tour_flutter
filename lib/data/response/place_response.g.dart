@@ -22,5 +22,5 @@ Map<String, dynamic> _$PlaceResponseToJson(PlaceResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'location': instance.location,
+      'location': instance.location?.toJson(),
     };
