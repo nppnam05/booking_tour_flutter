@@ -23,7 +23,9 @@ class ChangePasswordScreen extends StatelessWidget {
       create: (context) => _cubit,
       child: Scaffold(
         appBar: AppBar(backgroundColor: AppColors.scaffoldBackgroundColor),
-        body: Center(child: wrappedOutside(context, columnOfWidget())),
+        body: SingleChildScrollView(
+          child: Center(child: wrappedOutside(context, columnOfWidget())),
+        ),
       ),
     );
   }
@@ -53,13 +55,13 @@ class ChangePasswordScreen extends StatelessWidget {
             children: [
               ToggleInputField(
                 controller: _controllerFirstPassword,
-                text: "Mật khẩu mới",
+                title: "Mật khẩu mới",
                 color: Colors.grey.shade100,
               ),
               const SizedBox(height: 12),
               ToggleInputField(
                 controller: _controllerPassword,
-                text: "Mật khẩu",
+                title: "Mật khẩu",
                 color: Colors.grey.shade100,
               ),
             ],
