@@ -1,11 +1,17 @@
-import 'package:booking_tour_flutter/domain/fake_post.dart';
+import 'package:booking_tour_flutter/domain/user.dart';
 
 class LoginState{
-  final List<FakePost> posts;
-  
-  LoginState({required this.posts});
+  final User user;
+  final bool login;
 
-  LoginState copyWith({List<FakePost>? posts}){
-    return LoginState(posts:  posts ?? this.posts);
+  
+  LoginState({required this.user, this.login = false});
+
+  LoginState copyWith({User? user}){
+    return LoginState(user:  user ?? this.user, login: true);
+  }
+  
+  LoginState copyWithError(){
+    return LoginState(user: User.empty(), login: false);
   }
 }

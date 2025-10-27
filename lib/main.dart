@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app.dart';
 import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/theme_manager.dart';
@@ -17,21 +18,5 @@ void main() async {
   // init firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const _App());
-}
-
-class _App extends StatelessWidget {
-  const _App();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Booking Tour Flutter',
-      navigatorKey: AppNavigator.navigatorKey,
-      theme: AppThemes.lightTheme,
-      routes: RouteManager.routes,
-      initialRoute: RouteName.addTour,
-    );
-  }
+  runApp(const MyApp());
 }

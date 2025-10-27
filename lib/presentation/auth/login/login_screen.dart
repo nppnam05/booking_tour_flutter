@@ -3,17 +3,17 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_cubit.dart';
+import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field.dart';
-import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field_ic.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
-  final _cubit = LoginCubit()..syncPost();
+  final _cubit = LoginCubit();
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
@@ -23,9 +23,7 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Center(child: wrappedOutside(context, columnOfWidget())),
-        ),
+        body: Center(child: wrappedOutside(context, columnOfWidget())),
       ),
     );
   }
@@ -34,63 +32,83 @@ class LoginScreen extends StatelessWidget {
   Widget columnOfWidget() {
     final context = AppNavigator.currentContext;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            NameOfScreen.login,
-            style: TextStyle(
-              fontSize: AppFonts.fontSize32,
-              fontFamily: AppFonts.fontFamily,
-              fontWeight: AppFonts.fontWeight500,
-              color: AppColors.textPrimary,
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        if (state.login) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RouteName.home,
+            (route) => false,
+          );
+        }
+        else{
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(child: Text('Đăng nhập thất bại')),
+              duration: const Duration(seconds: 1),
             ),
-          ),
-
-          const SizedBox(height: 50),
-
-          Column(
-            children: [
-              notToggleInputField(
-                _controllerEmail,
-                "Email",
-                Colors.grey.shade100,
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              NameOfScreen.login,
+              style: TextStyle(
+                fontSize: AppFonts.fontSize32,
+                fontFamily: AppFonts.fontFamily,
+                fontWeight: AppFonts.fontWeight500,
+                color: AppColors.textPrimary,
               ),
-              const SizedBox(height: 12),
-              ToggleInputField(
-                controller: _controllerPassword,
-                title: "Mật khẩu",
-                color: Colors.grey.shade100,
-              ),
-            ],
-          ),
+            ),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 50),
 
-          customButton(
-            // qua màn Home
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                RouteName.home,
-                (route) => false, // Xóa tất cả các route cũ
-              );
-            },
-            text: "Đăng nhập",
-          ),
+            notToggleInputField(
+              _controllerEmail,
+              "Email",
+              Colors.grey.shade100,
+            ),
+            const SizedBox(height: 12),
+            ToggleInputField(
+              controller: _controllerPassword,
+              title: "Mật khẩu",
+              color: Colors.grey.shade100,
+            ),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          Column(
-            children: [
-              iconLogin(),
-              const SizedBox(height: 12),
-              textDangKiQuenMatKhau(context),
-            ],
-          ),
-        ],
+            customButton(
+              onPressed: () {
+                if (_controllerEmail.text.isNotEmpty &&
+                    _controllerPassword.text.isNotEmpty) {
+                  _cubit.syncPost(
+                    _controllerEmail.text,
+                    _controllerPassword.text,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Center(child: Text('Vui lòng nhập đầy đủ thông tin')),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
+              text: "Đăng nhập",
+            ),
+
+            const SizedBox(height: 20),
+
+            iconLogin(),
+            const SizedBox(height: 12),
+            textDangKiQuenMatKhau(context),
+          ],
+        ),
       ),
     );
   }

@@ -1,24 +1,45 @@
-import 'dart:ffi';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
+import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
+import 'package:booking_tour_flutter/domain/tour_guide.dart';
+import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:dartz/dartz.dart';
 
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
-import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
+
+  Future<Either<Failure, bool>> checkAssignment({
+    required int scheduleId,
+    required List<TourGuideResponse> tourGuides,
+  });
+
+  Future<Either<Failure, List<TourGuide>>> getTourGuides({
+    required int idschedule,
+  });
+
+  Future<Either<Failure, ScheduleAssignmentTourguide>>
+  getScheduleAssignmentById({required int id});
+
+  Future<Either<Failure, User>> postLogin({
+    required String email,
+    required String password,
+  });
 
   Future<Either<Failure, List<Activity>>> getActivities({
     int? locationActivityId,
@@ -148,6 +169,87 @@ class BookingRepositoryImp implements BookingRepository {
 
       return Right(locationActivities);
     } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> postLogin({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      var response = await _coreService.login({
+        "email": email,
+        "password": password,
+      });
+
+      var data = response.data as Map<String, dynamic>;
+
+      var userResponse = UserResponse.fromJson(data);
+
+      var user = userResponse.map();
+
+      return Right(user);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, ScheduleAssignmentTourguide>>
+  getScheduleAssignmentById({required int id}) async {
+    try {
+      var response = await _coreService.getScheduleAssignmentById(id);
+
+      var data = response.data as Map<String, dynamic>;
+
+      var scheduleResponse = ScheduleAssignmentTourguideResponse.fromJson(data);
+
+      var schedule = scheduleResponse.map();
+
+      return Right(schedule);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TourGuide>>> getTourGuides({
+    required int idschedule,
+  }) async {
+    try {
+      var response = await _coreService.getTourGuideAssignmentById(idschedule);
+
+      var data = response.data as List<dynamic>;
+
+      var tourGuideResponses = data.map(
+        (json) => TourGuideResponse.fromJson(json as Map<String, dynamic>),
+      );
+
+      var tourGuides =
+          tourGuideResponses.map((response) => response.map()).toList();
+
+      return Right(tourGuides);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkAssignment({
+    required int scheduleId,
+    required List<TourGuideResponse> tourGuides,
+  }) async {
+    try {
+      var response = await _coreService.checkAssignment(scheduleId, tourGuides);
+
+      if (response.hashCode == 200) {
+        return Right(true);
+      } else {
+        return Left(ErrorHandler.handle("").failure);
+      }
+    } catch (e, stackTrace) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
