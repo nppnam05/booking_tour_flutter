@@ -99,9 +99,6 @@ class RouteManager {
     RouteName.tripList: (context) => TripScreen(),
     RouteName.assignment: (context) => AssignmentScreen(),
     RouteName.updateTour: (context) => UpdateTourScreen(),
-
-    RouteName.tripList: (context)=> TripScreen(),
-    RouteName.assignment: (context)=> AssignmentScreen(),
     RouteName.scheduleTourguide: (context)=> ScheduleTourguideScreen(),
     RouteName.ScheduleTourmanager: (context)=> ScheduleTourmanagerScreen(),
     RouteName.participants: (context) {
