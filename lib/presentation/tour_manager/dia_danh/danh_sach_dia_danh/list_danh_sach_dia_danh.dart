@@ -76,17 +76,27 @@ class ListDiaDanhItem extends StatelessWidget {
   }
 
   Widget _buildIconText(IconData icon, Color color, String text) {
-    var tmp = text.split(" ");
-    var limitedWords = tmp.length > 6 ? tmp.sublist(0, 6) : tmp;
-    var str = limitedWords.join(" ");
-    if (tmp.length > 6) str += " ...";
+  var tmp = text.split(" ");
+  var limitedWords = tmp.length > 6 ? tmp.sublist(0, 6) : tmp;
+  var str = limitedWords.join(" ");
+  if (tmp.length > 6) str += " ...";
 
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: color),
-        const SizedBox(width: 4),
-        Text(str, style: const TextStyle(fontSize: 16)),
-      ],
-    );
-  }
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Icon(icon, size: 18, color: color),
+      const SizedBox(width: 4),
+      Expanded(
+        child: Text(
+          str,
+          style: const TextStyle(fontSize: 16),
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+    ],
+  );
+}
+
 }
