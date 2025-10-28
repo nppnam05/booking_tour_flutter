@@ -23,7 +23,15 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        body: Center(child: wrappedOutside(context, columnOfWidget())),
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+            child: Center(child: wrappedOutside(context, columnOfWidget())),
+          ),
+        ),
       ),
     );
   }

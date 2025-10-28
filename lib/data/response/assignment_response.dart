@@ -62,6 +62,7 @@ extension AssignmentResponseMapper on AssignmentResponse {
         : '';
 
     return Assignment(
+      id: id ?? 0,
       title: title ?? "",
       placeNames: Place(
         id: 0,
