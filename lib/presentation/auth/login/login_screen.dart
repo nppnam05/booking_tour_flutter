@@ -35,11 +35,24 @@ class LoginScreen extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.login) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            RouteName.home,
-            (route) => false,
-          );
+          switch (state.user.roleId) {
+            case 1:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.home,
+                (route) => false,
+              );
+              return;
+            case 2:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.tripList,
+                (route) => false,
+              );
+              return;
+            default:
+              return;
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
