@@ -2,7 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/configure_injectab
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/cubit/tour_guide_assignment_state.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/cubit/tour_guide_assignment_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentCubit extends Cubit<TourGuideAssignmentState> {

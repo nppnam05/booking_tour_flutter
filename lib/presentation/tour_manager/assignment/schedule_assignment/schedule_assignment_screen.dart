@@ -3,22 +3,29 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
-import 'package:booking_tour_flutter/presentation/assignment/schedule_assignment/cubit/schedule_assignment_cubit.dart';
-import 'package:booking_tour_flutter/presentation/assignment/schedule_assignment/cubit/schedule_assignment_state.dart';
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_state.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleAssignmentScreen extends StatelessWidget {
-  ScheduleAssignmentScreen({Key? key}) : super(key: key);
+  final int tourId;
 
-  final _cubit = ScheduleAssignmentCubit()..loadData(1);
+  ScheduleAssignmentScreen({super.key, required this.tourId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _cubit,
+    return BlocProvider<ScheduleAssignmentCubit>(
+      create: (context) {
+        final _cubit = ScheduleAssignmentCubit();
+
+        _cubit.setTourId(tourId: tourId);
+        _cubit.loadData();
+
+        return _cubit;
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -64,7 +71,8 @@ class ScheduleAssignmentScreen extends StatelessWidget {
   Widget listSchedule(List<ScheduleAssignment> schedules) {
     return ListView.builder(
       shrinkWrap: true, // Cho phép ListView co lại theo nội dung
-      physics: NeverScrollableScrollPhysics(), // Vô hiệu hóa cuộn bên trong ListView
+      physics:
+          NeverScrollableScrollPhysics(), // Vô hiệu hóa cuộn bên trong ListView
       itemCount: schedules.length,
       itemBuilder: (context, index) {
         var schedule = schedules[index];
@@ -80,26 +88,24 @@ class ScheduleAssignmentScreen extends StatelessWidget {
   // item schedule
   Widget itemSchedule(ScheduleAssignment schedule) {
     var context = AppNavigator.navigatorKey.currentContext!;
-    String startDay = "${schedule.startDate.day}/${schedule.startDate.month}/${schedule.startDate.year}";
-    String endDay = "${schedule.endDate.day}/${schedule.endDate.month}/${schedule.endDate.year}";
+    String startDay =
+        "${schedule.startDate.day}/${schedule.startDate.month}/${schedule.startDate.year}";
+    String endDay =
+        "${schedule.endDate.day}/${schedule.endDate.month}/${schedule.endDate.year}";
 
     return InkWell(
       onTap: () async {
-        final cubit = context.read<TourGuideAssignmentCubit>();
-
-        // đẩy id qua cubit của màn đích
-        cubit.setIdSchedule(id: schedule.id);
-
-        cubit.loadData();
 
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TourGuideAssignmentScreen(cubit: cubit),
+            builder: (context) => TourGuideAssignmentScreen(idSchedule: schedule.id,),
           ),
         );
 
-        _cubit.loadData(1);
+
+        final currentCubit = context.read<ScheduleAssignmentCubit>();
+        currentCubit.loadData();
       },
       child: Container(
         padding: EdgeInsets.all(16.0),
@@ -220,13 +226,21 @@ class ScheduleAssignmentScreen extends StatelessWidget {
         children: <Widget>[
           //Ảnh
           ClipRRect(
-            borderRadius: BorderRadius.circular(15), // Thêm dòng này
-            child: Image.network(
-              "https://lh3.googleusercontent.com/a/ACg8ocJm9cIxvh1X-PHJVIaKPA6LrC5aeChHzskzPlvne6ggWnnY3Fg",
-              width: double.infinity,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
+            borderRadius: BorderRadius.circular(15),
+            child:
+                tour.tourImages.isNotEmpty
+                    ? Image.network(
+                      tour.tourImages[0],
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    )
+                    : Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.grey[300],
+                      child: Icon(Icons.image, color: Colors.grey[600]),
+                    ),
           ),
 
           // Content
