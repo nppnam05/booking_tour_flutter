@@ -76,10 +76,10 @@ class ListDiaDanhItem extends StatelessWidget {
   }
 
   Widget _buildIconText(IconData icon, Color color, String text) {
-    var tmp = text.split(" ");
-    var limitedWords = tmp.length > 6 ? tmp.sublist(0, 6) : tmp;
-    var str = limitedWords.join(" ");
-    if (tmp.length > 6) str += " ...";
+  var tmp = text.split(" ");
+  var limitedWords = tmp.length > 6 ? tmp.sublist(0, 6) : tmp;
+  var str = limitedWords.join(" ");
+  if (tmp.length > 6) str += " ...";
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

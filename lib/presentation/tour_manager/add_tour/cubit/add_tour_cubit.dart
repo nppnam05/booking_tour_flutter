@@ -122,7 +122,7 @@ class AddTourCubit extends Cubit<AddTourState> {
         tour: CTTour(),
         provinces: [],
         images: [],
-        validateState: ValidateState(errors: {}, isValidated: false)
+        validateState: ValidateState(errors: {}, isValidated: false),
       ),
     );
   }
@@ -180,11 +180,11 @@ class AddTourCubit extends Cubit<AddTourState> {
     }
   }
 
-  Future<void> add() async {
+  Future<bool> add() async {
     validate();
 
     if (state.validateState.errors.isNotEmpty) {
-      return;
+      return false;
     }
 
     var result = await _repository.createTour(
@@ -193,27 +193,29 @@ class AddTourCubit extends Cubit<AddTourState> {
       images: state.images,
     );
 
-    result.fold(
+    return result.fold(
       (failure) {
         ScaffoldMessenger.of(
           AppNavigator.currentContext,
         ).showSnackBar(SnackBar(content: Text("failure")));
+
+        return false;
       },
       (tour) {
         ScaffoldMessenger.of(
           AppNavigator.currentContext,
         ).showSnackBar(SnackBar(content: Text("success")));
+
+        return true;
       },
     );
-
-    return;
   }
 
-  Future<void> update() async {
+  Future<bool> update() async {
     validate();
 
     if (state.validateState.errors.isNotEmpty) {
-      return;
+      return false;
     }
 
     var result = await _repository.updateTour(
@@ -223,20 +225,22 @@ class AddTourCubit extends Cubit<AddTourState> {
       images: state.images,
     );
 
-    result.fold(
+    return result.fold(
       (failure) {
         ScaffoldMessenger.of(
           AppNavigator.currentContext,
         ).showSnackBar(SnackBar(content: Text("failure")));
+
+        return false;
       },
       (tour) {
         ScaffoldMessenger.of(
           AppNavigator.currentContext,
         ).showSnackBar(SnackBar(content: Text("success")));
+
+        return true;
       },
     );
-
-    return;
   }
 
   void validate() {
@@ -367,11 +371,11 @@ class AddTourCubit extends Cubit<AddTourState> {
     _addValidator(
       iterate: _iterateDayOfTour,
       field: AddTourErrorFields.dayOfTourTitle,
-      message: "Vui lòng tiêu đề cho ngày",
+      message: "Vui lòng nhập tiêu đề cho ngày",
       largeField: AddTourErrorFields.dayOfTour,
       check: (state, params) {
         int day = params[0] as int;
-        if (state.daysOfTour[day].title.isEmpty) {
+        if (state.daysOfTour[day].title.trim().isEmpty) {
           return false;
         }
 
@@ -386,7 +390,7 @@ class AddTourCubit extends Cubit<AddTourState> {
       largeField: AddTourErrorFields.dayOfTour,
       check: (state, params) {
         int day = params[0] as int;
-        if (state.daysOfTour[day].description.isEmpty) {
+        if (state.daysOfTour[day].description.trim().isEmpty) {
           return false;
         }
 

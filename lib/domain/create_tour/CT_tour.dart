@@ -35,6 +35,7 @@ extension CTMapper on CTTour {
       day: 0,
       title: tourName,
       price: priceValue,
+      percentDeposit: percentValue,
       description: description,
       dayOfTours: [],
     );
@@ -66,12 +67,12 @@ extension CTMapper on CTTour {
 }
 
 extension TripToCTTour on Trip {
-  CTTour maptoCTTour() {
+  CTTour mapToCTTour() {
     return CTTour(
       tourName: title,
       description: description,
       price: price.toString(),
-      percent: "0",
+      percent: percentDeposit.toString(),
     );
   }
 }

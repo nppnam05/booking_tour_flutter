@@ -45,7 +45,7 @@ class AddTourScreen extends StatelessWidget {
         value: _addTourCubit,
         child: BlocBuilder<AddTourCubit, AddTourState>(
           builder: (context, state) {
-            _tourNameController.text  = state.tour.tourName;
+            _tourNameController.text = state.tour.tourName;
             _tourDescController.text = state.tour.description;
             _tourPriceController.text = state.tour.price;
             _tourPercentController.text = state.tour.percent;
@@ -96,7 +96,10 @@ class AddTourScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ImageList(
-                      onImageDelete: (i) => context.read<PickImageButtonCubit>().removeImage(i),
+                      onImageDelete:
+                          (i) => context
+                              .read<PickImageButtonCubit>()
+                              .removeImage(i),
                       images: state.images,
                     ),
                   ),
@@ -138,6 +141,8 @@ class AddTourScreen extends StatelessWidget {
                       errorMessage: state.getErrorMessage(
                         AddTourErrorFields.tourDescription,
                       ),
+                      maxLength: 10000,
+                      maxLines: 10,
                     ),
                   ),
                 ),
