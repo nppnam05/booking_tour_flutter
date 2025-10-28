@@ -44,7 +44,7 @@ extension AddLocationActivityResponseMapper on AddLocationActivityResponse {
     return LocationActivity(
       id: id ?? 0,
       name: name ?? "",
-      place: place?.map() ?? Place(id: 0, name: "", province: null),
+      place: place?.map() ?? Place(id: 0, name: "", province: Province(id: 0, name: "")),
       activities: [],
     );
   }

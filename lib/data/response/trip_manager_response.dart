@@ -13,6 +13,7 @@ class TripManagerResponse {
   int? day;
   String? title;
   int? price;
+  int? percentDeposit;
   String? description;
   List<String>? tourImages;
   List<ProvinceResponse>? locations;
@@ -23,6 +24,7 @@ class TripManagerResponse {
     this.day,
     this.title,
     this.price,
+    this.percentDeposit,
     this.description,
     this.tourImages,
     this.locations,
@@ -49,6 +51,7 @@ extension TripManagerResponseMapper on TripManagerResponse {
       day: day ?? 0,
       title: title ?? "",
       price: price ?? 0,
+      percentDeposit: percentDeposit ?? 0,
       description: description ?? "",
       provinces: locations!.map((i) => i.map()).toList(),
       tourImages: tourImages!,

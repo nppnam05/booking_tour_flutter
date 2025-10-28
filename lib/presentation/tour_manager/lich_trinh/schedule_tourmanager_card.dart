@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../domain/schedule.dart';
+import '../../../domain/schedule_tourmanager.dart';
 
-class ScheduleCard extends StatelessWidget {
-  final Schedule trip;
+class ScheduleTourmanagerCard extends StatelessWidget {
+  final ScheduleTourmanager shedule_tour_manager;
   final VoidCallback onDelete;
 
-  const ScheduleCard({super.key, required this.trip, required this.onDelete});
+  const ScheduleTourmanagerCard({
+    required this.shedule_tour_manager,
+    required this.onDelete,
+  });
 
   String _formatDate(DateTime d) {
     two(int n) => n.toString().padLeft(2, '0');
@@ -29,10 +32,19 @@ class ScheduleCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    trip.imageUrl,
+                        shedule_tour_manager.tour.tourImages.first
+                    ,
                     width: 110,
                     height: 80,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 110,
+                        height: 80,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.image, color: Colors.grey),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -49,7 +61,7 @@ class ScheduleCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            _formatDate(trip.startDate),
+                            _formatDate(shedule_tour_manager.startDate),
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(width: 8),
@@ -59,7 +71,9 @@ class ScheduleCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            _formatDate(trip.endDate),
+                            _formatDate(shedule_tour_manager.endDate),
+                            maxLines: 1,
+                    overflow:  TextOverflow.ellipsis,
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                         ],
@@ -75,7 +89,14 @@ class ScheduleCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              trip.location,
+                              (shedule_tour_manager.tour.provinces.isNotEmpty
+                                  ? shedule_tour_manager
+                                      .tour
+                                      .provinces
+                                      .first
+                                      .name
+                                  : ""),
+
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -92,7 +113,7 @@ class ScheduleCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              trip.title,
+                              shedule_tour_manager.tour.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -104,7 +125,7 @@ class ScheduleCard extends StatelessWidget {
                         children: [
                           const Icon(Icons.group, size: 16, color: Colors.blue),
                           const SizedBox(width: 6),
-                          Text('Tối đa: ${trip.capacity}'),
+                          Text('Tối đa: ${shedule_tour_manager.maxSlot}'),
                         ],
                       ),
                     ],

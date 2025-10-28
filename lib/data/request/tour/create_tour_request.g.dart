@@ -12,6 +12,7 @@ Map<String, dynamic> _$CreateTourRequestToJson(CreateTourRequest instance) =>
       'title': instance.title,
       'price': instance.price,
       'description': instance.description,
+      'percentDeposit': instance.percentDeposit,
       'dayOfTours': instance.dayOfTours,
       'tourImages': instance.tourImages,
     };

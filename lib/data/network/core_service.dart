@@ -2,12 +2,12 @@ import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart'
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/add_location_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
-import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
-import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
@@ -26,6 +26,12 @@ part 'core_service.g.dart';
 abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
+
+  @GET("/Schedule/assignment/{tourId}")
+  Future<RestResponse> getScheduleAssignments(@Path("tourId") int tourId);
+
+  @GET("/Tour/{tourId}")
+  Future<RestResponse> getTourAssignmentByTourId(@Path("tourId") int tourId);
 
   @POST("/Guide/{scheduleId}")
   Future<RestResponse> checkAssignment(
@@ -95,15 +101,37 @@ abstract class CoreService {
   });
   @GET("/Tour")
   Future<RestResponse> getTrips({
-    @Query("sortBy") String sortBy = "Title",
-    @Query("orderBy") String order = "ASC",
+    @Query("SortBy") String sortBy = "Title",
+    @Query("SortOrder") String order = "ASC",
     @Query("filter") String? filter,
   });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({@Path("id") required int id});
 
-  @GET("/Assignment")
-  Future<RestResponse> getAssignments();
+  @GET("/Tour")
+  Future<RestResponse> getAssignments({
+    @Query("sortBy") String sortBy = "Title",
+    @Query("orderBy") String order = "ASC",
+    @Query("filter") String? filter,
+  });
+
+  @GET("/Guide/schedule/{staffId}")
+  Future<RestResponse> getGuidesByStaff({
+    @Path("staffId") required int staffId,
+  });
+
+    @GET("/Schedule")
+  Future<RestResponse> getAllSchedules();
+
+  @DELETE("/Schedule/{id}")
+Future<RestResponse> deleteScheduleById({
+  @Path("id") required int id,
+});
+@GET("/UserCompletedSchedule/{scheduleId}")
+  Future<RestResponse> getUserCompletedSchedule({
+    @Path("scheduleId") required int scheduleId,
+  });
+  
 
   @POST("/Tour")
   Future<RestResponse> createTour(@Body() CreateTourRequest request);

@@ -25,7 +25,15 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        body: Center(child: wrappedOutside(context, columnOfWidget())),
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: Center(child: wrappedOutside(context, columnOfWidget())),
+          ),
+        ),
       ),
     );
   }
@@ -37,15 +45,28 @@ class LoginScreen extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.login) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            RouteName.home,
-            (route) => false,
-          );
+          switch (state.user.roleId) {
+            case 1:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.home,
+                (route) => false,
+              );
+              return;
+            case 2:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.tripList,
+                (route) => false,
+              );
+              return;
+            default:
+              return;
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Center(child: Text('Đăng nhập thất bại')),
+              content: Center(child: Text('Email hoặc mật khẩu đã sai')),
               duration: const Duration(seconds: 1),
             ),
           );
@@ -74,7 +95,9 @@ class LoginScreen extends StatelessWidget {
               "Email",
               Colors.grey.shade100,
             ),
+
             const SizedBox(height: 12),
+
             ToggleInputField(
               controller: _controllerPassword,
               title: "Mật khẩu",

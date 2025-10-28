@@ -8,27 +8,55 @@ part of 'assignment_response.dart';
 
 AssignmentResponse _$AssignmentResponseFromJson(Map<String, dynamic> json) =>
     AssignmentResponse(
-      idSchedule: (json['idSchedule'] as num?)?.toInt(),
-      titleTour: json['titleTour'] as String?,
-      tourImageDTOs:
-          (json['tourImageDTOs'] as List<dynamic>?)
+      id: (json['id'] as num?)?.toInt(),
+      title: json['title'] as String?,
+      tourImages:
+          (json['tourImages'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList(),
-      nameLocations:
-          (json['nameLocations'] as List<dynamic>?)
-              ?.map((e) => e as String)
+      locations:
+          (json['locations'] as List<dynamic>?)
+              ?.map((e) => LocationResponse.fromJson(e as Map<String, dynamic>))
               .toList(),
-      placeNameDTOs:
-          (json['placeNameDTOs'] as List<dynamic>?)
-              ?.map((e) => e as String)
+      places:
+          (json['places'] as List<dynamic>?)
+              ?.map((e) => PlaceResponse.fromJson(e as Map<String, dynamic>))
               .toList(),
     );
 
 Map<String, dynamic> _$AssignmentResponseToJson(AssignmentResponse instance) =>
     <String, dynamic>{
-      'idSchedule': instance.idSchedule,
-      'titleTour': instance.titleTour,
-      'tourImageDTOs': instance.tourImageDTOs,
-      'nameLocations': instance.nameLocations,
-      'placeNameDTOs': instance.placeNameDTOs,
+      'id': instance.id,
+      'title': instance.title,
+      'tourImages': instance.tourImages,
+      'locations': instance.locations,
+      'places': instance.places,
+    };
+
+LocationResponse _$LocationResponseFromJson(Map<String, dynamic> json) =>
+    LocationResponse(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$LocationResponseToJson(LocationResponse instance) =>
+    <String, dynamic>{'id': instance.id, 'name': instance.name};
+
+PlaceResponse _$PlaceResponseFromJson(Map<String, dynamic> json) =>
+    PlaceResponse(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+      location:
+          json['location'] == null
+              ? null
+              : LocationResponse.fromJson(
+                json['location'] as Map<String, dynamic>,
+              ),
+    );
+
+Map<String, dynamic> _$PlaceResponseToJson(PlaceResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'location': instance.location,
     };

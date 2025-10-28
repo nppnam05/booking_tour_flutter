@@ -140,6 +140,8 @@ class AddTourScreen extends StatelessWidget {
                       errorMessage: state.getErrorMessage(
                         AddTourErrorFields.tourDescription,
                       ),
+                      maxLength: 10000,
+                      maxLines: 10,
                     ),
                   ),
                 ),

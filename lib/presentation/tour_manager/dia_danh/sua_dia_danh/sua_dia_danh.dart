@@ -31,24 +31,14 @@ class _SuaDiaDanhView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<SuaDiaDanhCubit>();
-    final nameController = TextEditingController(text: place.name);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(style: AppFonts.textWhite, "Sửa Địa Danh"),
-        backgroundColor: AppColors.button,
-        centerTitle: true,
       ),
       body: BlocConsumer<SuaDiaDanhCubit, SuaDiaDanhState>(
         listener:
             (context, state) => {
-              if (state.successMessage != null)
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.successMessage!)),
-                  ),
-                  Navigator.pop(context, true),
-                },
               if (state.error != null)
                 {
                   ScaffoldMessenger.of(
@@ -66,23 +56,17 @@ class _SuaDiaDanhView extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _buildTinhThanh(
-                      context,
-                      cubit,
-                      state.provinces,
-                      state.province,
-                    ),
-                    _buildTenDiaDanh(cubit, nameController),
+                    _buildTinhThanh(context, cubit, state.provinces, state.province),
+                    _buildTenDiaDanh(cubit, cubit.nameController),
                   ],
                 ),
               ),
               const Spacer(),
 
               DeleteButtonWidget(
-                onDelete: () {
-                  if (!state.isLoading) {
-                    cubit.updatePlace(place.id);
-                  }
+                onDelete: () async{
+                  cubit.setName( cubit.nameController.text);
+                  await cubit.updatePlace(context, place.id);
                 },
                 text: "Lưu",
                 textColor: Colors.white,
@@ -119,31 +103,31 @@ class _SuaDiaDanhView extends StatelessWidget {
                 ),
           );
 
-          if (result != null) {
-            cubit.setProvince(result);
-          }
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: AppColors.secondary),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                selectedProvince?.name ?? "Chọn tỉnh",
-                style: AppFonts.text16,
-              ),
-              const Icon(Icons.arrow_drop_down),
-            ],
-          ),
+        if (result != null) {
+          cubit.setProvince(result);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: AppColors.secondary),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              selectedProvince?.name ?? "Chọn tỉnh",
+              style: AppFonts.text16,
+            ),
+            const Icon(Icons.arrow_drop_down),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTenDiaDanh(
     SuaDiaDanhCubit cubit,
@@ -152,9 +136,7 @@ class _SuaDiaDanhView extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(12),
       child: notIconToggleInputField(
-        onChanged: (i) {
-          cubit.setName(i);
-        },
+        onChanged: (_){},
         nameController,
         "Tên địa danh",
         AppColors.gray,

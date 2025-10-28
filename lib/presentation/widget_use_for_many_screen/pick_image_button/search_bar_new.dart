@@ -46,6 +46,8 @@ class _SearchBarNewWidgetState extends State<SearchBarNewWidget> {
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
               ),
               onChanged: widget.onChanged,
             ),

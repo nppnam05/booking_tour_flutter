@@ -7,28 +7,34 @@ Widget notIconToggleInputField(
   Color color, {
   ValueChanged<String>? onChanged,
 }) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
-      const SizedBox(height: 8.0),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.gray, width: 1.5),
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        child: TextField(
+        const SizedBox(height: 8.0),
+        TextField(
           controller: controller,
           decoration: InputDecoration(
-            border: const OutlineInputBorder(
+            hintText: text,
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
             ),
-            hintText: text,
           ),
           onChanged: onChanged,
         ),
-      ),
-    ],
+      ],
+    ),
   );
 }
-
