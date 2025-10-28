@@ -11,24 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentScreen extends StatelessWidget {
-  final int idSchedule;
+  late final TourGuideAssignmentCubit _cubit;
 
   final TextEditingController _controllerSearch = TextEditingController();
 
-  TourGuideAssignmentScreen({super.key, required this.idSchedule});
+  TourGuideAssignmentScreen({
+    super.key,
+    required TourGuideAssignmentCubit cubit,
+  }) {
+    _cubit = cubit;
+  }
 
   @override
   Widget build(BuildContext context) {
     
-    return BlocProvider<TourGuideAssignmentCubit>(
-      create: (context) {
-        final _cubit = TourGuideAssignmentCubit();
-
-        _cubit.setIdSchedule(id: idSchedule);
-        _cubit.loadData();
-
-        return _cubit;
-      },
+    return BlocProvider<TourGuideAssignmentCubit>.value(
+      value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text('Phân công hướng dẫn viên')),
         body: columnOfWidget(),
@@ -38,10 +36,8 @@ class TourGuideAssignmentScreen extends StatelessWidget {
 
   // gom các widget lại
   Widget columnOfWidget() {
-    var context = AppNavigator.navigatorKey.currentContext!;
-    final _cubit = context.read<TourGuideAssignmentCubit>();
-
     var ischeck = true;
+    final context = AppNavigator.currentContext;
 
     return Column(
       children: [
@@ -99,9 +95,6 @@ class TourGuideAssignmentScreen extends StatelessWidget {
 
   // quản lý tourGuide
   Widget tourGuideCard() {
-    var context = AppNavigator.navigatorKey.currentContext!;
-    final _cubit = context.read<TourGuideAssignmentCubit>();
-    
     return BlocSelector<
       TourGuideAssignmentCubit,
       TourGuideAssignmentState,
