@@ -40,3 +40,9 @@ class Schedule {
     this.tourLocations,
   });
 }
+
+class TourOption {
+  final int id;
+  final String title;
+  const TourOption({required this.id, required this.title});
+}

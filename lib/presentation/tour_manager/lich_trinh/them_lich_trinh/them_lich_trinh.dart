@@ -8,6 +8,7 @@ import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dro
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/cubit/them_lich_trinh_cubit.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_demo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,12 +29,15 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
   DateTime? _endDate;
   TimeOfDay? _gatheringTime;
   final ThemLichTrinhCubit _cubit = ThemLichTrinhCubit();
+  int? _selectedTourId;
+  List<TourOption> _tourOptions = const [];
 
   Future<void> _handleSave() async {
     if (_openDate == null ||
         _startDate == null ||
         _endDate == null ||
-        _gatheringTime == null) {
+        _gatheringTime == null ||
+        _selectedTourId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
       );
@@ -67,7 +71,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
 
     final request = AddScheduleRequest(
-      tourId: 1,
+      tourId: _selectedTourId!,
       startDate: _startDate!.toIso8601String(),
       endDate: _endDate!.toIso8601String(),
       openDate: _openDate!.toIso8601String(),
@@ -96,6 +100,12 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Receive tour options (id + title) via route arguments
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is List<TourOption> && _tourOptions.isEmpty) {
+      _tourOptions = args;
+    }
+
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
@@ -117,10 +127,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTextField(),
-                const SizedBox(height: 24),
-              ],
+              children: [_buildTextField(), const SizedBox(height: 24)],
             ),
           ),
         ),
@@ -159,19 +166,26 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
   }
 
   Widget _buildTour() {
-    final List<String> provinces = [
-      "Hà Nội",
-      "Đà Nẵng",
-      "Hồ Chí Minh",
-      "Đà Lạt",
-    ];
-    String? selectedTour;
-    return DropDownWidget(
+    TourOption? selectedOption;
+    if (_selectedTourId != null) {
+      for (final o in _tourOptions) {
+        if (o.id == _selectedTourId) {
+          selectedOption = o;
+          break;
+        }
+      }
+    }
+
+    return DropDownWidget<TourOption>(
       title: "Tour",
-      options: provinces,
-      itemToString: (item) => item,
-      onChanged: (value) {
-        selectedTour = value;
+      options: _tourOptions,
+      value: selectedOption,
+      itemToString: (item) => item.title,
+      hintText: "Chọn tour",
+      onChanged: (option) {
+        setState(() {
+          _selectedTourId = option?.id;
+        });
       },
     );
   }

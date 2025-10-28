@@ -29,7 +29,7 @@ class DanhSachLichTrinhScreen extends StatelessWidget {
         gatheringTime: "08:00:00",
         code: "string",
         desposit: 100,
-        tourTitle: "Tour Đà Lạt 3 ngày 2 đêm",
+        tourTitle: "Tour Đà Lạt 4 ngày 2 đêm",
         tourImages: [
           "http://tt1220-001-site1.ntempurl.com/images/682ec9b9-57a0-4b87-809a-773b53860ead.jpg",
           "http://tt1220-001-site1.ntempurl.com/images/d66e0d97-03fd-4568-ac72-b8124d3c785b.jpg",
@@ -98,7 +98,23 @@ class DanhSachLichTrinhScreen extends StatelessWidget {
           // Nút thêm tại dùng lại layout của nút xoá
           DeleteButtonWidget(
             onDelete: () {
-              Navigator.pushNamed(context, RouteName.themLichTrinh);
+              // Build unique list of tour options (id + title) from schedules
+              final Map<int, String> idToTitle = {};
+              for (final s in schedules) {
+                if (s.tourId != null && (s.tourTitle ?? '').isNotEmpty) {
+                  idToTitle[s.tourId!] = s.tourTitle!;
+                }
+              }
+              final options =
+                  idToTitle.entries
+                      .map((e) => TourOption(id: e.key, title: e.value))
+                      .toList();
+
+              Navigator.pushNamed(
+                context,
+                RouteName.themLichTrinh,
+                arguments: options,
+              );
             },
             text: "+ Thêm",
             textColor: Colors.white,
