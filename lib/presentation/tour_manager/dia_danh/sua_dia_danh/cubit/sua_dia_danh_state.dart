@@ -4,7 +4,6 @@ class SuaDiaDanhState {
   final String? name;
   final List<Province> provinces;
   final Province? province;
-  final bool isLoading;
   final String? error;
   final String? successMessage;
 
@@ -12,7 +11,6 @@ class SuaDiaDanhState {
     this.name,
     this.provinces = const [],
     this.province,
-    this.isLoading = false,
     this.error,
     this.successMessage,
   });
@@ -29,7 +27,6 @@ class SuaDiaDanhState {
       name: name ?? this.name,
       provinces: provinces ?? this.provinces,
       province: province ?? this.province,
-      isLoading: isLoading ?? this.isLoading,
       error: error,
       successMessage: successMessage,
     );

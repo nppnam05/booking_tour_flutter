@@ -3,30 +3,32 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/cubit/tour_guide_assignment_state.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/cubit/tour_guide_assignment_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentScreen extends StatelessWidget {
-  late final TourGuideAssignmentCubit _cubit;
+  final int idSchedule;
 
   final TextEditingController _controllerSearch = TextEditingController();
 
-  TourGuideAssignmentScreen({
-    super.key,
-    required TourGuideAssignmentCubit cubit,
-  }) {
-    _cubit = cubit;
-  }
+  TourGuideAssignmentScreen({super.key, required this.idSchedule});
 
   @override
   Widget build(BuildContext context) {
     
-    return BlocProvider<TourGuideAssignmentCubit>.value(
-      value: _cubit,
+    return BlocProvider<TourGuideAssignmentCubit>(
+      create: (context) {
+        final _cubit = TourGuideAssignmentCubit();
+
+        _cubit.setIdSchedule(id: idSchedule);
+        _cubit.loadData();
+
+        return _cubit;
+      },
       child: Scaffold(
         appBar: AppBar(title: Text('Phân công hướng dẫn viên')),
         body: columnOfWidget(),
@@ -36,8 +38,10 @@ class TourGuideAssignmentScreen extends StatelessWidget {
 
   // gom các widget lại
   Widget columnOfWidget() {
+    var context = AppNavigator.navigatorKey.currentContext!;
+    final _cubit = context.read<TourGuideAssignmentCubit>();
+
     var ischeck = true;
-    final context = AppNavigator.currentContext;
 
     return Column(
       children: [
@@ -95,6 +99,9 @@ class TourGuideAssignmentScreen extends StatelessWidget {
 
   // quản lý tourGuide
   Widget tourGuideCard() {
+    var context = AppNavigator.navigatorKey.currentContext!;
+    final _cubit = context.read<TourGuideAssignmentCubit>();
+    
     return BlocSelector<
       TourGuideAssignmentCubit,
       TourGuideAssignmentState,
