@@ -27,8 +27,8 @@ class LoginScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height,
-          ),
+              minHeight: MediaQuery.of(context).size.height,
+            ),
             child: Center(child: wrappedOutside(context, columnOfWidget())),
           ),
         ),
@@ -55,6 +55,13 @@ class LoginScreen extends StatelessWidget {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 RouteName.tripList,
+                (route) => false,
+              );
+              return;
+            case 6:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.ScheduleTourmanager,
                 (route) => false,
               );
               return;
