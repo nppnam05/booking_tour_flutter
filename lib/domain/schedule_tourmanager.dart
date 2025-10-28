@@ -1,0 +1,29 @@
+import 'package:booking_tour_flutter/domain/trip.dart';
+
+class ScheduleTourmanager {
+  final int id;
+  final int tourId;
+  final DateTime startDate;
+  final DateTime endDate;
+  final DateTime openDate;
+  final int maxSlot;
+  final int finalPrice;
+  final String gatheringTime;
+  final String code;
+  final int desposit;
+  final Trip tour;
+
+  ScheduleTourmanager({
+    required this.id,
+    required this.tourId,
+    required this.startDate,
+    required this.endDate,
+    required this.openDate,
+    required this.maxSlot,
+    required this.finalPrice,
+    required this.gatheringTime,
+    required this.code,
+    required this.desposit,
+    required this.tour,
+  });
+}
