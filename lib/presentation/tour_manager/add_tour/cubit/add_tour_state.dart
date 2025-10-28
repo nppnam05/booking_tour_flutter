@@ -61,7 +61,7 @@ class AddTourState {
 
 extension TripToStateMapper on Trip {
   AddTourState toAddTourState() {
-    var tour = this.maptoCTTour();
+    var tour = this.mapToCTTour();
     var daysOfTour = this.dayOfTours.map((i) => i.mapToCTDayOfTour()).toList();
     var images = this.tourImages.map((i) => right<File, String>(i)).toList();
 

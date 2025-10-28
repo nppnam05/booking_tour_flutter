@@ -32,7 +32,8 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    "http://tt1220-001-site1.ntempurl.com/images/https://dalattrongtoi.com/media/images/uploaded/2/2016_01_23/post/da-lat-thanh-pho-cua-nhung-giac-mo-3.jpg",
+                        shedule_tour_manager.tour.tourImages.first
+                    ,
                     width: 110,
                     height: 80,
                     fit: BoxFit.cover,
@@ -71,6 +72,8 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             _formatDate(shedule_tour_manager.endDate),
+                            maxLines: 1,
+                    overflow:  TextOverflow.ellipsis,
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                         ],
