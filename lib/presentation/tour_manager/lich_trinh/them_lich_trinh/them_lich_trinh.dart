@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/tour_option.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
@@ -8,7 +9,6 @@ import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dro
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/cubit/them_lich_trinh_cubit.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_demo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,6 +31,17 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
   final ThemLichTrinhCubit _cubit = ThemLichTrinhCubit();
   int? _selectedTourId;
   List<TourOption> _tourOptions = const [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is List && _tourOptions.isEmpty) {
+      setState(() {
+        _tourOptions = TourOption.fromTrips(args);
+      });
+    }
+  }
 
   Future<void> _handleSave() async {
     if (_openDate == null ||
@@ -89,7 +100,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tạo lịch trình thành công')),
       );
-      Navigator.pushNamed(context, RouteName.danhSachLichTrinh);
+      Navigator.pushNamed(context, RouteName.scheduleTourmanager);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -100,12 +111,6 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Receive tour options (id + title) via route arguments
-    final args = ModalRoute.of(context)?.settings.arguments;
-    if (args is List<TourOption> && _tourOptions.isEmpty) {
-      _tourOptions = args;
-    }
-
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(

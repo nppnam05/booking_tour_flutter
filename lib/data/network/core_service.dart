@@ -1,9 +1,9 @@
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
-import 'package:booking_tour_flutter/data/response/add_location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
+import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
@@ -51,6 +51,12 @@ abstract class CoreService {
 
   @PUT("/Schedule")
   Future<RestResponse> updateSchedule(@Body() UpdateScheduleRequest request);
+
+  @GET("/Schedule")
+  Future<RestResponse> getAllSchedules();
+
+  @DELETE("/Schedule/{id}")
+  Future<RestResponse> deleteScheduleById({@Path("id") required int id});
 
   @POST("/User/Login")
   Future<RestResponse> login(@Body() Map<String, dynamic> body);
@@ -124,7 +130,7 @@ abstract class CoreService {
   Future<RestResponse> deletePlace(@Path("id") int placeId);
 
   @POST("/LocationActivity")
-  Future<AddLocationActivityResponse> addLocationActivities(
+  Future<LocationActivityResponse> addLocationActivities(
     @Body() AddLocationActivityRequest request,
   );
 

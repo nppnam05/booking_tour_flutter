@@ -28,7 +28,7 @@ class DrawerBar extends StatelessWidget {
           ListTile(
             onTap:
                 () => {
-                  Navigator.pushNamed(context, RouteName.danhSachLichTrinh),
+                  Navigator.pushNamed(context, RouteName.scheduleTourmanager),
                 },
             leading: Icon(Icons.calendar_today),
             title: Text("Lịch trình"),

@@ -5,11 +5,12 @@ import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
-import 'package:booking_tour_flutter/data/response/add_location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
+    hide ProvinceResponse;
 import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
@@ -24,6 +25,7 @@ import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
@@ -119,13 +121,15 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Activity>>> putActivity(int id, String action);
   Future<Either<Failure, bool>> deleteActivity(int id);
   Future<Either<Failure, Place>> addPlace(AddPlaceRequest request);
-  Future<Either<Failure, AddLocationActivityResponse>> addLocationActivities(
+  Future<Either<Failure, LocationActivityResponse>> addLocationActivities(
     AddLocationActivityRequest request,
   );
   Future<Either<Failure, UpdateLocationActivitiesResponse>>
   updateLocationActivities(UpdateLocationActivities request);
   Future<Either<Failure, int>> addSchedule(AddScheduleRequest request);
   Future<Either<Failure, bool>> updateSchedule(UpdateScheduleRequest request);
+  Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule();
+  Future<Either<Failure, void>> deleteScheduleById({required int id});
 }
 
 @Singleton(as: BookingRepository)
@@ -146,7 +150,7 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, AddLocationActivityResponse>> addLocationActivities(
+  Future<Either<Failure, LocationActivityResponse>> addLocationActivities(
     AddLocationActivityRequest request,
   ) async {
     try {
@@ -603,10 +607,43 @@ class BookingRepositoryImp implements BookingRepository {
   ) async {
     try {
       var response = await _coreService.updateSchedule(request);
-      final success = (response.data is bool)
-          ? response.data as bool
-          : (response.data == true);
+      final success =
+          (response.data is bool)
+              ? response.data as bool
+              : (response.data == true);
       return Right(success);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule() async {
+    try {
+      final response = await _coreService.getAllSchedules();
+      final data = response.data as List<dynamic>;
+
+      final schedules =
+          data
+              .map(
+                (json) =>
+                    ScheduleTourmanagerResponse.fromJson(
+                      json as Map<String, dynamic>,
+                    ).map(),
+              )
+              .toList();
+
+      return Right(schedules);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteScheduleById({required int id}) async {
+    try {
+      await _coreService.deleteScheduleById(id: id);
+      return const Right(null);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

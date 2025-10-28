@@ -9,8 +9,8 @@ part of 'add_location_activity_request.dart';
 AddLocationActivityRequest _$AddLocationActivityRequestFromJson(
   Map<String, dynamic> json,
 ) => AddLocationActivityRequest(
-  name: json['name'] as String,
   placeId: (json['placeId'] as num).toInt(),
+  name: json['name'] as String,
   activityIds:
       (json['activityIds'] as List<dynamic>)
           .map((e) => (e as num).toInt())
@@ -20,7 +20,7 @@ AddLocationActivityRequest _$AddLocationActivityRequestFromJson(
 Map<String, dynamic> _$AddLocationActivityRequestToJson(
   AddLocationActivityRequest instance,
 ) => <String, dynamic>{
-  'name': instance.name,
   'placeId': instance.placeId,
+  'name': instance.name,
   'activityIds': instance.activityIds,
 };

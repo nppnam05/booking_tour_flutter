@@ -2,8 +2,8 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/cubit/chi_tiet_lich_trinh_cubit.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_demo.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
@@ -28,38 +28,30 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
   DateTime? _startDate;
   DateTime? _endDate;
   TimeOfDay? _gatheringTime;
-  Schedule? _schedule;
+  ScheduleTourmanager? _schedule;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final args = ModalRoute.of(context)!.settings.arguments;
-    if (_schedule == null && args is Schedule) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (_schedule == null && args is ScheduleTourmanager) {
       _schedule = args;
       _prefillFromSchedule(args);
     }
   }
 
-  void _prefillFromSchedule(Schedule s) {
-    _controllerMaLich.text = s.id?.toString() ?? '';
-    _controllerTour.text = s.tourTitle ?? '';
-    _controllerNguoiToiDa.text = s.maxCapacity.toString();
-    _controllerGia.text = s.finalPrice?.toString() ?? '';
-    _controllerTienCoc.text = s.desposit?.toString() ?? '';
-    if (s.openDateIso != null) {
-      _openDate = DateTime.tryParse(s.openDateIso!);
-    }
+  void _prefillFromSchedule(ScheduleTourmanager s) {
+    _controllerMaLich.text = s.code;
+    _controllerTour.text = s.tour.title;
+    _controllerNguoiToiDa.text = s.maxSlot.toString();
+    _controllerGia.text = s.finalPrice.toString();
+    _controllerTienCoc.text = s.desposit.toString();
+    _openDate = s.openDate;
+    _startDate = s.startDate;
+    _endDate = s.endDate;
 
-    if (s.startDateIso != null) {
-      _startDate = DateTime.tryParse(s.startDateIso!);
-    }
-
-    if (s.endDateIso != null) {
-      _endDate = DateTime.tryParse(s.endDateIso!);
-    }
-
-    if (s.gatheringTime != null) {
-      final parts = s.gatheringTime!.split(":");
+    if (s.gatheringTime.isNotEmpty) {
+      final parts = s.gatheringTime.split(":");
       if (parts.length >= 2) {
         _gatheringTime = TimeOfDay(
           hour: int.tryParse(parts[0]) ?? 0,
@@ -141,8 +133,8 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
 
     final request = UpdateScheduleRequest(
-      id: _schedule!.id ?? 0,
-      tourId: _schedule!.tourId ?? 1,
+      id: _schedule!.id,
+      tourId: _schedule!.tourId,
       startDate: _startDate!.toIso8601String(),
       endDate: _endDate!.toIso8601String(),
       openDate: _openDate!.toIso8601String(),
@@ -150,7 +142,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
       finalPrice: finalPrice,
       gatheringTime:
           "${twoDigits(_gatheringTime!.hour)}:${twoDigits(_gatheringTime!.minute)}",
-      code: _schedule!.code ?? "",
+      code: _schedule!.code,
       desposit: desposit,
     );
 
@@ -161,7 +153,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cập nhật lịch trình thành công')),
       );
-      Navigator.pushNamed(context, RouteName.danhSachLichTrinh);
+      Navigator.pushNamed(context, RouteName.scheduleTourmanager);
     } else {
       ScaffoldMessenger.of(
         context,
@@ -224,6 +216,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
               "Ngày mở đăng kí",
             ),
             DatePickerFieldWidget(
+              initialDateText: _openDate,
               onDateSelected: (date) {
                 setState(() {
                   _openDate = date;
@@ -244,6 +237,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
               "Ngày bắt đầu",
             ),
             DatePickerFieldWidget(
+              initialDateText: _startDate,
               onDateSelected: (date) {
                 setState(() {
                   _startDate = date;
@@ -268,6 +262,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
               "Thời gian tập hợp",
             ),
             TimePickerFieldWidget(
+              initialTimeText: _gatheringTime,
               onDateSelected: (time) {
                 setState(() {
                   _gatheringTime = time;
@@ -283,6 +278,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
           children: [
             SizedBox(height: 20),
             DatePickerFieldWidget(
+              initialDateText: _endDate,
               onDateSelected: (date) {
                 setState(() {
                   _endDate = date;

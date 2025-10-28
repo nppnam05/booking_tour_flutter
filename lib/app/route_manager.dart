@@ -7,10 +7,11 @@ import 'package:booking_tour_flutter/presentation/auth/register/register_screen.
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/real_add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/update_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/assignment_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_hoat_dong_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/danh_sach_dia_danh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/sua_dia_danh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/them_dia_danh/them_dia_danh.dart';
@@ -19,7 +20,6 @@ import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_do
 
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/danh_sach_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
@@ -33,7 +33,6 @@ class RouteName {
   static final profile = "profile";
 
   static final menu = "menu";
-  static final danhSachLichTrinh = "danh_sach_lich_trinh";
   static final themLichTrinh = "them_lich_trinh";
   static final chiTietLichTrinh = "chi_tiet_lich_trinh";
   static final test = "test";
@@ -57,6 +56,7 @@ class RouteName {
   static final danhSachDiaDanh = "danh_sach_dia_danh";
   static final themDiaDanh = "them_dia_danh";
   static final suaDiaDanh = "sua_dia_danh";
+  static final scheduleTourmanager = "scheduleTourmanager";
 }
 
 class RouteManager {
@@ -66,7 +66,6 @@ class RouteManager {
     RouteName.home: (context) => HomeScreen(),
     RouteName.profile: (context) => ProfileScreen(),
     RouteName.menu: (context) => DrawerBar(),
-    RouteName.danhSachLichTrinh: (context) => DanhSachLichTrinhScreen(),
     RouteName.themLichTrinh: (context) => ThemLichTrinhScreen(),
     RouteName.chiTietLichTrinh: (context) => ChiTietTrinhScreen(),
     RouteName.test: (context) => TestScreen(),
@@ -88,5 +87,6 @@ class RouteManager {
     RouteName.tripList: (context) => TripScreen(),
     RouteName.assignment: (context) => AssignmentScreen(),
     RouteName.updateTour: (context) => UpdateTourScreen(),
+    RouteName.scheduleTourmanager: (context) => ScheduleTourmanagerScreen(),
   };
 }

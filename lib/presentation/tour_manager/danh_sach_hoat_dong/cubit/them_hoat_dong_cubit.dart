@@ -44,8 +44,8 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
 
     final result = await bookingRepository.addLocationActivities(
       AddLocationActivityRequest(
-        name: tenDiaDiem,
         placeId: placeId,
+        name: tenDiaDiem,
         activityIds: activityIds,
       ),
     );

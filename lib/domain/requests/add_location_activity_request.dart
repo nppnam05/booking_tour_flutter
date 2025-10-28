@@ -3,13 +3,13 @@ part 'add_location_activity_request.g.dart';
 
 @JsonSerializable()
 class AddLocationActivityRequest {
-  final String name;
   final int placeId;
+  final String name;
   final List<int> activityIds;
 
   AddLocationActivityRequest({
-    required this.name,
     required this.placeId,
+    required this.name,
     required this.activityIds,
   });
 
