@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 class Place extends Equatable {
   int id;
   String name;
-  Province? province;
+  Province province;
 
   Place({required this.id, required this.name, required this.province});
 

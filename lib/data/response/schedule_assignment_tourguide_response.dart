@@ -30,7 +30,7 @@ class ScheduleAssignmentTourguideResponse {
   ) => _$ScheduleAssignmentTourguideResponseFromJson(json);
 }
 
-extension ScheduleAssignmentTourguideResponseX
+extension ScheduleAssignmentTourguideResponseMapper
     on ScheduleAssignmentTourguideResponse {
   schedule.ScheduleAssignmentTourguide map() {
     return schedule.ScheduleAssignmentTourguide(
@@ -56,7 +56,7 @@ class TourResponse {
       _$TourResponseFromJson(json);
 }
 
-extension TourResponseX on TourResponse {
+extension TourResponseMapper on TourResponse {
   schedule.Tour map() {
     return schedule.Tour(
       title: title ?? '',
@@ -79,7 +79,7 @@ class LocationResponse {
       _$LocationResponseFromJson(json);
 }
 
-extension LocationResponseX on LocationResponse {
+extension LocationResponseMapper on LocationResponse {
   schedule.Location map() {
     return schedule.Location(name: name ?? '');
   }

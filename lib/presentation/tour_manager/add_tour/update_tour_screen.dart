@@ -1,3 +1,8 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
+import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button_cubit.dart';
@@ -31,8 +36,13 @@ class UpdateTourScreen extends StatelessWidget {
       create: (_) => pickImageCubit,
       child: AddTourScreen(
         title: "Sửa chuyến đi",
-        onSave: () {
-          context.read<AddTourCubit>().update();
+        onSave: () async {
+          DialogHelper.showLoadingDialog();
+          var isUpdated = await context.read<AddTourCubit>().update();
+          DialogHelper.dismissDialog();
+          if (isUpdated) {
+            Navigator.pop(AppNavigator.currentContext);
+          }
         },
         addTourCubit: context.read<AddTourCubit>(),
         isAllowChangeAmountDays: false,

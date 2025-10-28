@@ -44,33 +44,27 @@ class TripScreen extends StatelessWidget {
                   if (state is TripLoaded) {
                     return ListView(
                       padding: EdgeInsets.all(8),
-                      children:
-                          state.trips.map((trip) {
-                            return TripCard(
-                              trip: trip,
-                              onDelete: () async {
-                                final confirmed = await DialogNoti.confirm(
-                                  context: context,
-                                  title: 'Xác nhận xóa',
-                                  message:
-                                      'Bạn có chắc muốn xóa chuyến đi này?',
-                                  highlightPhrases: ['xóa chuyến đi'],
-                                );
-                                if (confirmed) {
-                                  _cubit.deleteTrip(trip);
-                                }
-                              },
-                              onView: () {
-                                context.read<AddTourCubit>().setState(
-                                  trip.toAddTourState(),
-                                );
-                                Navigator.pushNamed(
-                                  context,
-                                  RouteName.updateTour,
-                                );
-                              },
+                      children: state.trips.map((trip) {
+                        return TripCard(
+                          trip: trip,
+                          onDelete: () async {
+                            final confirmed = await DialogNoti.confirm(
+                              context: context,
+                              title: 'Xác nhận xóa',
+                              message: 'Bạn có chắc muốn xóa chuyến đi này?',
+                              highlightPhrases: ['xóa chuyến đi'],
                             );
-                          }).toList(),
+                            if (confirmed) {
+                              _cubit.deleteTrip(trip);
+                            }
+                          },
+                          onView: () async{
+                            context.read<AddTourCubit>().setState(trip.toAddTourState());
+                            await Navigator.pushNamed(context, RouteName.updateTour);
+                            _cubit.loadTrips();
+                          },
+                        );
+                      }).toList(),
                     );
                   }
 
@@ -93,8 +87,9 @@ class TripScreen extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pushNamed(context, RouteName.addTour);
+                onPressed: () async{
+                  await Navigator.pushNamed(context, RouteName.addTour);
+                  _cubit.loadTrips();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,

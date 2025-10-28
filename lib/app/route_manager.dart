@@ -1,5 +1,4 @@
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -9,6 +8,7 @@ import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/real_add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/update_tour_screen.dart';
@@ -49,17 +49,18 @@ class RouteName {
   static final changePassword = "change_password";
   static final authOtpChangePassword = "auth_otp_change_password";
   static final assignment = "assignment";
-  static final tourGuideAssignment = "tour_guide_assignment";
 
   static final addTour = "addTour";
   static final updateTour = "updateTour";
   static final tripList = "tripList";
+  static final scheduleTourguide = "scheduleTourguide";
+  static final ScheduleTourmanager = "scheduleTourmanager";
+  static final participants = "participants";
 
   static final danhSachDiaDanh = "danh_sach_dia_danh";
   static final themDiaDanh = "them_dia_danh";
   static final suaDiaDanh = "sua_dia_danh";
   static final scheduleTourmanager = "scheduleTourmanager";
-  static final participants = "participants";
 }
 
 class RouteManager {
@@ -82,7 +83,6 @@ class RouteManager {
     RouteName.authOtp: (context) => AuthOtpScreen(),
     RouteName.changePassword: (context) => ChangePasswordScreen(),
     RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
-    RouteName.tourGuideAssignment: (context) => TourGuideAssignmentScreen(),
     RouteName.danhSachDiaDanh: (context) => DanhSachDiaDanhScreen(),
     RouteName.themDiaDanh: (context) => ThemDiaDanhScreen(),
     RouteName.suaDiaDanh: (context) => SuaDiaDanhScreen(),
@@ -90,7 +90,8 @@ class RouteManager {
     RouteName.tripList: (context) => TripScreen(),
     RouteName.assignment: (context) => AssignmentScreen(),
     RouteName.updateTour: (context) => UpdateTourScreen(),
-    RouteName.scheduleTourmanager: (context) => ScheduleTourmanagerScreen(),
+    RouteName.scheduleTourguide: (context) => ScheduleTourguideScreen(),
+    RouteName.ScheduleTourmanager: (context) => ScheduleTourmanagerScreen(),
     RouteName.participants: (context) {
       final schedule =
           ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;

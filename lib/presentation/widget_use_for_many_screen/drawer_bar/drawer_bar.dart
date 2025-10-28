@@ -21,7 +21,7 @@ class DrawerBar extends StatelessWidget {
             ),
           ),
           ListTile(
-            onTap: () => {print("haha")},
+            onTap: () => {Navigator.pushNamed(context, RouteName.tripList)},
             leading: Icon(Icons.route),
             title: Text("Chuyến đi"),
           ),
@@ -34,7 +34,7 @@ class DrawerBar extends StatelessWidget {
             title: Text("Lịch trình"),
           ),
           ListTile(
-            onTap: () => {print("hehe")},
+            onTap: () => {Navigator.pushNamed(context, RouteName.assignment)},
             leading: Icon(Icons.person_pin_circle),
             title: Text("Phân công"),
           ),
@@ -45,7 +45,10 @@ class DrawerBar extends StatelessWidget {
             title: Text("Địa danh"),
           ),
           ListTile(
-            onTap: () => {Navigator.pushNamed(context, RouteName.hoatDong)},
+            onTap:
+                () => {
+                  Navigator.pushNamed(context, RouteName.danhSachHoatDong),
+                },
             leading: Icon(Icons.group),
             title: Text("Hoạt động"),
           ),

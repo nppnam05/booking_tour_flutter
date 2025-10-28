@@ -29,6 +29,26 @@ class ScheduleAssignmentTourguide {
       tour: Tour(title: '', locations: []),
     );
   }
+
+  ScheduleAssignmentTourguide copyWith({
+    int? id,
+    int? tourId,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? code,
+    int? maxSlot,
+    Tour? tour,
+  }) {
+    return ScheduleAssignmentTourguide(
+      id: id ?? this.id,
+      tourId: tourId ?? this.tourId,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      code: code ?? this.code,
+      maxSlot: maxSlot ?? this.maxSlot,
+      tour: tour ?? this.tour,
+    );
+  }
 }
 
 class Tour {

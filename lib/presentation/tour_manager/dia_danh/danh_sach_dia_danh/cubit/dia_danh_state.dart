@@ -15,16 +15,16 @@ class DiaDanhState {
   });
 
   DiaDanhState copyWith({
-    List<Province>? province,
-    List<Place>? place,
-    List<Place>? filteredPlace,
+    List<Province>? provinces,
+    List<Place>? places,
+    List<Place>? filteredPlaces,
     Province? selectedProvince,
   }) {
     return DiaDanhState(
-      provinces: province ?? provinces,
-      places: place ?? places,
+      provinces: provinces ?? this.provinces,
+      places: places ?? this.places,
       selectedProvince: selectedProvince ?? this.selectedProvince,
-      filteredPlaces: filteredPlace ?? filteredPlaces,
+      filteredPlaces: filteredPlaces ?? this.filteredPlaces
     );
   }
 }
