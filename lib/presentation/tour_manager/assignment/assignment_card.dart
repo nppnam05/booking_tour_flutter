@@ -57,6 +57,8 @@ class AssignmentCard extends StatelessWidget {
                 children: [
                   Text(
                     assignment.title,
+                       maxLines: 1,
+                    overflow:  TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

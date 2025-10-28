@@ -30,3 +30,4 @@ Map<String, dynamic> _$DayActivityResponseToJson(
   'locationActivity': instance.locationActivity,
   'time': instance.time,
 };
+
