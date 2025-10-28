@@ -45,10 +45,7 @@ class DrawerBar extends StatelessWidget {
             title: Text("Địa danh"),
           ),
           ListTile(
-            onTap:
-                () => {
-                  Navigator.pushNamed(context, RouteName.danhSachHoatDong),
-                },
+            onTap: () => {Navigator.pushNamed(context, RouteName.hoatDong)},
             leading: Icon(Icons.group),
             title: Text("Hoạt động"),
           ),

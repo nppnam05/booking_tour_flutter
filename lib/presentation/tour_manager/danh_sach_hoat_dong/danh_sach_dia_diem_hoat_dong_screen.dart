@@ -195,10 +195,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
           children: [
             _buildInfoRow("Địa điểm:", locationActivity.place.name),
             const SizedBox(height: 16),
-            _buildInfoRow(
-              "Tỉnh thành:",
-              locationActivity.place.province?.name ?? '',
-            ),
+            _buildInfoRow("Tỉnh thành:", locationActivity.place.province.name),
             const SizedBox(height: 16),
           ],
         ),
