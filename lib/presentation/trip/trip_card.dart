@@ -54,7 +54,7 @@ class TripCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Địa điểm: ${trip.provinces.join(", ")}',
+                    'Địa điểm: ${trip.provinces.map((i) => i.name).join(", ")}',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

@@ -9,6 +9,9 @@ class BkTextfield extends StatelessWidget {
   final ValueChanged<String>? onChange;
   final bool isShowError;
   final String? errorMessage;
+  final int? maxLength;
+  final int? minLines;
+  final int? maxLines;
 
   const BkTextfield({
     super.key,
@@ -19,6 +22,9 @@ class BkTextfield extends StatelessWidget {
     this.onChange,
     this.isShowError = false,
     this.errorMessage,
+    this.maxLength = 255,
+    this.minLines = 1,
+    this.maxLines = 1,
   });
 
   @override
@@ -36,6 +42,9 @@ class BkTextfield extends StatelessWidget {
         const SizedBox(height: 4.0),
 
         TextField(
+          maxLength: maxLength,
+          minLines: minLines,
+          maxLines: maxLines,
           controller: controller,
           decoration: const InputDecoration()
               .applyDefaults(
@@ -55,15 +64,31 @@ class BkTextfield extends StatelessWidget {
                 ),
               )
               .copyWith(hintText: hint, fillColor: fillColor),
-          onChanged: onChange,
-          onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+          onChanged: (value) => onChange?.call(value.trim()),
+          onTapOutside: (_) {
+            controller.text = controller.text.trim();
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          onEditingComplete: () {
+            controller.text = controller.text.trim();
+          },
+          buildCounter: (
+            BuildContext context, {
+            required int currentLength,
+            required bool isFocused,
+            required int? maxLength,
+          }) {
+            return null; // Hide the counter
+          },
         ),
 
         Visibility(
           visible: isError,
           child: Text(
             errorMessage ?? "",
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(color: AppColors.error),
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge!.copyWith(color: AppColors.error),
           ),
         ),
       ],

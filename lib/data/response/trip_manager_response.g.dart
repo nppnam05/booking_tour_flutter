@@ -13,6 +13,7 @@ TripManagerResponse _$TripManagerResponseFromJson(
   day: (json['day'] as num?)?.toInt(),
   title: json['title'] as String?,
   price: (json['price'] as num?)?.toInt(),
+  percentDeposit: (json['percentDeposit'] as num?)?.toInt(),
   description: json['description'] as String?,
   tourImages:
       (json['tourImages'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -33,6 +34,7 @@ Map<String, dynamic> _$TripManagerResponseToJson(
   'day': instance.day,
   'title': instance.title,
   'price': instance.price,
+  'percentDeposit': instance.percentDeposit,
   'description': instance.description,
   'tourImages': instance.tourImages,
   'locations': instance.locations,

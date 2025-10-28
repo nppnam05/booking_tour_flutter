@@ -9,6 +9,7 @@ class CreateTourRequest {
   String title;
   int price;
   String description;
+  int percentDeposit;
   List<CreateDayOfTourRequest> dayOfTours;
   List<String> tourImages;
 
@@ -16,6 +17,7 @@ class CreateTourRequest {
     required this.day,
     required this.title,
     required this.price,
+    required this.percentDeposit,
     required this.description,
     required this.dayOfTours,
     this.tourImages = const [],
