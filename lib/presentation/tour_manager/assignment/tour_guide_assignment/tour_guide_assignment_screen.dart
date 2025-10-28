@@ -36,7 +36,6 @@ class TourGuideAssignmentScreen extends StatelessWidget {
 
   // gom các widget lại
   Widget columnOfWidget() {
-    var ischeck = true;
     final context = AppNavigator.currentContext;
 
     return Column(
