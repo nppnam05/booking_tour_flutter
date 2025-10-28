@@ -67,7 +67,7 @@ extension TourGuideResponseMapper on TourGuideResponse {
       cccdFrontPath: CCCD_front_path ?? "",
       cccBackPath: CCCD_back_path ?? "",
       endWorkingDate: DateTime.tryParse(endWorkingDate ?? "") ?? DateTime.now(  ),
-      ischecked: false,
+      ischecked: ischecked ?? false,
       user: user?.map() ?? User.empty(),
     );
   }

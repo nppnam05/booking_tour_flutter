@@ -11,13 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentScreen extends StatelessWidget {
-  final _cubit = TourGuideAssignmentCubit()..syncPost(idschedule: 2);
+  late final TourGuideAssignmentCubit _cubit;
+
   final TextEditingController _controllerSearch = TextEditingController();
+
+  TourGuideAssignmentScreen({
+    super.key,
+    required TourGuideAssignmentCubit cubit,
+  }) {
+    _cubit = cubit;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _cubit,
+    
+    return BlocProvider<TourGuideAssignmentCubit>.value(
+      value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text('Phân công hướng dẫn viên')),
         body: columnOfWidget(),
@@ -42,7 +51,9 @@ class TourGuideAssignmentScreen extends StatelessWidget {
           controller: _controllerSearch,
           onClear: () {
             _controllerSearch.clear();
+            _cubit.searchTourGuides('');
           },
+          onChanged: (value) => _cubit.searchTourGuides(value),
           hintText: "Tìm kiếm nhân viên ...",
         ),
 
@@ -89,7 +100,7 @@ class TourGuideAssignmentScreen extends StatelessWidget {
       TourGuideAssignmentState,
       List<TourGuide>
     >(
-      selector: (state) => state.tourGuides,
+      selector: (state) => state.tourGuidesSearch,
       builder: (context, tourGuides) {
         if (tourGuides.isEmpty) {
           return Center(child: Text('No tour guides available'));
@@ -158,7 +169,7 @@ class TourGuideAssignmentScreen extends StatelessWidget {
                       const Icon(
                         Icons.person_outline,
                         size: 30,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
 
                       const SizedBox(width: 14),
@@ -177,7 +188,7 @@ class TourGuideAssignmentScreen extends StatelessWidget {
                   // Mã nhân viên
                   Row(
                     children: [
-                      const Icon(Icons.code, size: 30, color: Colors.black54),
+                      const Icon(Icons.code, size: 30, color: Colors.black),
 
                       const SizedBox(width: 14),
 
@@ -239,28 +250,19 @@ class TourGuideAssignmentScreen extends StatelessWidget {
           ),
 
           // Checkbox
-          BlocSelector<
-            TourGuideAssignmentCubit,
-            TourGuideAssignmentState,
-            bool
-          >(
-            selector: (state) => tourGuide.ischecked,
-            builder: (context, isChecked) {
-              return Checkbox(
-                value: isChecked,
-                onChanged: (bool? value) {
-                  onCheckChanged(value);
-                },
-
-                activeColor: Colors.black,
-
-                checkColor: Colors.white,
-
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              );
+          Checkbox(
+            value: tourGuide.ischecked,
+            onChanged: (bool? value) {
+              onCheckChanged(value);
             },
+
+            activeColor: Colors.black,
+
+            checkColor: Colors.white,
+
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
           ),
         ],
       ),

@@ -40,11 +40,10 @@ class LoginScreen extends StatelessWidget {
             RouteName.home,
             (route) => false,
           );
-        }
-        else{
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Center(child: Text('Đăng nhập thất bại')),
+              content: Center(child: Text('Email hoặc mật khẩu đã sai')),
               duration: const Duration(seconds: 1),
             ),
           );
@@ -73,7 +72,9 @@ class LoginScreen extends StatelessWidget {
               "Email",
               Colors.grey.shade100,
             ),
+
             const SizedBox(height: 12),
+
             ToggleInputField(
               controller: _controllerPassword,
               title: "Mật khẩu",
@@ -93,7 +94,9 @@ class LoginScreen extends StatelessWidget {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Center(child: Text('Vui lòng nhập đầy đủ thông tin')),
+                      content: Center(
+                        child: Text('Vui lòng nhập đầy đủ thông tin'),
+                      ),
                       duration: const Duration(seconds: 2),
                     ),
                   );
