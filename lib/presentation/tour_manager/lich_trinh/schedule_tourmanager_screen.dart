@@ -21,15 +21,8 @@ class ScheduleTourmanagerScreen extends StatelessWidget {
           title: const Text('Lịch Trình'),
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
-          leading:  Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-          ),
         ),
+        drawer: DrawerBar(),
         body: BlocBuilder<ScheduleTourmanagerCubit, ScheduleTourmanagerState>(
           builder: (context, state) {
             if (state is ScheduleTourmanagerLoaded) {

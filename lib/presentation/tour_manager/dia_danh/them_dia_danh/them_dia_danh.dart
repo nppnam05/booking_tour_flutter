@@ -19,13 +19,7 @@ class ThemDiaDanhScreen extends StatelessWidget {
       create: (_) => ThemDiaDanhCubit(),
       child: BlocConsumer<ThemDiaDanhCubit, SuaDiaDanhState>(
         listener: (context, state) {
-          if (state.successMessage != null) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.successMessage!)));
-
-            Navigator.pushNamed(context, RouteName.danhSachDiaDanh);
-          } else if (state.error != null) {
+          if (state.error != null) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.error!)));
@@ -33,14 +27,10 @@ class ThemDiaDanhScreen extends StatelessWidget {
         },
         builder: (context, state) {
           final cubit = context.read<ThemDiaDanhCubit>();
-          final TextEditingController nameController = TextEditingController(
-            text: state.name ?? "",
-          );
+          
           return Scaffold(
             appBar: AppBar(
               title: Text(style: AppFonts.textWhite, "Thêm Địa Danh"),
-              backgroundColor: AppColors.button,
-              centerTitle: true,
             ),
             body: Column(
               children: [
@@ -52,7 +42,7 @@ class ThemDiaDanhScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       _buildTinhThanh(context, cubit, state.provinces, state.province),
-                      _buildTenDiaDanh(cubit, nameController),
+                      _buildTenDiaDanh(cubit, cubit.nameController),
                     ],
                   ),
                 ),
@@ -61,7 +51,8 @@ class ThemDiaDanhScreen extends StatelessWidget {
 
                 DeleteButtonWidget(
                   onDelete: () async {
-                    await cubit.createPlace();
+                    cubit.setName(cubit.nameController.text);
+                    await cubit.createPlace(context);
                   },
                   text: "Lưu",
                   textColor: Colors.white,
@@ -128,8 +119,8 @@ class ThemDiaDanhScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(12),
       child: notIconToggleInputField(
-        onChanged: cubit.setName,
         name,
+        onChanged: cubit.setName,
         "Tên địa danh",
         AppColors.gray,
       ),

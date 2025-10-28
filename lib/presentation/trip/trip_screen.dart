@@ -56,9 +56,10 @@ class TripScreen extends StatelessWidget {
                               _cubit.deleteTrip(trip);
                             }
                           },
-                          onView: () {
+                          onView: () async{
                             context.read<AddTourCubit>().setState(trip.toAddTourState());
-                            Navigator.pushNamed(context, RouteName.updateTour);
+                            await Navigator.pushNamed(context, RouteName.updateTour);
+                            _cubit.loadTrips();
                           },
                         );
                       }).toList(),
@@ -87,8 +88,9 @@ class TripScreen extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pushNamed(context, RouteName.addTour);
+                onPressed: () async{
+                  await Navigator.pushNamed(context, RouteName.addTour);
+                  _cubit.loadTrips();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,

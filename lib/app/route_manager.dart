@@ -1,5 +1,5 @@
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
-import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/schedule_assignment_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
@@ -54,7 +54,7 @@ class RouteName {
   static final authOtp = "auth_otp";
   static final changePassword = "change_password";
   static final authOtpChangePassword = "auth_otp_change_password";
-  static final assignment = "assignment";  static final tourGuideAssignment = "tour_guide_assignment";
+  static final assignment = "assignment";  
 
   static final addTour = "addTour";
   static final updateTour = "updateTour";
@@ -90,7 +90,6 @@ class RouteManager {
     RouteName.authOtp: (context) => AuthOtpScreen(),
     RouteName.changePassword: (context) => ChangePasswordScreen(),
     RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
-    RouteName.tourGuideAssignment: (context) => TourGuideAssignmentScreen(),
     RouteName.danhSachDiaDanh: (context) => DanhSachDiaDanhScreen(),
     RouteName.themDiaDanh: (context) => ThemDiaDanhScreen(),
     RouteName.suaDiaDanh: (context) => SuaDiaDanhScreen(),
@@ -98,9 +97,6 @@ class RouteManager {
     RouteName.tripList: (context) => TripScreen(),
     RouteName.assignment: (context) => AssignmentScreen(),
     RouteName.updateTour: (context) => UpdateTourScreen(),
-
-    RouteName.tripList: (context)=> TripScreen(),
-    RouteName.assignment: (context)=> AssignmentScreen(),
     RouteName.scheduleTourguide: (context)=> ScheduleTourguideScreen(),
     RouteName.ScheduleTourmanager: (context)=> ScheduleTourmanagerScreen(),
     RouteName.participants: (context) {
