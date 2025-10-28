@@ -1,5 +1,8 @@
 import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/cubit/dia_danh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/cubit/sua_dia_danh_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
@@ -7,6 +10,8 @@ import 'package:booking_tour_flutter/app/dependency_injection/configure_injectab
 
 class ThemDiaDanhCubit extends Cubit<SuaDiaDanhState> {
   final bookingRepository = getIt<BookingRepository>();
+  final TextEditingController nameController = TextEditingController();
+  
 
   ThemDiaDanhCubit({Place? place})
     : super(SuaDiaDanhState(name: "", province: null, provinces: [])) {
@@ -29,13 +34,19 @@ class ThemDiaDanhCubit extends Cubit<SuaDiaDanhState> {
   void setName(String name) {
     emit(state.copyWith(name: name));
   }
+  @override
+  Future<void> close() {
+    nameController.dispose();
+    return super.close();
+  }
 
   void setProvince(Province province) {
     emit(state.copyWith(province: province));
   }
 
-  Future<void> createPlace() async {
-    if ((state.name ?? '').isEmpty) {
+  Future<void> createPlace(BuildContext context) async {
+    final trimmedName = (state.name ?? '').trim();
+    if (trimmedName.isEmpty) {
       emit(state.copyWith(error: "Vui lòng nhập tên địa danh"));
       return;
     }
@@ -45,27 +56,7 @@ class ThemDiaDanhCubit extends Cubit<SuaDiaDanhState> {
       return;
     }
 
-    emit(state.copyWith(isLoading: true, error: null));
-
-    final result = await bookingRepository.createPlace(
-      name: state.name!,
-      locationId: state.province!.id,
-    );
-
-    result.fold(
-      (failure) {
-        emit(state.copyWith(isLoading: false, error: failure.message));
-      },
-      (updatedPlace) {
-        emit(
-          state.copyWith(
-            isLoading: false,
-            successMessage: "Thêm thành công",
-            name: updatedPlace.name,
-            province: updatedPlace.province,
-          ),
-        );
-      },
-    );
+    final tmp = Place(id: -DateTime.now().millisecondsSinceEpoch, name: state.name!, province: state.province!);  
+    Navigator.pop(context, tmp);
   }
 }

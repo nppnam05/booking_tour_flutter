@@ -11,16 +11,16 @@ class DiaDanhState {
   DiaDanhState({required this.provinces, required this.places, this.selectedProvince, this.filteredPlaces});
 
   DiaDanhState copyWith({
-    List<Province>? province,
-    List<Place>? place,
-    List<Place>? filteredPlace,
+    List<Province>? provinces,
+    List<Place>? places,
+    List<Place>? filteredPlaces,
     Province? selectedProvince,
   }) {
     return DiaDanhState(
-      provinces: province ?? this.provinces,
-      places: place ?? this.places,
+      provinces: provinces ?? this.provinces,
+      places: places ?? this.places,
       selectedProvince: selectedProvince ?? this.selectedProvince,
-      filteredPlaces: filteredPlace ?? this.filteredPlaces
+      filteredPlaces: filteredPlaces ?? this.filteredPlaces
     );
   }
 }

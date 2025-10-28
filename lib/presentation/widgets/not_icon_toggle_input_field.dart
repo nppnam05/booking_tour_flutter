@@ -14,16 +14,20 @@ Widget notIconToggleInputField(
       const SizedBox(height: 8.0),
       Container(
         decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.gray, width: 1.5),
         ),
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
-            border: const OutlineInputBorder(
-              borderSide: BorderSide.none,
-            ),
             hintText: text,
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
           ),
           onChanged: onChanged,
         ),
@@ -31,4 +35,3 @@ Widget notIconToggleInputField(
     ],
   );
 }
-
