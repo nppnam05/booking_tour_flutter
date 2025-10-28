@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button_cubit.dart';
@@ -16,11 +18,16 @@ class RealAddTourScreen extends StatelessWidget {
       create: (_) => _pickImageCubit,
       child: AddTourScreen(
         title: "Thêm chuyến đi",
-        onSave: () {
-          context.read<AddTourCubit>().add();
+        onSave: () async{
+          await DialogHelper.showLoadingDialog();
+          var isAdded = await context.read<AddTourCubit>().add();
+          DialogHelper.dismissDialog();
+          if (isAdded){
+            Navigator.pop(AppNavigator.currentContext);
+          }
         },
         addTourCubit: context.read<AddTourCubit>()..resetState(),
-        isAllowChangeAmountDays: false,
+        isAllowChangeAmountDays: true,
       ),
     );
   }

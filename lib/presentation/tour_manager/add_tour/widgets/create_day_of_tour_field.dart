@@ -102,6 +102,8 @@ class CreateDayOfTourField extends StatelessWidget {
             errorMessage: getError(
               sprintf(AddTourErrorFields.dayOfTourDescription, [selectedDay]),
             ),
+            maxLines: 10,
+            maxLength: 10000,
           ),
 
           //more day activity
