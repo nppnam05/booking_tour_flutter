@@ -46,6 +46,8 @@ class TripCard extends StatelessWidget {
                 children: [
                   Text(
                     trip.title,
+                    maxLines: 1,
+                    overflow:  TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

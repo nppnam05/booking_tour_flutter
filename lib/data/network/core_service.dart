@@ -66,15 +66,37 @@ abstract class CoreService {
   });
   @GET("/Tour")
   Future<RestResponse> getTrips({
-    @Query("sortBy") String sortBy = "Title",
-    @Query("orderBy") String order = "ASC",
+    @Query("SortBy") String sortBy = "Title",
+    @Query("SortOrder") String order = "ASC",
     @Query("filter") String? filter,
   });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({@Path("id") required int id});
 
-  @GET("/Assignment")
-  Future<RestResponse> getAssignments();
+  @GET("/Tour")
+  Future<RestResponse> getAssignments({
+    @Query("sortBy") String sortBy = "Title",
+    @Query("orderBy") String order = "ASC",
+    @Query("filter") String? filter,
+  });
+
+  @GET("/Guide/schedule/{staffId}")
+  Future<RestResponse> getGuidesByStaff({
+    @Path("staffId") required int staffId,
+  });
+
+    @GET("/Schedule")
+  Future<RestResponse> getAllSchedules();
+
+  @DELETE("/Schedule/{id}")
+Future<RestResponse> deleteScheduleById({
+  @Path("id") required int id,
+});
+@GET("/UserCompletedSchedule/{scheduleId}")
+  Future<RestResponse> getUserCompletedSchedule({
+    @Path("scheduleId") required int scheduleId,
+  });
+  
 
   @POST("/Tour")
   Future<RestResponse> createTour(@Body() CreateTourRequest request);

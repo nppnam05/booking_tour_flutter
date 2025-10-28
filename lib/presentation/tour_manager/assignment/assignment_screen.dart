@@ -81,7 +81,7 @@ class AssignmentScreen extends StatelessWidget {
                       // TODO: Navigate to detail screen
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Xem chi tiết: ${assignment.titleTour}'),
+                          content: Text('Xem chi tiết: ${assignment.title}'),
                         ),
                       );
                     },
