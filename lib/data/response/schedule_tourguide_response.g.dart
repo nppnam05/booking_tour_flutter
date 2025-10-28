@@ -2,7 +2,9 @@
 
 part of 'schedule_tourguide_response.dart';
 
-
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
 ScheduleTourguideResponse _$ScheduleTourguideResponseFromJson(
   Map<String, dynamic> json,

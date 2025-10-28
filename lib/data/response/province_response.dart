@@ -11,6 +11,7 @@ class ProvinceResponse {
 
   factory ProvinceResponse.fromJson(Map<String, dynamic> json) =>
       _$ProvinceResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ProvinceResponseToJson(this);
 }
 
 extension ProvinceResponseMapper on ProvinceResponse {

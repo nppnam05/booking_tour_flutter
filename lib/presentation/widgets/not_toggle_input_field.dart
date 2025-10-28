@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 Widget notToggleInputField(
   TextEditingController controller,
-  String text,
+  String title,
   Color color,
 ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       
-      Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
+      Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
 
       const SizedBox(height: 8.0),
 
@@ -30,7 +30,7 @@ Widget notToggleInputField(
             borderSide: const BorderSide(color: AppColors.borderTextInputColor),
           ),
 
-          hintText: text,
+          hintText: title,
 
           //  Biểu tượng người dùng
           suffixIcon: const Icon(Icons.person_outline, color: Colors.grey),

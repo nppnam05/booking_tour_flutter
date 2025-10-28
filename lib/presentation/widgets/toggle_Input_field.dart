@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 
 class ToggleInputField extends StatefulWidget {
   final TextEditingController controller;
-  final String text;
+  final String title;
   final Color color;
 
-  const ToggleInputField({super.key, required this.controller, required this.text, required this.color});
+  const ToggleInputField({
+    super.key,
+    required this.controller,
+    required this.title,
+    required this.color,
+  });
 
   @override
   State<ToggleInputField> createState() => _ToggleInputFieldState();
@@ -21,8 +26,7 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
-        Text(widget.text, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold)),
 
         const SizedBox(height: 8.0),
 
@@ -43,11 +47,11 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               borderSide: const BorderSide(
-                color: AppColors.borderTextInputColor
-              )
+                color: AppColors.borderTextInputColor,
+              ),
             ),
 
-            hintText: widget.text,
+            hintText: widget.title,
 
             // Biểu tượng con mắt có chức năng
             suffixIcon: IconButton(
@@ -57,7 +61,6 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
                 color: Colors.grey,
               ),
 
-              
               onPressed: () {
                 // Đảo ngược trạng thái khi click
                 setState(() {
@@ -71,5 +74,3 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
     );
   }
 }
-
-

@@ -3,15 +3,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'activity_response.g.dart';
 
-@JsonSerializable()
-class ActivityResponse {
-  final List<ActivityResponseData>? data;
+// @JsonSerializable()
+// class ActivityResponse {
+//   final List<ActivityResponseData>? data;
 
-  ActivityResponse({this.data});
+//   ActivityResponse({this.data});
 
-  factory ActivityResponse.fromJson(Map<String, dynamic> json) =>
-      _$ActivityResponseFromJson(json);
-}
+//   factory ActivityResponse.fromJson(Map<String, dynamic> json) =>
+//       _$ActivityResponseFromJson(json);
+// }
 
 @JsonSerializable()
 class ActivityResponseData {
@@ -24,12 +24,12 @@ class ActivityResponseData {
       _$ActivityResponseDataFromJson(json);
 }
 
-extension ActivityResponseMap on ActivityResponse {
-  List<Activity> map() {
-    var list = data?.map((i) => i.map()).toList() ?? [];
-    return list;
-  }
-}
+// extension ActivityResponseMap on ActivityResponse {
+//   List<Activity> map() {
+//     var list = data?.map((i) => i.map()).toList() ?? [];
+//     return list;
+//   }
+// }
 
 extension ActivityResponseDataMap on ActivityResponseData {
   Activity map() {

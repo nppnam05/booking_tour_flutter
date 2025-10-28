@@ -1,8 +1,11 @@
+import 'dart:io';
+
+import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PickImageButtonState {
   final bool picking;
-  final List<XFile> files;
+  final List<Either<XFile, String>> files;
   final String? error;
   final bool allowMultiple;
   final int maxImages;
@@ -17,7 +20,7 @@ class PickImageButtonState {
 
   PickImageButtonState copyWith({
     bool? picking,
-    List<XFile>? files,
+    List<Either<XFile, String>>? files,
     String? error,
     bool? allowMultiple,
     int? maxImages,

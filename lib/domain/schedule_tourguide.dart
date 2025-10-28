@@ -1,4 +1,3 @@
-
 class ScheduleTourguide {
   final int id;
   final DateTime startDate;

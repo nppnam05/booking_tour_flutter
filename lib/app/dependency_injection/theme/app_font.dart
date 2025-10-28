@@ -78,4 +78,12 @@ class AppFonts {
     fontWeight: fontWeight700,
     color: AppColors.textPrimary,
   );
+
+  static TextStyle textWhite = TextStyle(
+    fontSize: fontSize24,
+    fontFamily: fontFamily,
+    fontWeight: fontWeight600,
+    color: AppColors.white,
+  );
+  
 }

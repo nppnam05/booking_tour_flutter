@@ -21,9 +21,7 @@ class ScheduleTourmanagerCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: const Color(0xFFE0F2F1),
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -34,10 +32,9 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    
-          "http://tt1220-001-site1.ntempurl.com/images/https://dalattrongtoi.com/media/images/uploaded/2/2016_01_23/post/da-lat-thanh-pho-cua-nhung-giac-mo-3.jpg",
+                    "http://tt1220-001-site1.ntempurl.com/images/https://dalattrongtoi.com/media/images/uploaded/2/2016_01_23/post/da-lat-thanh-pho-cua-nhung-giac-mo-3.jpg",
                     width: 110,
-                    height: 80, 
+                    height: 80,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
@@ -56,14 +53,21 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.calendar_today, size: 16, color: Colors.black87),
+                          const Icon(
+                            Icons.calendar_today,
+                            size: 16,
+                            color: Colors.black87,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             _formatDate(shedule_tour_manager.startDate),
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(width: 8),
-                          const Icon(Icons.arrow_right_alt, color: Colors.purple),
+                          const Icon(
+                            Icons.arrow_right_alt,
+                            color: Colors.purple,
+                          ),
                           const SizedBox(width: 8),
                           Text(
                             _formatDate(shedule_tour_manager.endDate),
@@ -74,14 +78,27 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          const Icon(Icons.location_on, size: 16, color: Colors.orange),
+                          const Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: Colors.orange,
+                          ),
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              shedule_tour_manager.tour.province.name.isNotEmpty ? shedule_tour_manager.tour.province.name : "" ,
+                              (shedule_tour_manager.tour.provinces.isNotEmpty
+                                  ? shedule_tour_manager
+                                      .tour
+                                      .provinces
+                                      .first
+                                      .name
+                                  : ""),
+
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -105,7 +122,7 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                         children: [
                           const Icon(Icons.group, size: 16, color: Colors.blue),
                           const SizedBox(width: 6),
-                          Text('Tối đa: ${shedule_tour_manager.maxSlot}')
+                          Text('Tối đa: ${shedule_tour_manager.maxSlot}'),
                         ],
                       ),
                     ],
@@ -120,8 +137,13 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 10,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 child: const Text('Xóa'),
               ),
@@ -132,4 +154,3 @@ class ScheduleTourmanagerCard extends StatelessWidget {
     );
   }
 }
-

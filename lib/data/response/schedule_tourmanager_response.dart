@@ -61,20 +61,18 @@ class TripResponse {
   Map<String, dynamic> toJson() => _$TripResponseToJson(this);
 
   Trip map() {
-    final image = (tourImages?.isNotEmpty ?? false)
-        ? tourImages!.first.toString()
-        : '';
-
-    final province = (locations?.isNotEmpty ?? false)
-        ? locations!.first.map()
-        : Province(id: 0, name: '');
+    final images = tourImages?.map((e) => e.toString()).toList() ?? [];
+    final provinceList = locations?.map((e) => e.map()).toList() ?? [];
 
     return Trip(
       id: id ?? 0,
+      day: 0,
       title: title ?? '',
       price: price ?? 0,
-      tourImages: image,
-      province: province,
+      description: '',
+      provinces: provinceList,
+      tourImages: images,
+      dayOfTours: [],
     );
   }
 }
@@ -113,13 +111,18 @@ extension ScheduleTourmanagerResponseMapper on ScheduleTourmanagerResponse {
       gatheringTime: gatheringTime ?? '',
       code: code ?? '',
       desposit: desposit ?? 0,
-      tour: tour?.map() ?? Trip(
-        id: 0,
-        title: '',
-        price: 0,
-        tourImages: '',
-        province: Province(id: 0, name: ''),
-      ),
+      tour:
+          tour?.map() ??
+          Trip(
+            id: 0,
+            day: 0,
+            title: '',
+            price: 0,
+            description: '',
+            provinces: [],
+            tourImages: [],
+            dayOfTours: [],
+          ),
     );
   }
 

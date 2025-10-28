@@ -1,5 +1,5 @@
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
+import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:flutter/material.dart';
 

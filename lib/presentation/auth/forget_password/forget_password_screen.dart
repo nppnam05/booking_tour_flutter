@@ -21,7 +21,9 @@ class ForgetPasswordScreen extends StatelessWidget {
       create: (context) => _cubit,
       child: Scaffold(
         appBar: AppBar(backgroundColor: AppColors.scaffoldBackgroundColor),
-        body: Center(child: wrappedOutside(context, columnOfWidget())),
+        body: SingleChildScrollView(
+          child: Center(child: wrappedOutside(context, columnOfWidget())),
+        ),
       ),
     );
   }
@@ -48,7 +50,11 @@ class ForgetPasswordScreen extends StatelessWidget {
 
           const SizedBox(height: 50),
 
-          notToggleInputFieldNotIcon(_controllerEmail, "Email", Colors.grey.shade100),
+          notToggleInputFieldNotIcon(
+            _controllerEmail,
+            "Email",
+            Colors.grey.shade100,
+          ),
 
           const SizedBox(height: 30),
 
