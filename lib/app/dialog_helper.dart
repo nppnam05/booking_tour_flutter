@@ -1,8 +1,34 @@
 import 'package:booking_tour_flutter/app/app_navigator.dart';
+import 'package:booking_tour_flutter/presentation/widgets_dialog/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import '../presentation/widgets_dialog/generic_selected_dialog.dart';
 
 class DialogHelper {
+  static bool _isShowedDialog = false;
+  static BuildContext? _dialogContext;
+
+  static Future<void> showLoadingDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: AppNavigator.currentContext,
+      builder: (context) {
+        _dialogContext = context;
+        return PopScope(
+          canPop: false,
+          child: LoadingDialog()
+          );
+      },
+    );
+
+    return Future.delayed(Duration(milliseconds: 200));
+  }
+
+  static void dismissDialog() {
+    if (_dialogContext != null && _dialogContext!.mounted) {
+      Navigator.pop(_dialogContext!);
+    }
+  }
+
   /// Single select: returns T?
   static Future<T?> selectOne<T>({
     required BuildContext context,
@@ -14,6 +40,10 @@ class DialogHelper {
     String cancelText = 'Hủy',
     T? initial,
   }) async {
+    if (_isShowedDialog) {
+      return null;
+    }
+    _isShowedDialog = true;
     FocusManager.instance.primaryFocus?.unfocus();
 
     await Future.delayed(const Duration(milliseconds: 50));
@@ -36,6 +66,7 @@ class DialogHelper {
 
     FocusManager.instance.primaryFocus?.unfocus();
 
+    _isShowedDialog = false;
     return result;
   }
 
@@ -49,6 +80,10 @@ class DialogHelper {
     String cancelText = 'Hủy',
     List<T> initial = const [],
   }) async {
+    if (_isShowedDialog) {
+      return null;
+    }
+    _isShowedDialog = true;
     FocusManager.instance.primaryFocus?.unfocus();
 
     await Future.delayed(const Duration(milliseconds: 50));
@@ -75,6 +110,7 @@ class DialogHelper {
 
     FocusManager.instance.primaryFocus?.unfocus();
 
-    return result ;
+    _isShowedDialog = false;
+    return result;
   }
 }
