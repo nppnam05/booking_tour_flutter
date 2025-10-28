@@ -56,7 +56,7 @@ class ThemDiaDanhCubit extends Cubit<SuaDiaDanhState> {
       return;
     }
 
-    final tmp = Place(id: -DateTime.now().millisecondsSinceEpoch, name: state.name!, province: state.province!);  
+    final tmp = Place(id: -DateTime.now().millisecondsSinceEpoch, name: trimmedName, province: state.province!);  
     Navigator.pop(context, tmp);
   }
 }
