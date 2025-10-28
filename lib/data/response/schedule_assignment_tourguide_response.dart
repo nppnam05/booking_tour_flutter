@@ -1,6 +1,5 @@
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart'
     as schedule;
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'schedule_assignment_tourguide_response.g.dart';
@@ -31,7 +30,7 @@ class ScheduleAssignmentTourguideResponse {
   ) => _$ScheduleAssignmentTourguideResponseFromJson(json);
 }
 
-extension ScheduleAssignmentTourguideResponseX
+extension ScheduleAssignmentTourguideResponseMapper
     on ScheduleAssignmentTourguideResponse {
   schedule.ScheduleAssignmentTourguide map() {
     return schedule.ScheduleAssignmentTourguide(
@@ -57,7 +56,7 @@ class TourResponse {
       _$TourResponseFromJson(json);
 }
 
-extension TourResponseX on TourResponse {
+extension TourResponseMapper on TourResponse {
   schedule.Tour map() {
     return schedule.Tour(
       title: title ?? '',
@@ -80,7 +79,7 @@ class LocationResponse {
       _$LocationResponseFromJson(json);
 }
 
-extension LocationResponseX on LocationResponse {
+extension LocationResponseMapper on LocationResponse {
   schedule.Location map() {
     return schedule.Location(name: name ?? '');
   }

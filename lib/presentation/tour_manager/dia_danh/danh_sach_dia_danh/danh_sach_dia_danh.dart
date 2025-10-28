@@ -1,13 +1,13 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/cubit/dia_danh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/cubit/dia_danh_state.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/list_danh_sach_dia_danh.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/search_bar_new.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/generic_selected_dialog.dart';
@@ -23,11 +23,7 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("Địa danh", style: AppFonts.textWhite),
-          backgroundColor: AppColors.button,
-          centerTitle: true,
-        ),
+        appBar: AppBar(title: Text("Địa danh", style: AppFonts.textWhite)),
         drawer: DrawerBar(),
 
         body: BlocBuilder<DiaDanhCubit, DiaDanhState>(
@@ -44,16 +40,21 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      _buildSearch(context),
+                      _buildSearch(context, cubit),
 
-                      _buildTinhThanh(context, state.provinces, state.selectedProvince, (
-                        value,
-                      ) {
-                        cubit.selectProvinces(value);
-                      }),
+                      _buildTinhThanh(
+                        context,
+                        state.provinces,
+                        state.selectedProvince,
+                        (value) {
+                          cubit.selectProvinces(value);
+                        },
+                      ),
                     ],
                   ),
                 ),
+
+                //Danh sách
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
@@ -65,6 +66,8 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 12),
                           child: ListDiaDanhItem(
                             diaDanh: place,
+
+                            // Xoá
                             onDelete: () async {
                               final confirm = await DialogNoti.confirm(
                                 context: context,
@@ -78,19 +81,20 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                               // huỷ
                               if (!confirm) return;
 
-                              try {
-                                await cubit.deletePlace(place.id);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Xoá thành công")),
-                                );
-                                cubit.reloadPlaces();
-                              } catch (_) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Xoá thất bại")),
-                                );
-                              }
+                              final success = await cubit.deletePlace(place.id);
+                              if (!context.mounted) return;
+                              cubit.clearSearchAndFilter(searchController: _searchController);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    success ? "Xoá thành công" : "Xoá thất bại",
+                                  ),
+                                ),
+                              );
                             },
 
+                            //Sua
                             onSua: () async {
                               final result = await Navigator.pushNamed(
                                 context,
@@ -98,9 +102,22 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                                 arguments: place,
                               );
 
-                              // Neu ma sua xong thi no phai reload lai danh sahc
-                              if (result == true) {
-                                context.read<DiaDanhCubit>().reloadPlaces();
+                              // reload lai danh sahc
+                              if (result is Place) {
+                                final success = await cubit.updatedLocalPlace(
+                                  result,
+                                );
+                                cubit.clearSearchAndFilter(searchController: _searchController);
+                                
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      success
+                                          ? "Cập nhật thành công"
+                                          : "Cập nhật thất bại",
+                                    ),
+                                  ),
+                                );
                               }
                             },
                           ),
@@ -110,21 +127,38 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Nút thêm tại dùng lại layout của nút xoá
-                DeleteButtonWidget(
-                  onDelete: () {
-                    Navigator.pushNamed(context, RouteName.themDiaDanh);
-                  },
-                  text: "+ Thêm",
-                  textColor: Colors.white,
-                  backgroundColor: AppColors.button,
-                ),
+                // Nút thêm
+                _btnThem(cubit, context),
                 SizedBox(height: 50),
               ],
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget _btnThem(DiaDanhCubit cubit, BuildContext context) {
+    return DeleteButtonWidget(
+      onDelete: () async {
+        final result = await Navigator.pushNamed(
+          context,
+          RouteName.themDiaDanh,
+        );
+        if (result is Place) {
+          final success = await cubit.addLocalPlace(result);
+          cubit.clearSearchAndFilter(searchController:  _searchController);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(success ? "Thêm thành công" : "Thêm thất bại"),
+            ),
+          );
+        }
+      },
+      text: "+ Thêm",
+      textColor: Colors.white,
+      backgroundColor: AppColors.button,
     );
   }
 
@@ -138,48 +172,56 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
       padding: EdgeInsetsGeometry.all(12),
       child: InkWell(
         onTap: () async {
-          final Province? result = await showDialog(context: context,
-          builder: (_) => SelectionDialog<Province>
-          (title: "Chọn Tỉnh", items: danhSachTinhThanh, display: (p) => p.name,isMultiSelect: false,preSelectedItems: selectedProvince!= null? [selectedProvince] :[], ));
-          if (result != null) {onChanged(result);}        
+          final Province? result = await showDialog(
+            context: context,
+            builder:
+                (_) => SelectionDialog<Province>(
+                  title: "Chọn Tỉnh",
+                  items: danhSachTinhThanh,
+                  display: (p) => p.name,
+                  isMultiSelect: false,
+                  preSelectedItems:
+                      selectedProvince != null ? [selectedProvince] : [],
+                ),
+          );
+          if (result != null) {
+            onChanged(result);
+          }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: AppColors.secondary),
-          borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+            border: Border.all(color: AppColors.secondary),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              selectedProvince?.name ?? "Chọn tỉnh",
-              style: AppFonts.text16,
-            ),
-            const Icon(Icons.arrow_drop_down),
-          ],
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedProvince?.name ?? "Chọn tỉnh",
+                style: AppFonts.text16,
+              ),
+              const Icon(Icons.arrow_drop_down),
+            ],
+          ),
         ),
-        ),
-      )
-       
+      ),
     );
   }
 
-  Widget _buildSearch(BuildContext context) {
-    final diaDanhCubit = context.read<DiaDanhCubit>();
+  Widget _buildSearch(BuildContext context, DiaDanhCubit cubit) {
 
     void _onClear() {
       _searchController.clear();
-      diaDanhCubit.filterPlaces("");
+      cubit.filterPlaces("");
     }
 
     return SearchBarNewWidget(
       controller: _searchController,
       onClear: _onClear,
       hintText: "Tìm kiếm địa danh",
-      onChanged: (value) => diaDanhCubit.filterPlaces(value),
+      onChanged: (value) => cubit.filterPlaces(value),
     );
   }
 }
-

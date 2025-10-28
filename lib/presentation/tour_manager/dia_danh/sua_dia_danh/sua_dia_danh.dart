@@ -5,7 +5,6 @@ import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/cubit/sua_dia_danh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/cubit/sua_dia_danh_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/generic_selected_dialog.dart';
 import 'package:flutter/material.dart';
@@ -32,24 +31,14 @@ class _SuaDiaDanhView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<SuaDiaDanhCubit>();
-    final nameController = TextEditingController(text: place.name);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(style: AppFonts.textWhite, "Sửa Địa Danh"),
-        backgroundColor: AppColors.button,
-        centerTitle: true,
       ),
       body: BlocConsumer<SuaDiaDanhCubit, SuaDiaDanhState>(
         listener:
             (context, state) => {
-              if (state.successMessage != null)
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.successMessage!)),
-                  ),
-                  Navigator.pop(context, true),
-                },
               if (state.error != null)
                 {
                   ScaffoldMessenger.of(
@@ -68,17 +57,16 @@ class _SuaDiaDanhView extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildTinhThanh(context, cubit, state.provinces, state.province),
-                    _buildTenDiaDanh(cubit, nameController),
+                    _buildTenDiaDanh(cubit, cubit.nameController),
                   ],
                 ),
               ),
               const Spacer(),
 
               DeleteButtonWidget(
-                onDelete: () {
-                  if (!state.isLoading) {
-                    cubit.updatePlace(place.id);
-                  }
+                onDelete: () async{
+                  cubit.setName( cubit.nameController.text);
+                  await cubit.updatePlace(context, place.id);
                 },
                 text: "Lưu",
                 textColor: Colors.white,
@@ -139,7 +127,6 @@ class _SuaDiaDanhView extends StatelessWidget {
   );
 }
 
-
   Widget _buildTenDiaDanh(
     SuaDiaDanhCubit cubit,
     TextEditingController nameController,
@@ -147,9 +134,7 @@ class _SuaDiaDanhView extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(12),
       child: notIconToggleInputField(
-        onChanged: (i) {
-          cubit.setName(i);
-        },
+        onChanged: (_){},
         nameController,
         "Tên địa danh",
         AppColors.gray,
