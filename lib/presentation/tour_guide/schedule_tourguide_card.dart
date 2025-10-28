@@ -78,12 +78,14 @@ class ScheduleTourguideCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             '${_formatDate(scheduleTourguide.startDate)} - ${_formatDate(scheduleTourguide.endDate)}',
+                            
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
+                            
                           ),
                         ),
                       ],
