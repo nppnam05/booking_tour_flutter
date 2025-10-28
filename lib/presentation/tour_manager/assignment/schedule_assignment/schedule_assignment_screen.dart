@@ -11,18 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleAssignmentScreen extends StatelessWidget {
-  ScheduleAssignmentCubit _cubit = ScheduleAssignmentCubit(); 
 
   ScheduleAssignmentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ScheduleAssignmentCubit>(
-      create: (context) {
-        _cubit = context.read<ScheduleAssignmentCubit>();
-
-        return _cubit;
-      },
+    return BlocProvider.value(
+      value: context.read<ScheduleAssignmentCubit>(),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -106,7 +101,7 @@ class ScheduleAssignmentScreen extends StatelessWidget {
           ),
         );
 
-        _cubit.loadData();
+        context.read<ScheduleAssignmentCubit>().loadData();
       },
       child: Container(
         padding: EdgeInsets.all(16.0),

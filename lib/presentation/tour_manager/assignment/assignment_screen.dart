@@ -84,7 +84,6 @@ class AssignmentScreen extends StatelessWidget {
                       var cubit = context.read<ScheduleAssignmentCubit>();
 
                       cubit.setTourId(tourId: assignment.id);
-
                       
                       await cubit.loadData();
 
