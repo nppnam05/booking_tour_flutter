@@ -1,4 +1,4 @@
-import '../domain/schedule_tourguide.dart';
+import '../../../domain/schedule_tourguide.dart';
 
 abstract class ScheduleTourguideState {}
 

@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -5,7 +6,7 @@ import 'pick_image_button_cubit.dart';
 import 'pick_image_button_state.dart';
 
 class PickImageButton extends StatelessWidget {
-  final Function(List<XFile>) onImagesPicked;
+  final Function(List<Either<XFile, String>>) onImagesPicked;
   final String text;
   final bool allowMultiple;
   final int maxImages;

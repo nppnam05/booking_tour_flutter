@@ -6,19 +6,6 @@ part of 'activity_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ActivityResponse _$ActivityResponseFromJson(Map<String, dynamic> json) =>
-    ActivityResponse(
-      data:
-          (json['data'] as List<dynamic>?)
-              ?.map(
-                (e) => ActivityResponseData.fromJson(e as Map<String, dynamic>),
-              )
-              .toList(),
-    );
-
-Map<String, dynamic> _$ActivityResponseToJson(ActivityResponse instance) =>
-    <String, dynamic>{'data': instance.data};
-
 ActivityResponseData _$ActivityResponseDataFromJson(
   Map<String, dynamic> json,
 ) => ActivityResponseData(

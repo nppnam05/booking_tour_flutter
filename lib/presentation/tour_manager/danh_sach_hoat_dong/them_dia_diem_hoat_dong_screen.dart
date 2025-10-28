@@ -163,11 +163,6 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
                             },
                             title: 'Thêm',
                             backgroundColor: AppColors.button,
-                            textStyle: const TextStyle(
-                              fontSize: AppFonts.fontSize16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.white,
-                            ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24,
                               vertical: 16,

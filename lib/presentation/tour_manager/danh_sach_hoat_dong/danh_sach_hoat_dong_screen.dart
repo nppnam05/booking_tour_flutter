@@ -121,11 +121,6 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
                           onPressed: () => _navigateToAddScreen(),
                           title: 'Thêm hoạt động',
                           backgroundColor: AppColors.button,
-                          textStyle: const TextStyle(
-                            fontSize: AppFonts.fontSize16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,
                             vertical: 16,
@@ -200,7 +195,10 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
           children: [
             _buildInfoRow("Địa điểm:", locationActivity.place.name),
             const SizedBox(height: 16),
-            _buildInfoRow("Tỉnh thành:", locationActivity.place.location.name),
+            _buildInfoRow(
+              "Tỉnh thành:",
+              locationActivity.place.province?.name ?? '',
+            ),
             const SizedBox(height: 16),
           ],
         ),

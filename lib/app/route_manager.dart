@@ -7,7 +7,9 @@ import 'package:booking_tour_flutter/presentation/auth/register/register_screen.
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/real_add_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/update_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/assignment_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/danh_sach_dia_danh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/sua_dia_danh.dart';
@@ -19,6 +21,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/danh_sach_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
+import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +47,12 @@ class RouteName {
   static final authOtp = "auth_otp";
   static final changePassword = "change_password";
   static final authOtpChangePassword = "auth_otp_change_password";
+  static final assignment = "assignment";
   static final tourGuideAssignment = "tour_guide_assignment";
 
   static final addTour = "addTour";
+  static final updateTour = "updateTour";
+  static final tripList = "tripList";
 
   static final danhSachDiaDanh = "danh_sach_dia_danh";
   static final themDiaDanh = "them_dia_danh";
@@ -74,10 +80,13 @@ class RouteManager {
     RouteName.authOtp: (context) => AuthOtpScreen(),
     RouteName.changePassword: (context) => ChangePasswordScreen(),
     RouteName.authOtpChangePassword: (context) => AuthOtpChangePasswordScreen(),
-    RouteName.addTour: (context) => AddTourScreen(),
     RouteName.tourGuideAssignment: (context) => TourGuideAssignmentScreen(),
     RouteName.danhSachDiaDanh: (context) => DanhSachDiaDanhScreen(),
     RouteName.themDiaDanh: (context) => ThemDiaDanhScreen(),
     RouteName.suaDiaDanh: (context) => SuaDiaDanhScreen(),
+    RouteName.addTour: (context) => RealAddTourScreen(),
+    RouteName.tripList: (context) => TripScreen(),
+    RouteName.assignment: (context) => AssignmentScreen(),
+    RouteName.updateTour: (context) => UpdateTourScreen(),
   };
 }

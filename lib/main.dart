@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app.dart';
+import 'package:booking_tour_flutter/app/app_global_provider.dart';
 import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:flutter/material.dart';

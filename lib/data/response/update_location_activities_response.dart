@@ -1,4 +1,6 @@
 import 'package:booking_tour_flutter/domain/location_activity.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'update_location_activities_response.g.dart';
@@ -32,11 +34,8 @@ extension UpdateLocationActivitiesResponseMapper
     return LocationActivity(
       id: data!.id ?? 0,
       name: data!.name ?? "",
-      place: PlaceActivity(
-        id: 0,
-        name: "",
-        location: Location(id: 0, name: ""),
-      ),
+      place: Place(id: 0, name: "", province: null),
+      activities: [],
     );
   }
 }

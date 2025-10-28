@@ -1,4 +1,9 @@
+import 'package:booking_tour_flutter/data/response/activity_response.dart';
+import 'package:booking_tour_flutter/data/response/place_response.dart';
+import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
+import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'location_activity_response.g.dart';
 
@@ -6,25 +11,15 @@ part 'location_activity_response.g.dart';
 class LocationActivityResponse {
   int? id;
   String? name;
-  PlaceActivityResponse? place;
-
-  LocationActivityResponse({this.id, this.name, this.place});
+  PlaceResponse? place;
+  List<ActivityResponseData>? activities;
+  LocationActivityResponse({this.id, this.name, this.place, this.activities});
 
   factory LocationActivityResponse.fromJson(Map<String, dynamic> json) =>
       _$LocationActivityResponseFromJson(json);
 }
 
-@JsonSerializable()
-class PlaceActivityResponse {
-  int? id;
-  String? name;
-  LocationResponse? location;
 
-  PlaceActivityResponse({this.id, this.name, this.location});
-
-  factory PlaceActivityResponse.fromJson(Map<String, dynamic> json) =>
-      _$PlaceActivityResponseFromJson(json);
-}
 
 @JsonSerializable()
 class LocationResponse {
@@ -44,23 +39,8 @@ extension LocationActivityResponseMapper on LocationActivityResponse {
       name: name ?? "",
       place:
           place?.map() ??
-          PlaceActivity(id: 0, name: "", location: Location(id: 0, name: "")),
+          Place(id: 0, name: "", province: Province(id: 0, name: "")),
+      activities: activities?.map((i) => i.map()).toList() ?? [],
     );
-  }
-}
-
-extension PlaceActivityResponseMapper on PlaceActivityResponse {
-  PlaceActivity map() {
-    return PlaceActivity(
-      id: id ?? 0,
-      name: name ?? "",
-      location: location?.map() ?? Location(id: 0, name: ""),
-    );
-  }
-}
-
-extension LocationResponseMapper on LocationResponse {
-  Location map() {
-    return Location(id: id ?? 0, name: name ?? "");
   }
 }

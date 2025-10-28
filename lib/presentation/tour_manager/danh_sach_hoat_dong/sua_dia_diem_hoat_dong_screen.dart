@@ -165,11 +165,6 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
                             onPressed: () => _handleUpdate(),
                             title: 'Cập nhật',
                             backgroundColor: AppColors.button,
-                            textStyle: const TextStyle(
-                              fontSize: AppFonts.fontSize16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.white,
-                            ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24,
                               vertical: 16,
