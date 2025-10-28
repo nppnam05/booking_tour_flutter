@@ -1,5 +1,6 @@
-import 'package:booking_tour_flutter/blocs/schedule_tourguide.dart';
-import 'package:booking_tour_flutter/blocs/schedule_tourguide_sate.dart';
+
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_sate.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_card.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class ScheduleTourguideScreen extends StatelessWidget {
                 return const Center(child: Text('Không có lịch trình nào.'));
               }
               return ListView.builder(
+                padding: EdgeInsets.all(8),
                 itemCount: state.schedules.length,
                 itemBuilder: (context, index) {
                   final schedule = state.schedules[index];
@@ -38,11 +40,30 @@ class ScheduleTourguideScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: ScheduleTourguideCard(trip: schedule),
+                    child: ScheduleTourguideCard(scheduleTourguide: schedule),
                   );
                 },
               );
             }
+
+            if (state is ScheduleTourguideError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Lỗi: ${state.message}'),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<ScheduleTourguideCubit>().loadSchedules();
+                      },
+                      child: Text('Thử lại'),
+                    ),
+                  ],
+                ),
+              );
+            }
+
             return const Center(child: CircularProgressIndicator());
           },
         ),

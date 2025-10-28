@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/app_global_provider.dart';
 import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/theme_manager.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
@@ -8,12 +9,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppThemes.lightTheme,
-      navigatorKey: AppNavigator.navigatorKey,
-      routes: RouteManager.routes,
-      initialRoute: RouteName.danhSachDiaDanh,
+    return AppGlobalProvider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppThemes.lightTheme,
+        navigatorKey: AppNavigator.navigatorKey,
+        routes: RouteManager.routes,
+        initialRoute: RouteName.danhSachDiaDanh,
+      ),
     );
   }
 }

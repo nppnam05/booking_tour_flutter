@@ -9,12 +9,10 @@ part 'place_response.g.dart';
 class PlaceResponse {
   int? id;
   String? name;
-  @JsonKey(name: 'location')
-  ProvinceResponse? province;
+  ProvinceResponse? location;
 
-  
-  PlaceResponse({this.id, this.name, this.province});
-  
+  PlaceResponse({this.id, this.name, this.location});
+
   factory PlaceResponse.fromJson(Map<String, dynamic> json) =>
       _$PlaceResponseFromJson(json);
       
@@ -26,7 +24,7 @@ extension PlaceResponseMapper on PlaceResponse {
     return Place(
       id: id ?? 0,
       name: name ?? "",
-      province: province?.map() ?? Province(id: 0, name: ""),
+      province: location?.map() ?? Province(id: 0, name: ""),
     );
   }
 }

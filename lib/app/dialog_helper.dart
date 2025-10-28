@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:flutter/material.dart';
 import '../presentation/widgets_dialog/generic_selected_dialog.dart';
 
@@ -13,7 +14,11 @@ class DialogHelper {
     String cancelText = 'Hủy',
     T? initial,
   }) async {
-    return showDialog<T>(
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    var result = await showDialog<T>(
       context: context,
       barrierDismissible: false,
       builder:
@@ -28,9 +33,13 @@ class DialogHelper {
             preSelectedItems: initial == null ? const [] : [initial],
           ),
     );
+
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    return result;
   }
 
-  static Future<List<T>> selectMany<T>({
+  static Future<List<T>?> selectMany<T>({
     required BuildContext context,
     required String title,
     required List<T> items,
@@ -40,6 +49,14 @@ class DialogHelper {
     String cancelText = 'Hủy',
     List<T> initial = const [],
   }) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    if (!context.mounted) {
+      return null;
+    }
+
     final result = await showDialog<List<T>>(
       context: context,
       barrierDismissible: false,
@@ -55,6 +72,9 @@ class DialogHelper {
             preSelectedItems: initial,
           ),
     );
-    return result ?? <T>[];
+
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    return result ;
   }
 }

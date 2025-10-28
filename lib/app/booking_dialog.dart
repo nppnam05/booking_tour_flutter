@@ -10,9 +10,11 @@ import 'package:booking_tour_flutter/domain/province.dart';
 class BookingDialog {
   static final _repository = getIt<BookingRepository>();
 
-  static Future<List<Province>?> selectMultiProvince() async {
+  static Future<List<Province>?> selectMultiProvince({
+    List<Province> initProvinces = const [],
+  }) async {
     var result = await _repository.getProvinces();
-    result.fold(
+    return await result.fold(
       (failure) {
         throw Exception(failure.message);
       },
@@ -24,6 +26,7 @@ class BookingDialog {
           display: (province) {
             return province.name;
           },
+          initial: initProvinces,
         );
       },
     );
@@ -31,12 +34,13 @@ class BookingDialog {
 
   static Future<Activity?> selectSingleActivity({
     int? locationActivityId,
+    Activity? initActivity,
   }) async {
     var result = await _repository.getActivities(
       locationActivityId: locationActivityId,
     );
 
-    result.fold(
+    return result.fold(
       (failure) {
         throw Exception(failure.message);
       },
@@ -48,6 +52,7 @@ class BookingDialog {
           display: (activity) {
             return activity.action;
           },
+          initial: initActivity,
         );
       },
     );
@@ -55,10 +60,11 @@ class BookingDialog {
 
   static Future<Place?> selectSinglePlace({
     List<int> provinceIds = const [],
+    Place? initPlace,
   }) async {
     var result = await _repository.getPlaces(provinceIds: provinceIds);
 
-    result.fold(
+    return result.fold(
       (failure) {
         throw Exception(failure);
       },
@@ -70,6 +76,7 @@ class BookingDialog {
           display: (place) {
             return place.name;
           },
+          initial: initPlace,
         );
       },
     );
@@ -77,10 +84,11 @@ class BookingDialog {
 
   static Future<LocationActivity?> selectSingleLocationActivity({
     required int placeId,
+    LocationActivity? initLocationActivity,
   }) async {
     var result = await _repository.getLocationActivities(placeId: placeId);
 
-    result.fold(
+    return result.fold(
       (failure) {
         throw Exception(failure);
       },
@@ -92,6 +100,7 @@ class BookingDialog {
           display: (locationActivity) {
             return locationActivity.name;
           },
+          initial: initLocationActivity,
         );
       },
     );
