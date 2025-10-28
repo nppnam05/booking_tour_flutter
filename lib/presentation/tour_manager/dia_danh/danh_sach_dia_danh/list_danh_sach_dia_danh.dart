@@ -82,10 +82,19 @@ class ListDiaDanhItem extends StatelessWidget {
     if (tmp.length > 6) str += " ...";
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 18, color: color),
         const SizedBox(width: 4),
-        Text(str, style: const TextStyle(fontSize: 16)),
+        Expanded(
+          child: Text(
+            str,
+            style: const TextStyle(fontSize: 16),
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
       ],
     );
   }
