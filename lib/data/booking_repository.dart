@@ -6,6 +6,7 @@ import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/participant_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
@@ -21,10 +22,12 @@ import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/domain/assignment.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
+import 'package:booking_tour_flutter/domain/participants.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
@@ -130,6 +133,12 @@ abstract class BookingRepository {
   Future<Either<Failure, bool>> updateSchedule(UpdateScheduleRequest request);
   Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule();
   Future<Either<Failure, void>> deleteScheduleById({required int id});
+  Future<Either<Failure, List<Participant>>> getParticipantsByScheduleId({
+    required int scheduleId,
+  });
+  Future<Either<Failure, List<ScheduleTourguide>>> getSchedulesByStaff({
+    required int staffId,
+  });
 }
 
 @Singleton(as: BookingRepository)
@@ -644,6 +653,54 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       await _coreService.deleteScheduleById(id: id);
       return const Right(null);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Participant>>> getParticipantsByScheduleId({
+    required int scheduleId,
+  }) async {
+    try {
+      var response = await _coreService.getUserCompletedSchedule(
+        scheduleId: scheduleId,
+      );
+
+      var data = response.data as List<dynamic>;
+      var scheduleResponses = data.map(
+        (json) => UserCompletedScheduleResponse.fromJson(
+          json as Map<String, dynamic>,
+        ),
+      );
+
+      List<Participant> allParticipants = [];
+      for (var scheduleResponse in scheduleResponses) {
+        allParticipants.addAll(scheduleResponse.mapToParticipants());
+      }
+
+      return Right(allParticipants);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleTourguide>>> getSchedulesByStaff({
+    required int staffId,
+  }) async {
+    try {
+      var responses = await _coreService.getGuidesByStaff(staffId: staffId);
+      var data = responses.data as List<dynamic>;
+
+      var scheduleResponses = data.map(
+        (json) =>
+            ScheduleTourguideResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var schedules =
+          scheduleResponses.map((response) => response.map()).toList();
+
+      return Right(schedules);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

@@ -4,7 +4,7 @@ import 'package:booking_tour_flutter/domain/participants.dart';
 class ParticipantCard extends StatelessWidget {
   final Participant participant;
 
-  const ParticipantCard({super.key, required this.participant});
+  const ParticipantCard({Key? key, required this.participant}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,13 @@ class ParticipantCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage(participant.avatarUrl),
+              backgroundImage: NetworkImage(participant.avatarPath),
+              onBackgroundImageError: (exception, stackTrace) {
+                // Handle image load error
+              },
+              child: participant.avatarPath.isEmpty
+                  ? const Icon(Icons.person, size: 30)
+                  : null,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -27,10 +33,20 @@ class ParticipantCard extends StatelessWidget {
                 children: [
                   Text(
                     'Tên KH: ${participant.name}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Text('SL: ${participant.quantity}'),
-                  Text('SDT: ${participant.phoneNumber}'),
+                  const SizedBox(height: 4),
+                  Text(
+                    'SL: ${participant.quantity}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'SDT: ${participant.phoneNumber}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
                 ],
               ),
             ),

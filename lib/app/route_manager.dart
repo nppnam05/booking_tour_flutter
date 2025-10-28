@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
@@ -7,6 +8,7 @@ import 'package:booking_tour_flutter/presentation/auth/register/register_screen.
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/real_add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/update_tour_screen.dart';
@@ -57,6 +59,7 @@ class RouteName {
   static final themDiaDanh = "them_dia_danh";
   static final suaDiaDanh = "sua_dia_danh";
   static final scheduleTourmanager = "scheduleTourmanager";
+  static final participants = "participants";
 }
 
 class RouteManager {
@@ -88,5 +91,10 @@ class RouteManager {
     RouteName.assignment: (context) => AssignmentScreen(),
     RouteName.updateTour: (context) => UpdateTourScreen(),
     RouteName.scheduleTourmanager: (context) => ScheduleTourmanagerScreen(),
+    RouteName.participants: (context) {
+      final schedule =
+          ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;
+      return ParticipantsScreen(schedule: schedule);
+    },
   };
 }

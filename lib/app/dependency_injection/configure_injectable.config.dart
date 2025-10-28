@@ -29,13 +29,11 @@ _i174.GetIt $initGetIt(
   final dioManager = _$DioManager();
   gh.factory<_i361.Dio>(() => dioManager.createDio());
   gh.factory<_i849.CoreService>(() => _i849.CoreService(gh<_i361.Dio>()));
-  gh.factory<_i590.ScheduleTourmanagerCubit>(
-    () => _i590.ScheduleTourmanagerCubit(
-      gh<_i849.CoreService>() as _i249.BookingRepository,
-    ),
-  );
   gh.singleton<_i249.BookingRepository>(
     () => _i249.BookingRepositoryImp(gh<_i849.CoreService>()),
+  );
+  gh.factory<_i590.ScheduleTourmanagerCubit>(
+    () => _i590.ScheduleTourmanagerCubit(gh<_i249.BookingRepository>()),
   );
   return getIt;
 }

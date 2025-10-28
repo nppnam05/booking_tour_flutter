@@ -141,4 +141,14 @@ abstract class CoreService {
 
   @POST("/Place")
   Future<PlaceResponse> addPlace(@Body() Map<String, dynamic> request);
+
+  @GET("/UserCompletedSchedule/{scheduleId}")
+  Future<RestResponse> getUserCompletedSchedule({
+    @Path("scheduleId") required int scheduleId,
+  });
+
+  @GET("/Guide/schedule/{staffId}")
+  Future<RestResponse> getGuidesByStaff({
+    @Path("staffId") required int staffId,
+  });
 }
