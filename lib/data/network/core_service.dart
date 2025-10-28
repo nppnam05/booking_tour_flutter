@@ -11,8 +11,10 @@ import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
+import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -43,6 +45,12 @@ abstract class CoreService {
 
   @GET("/Schedule/{id}")
   Future<RestResponse> getScheduleAssignmentById(@Path("id") int id);
+
+  @POST("/Schedule")
+  Future<RestResponse> createSchedule(@Body() AddScheduleRequest request);
+
+  @PUT("/Schedule")
+  Future<RestResponse> updateSchedule(@Body() UpdateScheduleRequest request);
 
   @POST("/User/Login")
   Future<RestResponse> login(@Body() Map<String, dynamic> body);

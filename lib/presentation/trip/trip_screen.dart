@@ -1,5 +1,4 @@
 import 'package:booking_tour_flutter/app/route_manager.dart';
-import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
 import 'package:booking_tour_flutter/presentation/trip/cubit/trip_bloc.dart';
@@ -13,6 +12,8 @@ import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dra
 class TripScreen extends StatelessWidget {
   final _cubit = TripCubit()..loadTrips();
 
+  TripScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -23,12 +24,13 @@ class TripScreen extends StatelessWidget {
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
           leading: Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
+            builder:
+                (context) => IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
           ),
         ),
         drawer: DrawerBar(),
@@ -42,26 +44,33 @@ class TripScreen extends StatelessWidget {
                   if (state is TripLoaded) {
                     return ListView(
                       padding: EdgeInsets.all(8),
-                      children: state.trips.map((trip) {
-                        return TripCard(
-                          trip: trip,
-                          onDelete: () async {
-                            final confirmed = await DialogNoti.confirm(
-                              context: context,
-                              title: 'Xác nhận xóa',
-                              message: 'Bạn có chắc muốn xóa chuyến đi này?',
-                              highlightPhrases: ['xóa chuyến đi'],
+                      children:
+                          state.trips.map((trip) {
+                            return TripCard(
+                              trip: trip,
+                              onDelete: () async {
+                                final confirmed = await DialogNoti.confirm(
+                                  context: context,
+                                  title: 'Xác nhận xóa',
+                                  message:
+                                      'Bạn có chắc muốn xóa chuyến đi này?',
+                                  highlightPhrases: ['xóa chuyến đi'],
+                                );
+                                if (confirmed) {
+                                  _cubit.deleteTrip(trip);
+                                }
+                              },
+                              onView: () {
+                                context.read<AddTourCubit>().setState(
+                                  trip.toAddTourState(),
+                                );
+                                Navigator.pushNamed(
+                                  context,
+                                  RouteName.updateTour,
+                                );
+                              },
                             );
-                            if (confirmed) {
-                              _cubit.deleteTrip(trip);
-                            }
-                          },
-                          onView: () {
-                            context.read<AddTourCubit>().setState(trip.toAddTourState());
-                            Navigator.pushNamed(context, RouteName.updateTour);
-                          },
-                        );
-                      }).toList(),
+                          }).toList(),
                     );
                   }
 
@@ -80,10 +89,7 @@ class TripScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 border: Border(
-                  top: BorderSide(
-                    color: Colors.grey[100]!,
-                    width: 1,
-                  ),
+                  top: BorderSide(color: Colors.grey[100]!, width: 1),
                 ),
               ),
               child: ElevatedButton.icon(

@@ -7,9 +7,20 @@ class TourGuideAssignmentState {
   final List<TourGuide> tourGuides;
   final List<Guide> guides;
 
-  TourGuideAssignmentState({required this.schedule ,required this.tourGuides, required this.guides});
+  TourGuideAssignmentState({
+    required this.schedule,
+    required this.tourGuides,
+    required this.guides,
+  });
 
-  TourGuideAssignmentState copyWith({ ScheduleAssignmentTourguide? schedule, List<TourGuide>? tourGuides}) {
-    return TourGuideAssignmentState( schedule: schedule ?? this.schedule, tourGuides: tourGuides ?? this.tourGuides, guides: this.guides);
+  TourGuideAssignmentState copyWith({
+    ScheduleAssignmentTourguide? schedule,
+    List<TourGuide>? tourGuides,
+  }) {
+    return TourGuideAssignmentState(
+      schedule: schedule ?? this.schedule,
+      tourGuides: tourGuides ?? this.tourGuides,
+      guides: guides,
+    );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
-import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
@@ -18,8 +17,6 @@ class LocationActivityResponse {
   factory LocationActivityResponse.fromJson(Map<String, dynamic> json) =>
       _$LocationActivityResponseFromJson(json);
 }
-
-
 
 @JsonSerializable()
 class LocationResponse {

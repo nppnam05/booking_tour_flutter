@@ -8,18 +8,23 @@ import '../../domain/schedule_tourguide.dart';
 class ParticipantsScreen extends StatelessWidget {
   final ScheduleTourguide schedule;
 
-  const ParticipantsScreen({Key? key, required this.schedule}) : super(key: key);
+  const ParticipantsScreen({super.key, required this.schedule});
 
   String _formatDate(DateTime d) {
-    final two = (int n) => n.toString().padLeft(2, '0');
+    two(int n) => n.toString().padLeft(2, '0');
     return '${two(d.day)}/${two(d.month)}/${d.year}';
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ParticipantsCubit()
-        ..loadParticipants(schedule.idSchedule, schedule.startDate, schedule.endDate),
+      create:
+          (_) =>
+              ParticipantsCubit()..loadParticipants(
+                schedule.idSchedule,
+                schedule.startDate,
+                schedule.endDate,
+              ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Danh sách người tham gia'),
@@ -37,7 +42,10 @@ class ParticipantsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Mã: ${state.scheduleCode}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
@@ -54,7 +62,9 @@ class ParticipantsScreen extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: state.participants.length,
                       itemBuilder: (context, index) {
-                        return ParticipantCard(participant: state.participants[index]);
+                        return ParticipantCard(
+                          participant: state.participants[index],
+                        );
                       },
                     ),
                   ),

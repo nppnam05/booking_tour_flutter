@@ -1,7 +1,6 @@
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
-import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'add_location_activity_response.g.dart';
 

@@ -3,6 +3,8 @@ import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }

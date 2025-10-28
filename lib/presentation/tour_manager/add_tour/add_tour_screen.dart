@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:booking_tour_flutter/app/booking_dialog.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_error_fields.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
@@ -45,7 +44,7 @@ class AddTourScreen extends StatelessWidget {
         value: _addTourCubit,
         child: BlocBuilder<AddTourCubit, AddTourState>(
           builder: (context, state) {
-            _tourNameController.text  = state.tour.tourName;
+            _tourNameController.text = state.tour.tourName;
             _tourDescController.text = state.tour.description;
             _tourPriceController.text = state.tour.price;
             _tourPercentController.text = state.tour.percent;
@@ -96,7 +95,10 @@ class AddTourScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ImageList(
-                      onImageDelete: (i) => context.read<PickImageButtonCubit>().removeImage(i),
+                      onImageDelete:
+                          (i) => context
+                              .read<PickImageButtonCubit>()
+                              .removeImage(i),
                       images: state.images,
                     ),
                   ),

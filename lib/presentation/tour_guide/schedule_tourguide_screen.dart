@@ -5,9 +5,8 @@ import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class ScheduleTourguideScreen extends StatelessWidget {
-  const ScheduleTourguideScreen({Key? key}) : super(key: key);
+  const ScheduleTourguideScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,8 @@ class ScheduleTourguideScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => ParticipantsScreen(schedule: schedule),
+                          builder:
+                              (_) => ParticipantsScreen(schedule: schedule),
                         ),
                       );
                     },

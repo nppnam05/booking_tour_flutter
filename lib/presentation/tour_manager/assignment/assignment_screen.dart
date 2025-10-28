@@ -6,9 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 
 class AssignmentScreen extends StatelessWidget {
-  const AssignmentScreen({
-    Key? key,
-  }) : super(key: key);
+  const AssignmentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +20,13 @@ class AssignmentScreen extends StatelessWidget {
           backgroundColor: Color(0xFF23A892),
           foregroundColor: Colors.white,
           leading: Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
+            builder:
+                (context) => IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
           ),
         ),
         drawer: DrawerBar(),
@@ -81,7 +80,9 @@ class AssignmentScreen extends StatelessWidget {
                       // TODO: Navigate to detail screen
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Xem chi tiết: ${assignment.titleTour}'),
+                          content: Text(
+                            'Xem chi tiết: ${assignment.titleTour}',
+                          ),
                         ),
                       );
                     },
@@ -96,6 +97,4 @@ class AssignmentScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }

@@ -5,13 +5,10 @@ class ScheduleCard extends StatelessWidget {
   final Schedule trip;
   final VoidCallback onDelete;
 
-  const ScheduleCard({
-    required this.trip,
-    required this.onDelete,
-  });
+  const ScheduleCard({super.key, required this.trip, required this.onDelete});
 
   String _formatDate(DateTime d) {
-    final two = (int n) => n.toString().padLeft(2, '0');
+    two(int n) => n.toString().padLeft(2, '0');
     return '${two(d.day)}/${two(d.month)}/${d.year}';
   }
 
@@ -21,9 +18,7 @@ class ScheduleCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: const Color(0xFFE0F2F1),
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -47,14 +42,21 @@ class ScheduleCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.calendar_today, size: 16, color: Colors.black87),
+                          const Icon(
+                            Icons.calendar_today,
+                            size: 16,
+                            color: Colors.black87,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             _formatDate(trip.startDate),
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(width: 8),
-                          const Icon(Icons.arrow_right_alt, color: Colors.purple),
+                          const Icon(
+                            Icons.arrow_right_alt,
+                            color: Colors.purple,
+                          ),
                           const SizedBox(width: 8),
                           Text(
                             _formatDate(trip.endDate),
@@ -65,14 +67,20 @@ class ScheduleCard extends StatelessWidget {
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          const Icon(Icons.location_on, size: 16, color: Colors.orange),
+                          const Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: Colors.orange,
+                          ),
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
                               trip.location,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -96,7 +104,7 @@ class ScheduleCard extends StatelessWidget {
                         children: [
                           const Icon(Icons.group, size: 16, color: Colors.blue),
                           const SizedBox(width: 6),
-                          Text('Tối đa: ${trip.capacity}')
+                          Text('Tối đa: ${trip.capacity}'),
                         ],
                       ),
                     ],
@@ -111,8 +119,13 @@ class ScheduleCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 10,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 child: const Text('Xóa'),
               ),

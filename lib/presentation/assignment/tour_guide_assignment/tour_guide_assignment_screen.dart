@@ -14,6 +14,8 @@ class TourGuideAssignmentScreen extends StatelessWidget {
   final _cubit = TourGuideAssignmentCubit()..syncPost(idschedule: 2);
   final TextEditingController _controllerSearch = TextEditingController();
 
+  TourGuideAssignmentScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

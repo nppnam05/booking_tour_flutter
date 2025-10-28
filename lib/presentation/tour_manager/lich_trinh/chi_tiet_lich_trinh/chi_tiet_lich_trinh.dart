@@ -1,24 +1,80 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/cubit/chi_tiet_lich_trinh_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_demo.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:flutter/material.dart';
 
-class ChiTietTrinhScreen extends StatelessWidget {
-  ChiTietTrinhScreen({super.key});
+class ChiTietTrinhScreen extends StatefulWidget {
+  const ChiTietTrinhScreen({super.key});
 
+  @override
+  State<ChiTietTrinhScreen> createState() => _ChiTietTrinhScreenState();
+}
+
+class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
+  final TextEditingController _controllerMaLich = TextEditingController();
   final TextEditingController _controllerTour = TextEditingController();
   final TextEditingController _controllerNguoiToiDa = TextEditingController();
   final TextEditingController _controllerGia = TextEditingController();
   final TextEditingController _controllerTienCoc = TextEditingController();
 
+  DateTime? _openDate;
+  DateTime? _startDate;
+  DateTime? _endDate;
+  TimeOfDay? _gatheringTime;
+  Schedule? _schedule;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments;
+    if (_schedule == null && args is Schedule) {
+      _schedule = args;
+      _prefillFromSchedule(args);
+    }
+  }
+
+  void _prefillFromSchedule(Schedule s) {
+    _controllerMaLich.text = s.id?.toString() ?? '';
+    _controllerTour.text = s.tourTitle ?? '';
+    _controllerNguoiToiDa.text = s.maxCapacity.toString();
+    _controllerGia.text = s.finalPrice?.toString() ?? '';
+    _controllerTienCoc.text = s.desposit?.toString() ?? '';
+    if (s.openDateIso != null) {
+      _openDate = DateTime.tryParse(s.openDateIso!);
+    }
+
+    if (s.startDateIso != null) {
+      _startDate = DateTime.tryParse(s.startDateIso!);
+    }
+
+    if (s.endDateIso != null) {
+      _endDate = DateTime.tryParse(s.endDateIso!);
+    }
+
+    if (s.gatheringTime != null) {
+      final parts = s.gatheringTime!.split(":");
+      if (parts.length >= 2) {
+        _gatheringTime = TimeOfDay(
+          hour: int.tryParse(parts[0]) ?? 0,
+          minute: int.tryParse(parts[1]) ?? 0,
+        );
+      }
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "Chi tiết lịch trình",
@@ -27,40 +83,112 @@ class ChiTietTrinhScreen extends StatelessWidget {
         backgroundColor: AppColors.button,
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsetsGeometry.all(20),
-              child: _buildTextField(),
-            ),
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20).add(
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           ),
-
-          //Nút lưu dùng chung
-          DeleteButtonWidget(
-            onDelete: () {
-              Navigator.pushNamed(context, RouteName.danhSachLichTrinh);
-            },
-            text: "Lưu",
-            textColor: Colors.white,
-            backgroundColor: AppColors.button,
-          ),
-          SizedBox(height: 50),
-        ],
+          child: _buildTextField(),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+        child: DeleteButtonWidget(
+          onDelete: _handleSave,
+          text: "Lưu",
+          textColor: Colors.white,
+          backgroundColor: AppColors.button,
+        ),
       ),
     );
+  }
+
+  Future<void> _handleSave() async {
+    if (_schedule == null) return;
+    if (_openDate == null ||
+        _startDate == null ||
+        _endDate == null ||
+        _gatheringTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
+      );
+      return;
+    }
+    final maxSlot = int.tryParse(_controllerNguoiToiDa.text);
+    final finalPrice = int.tryParse(_controllerGia.text);
+    final desposit = int.tryParse(_controllerTienCoc.text);
+    if (maxSlot == null || maxSlot <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng nhập số người tối đa hợp lệ')),
+      );
+      return;
+    }
+    if (finalPrice == null || finalPrice <= 0 || finalPrice > 100000000) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Giá phải trong (0, 100.000.000]')),
+      );
+      return;
+    }
+    if (desposit == null || desposit < 0 || desposit > 100) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tiền cọc là phần trăm [0,100]')),
+      );
+      return;
+    }
+
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+
+    final request = UpdateScheduleRequest(
+      id: _schedule!.id ?? 0,
+      tourId: _schedule!.tourId ?? 1,
+      startDate: _startDate!.toIso8601String(),
+      endDate: _endDate!.toIso8601String(),
+      openDate: _openDate!.toIso8601String(),
+      maxSlot: maxSlot,
+      finalPrice: finalPrice,
+      gatheringTime:
+          "${twoDigits(_gatheringTime!.hour)}:${twoDigits(_gatheringTime!.minute)}",
+      code: _schedule!.code ?? "",
+      desposit: desposit,
+    );
+
+    final cubit = ChiTietLichTrinhCubit();
+    final ok = await cubit.updateSchedule(request);
+    if (!mounted) return;
+    if (ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cập nhật lịch trình thành công')),
+      );
+      Navigator.pushNamed(context, RouteName.danhSachLichTrinh);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Cập nhật thất bại')));
+    }
   }
 
   Widget _buildTextField() {
     return Column(
       children: [
-        notIconToggleInputField(
-          _controllerTour,
-          "Mã lịch trình",
-          AppColors.gray,
+        AbsorbPointer(
+          absorbing: true,
+          child: notIconToggleInputField(
+            _controllerMaLich,
+            "Mã lịch trình",
+            AppColors.gray,
+          ),
         ),
 
-        notIconToggleInputField(_controllerTour, "Tour", AppColors.gray),
+        AbsorbPointer(
+          absorbing: true,
+          child: notIconToggleInputField(
+            _controllerTour,
+            "Tour",
+            AppColors.gray,
+          ),
+        ),
 
         // Ngày mở and bắt đầu
         _buildNgayMoVaBatDau(),
@@ -74,7 +202,7 @@ class ChiTietTrinhScreen extends StatelessWidget {
         notIconToggleInputField(_controllerGia, "Giá", AppColors.gray),
 
         notIconToggleInputField(
-          _controllerTour,
+          _controllerTienCoc,
           "Số tiền cọc",
           AppColors.gray,
         ),
@@ -97,7 +225,9 @@ class ChiTietTrinhScreen extends StatelessWidget {
             ),
             DatePickerFieldWidget(
               onDateSelected: (date) {
-                print("Ngày được chọn: $date");
+                setState(() {
+                  _openDate = date;
+                });
               },
               primaryColor: Colors.grey.shade100,
             ),
@@ -115,9 +245,11 @@ class ChiTietTrinhScreen extends StatelessWidget {
             ),
             DatePickerFieldWidget(
               onDateSelected: (date) {
-                print("Ngày được chọn: $date");
+                setState(() {
+                  _startDate = date;
+                });
               },
-              primaryColor: AppColors.gray
+              primaryColor: AppColors.gray,
             ),
           ],
         ),
@@ -137,7 +269,9 @@ class ChiTietTrinhScreen extends StatelessWidget {
             ),
             TimePickerFieldWidget(
               onDateSelected: (time) {
-                print("holo");
+                setState(() {
+                  _gatheringTime = time;
+                });
               },
               primaryColor: AppColors.gray,
             ),
@@ -150,7 +284,9 @@ class ChiTietTrinhScreen extends StatelessWidget {
             SizedBox(height: 20),
             DatePickerFieldWidget(
               onDateSelected: (date) {
-                print("Ngày được chọn: $date");
+                setState(() {
+                  _endDate = date;
+                });
               },
               primaryColor: AppColors.gray,
             ),

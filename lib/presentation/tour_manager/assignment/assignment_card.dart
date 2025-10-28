@@ -6,19 +6,17 @@ class AssignmentCard extends StatelessWidget {
   final VoidCallback onViewDetails;
 
   const AssignmentCard({
-    Key? key,
+    super.key,
     required this.assignment,
     required this.onViewDetails,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(16),
         child: Row(
@@ -27,27 +25,28 @@ class AssignmentCard extends StatelessWidget {
             // Hình ảnh
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: assignment.tourImageDTOs.isNotEmpty
-                  ? Image.network(
-                      assignment.tourImageDTOs,
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: 80,
-                          height: 80,
-                          color: Colors.grey[300],
-                          child: Icon(Icons.image, color: Colors.grey[600]),
-                        );
-                      },
-                    )
-                  : Container(
-                      width: 80,
-                      height: 80,
-                      color: Colors.grey[300],
-                      child: Icon(Icons.image, color: Colors.grey[600]),
-                    ),
+              child:
+                  assignment.tourImageDTOs.isNotEmpty
+                      ? Image.network(
+                        assignment.tourImageDTOs,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 80,
+                            height: 80,
+                            color: Colors.grey[300],
+                            child: Icon(Icons.image, color: Colors.grey[600]),
+                          );
+                        },
+                      )
+                      : Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.grey[300],
+                        child: Icon(Icons.image, color: Colors.grey[600]),
+                      ),
             ),
             SizedBox(width: 16),
             // Thông tin
@@ -57,10 +56,7 @@ class AssignmentCard extends StatelessWidget {
                 children: [
                   Text(
                     assignment.titleTour,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
                   Row(

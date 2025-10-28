@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
@@ -23,7 +22,8 @@ import 'package:booking_tour_flutter/domain/assignment.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
+import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
+import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
@@ -124,6 +124,8 @@ abstract class BookingRepository {
   );
   Future<Either<Failure, UpdateLocationActivitiesResponse>>
   updateLocationActivities(UpdateLocationActivities request);
+  Future<Either<Failure, int>> addSchedule(AddScheduleRequest request);
+  Future<Either<Failure, bool>> updateSchedule(UpdateScheduleRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -132,6 +134,7 @@ class BookingRepositoryImp implements BookingRepository {
 
   BookingRepositoryImp(this._coreService);
 
+  @override
   Future<Either<Failure, UpdateLocationActivitiesResponse>>
   updateLocationActivities(UpdateLocationActivities request) async {
     try {
@@ -387,7 +390,7 @@ class BookingRepositoryImp implements BookingRepository {
 
       List<Future<String>> futureImages = [];
       List<String> retainImages = [];
-      images.forEach((image) {
+      for (var image in images) {
         image.fold(
           (file) {
             var futureImage = AppEncodeHelper.toBase64String(file);
@@ -397,7 +400,7 @@ class BookingRepositoryImp implements BookingRepository {
             retainImages.add(url);
           },
         );
-      });
+      }
 
       var encodeImages = await Future.wait(futureImages);
 
@@ -427,7 +430,7 @@ class BookingRepositoryImp implements BookingRepository {
 
       List<Future<String>> futureImages = [];
       List<String> retainImages = [];
-      images.forEach((image) {
+      for (var image in images) {
         image.fold(
           (file) {
             var futureImage = AppEncodeHelper.toBase64String(file);
@@ -437,7 +440,7 @@ class BookingRepositoryImp implements BookingRepository {
             retainImages.add(url);
           },
         );
-      });
+      }
 
       var encodeImages = await Future.wait(futureImages);
 
@@ -580,7 +583,31 @@ class BookingRepositoryImp implements BookingRepository {
       } else {
         return Left(ErrorHandler.handle("").failure);
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> addSchedule(AddScheduleRequest request) async {
+    try {
+      var response = await _coreService.createSchedule(request);
+      return Right(response.data);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  Future<Either<Failure, bool>> updateSchedule(
+    UpdateScheduleRequest request,
+  ) async {
+    try {
+      var response = await _coreService.updateSchedule(request);
+      final success = (response.data is bool)
+          ? response.data as bool
+          : (response.data == true);
+      return Right(success);
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }

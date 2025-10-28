@@ -41,6 +41,8 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
       locationActivity =
           ModalRoute.of(context)!.settings.arguments as LocationActivity;
       _tenDiaDiemController.text = locationActivity.name;
+      _selectedActivities = List<Activity>.from(locationActivity.activities);
+      _cubit.setSelectedActivities(_selectedActivities);
       _isInitialized = true;
     }
   }

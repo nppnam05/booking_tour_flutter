@@ -4,7 +4,7 @@ import 'package:booking_tour_flutter/domain/participants.dart';
 class ParticipantCard extends StatelessWidget {
   final Participant participant;
 
-  const ParticipantCard({Key? key, required this.participant}) : super(key: key);
+  const ParticipantCard({super.key, required this.participant});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,10 @@ class ParticipantCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Tên KH: ${participant.name}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    'Tên KH: ${participant.name}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   Text('SL: ${participant.quantity}'),
                   Text('SDT: ${participant.phoneNumber}'),
                 ],

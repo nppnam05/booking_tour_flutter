@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/validate_state.dart';
 import 'package:dartz/dartz.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
@@ -61,9 +60,9 @@ class AddTourState {
 
 extension TripToStateMapper on Trip {
   AddTourState toAddTourState() {
-    var tour = this.maptoCTTour();
-    var daysOfTour = this.dayOfTours.map((i) => i.mapToCTDayOfTour()).toList();
-    var images = this.tourImages.map((i) => right<File, String>(i)).toList();
+    var tour = maptoCTTour();
+    var daysOfTour = dayOfTours.map((i) => i.mapToCTDayOfTour()).toList();
+    var images = tourImages.map((i) => right<File, String>(i)).toList();
 
     return AddTourState(
       id: this.id,

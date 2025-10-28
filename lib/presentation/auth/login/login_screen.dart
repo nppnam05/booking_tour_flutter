@@ -18,6 +18,8 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+  LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -40,8 +42,7 @@ class LoginScreen extends StatelessWidget {
             RouteName.home,
             (route) => false,
           );
-        }
-        else{
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Center(child: Text('Đăng nhập thất bại')),
@@ -93,7 +94,9 @@ class LoginScreen extends StatelessWidget {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Center(child: Text('Vui lòng nhập đầy đủ thông tin')),
+                      content: Center(
+                        child: Text('Vui lòng nhập đầy đủ thông tin'),
+                      ),
                       duration: const Duration(seconds: 2),
                     ),
                   );

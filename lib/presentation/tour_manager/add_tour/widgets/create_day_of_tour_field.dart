@@ -1,12 +1,8 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
-import 'package:booking_tour_flutter/domain/day_of_tour.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_error_fields.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/create_activity_day_field.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/day_of_tour_list_field.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_textfield.dart';
 import 'package:flutter/material.dart';

@@ -6,7 +6,7 @@ class TimePickerFieldWidget extends StatefulWidget {
   final Function(TimeOfDay) onDateSelected;
   final Color primaryColor;
 
-  TimePickerFieldWidget({
+  const TimePickerFieldWidget({
     super.key,
     this.initialTimeText,
     required this.onDateSelected,

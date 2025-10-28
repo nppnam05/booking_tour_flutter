@@ -1,4 +1,3 @@
-import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:flutter/material.dart';
 import '../presentation/widgets_dialog/generic_selected_dialog.dart';
 
@@ -75,6 +74,6 @@ class DialogHelper {
 
     FocusManager.instance.primaryFocus?.unfocus();
 
-    return result ;
+    return result;
   }
 }

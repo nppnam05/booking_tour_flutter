@@ -2,8 +2,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:booking_tour_flutter/data/response/user_response.dart';
-import 'package:booking_tour_flutter/domain/role.dart';
-import 'package:booking_tour_flutter/domain/staff.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 
@@ -23,10 +21,9 @@ class TourGuideResponse {
   String? CCCD_back_path;
   String? endWorkingDate;
 
-
   bool? ischecked;
   UserResponse? user;
-  
+
   TourGuideResponse({
     this.userId,
     this.code,
@@ -43,14 +40,10 @@ class TourGuideResponse {
     this.user,
   });
 
-
-  
-
   factory TourGuideResponse.fromJson(Map<String, dynamic> json) =>
       _$TourGuideResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$TourGuideResponseToJson(this);
-
 }
 
 extension TourGuideResponseMapper on TourGuideResponse {
@@ -62,11 +55,12 @@ extension TourGuideResponseMapper on TourGuideResponse {
       cccd: cccd ?? "",
       address: address ?? "",
       dateOfBirth: DateTime.tryParse(dateOfBirth ?? "") ?? DateTime.now(),
-      startWorkingDate: DateTime.tryParse(startWorkingDate ?? "") ?? DateTime.now(),
+      startWorkingDate:
+          DateTime.tryParse(startWorkingDate ?? "") ?? DateTime.now(),
       cccdIssueDate: DateTime.tryParse(cccdIssueDate ?? "") ?? DateTime.now(),
       cccdFrontPath: CCCD_front_path ?? "",
       cccBackPath: CCCD_back_path ?? "",
-      endWorkingDate: DateTime.tryParse(endWorkingDate ?? "") ?? DateTime.now(  ),
+      endWorkingDate: DateTime.tryParse(endWorkingDate ?? "") ?? DateTime.now(),
       ischecked: false,
       user: user?.map() ?? User.empty(),
     );

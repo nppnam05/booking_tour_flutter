@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuaDiaDanhScreen extends StatelessWidget {
-  SuaDiaDanhScreen({super.key});
+  const SuaDiaDanhScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class SuaDiaDanhScreen extends StatelessWidget {
 
 class _SuaDiaDanhView extends StatelessWidget {
   final Place place;
-  _SuaDiaDanhView({required this.place});
+  const _SuaDiaDanhView({required this.place});
 
   @override
   Widget build(BuildContext context) {

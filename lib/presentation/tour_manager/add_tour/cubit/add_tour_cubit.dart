@@ -4,14 +4,11 @@ import 'dart:io';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_error_fields.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/validate_state.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:booking_tour_flutter/app/app_navigator.dart';
-import 'package:booking_tour_flutter/app/booking_dialog.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
-import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_activity.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
@@ -122,7 +119,7 @@ class AddTourCubit extends Cubit<AddTourState> {
         tour: CTTour(),
         provinces: [],
         images: [],
-        validateState: ValidateState(errors: {}, isValidated: false)
+        validateState: ValidateState(errors: {}, isValidated: false),
       ),
     );
   }

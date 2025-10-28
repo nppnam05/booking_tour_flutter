@@ -6,7 +6,7 @@ import '../../presentation/widgets_dialog/dialog_noti.dart';
 import 'schedule_card.dart';
 
 class ScheduleScreen extends StatelessWidget {
-  const ScheduleScreen({Key? key}) : super(key: key);
+  const ScheduleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +17,7 @@ class ScheduleScreen extends StatelessWidget {
           title: const Text('Lịch Trình'),
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
-          ),
+          leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
         ),
         body: BlocBuilder<ScheduleBloc, ScheduleState>(
           builder: (context, state) {
@@ -29,31 +26,34 @@ class ScheduleScreen extends StatelessWidget {
                 return const Center(child: Text('Chưa có lịch trình nào.'));
               }
               return ListView(
-                children: state.schedules
-                    .map((schedule) => ScheduleCard(
-                          trip: schedule,
-                          onDelete: () async {
-                            final confirmed = await DialogNoti.confirm(
-                              context: context,
-                              title: 'Xác nhận xóa',
-                              message: 'Bạn có chắc muốn xóa lịch trình này?',
-                              highlightPhrases: ['xóa'],
-                            );
-                            if (confirmed) {
-                              context.read<ScheduleBloc>().add(DeleteSchedule(schedule));
-                            }
-                          },
-                        ))
-                    .toList(),
+                children:
+                    state.schedules
+                        .map(
+                          (schedule) => ScheduleCard(
+                            trip: schedule,
+                            onDelete: () async {
+                              final confirmed = await DialogNoti.confirm(
+                                context: context,
+                                title: 'Xác nhận xóa',
+                                message: 'Bạn có chắc muốn xóa lịch trình này?',
+                                highlightPhrases: ['xóa'],
+                              );
+                              if (confirmed) {
+                                context.read<ScheduleBloc>().add(
+                                  DeleteSchedule(schedule),
+                                );
+                              }
+                            },
+                          ),
+                        )
+                        .toList(),
               );
             }
             return const Center(child: CircularProgressIndicator());
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            
-          },
+          onPressed: () {},
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
           icon: const Icon(Icons.add),

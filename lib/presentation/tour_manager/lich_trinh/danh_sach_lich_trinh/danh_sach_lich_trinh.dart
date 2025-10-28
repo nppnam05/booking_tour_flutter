@@ -2,8 +2,6 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_demo.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,31 +11,54 @@ class DanhSachLichTrinhScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final List<Schedule> schedules = [
       Schedule(
-        imageUrl: "",
+        id: 2,
+        tourId: 1,
+        imageUrl:
+            "http://tt1220-001-site1.ntempurl.com/images/682ec9b9-57a0-4b87-809a-773b53860ead.jpg",
         location: "Đà Lạt",
-        description: "Khám phá rừng thông và hồ Xuân Hương",
-        startDate: "01/11/2025",
-        endDate: "03/11/2025",
-        maxCapacity: 25,
+        description: "Tour Đà Lạt 3 ngày 2 đêm",
+        startDate: "28/10/2025",
+        endDate: "28/10/2025",
+        maxCapacity: 1000,
+        finalPrice: 100000000,
+        openDateIso: "2025-10-28T07:15:30.941",
+        startDateIso: "2025-10-28T07:15:30.941",
+        endDateIso: "2025-10-28T07:15:30.941",
+        gatheringTime: "08:00:00",
+        code: "string",
+        desposit: 100,
+        tourTitle: "Tour Đà Lạt 3 ngày 2 đêm",
+        tourImages: [
+          "http://tt1220-001-site1.ntempurl.com/images/682ec9b9-57a0-4b87-809a-773b53860ead.jpg",
+          "http://tt1220-001-site1.ntempurl.com/images/d66e0d97-03fd-4568-ac72-b8124d3c785b.jpg",
+        ],
+        tourLocations: ["Đà Lạt"],
       ),
       Schedule(
-        imageUrl: "",
-        location: "Phú Quốc",
-        description: "Tham quan đảo và thưởng thức hải sản",
-        startDate: "05/12/2025",
-        endDate: "09/12/2025",
-        maxCapacity: 40,
-      ),
-      Schedule(
-        imageUrl: "",
-        location: "Hạ Long",
-        description: "Du thuyền và thăm hang Sửng Sốt",
-        startDate: "10/01/2026",
-        endDate: "12/01/2026",
-        maxCapacity: 30,
+        id: 9,
+        tourId: 1,
+        imageUrl:
+            "http://tt1220-001-site1.ntempurl.com/images/d66e0d97-03fd-4568-ac72-b8124d3c785b.jpg",
+        location: "Đà Lạt",
+        description: "Tour Đà Lạt 3 ngày 2 đêm",
+        startDate: "28/10/2025",
+        endDate: "28/10/2025",
+        maxCapacity: 1000,
+        finalPrice: 100000000,
+        openDateIso: "2025-10-28T06:13:31.219",
+        startDateIso: "2025-10-28T06:13:31.219",
+        endDateIso: "2025-10-28T06:13:31.219",
+        gatheringTime: "09:06:00",
+        code: "string",
+        desposit: 100,
+        tourTitle: "Tour Đà Lạt 3 ngày 2 đêm",
+        tourImages: [
+          "http://tt1220-001-site1.ntempurl.com/images/682ec9b9-57a0-4b87-809a-773b53860ead.jpg",
+          "http://tt1220-001-site1.ntempurl.com/images/d66e0d97-03fd-4568-ac72-b8124d3c785b.jpg",
+        ],
+        tourLocations: ["Đà Lạt"],
       ),
     ];
 
@@ -75,10 +96,15 @@ class DanhSachLichTrinhScreen extends StatelessWidget {
           ),
 
           // Nút thêm tại dùng lại layout của nút xoá
-          DeleteButtonWidget(onDelete: (){
-            Navigator.pushNamed(context, RouteName.themLichTrinh);
-          }, text: "+ Thêm", textColor: Colors.white, backgroundColor: AppColors.button,),
-          SizedBox(height: 50,)
+          DeleteButtonWidget(
+            onDelete: () {
+              Navigator.pushNamed(context, RouteName.themLichTrinh);
+            },
+            text: "+ Thêm",
+            textColor: Colors.white,
+            backgroundColor: AppColors.button,
+          ),
+          SizedBox(height: 50),
         ],
       ),
     );
@@ -151,7 +177,10 @@ class ScheduleListItem extends StatelessWidget {
                               AppColors.borderButton,
                               "Tối đa: ${schedule.maxCapacity}",
                             ),
-                            DeleteButtonWidget(onDelete: onDelete, textColor: Colors.white,),
+                            DeleteButtonWidget(
+                              onDelete: onDelete,
+                              textColor: Colors.white,
+                            ),
                           ],
                         ),
                       ],
@@ -178,14 +207,13 @@ class ScheduleListItem extends StatelessWidget {
         ),
         const SizedBox(width: 8),
 
-        const Icon(
-          Icons.arrow_right_alt,
-          size: 28,
-          color: AppColors.info
-        ),
+        const Icon(Icons.arrow_right_alt, size: 28, color: AppColors.info),
         const SizedBox(width: 8),
 
-        Text(schedule.endDate, style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold)),
+        Text(
+          schedule.endDate,
+          style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }

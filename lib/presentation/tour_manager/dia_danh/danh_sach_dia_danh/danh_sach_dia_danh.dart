@@ -183,14 +183,14 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
   Widget _buildSearch(BuildContext context) {
     final diaDanhCubit = context.read<DiaDanhCubit>();
 
-    void _onClear() {
+    void onClear() {
       _searchController.clear();
       diaDanhCubit.filterPlaces("");
     }
 
     return SearchBarNewWidget(
       controller: _searchController,
-      onClear: _onClear,
+      onClear: onClear,
       hintText: "Tìm kiếm địa danh",
       onChanged: (value) => diaDanhCubit.filterPlaces(value),
     );

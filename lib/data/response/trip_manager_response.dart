@@ -3,8 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:booking_tour_flutter/data/response/day_of_tour_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
-import 'package:booking_tour_flutter/domain/province.dart';
-import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 
 part 'trip_manager_response.g.dart';
