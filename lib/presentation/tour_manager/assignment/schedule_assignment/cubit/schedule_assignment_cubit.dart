@@ -1,7 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
-import 'package:booking_tour_flutter/presentation/assignment/schedule_assignment/cubit/schedule_assignment_state.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleAssignmentCubit extends Cubit<ScheduleAssignmentState> {
@@ -16,10 +16,16 @@ class ScheduleAssignmentCubit extends Cubit<ScheduleAssignmentState> {
         ),
       );
 
+
+  void setTourId({required int tourId}){
+    emit(state.copyWith(tourId: tourId));
+  }
+
   // đọc dữ liệu từ api
-  Future<void> loadData(int tourId) async {
+  Future<void> loadData() async {
+
     var tour = await ScheduleAssignment.getTourAssignmentByTourId(
-      tourId: tourId,
+      tourId: state.tourId,
     );
 
     tour.fold((failure) {}, (tour) {
@@ -27,7 +33,7 @@ class ScheduleAssignmentCubit extends Cubit<ScheduleAssignmentState> {
     });
 
     var scheduleAssignment =
-        await ScheduleAssignment.getScheduleAssignmentsByTourId(tourId: tourId);
+        await ScheduleAssignment.getScheduleAssignmentsByTourId(tourId: state.tourId);
 
     scheduleAssignment.fold((failure) {}, (schedules) {
       emit(state.copyWith(schedules: schedules));
