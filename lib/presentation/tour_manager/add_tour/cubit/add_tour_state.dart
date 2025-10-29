@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/validate_state.dart';
 import 'package:dartz/dartz.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';

@@ -7,15 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RealAddTourScreen extends StatelessWidget {
+  const RealAddTourScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final _pickImageCubit = PickImageButtonCubit(
+    final pickImageCubit = PickImageButtonCubit(
       allowMultiple: true,
       maxImages: 5,
     );
 
     return BlocProvider(
-      create: (_) => _pickImageCubit,
+      create: (_) => pickImageCubit,
       child: AddTourScreen(
         title: "Thêm chuyến đi",
         onSave: () async{

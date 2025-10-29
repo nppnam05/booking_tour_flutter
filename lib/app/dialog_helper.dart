@@ -13,10 +13,7 @@ class DialogHelper {
       context: AppNavigator.currentContext,
       builder: (context) {
         _dialogContext = context;
-        return PopScope(
-          canPop: false,
-          child: LoadingDialog()
-          );
+        return PopScope(canPop: false, child: LoadingDialog());
       },
     );
 

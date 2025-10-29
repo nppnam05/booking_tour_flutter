@@ -18,6 +18,8 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
   final _cubit = DiaDanhCubit()..syncProvinces();
   final TextEditingController _searchController = TextEditingController();
 
+  DanhSachDiaDanhScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -30,7 +32,7 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
           bloc: _cubit,
           builder: (context, state) {
             final cubit = context.read<DiaDanhCubit>();
-            var danhSachDiaDanh = state.filteredPlaces ?? state.places ?? [];
+            var danhSachDiaDanh = state.filteredPlaces ?? state.places;
             return Column(
               children: [
                 Container(
@@ -212,14 +214,14 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
 
   Widget _buildSearch(BuildContext context, DiaDanhCubit cubit) {
 
-    void _onClear() {
+    void onClear() {
       _searchController.clear();
       cubit.filterPlaces("");
     }
 
     return SearchBarNewWidget(
       controller: _searchController,
-      onClear: _onClear,
+      onClear: onClear,
       hintText: "Tìm kiếm địa danh",
       onChanged: (value) => cubit.filterPlaces(value),
     );

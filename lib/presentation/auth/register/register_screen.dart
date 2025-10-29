@@ -18,6 +18,8 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController controllerPassword = TextEditingController();
   final TextEditingController controllerNhapLai = TextEditingController();
 
+  RegisterScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -117,7 +119,7 @@ class RegisterScreen extends StatelessWidget {
           child: const Padding(
             // Nên dùng Padding để tạo khoảng đệm cho vùng click
             padding: EdgeInsets.all(4.0),
-            child: const Text(
+            child: Text(
               "Đăng nhập ngay",
               style: TextStyle(
                 color: Color(0xFF0822AB),

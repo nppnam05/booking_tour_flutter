@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuaDiaDanhScreen extends StatelessWidget {
-  SuaDiaDanhScreen({super.key});
+  const SuaDiaDanhScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class SuaDiaDanhScreen extends StatelessWidget {
 
 class _SuaDiaDanhView extends StatelessWidget {
   final Place place;
-  _SuaDiaDanhView({required this.place});
+  const _SuaDiaDanhView({required this.place});
 
   @override
   Widget build(BuildContext context) {
@@ -81,25 +81,27 @@ class _SuaDiaDanhView extends StatelessWidget {
   }
 
   Widget _buildTinhThanh(
-  BuildContext context,
-  SuaDiaDanhCubit cubit,
-  List<Province> provinces,
-  Province? selectedProvince,
-) {
-  return Padding(
-    padding: const EdgeInsets.all(12),
-    child: InkWell(
-      onTap: () async {
-        final Province? result = await showDialog<Province>(
-          context: context,
-          builder: (_) => SelectionDialog<Province>(
-            title: "Chọn Tỉnh",
-            items: provinces,
-            display: (p) => p.name,
-            isMultiSelect: false,
-            preSelectedItems: selectedProvince != null ? [selectedProvince] : [],
-          ),
-        );
+    BuildContext context,
+    SuaDiaDanhCubit cubit,
+    List<Province> provinces,
+    Province? selectedProvince,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: InkWell(
+        onTap: () async {
+          final Province? result = await showDialog<Province>(
+            context: context,
+            builder:
+                (_) => SelectionDialog<Province>(
+                  title: "Chọn Tỉnh",
+                  items: provinces,
+                  display: (p) => p.name,
+                  isMultiSelect: false,
+                  preSelectedItems:
+                      selectedProvince != null ? [selectedProvince] : [],
+                ),
+          );
 
         if (result != null) {
           cubit.setProvince(result);

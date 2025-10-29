@@ -17,6 +17,8 @@ class AuthOtpChangePasswordScreen extends StatelessWidget {
   final TextEditingController _controllerOTP = TextEditingController();
   final String email = "nam@gmail.com";
 
+  AuthOtpChangePasswordScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

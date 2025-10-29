@@ -7,7 +7,8 @@ class OtpInputWidget extends StatelessWidget {
   final Function(String) onCompleted;
   final int length;
 
-  OtpInputWidget({
+  const OtpInputWidget({
+    super.key,
     required this.controller,
     required this.onCompleted,
     this.length = 6,

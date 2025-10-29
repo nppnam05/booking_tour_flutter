@@ -6,7 +6,7 @@ class DatePickerFieldWidget extends StatefulWidget {
   final Function(DateTime) onDateSelected;
   final Color primaryColor;
 
-  DatePickerFieldWidget({
+  const DatePickerFieldWidget({
     super.key,
     this.initialDateText,
     required this.onDateSelected,
@@ -20,6 +20,7 @@ class DatePickerFieldWidget extends StatefulWidget {
 class _DatePickerFieldState extends State<DatePickerFieldWidget> {
   DateTime? selectedDate;
 
+  @override
   void initState() {
     super.initState();
     selectedDate = widget.initialDateText;
@@ -56,9 +57,13 @@ class _DatePickerFieldState extends State<DatePickerFieldWidget> {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.grey, width: 1.5),
             ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(dateText, style: const TextStyle(fontSize: 16),),
-            Icon(Icons.calendar_today, color: Colors.red,)],),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(dateText, style: const TextStyle(fontSize: 16)),
+                Icon(Icons.calendar_today, color: Colors.red),
+              ],
+            ),
           ),
         ),
       ],

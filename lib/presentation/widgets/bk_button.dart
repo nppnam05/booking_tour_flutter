@@ -9,6 +9,7 @@ class BkButton extends StatelessWidget {
 
   final Color? textColor;
   final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
 
   final bool isShowError;
   final String? errorMessage;
@@ -19,6 +20,7 @@ class BkButton extends StatelessWidget {
     required this.title,
     this.backgroundColor = AppColors.backgroundAppBarTheme,
     this.padding,
+    this.borderRadius,
     this.textColor = AppColors.white,
     this.borderColor,
     this.isShowError = false,
@@ -37,8 +39,7 @@ class BkButton extends StatelessWidget {
         backgroundColor: backgroundColor,
         padding: padding,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(10),
-          side: BorderSide(color: nowBorderColor),
+          borderRadius: BorderRadius.circular(borderRadius ?? 8),
         ),
       ),
       child: Text(
