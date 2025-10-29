@@ -1,11 +1,7 @@
 import 'package:booking_tour_flutter/app/app_navigator.dart';
-import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
-import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button_cubit.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +9,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UpdateTourScreen extends StatelessWidget {
-  UpdateTourScreen({super.key});
+  const UpdateTourScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _pickImageCubit = PickImageButtonCubit(
+    final pickImageCubit = PickImageButtonCubit(
       allowMultiple: true,
       maxImages: 5,
     );
@@ -31,10 +27,10 @@ class UpdateTourScreen extends StatelessWidget {
             .whereType<String>()
             .toList();
     var imagesOfCubit = images.map((i) => right<XFile, String>(i)).toList();
-    _pickImageCubit.setImages(imagesOfCubit);
+    pickImageCubit.setImages(imagesOfCubit);
 
     return BlocProvider(
-      create: (_) => _pickImageCubit,
+      create: (_) => pickImageCubit,
       child: AddTourScreen(
         title: "Sửa chuyến đi",
         onSave: () async {

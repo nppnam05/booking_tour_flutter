@@ -52,9 +52,7 @@ class ScheduleTourmanagerScreen extends StatelessWidget {
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            
-          },
+          onPressed: () {},
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
           icon: const Icon(Icons.add),

@@ -22,7 +22,11 @@ class ListDiaDanhItem extends StatelessWidget {
       child: InkWell(
         // bấm vào item chuyển qua địa điểm hạot động
         onTap: () {
-          Navigator.pushNamed(context, RouteName.profile, arguments: diaDanh);
+          Navigator.pushNamed(
+            context,
+            RouteName.danhSachHoatDong,
+            arguments: diaDanh,
+          );
         },
 
         child: Card(
@@ -45,7 +49,7 @@ class ListDiaDanhItem extends StatelessWidget {
                       _buildIconText(
                         Icons.park,
                         Colors.green,
-                        "Tỉnh thành: ${diaDanh.province.name}",
+                        "Tỉnh thành: ${diaDanh.province?.name ?? ""}",
                       ),
                     ],
                   ),
@@ -81,22 +85,21 @@ class ListDiaDanhItem extends StatelessWidget {
   var str = limitedWords.join(" ");
   if (tmp.length > 6) str += " ...";
 
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Icon(icon, size: 18, color: color),
-      const SizedBox(width: 4),
-      Expanded(
-        child: Text(
-          str,
-          style: const TextStyle(fontSize: 16),
-          softWrap: true,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            str,
+            style: const TextStyle(fontSize: 16),
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 }

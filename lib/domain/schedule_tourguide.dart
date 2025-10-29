@@ -7,7 +7,7 @@ class ScheduleTourguide {
   final int quantity;
   final String tourImages;
   ScheduleTourguide({
-    required   this.id,
+    required this.id,
     required this.startDate,
     required this.endDate,
     required this.idSchedule,

@@ -1,5 +1,4 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:flutter/material.dart';
 
 class SpinnerDialog extends StatelessWidget {
@@ -59,8 +58,7 @@ class SpinnerDialog extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildTextContent(context, primaryColor),
-                  Spacer(),
+                  Expanded(child: _buildTextContent(context, primaryColor)),
                   Icon(Icons.arrow_drop_down_outlined, color: primaryColor),
                 ],
               ),

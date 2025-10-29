@@ -1,5 +1,3 @@
-import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/schedule_assignment_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/tour_guide_assignment_screen.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
@@ -11,24 +9,21 @@ import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_dia_diem_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/add_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/real_add_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/update_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/assignment_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_hoat_dong_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/danh_sach_dia_diem_hoat_dong_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/danh_sach_dia_danh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/sua_dia_danh/sua_dia_danh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/them_dia_danh/them_dia_danh.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/sua_dia_diem_hoat_dong_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/them_dia_diem_hoat_dong_screen.dart';
+
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_dong_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_tourmanager_card.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/schedule_tourmanager_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/sua_dia_diem_hoat_dong/sua_dia_diem_hoat_dong_screen.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +35,6 @@ class RouteName {
   static final profile = "profile";
 
   static final menu = "menu";
-  static final danhSachLichTrinh = "danh_sach_lich_trinh";
   static final themLichTrinh = "them_lich_trinh";
   static final chiTietLichTrinh = "chi_tiet_lich_trinh";
   static final test = "test";
@@ -54,19 +48,19 @@ class RouteName {
   static final authOtp = "auth_otp";
   static final changePassword = "change_password";
   static final authOtpChangePassword = "auth_otp_change_password";
-  static final assignment = "assignment";  
+  static final assignment = "assignment";
 
   static final addTour = "addTour";
   static final updateTour = "updateTour";
   static final tripList = "tripList";
-  static  final scheduleTourguide = "scheduleTourguide";
+  static final scheduleTourguide = "scheduleTourguide";
   static final ScheduleTourmanager = "scheduleTourmanager";
   static final participants = "participants";
-  
+
   static final danhSachDiaDanh = "danh_sach_dia_danh";
   static final themDiaDanh = "them_dia_danh";
   static final suaDiaDanh = "sua_dia_danh";
-  
+  static final scheduleTourmanager = "scheduleTourmanager";
 }
 
 class RouteManager {
@@ -76,7 +70,6 @@ class RouteManager {
     RouteName.home: (context) => HomeScreen(),
     RouteName.profile: (context) => ProfileScreen(),
     RouteName.menu: (context) => DrawerBar(),
-    RouteName.danhSachLichTrinh: (context) => DanhSachLichTrinhScreen(),
     RouteName.themLichTrinh: (context) => ThemLichTrinhScreen(),
     RouteName.chiTietLichTrinh: (context) => ChiTietTrinhScreen(),
     RouteName.test: (context) => TestScreen(),
@@ -97,12 +90,12 @@ class RouteManager {
     RouteName.tripList: (context) => TripScreen(),
     RouteName.assignment: (context) => AssignmentScreen(),
     RouteName.updateTour: (context) => UpdateTourScreen(),
-    RouteName.scheduleTourguide: (context)=> ScheduleTourguideScreen(),
-    RouteName.ScheduleTourmanager: (context)=> ScheduleTourmanagerScreen(),
+    RouteName.scheduleTourguide: (context) => ScheduleTourguideScreen(),
+    RouteName.ScheduleTourmanager: (context) => ScheduleTourmanagerScreen(),
     RouteName.participants: (context) {
-  final schedule = ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;
-  return ParticipantsScreen(schedule: schedule);
-},
-
+      final schedule =
+          ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;
+      return ParticipantsScreen(schedule: schedule);
+    },
   };
 }
