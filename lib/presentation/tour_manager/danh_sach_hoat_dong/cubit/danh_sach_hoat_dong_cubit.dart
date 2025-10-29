@@ -77,8 +77,9 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
       final filtered =
           state.originalDanhSachHoatDong
               .where(
-                (activity) =>
-                    activity.name.toLowerCase().contains(query.toLowerCase()),
+                (activity) => activity.name.toLowerCase().contains(
+                  query.trim().toLowerCase(),
+                ),
               )
               .toList();
       emit(state.copyWith(searchQuery: query, danhSachHoatDong: filtered));
