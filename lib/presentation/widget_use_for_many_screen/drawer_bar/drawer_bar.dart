@@ -49,11 +49,11 @@ class DrawerBar extends StatelessWidget {
             leading: Icon(Icons.group),
             title: Text("Hoạt động"),
           ),
-          ListTile(
-            onTap: () => {print("Hello")},
-            leading: Icon(Icons.local_taxi),
-            title: Text("Địa điểm hoạt động"),
-          ),
+          // ListTile(
+          //   onTap: () => {print("Hello")},
+          //   leading: Icon(Icons.local_taxi),
+          //   title: Text("Địa điểm hoạt động"),
+          // ),
         ],
       ),
     );
