@@ -592,11 +592,7 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       var response = await _coreService.checkAssignment(scheduleId, tourGuides);
 
-      if (response.hashCode == 200) {
-        return Right(true);
-      } else {
-        return Left(ErrorHandler.handle("").failure);
-      }
+      return Right(response.data as bool);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
