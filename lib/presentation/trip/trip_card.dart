@@ -77,7 +77,7 @@ class TripCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  // Các nút bấm
+    
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

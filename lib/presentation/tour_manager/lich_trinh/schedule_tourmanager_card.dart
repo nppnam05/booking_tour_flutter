@@ -56,7 +56,7 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                         children: [
                           const Icon(
                             Icons.calendar_today,
-                            size: 16,
+                            size: 14,
                             color: Colors.black87,
                           ),
                           const SizedBox(width: 6),
