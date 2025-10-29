@@ -49,7 +49,7 @@ class LoginScreen extends StatelessWidget {
             case 1:
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RouteName.home,
+                RouteName.tripList,
                 (route) => false,
               );
               return;
