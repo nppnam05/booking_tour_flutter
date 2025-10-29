@@ -58,8 +58,7 @@ class SpinnerDialog extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildTextContent(context, primaryColor),
-                  Spacer(),
+                  Expanded(child: _buildTextContent(context, primaryColor)),
                   Icon(Icons.arrow_drop_down_outlined, color: primaryColor),
                 ],
               ),
