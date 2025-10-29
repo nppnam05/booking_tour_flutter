@@ -18,8 +18,6 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
-  LoginScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -49,7 +47,7 @@ class LoginScreen extends StatelessWidget {
             case 1:
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RouteName.tripList,
+                RouteName.home,
                 (route) => false,
               );
               return;
@@ -57,6 +55,13 @@ class LoginScreen extends StatelessWidget {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 RouteName.scheduleTourguide,
+                (route) => false,
+              );
+              return;
+            case 6:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.tripList,
                 (route) => false,
               );
               return;
