@@ -40,7 +40,6 @@ import 'package:booking_tour_flutter/domain/tour_guide.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
-import 'package:booking_tour_flutter/domain/requests/add_place_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
 import 'package:dartz/dartz.dart';
@@ -128,7 +127,6 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Activity>>> postActivity(String action);
   Future<Either<Failure, List<Activity>>> putActivity(int id, String action);
   Future<Either<Failure, bool>> deleteActivity(int id);
-  Future<Either<Failure, Place>> addPlace(AddPlaceRequest request);
   Future<Either<Failure, LocationActivityResponse>> addLocationActivities(
     AddLocationActivityRequest request,
   );
@@ -176,18 +174,6 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       final response = await _coreService.addLocationActivities(request);
       return Right(response);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Place>> addPlace(AddPlaceRequest request) async {
-    try {
-      final response = await _coreService.createPlace(request.toJson());
-      final data = response.data as Map<String, dynamic>;
-      final placeResponse = PlaceResponse.fromJson(data);
-      return Right(placeResponse.map());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
