@@ -3,13 +3,14 @@ import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'assignment_response.g.dart';
+
 @JsonSerializable()
 class AssignmentResponse {
   final int? id;
   final String? title;
   final List<String>? tourImages;
   final List<LocationResponse>? locations;
-  final List<PlaceResponse>? places;
+  final List<AssignmentPlaceResponse>? places;
 
   AssignmentResponse({
     this.id,
@@ -36,30 +37,35 @@ class LocationResponse {
 }
 
 @JsonSerializable()
-class PlaceResponse {
+class AssignmentPlaceResponse {
   final int id;
   final String name;
   final LocationResponse? location;
 
-  PlaceResponse({required this.id, required this.name, this.location});
+  AssignmentPlaceResponse({
+    required this.id,
+    required this.name,
+    this.location,
+  });
 
-  factory PlaceResponse.fromJson(Map<String, dynamic> json) =>
-      _$PlaceResponseFromJson(json);
+  factory AssignmentPlaceResponse.fromJson(Map<String, dynamic> json) =>
+      _$AssignmentPlaceResponseFromJson(json);
 }
 
 extension AssignmentResponseMapper on AssignmentResponse {
   Assignment map() {
-    final firstImage = (tourImages != null && tourImages!.isNotEmpty)
-        ? tourImages!.first
-        : '';
+    final firstImage =
+        (tourImages != null && tourImages!.isNotEmpty) ? tourImages!.first : '';
 
-    final firstLocation = (locations != null && locations!.isNotEmpty)
-        ? locations!.first.name
-        : '';
-        
-    final placesText = (places != null && places!.isNotEmpty)
-        ? places!.map((p) => p.name).join(', ')
-        : '';
+    final firstLocation =
+        (locations != null && locations!.isNotEmpty)
+            ? locations!.first.name
+            : '';
+
+    final placesText =
+        (places != null && places!.isNotEmpty)
+            ? places!.map((p) => p.name).join(', ')
+            : '';
 
     return Assignment(
       id: id ?? 0,

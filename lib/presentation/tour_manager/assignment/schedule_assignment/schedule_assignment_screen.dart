@@ -11,13 +11,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleAssignmentScreen extends StatelessWidget {
+  final int tourId;
 
-  ScheduleAssignmentScreen({super.key});
+  ScheduleAssignmentScreen({super.key, required this.tourId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: context.read<ScheduleAssignmentCubit>(),
+    return BlocProvider<ScheduleAssignmentCubit>(
+      create: (context) {
+        final _cubit = ScheduleAssignmentCubit();
+
+        _cubit.setTourId(tourId: tourId);
+        _cubit.loadData();
+
+        return _cubit;
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -87,21 +95,17 @@ class ScheduleAssignmentScreen extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        final cubit = context.read<TourGuideAssignmentCubit>();
-
-        // đẩy id qua cubit của màn đích
-        cubit.setIdSchedule(id: schedule.id);
-
-        cubit.loadData();
 
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TourGuideAssignmentScreen(cubit: cubit),
+            builder: (context) => TourGuideAssignmentScreen(idSchedule: schedule.id,),
           ),
         );
 
-        context.read<ScheduleAssignmentCubit>().loadData();
+
+        final currentCubit = context.read<ScheduleAssignmentCubit>();
+        currentCubit.loadData();
       },
       child: Container(
         padding: EdgeInsets.all(16.0),

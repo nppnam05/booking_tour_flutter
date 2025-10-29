@@ -6,7 +6,6 @@ import 'package:booking_tour_flutter/data/request/tour/create_day_activity_reque
 import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
-import 'package:booking_tour_flutter/domain/trip.dart';
 
 class CTDayActivity {
   TimeOfDay? time;

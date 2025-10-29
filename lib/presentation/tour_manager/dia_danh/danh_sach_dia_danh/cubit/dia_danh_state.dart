@@ -7,8 +7,12 @@ class DiaDanhState {
   final Province? selectedProvince;
   final List<Place>? filteredPlaces;
 
-
-  DiaDanhState({required this.provinces, required this.places, this.selectedProvince, this.filteredPlaces});
+  DiaDanhState({
+    required this.provinces,
+    required this.places,
+    this.selectedProvince,
+    this.filteredPlaces,
+  });
 
   DiaDanhState copyWith({
     List<Province>? provinces,

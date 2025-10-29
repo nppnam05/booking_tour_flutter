@@ -2,20 +2,24 @@ import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
+import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
-import 'package:booking_tour_flutter/data/response/assignment_response.dart' hide PlaceResponse;
-import 'package:booking_tour_flutter/data/response/participant_response.dart';
-import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
-import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart' hide ProvinceResponse;
+import 'package:booking_tour_flutter/data/response/assignment_response.dart';
+import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/participant_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
+    hide ProvinceResponse;
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
-import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
+import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
@@ -24,16 +28,20 @@ import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/participants.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
+import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
-import 'package:booking_tour_flutter/domain/tour_assignment.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
-import 'package:booking_tour_flutter/domain/schedule.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/domain/tour_assignment.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
+import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
+import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
 import 'package:dartz/dartz.dart';
 
 import 'package:booking_tour_flutter/data/network/core_service.dart';
@@ -43,12 +51,6 @@ import 'package:injectable/injectable.dart';
 
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
-
-  Future<Either<Failure, List<ScheduleAssignment>>> getScheduleAssignmentsByTourId({required int tourId});
-
-  Future<Either<Failure, TourAssignment>> getTourAssignmentByTourId({
-    required int tourId,
-  });
 
   Future<Either<Failure, bool>> checkAssignment({
     required int scheduleId,
@@ -120,23 +122,32 @@ abstract class BookingRepository {
     required int locationId,
   });
 
-  Future<Either<Failure, Place>> deletePlace({
-    required int id,
-  });
- 
+  Future<Either<Failure, Place>> deletePlace({required int id});
 
+  Future<Either<Failure, List<Activity>>> postActivity(String action);
+  Future<Either<Failure, List<Activity>>> putActivity(int id, String action);
+  Future<Either<Failure, bool>> deleteActivity(int id);
+  Future<Either<Failure, LocationActivityResponse>> addLocationActivities(
+    AddLocationActivityRequest request,
+  );
+  Future<Either<Failure, UpdateLocationActivitiesResponse>>
+  updateLocationActivities(UpdateLocationActivities request);
+  Future<Either<Failure, int>> addSchedule(AddScheduleRequest request);
+  Future<Either<Failure, bool>> updateSchedule(UpdateScheduleRequest request);
+  Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule();
+  Future<Either<Failure, void>> deleteScheduleById({required int id});
+  Future<Either<Failure, List<Participant>>> getParticipantsByScheduleId({
+    required int scheduleId,
+  });
   Future<Either<Failure, List<ScheduleTourguide>>> getSchedulesByStaff({
     required int staffId,
   });
 
-  Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule();
-
-  Future<Either<Failure,void>> deleteScheduleById({
-    required int id 
-  }); 
-  Future<Either<Failure, List<Participant>>> getParticipantsByScheduleId({
-    required int scheduleId,
+  Future<Either<Failure, TourAssignment>> getTourAssignmentByTourId({
+    required int tourId,
   });
+  Future<Either<Failure, List<ScheduleAssignment>>>
+  getScheduleAssignmentsByTourId({required int tourId});
 }
 
 @Singleton(as: BookingRepository)
@@ -144,6 +155,68 @@ class BookingRepositoryImp implements BookingRepository {
   final CoreService _coreService;
 
   BookingRepositoryImp(this._coreService);
+
+  @override
+  Future<Either<Failure, UpdateLocationActivitiesResponse>>
+  updateLocationActivities(UpdateLocationActivities request) async {
+    try {
+      final response = await _coreService.updateLocationActivities(request);
+      return Right(response);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, LocationActivityResponse>> addLocationActivities(
+    AddLocationActivityRequest request,
+  ) async {
+    try {
+      final response = await _coreService.addLocationActivities(request);
+      return Right(response);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteActivity(int id) async {
+    try {
+      final response = await _coreService.deleteActivity(id);
+      return Right(response.data ?? false);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Activity>>> putActivity(
+    int id,
+    String action,
+  ) async {
+    try {
+      final response = await _coreService.updateActivity(
+        FixActivityRequest(action: action, id: id),
+      );
+      final activity = response.map();
+      return Right(activity != null ? [activity] : []);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Activity>>> postActivity(String action) async {
+    try {
+      final AddActivityResponse response = await _coreService.addActivity(
+        AddActivityRequest(action: action),
+      );
+      final activities = response.map();
+      return Right(activities);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 
   @override
   Future<Either<Failure, List<FakePost>>> getPost() async {
@@ -164,7 +237,6 @@ class BookingRepositoryImp implements BookingRepository {
   }) async {
     try {
       var responses = await _coreService.getActivities(
-        locationActivityId: locationActivityId,
         sortBy: sortBy,
         order: order,
       );
@@ -250,31 +322,29 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
- @override
- Future<Either<Failure, List<Trip>>> getTrips({
-   String sortBy = "Title",
-   String order = "ASC",
-   String? filter,
- }) async {
-   try {
-     var responses = await _coreService.getTrips(
-       sortBy: sortBy,
-       order: order,
-       filter: filter,
-     );
-     
-     var data = responses.data as List<dynamic>;
-     var tripResponses = data.map(
-       (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
-     );
-     var trips = tripResponses.map((response) => response.map()).toList();
 
-     return Right(trips);
-   } catch (e) {
-     return Left(ErrorHandler.handle(e).failure);
-   }
- }
-
+  @override
+  Future<Either<Failure, List<Trip>>> getTrips({
+    String sortBy = "Title",
+    String order = "ASC",
+    String? filter,
+  }) async {
+    try {
+      var responses = await _coreService.getTrips(
+        sortBy: sortBy,
+        order: order,
+        filter: filter,
+      );
+      var data = responses.data as List<dynamic>;
+      var tripResponses = data.map(
+        (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var trips = tripResponses.map((response) => response.map()).toList();
+      return Right(trips);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 
   @override
   Future<Either<Failure, void>> deleteTrip({required int id}) async {
@@ -290,8 +360,15 @@ class BookingRepositoryImp implements BookingRepository {
   Future<Either<Failure, List<Assignment>>> getAssignments() async {
     try {
       var responses = await _coreService.getAssignments();
+      print('=== DEBUG Assignment Response ===');
+      print('Response data: ${responses.data}');
 
       var data = responses.data as List<dynamic>;
+      print('Data length: ${data.length}');
+
+      if (data.isNotEmpty) {
+        print('First item: ${data.first}');
+      }
 
       var assignmentResponses = data.map(
         (json) => AssignmentResponse.fromJson(json as Map<String, dynamic>),
@@ -299,81 +376,15 @@ class BookingRepositoryImp implements BookingRepository {
       var assignments =
           assignmentResponses.map((response) => response.map()).toList();
 
+      print('Assignments count: ${assignments.length}');
       return Right(assignments);
     } catch (e, stackTrace) {
+      print('=== ERROR in getAssignments ===');
+      print('Error: $e');
+      print('StackTrace: $stackTrace');
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-
-  @override
-  Future<Either<Failure, List<ScheduleTourguide>>> getSchedulesByStaff({
-    required int staffId,
-  }) async {
-    try {
-      var responses = await _coreService.getGuidesByStaff(staffId: staffId);
-      var data = responses.data as List<dynamic>;
-
-      var scheduleResponses = data.map(
-        (json) => ScheduleTourguideResponse.fromJson(json as Map<String, dynamic>),
-      );
-      var schedules = scheduleResponses.map((response) => response.map()).toList();
-
-      return Right(schedules);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
- @override
-  Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule() async {
-    try {
-      final response = await _coreService.getAllSchedules();
-      final data = response.data as List<dynamic>;
-
-      final schedules = data
-          .map((json) => ScheduleTourmanagerResponse.fromJson(json as Map<String, dynamic>).map())
-          .toList();
-
-      return Right(schedules);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> deleteScheduleById({required int id}) async {
-    try {
-      await _coreService.deleteScheduleById(id: id);
-      return const Right(null);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    } 
-  }
-   @override
-  Future<Either<Failure, List<Participant>>> getParticipantsByScheduleId({
-    required int scheduleId,
-  }) async {
-    try {
-      var response = await _coreService.getUserCompletedSchedule(
-        scheduleId: scheduleId,
-      );
-      
-      var data = response.data as List<dynamic>;
-      var scheduleResponses = data.map(
-        (json) => UserCompletedScheduleResponse.fromJson(json as Map<String, dynamic>),
-      );
-      
-      List<Participant> allParticipants = [];
-      for (var scheduleResponse in scheduleResponses) {
-        allParticipants.addAll(scheduleResponse.mapToParticipants());
-      }
-      
-      return Right(allParticipants);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-  
 
   @override
   Future<Either<Failure, Trip>> createTour({
@@ -390,7 +401,7 @@ class BookingRepositoryImp implements BookingRepository {
 
       List<Future<String>> futureImages = [];
       List<String> retainImages = [];
-      images.forEach((image) {
+      for (var image in images) {
         image.fold(
           (file) {
             var futureImage = AppEncodeHelper.toBase64String(file);
@@ -400,7 +411,7 @@ class BookingRepositoryImp implements BookingRepository {
             retainImages.add(url);
           },
         );
-      });
+      }
 
       var encodeImages = await Future.wait(futureImages);
 
@@ -430,7 +441,7 @@ class BookingRepositoryImp implements BookingRepository {
 
       List<Future<String>> futureImages = [];
       List<String> retainImages = [];
-      images.forEach((image) {
+      for (var image in images) {
         image.fold(
           (file) {
             var futureImage = AppEncodeHelper.toBase64String(file);
@@ -440,7 +451,7 @@ class BookingRepositoryImp implements BookingRepository {
             retainImages.add(url);
           },
         );
-      });
+      }
 
       var encodeImages = await Future.wait(futureImages);
 
@@ -578,10 +589,117 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       var response = await _coreService.checkAssignment(scheduleId, tourGuides);
 
-      bool success = response.data as bool;
+      if (response.hashCode == 200) {
+        return Right(true);
+      } else {
+        return Left(ErrorHandler.handle("").failure);
+      }
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 
+  @override
+  Future<Either<Failure, int>> addSchedule(AddScheduleRequest request) async {
+    try {
+      var response = await _coreService.createSchedule(request);
+      return Right(response.data);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  Future<Either<Failure, bool>> updateSchedule(
+    UpdateScheduleRequest request,
+  ) async {
+    try {
+      var response = await _coreService.updateSchedule(request);
+      final success =
+          (response.data is bool)
+              ? response.data as bool
+              : (response.data == true);
       return Right(success);
-    } catch (e, stackTrace) {
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule() async {
+    try {
+      final response = await _coreService.getAllSchedules();
+      final data = response.data as List<dynamic>;
+
+      final schedules =
+          data
+              .map(
+                (json) =>
+                    ScheduleTourmanagerResponse.fromJson(
+                      json as Map<String, dynamic>,
+                    ).map(),
+              )
+              .toList();
+
+      return Right(schedules);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteScheduleById({required int id}) async {
+    try {
+      await _coreService.deleteScheduleById(id: id);
+      return const Right(null);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Participant>>> getParticipantsByScheduleId({
+    required int scheduleId,
+  }) async {
+    try {
+      var response = await _coreService.getUserCompletedSchedule(
+        scheduleId: scheduleId,
+      );
+
+      var data = response.data as List<dynamic>;
+      var scheduleResponses = data.map(
+        (json) => UserCompletedScheduleResponse.fromJson(
+          json as Map<String, dynamic>,
+        ),
+      );
+
+      List<Participant> allParticipants = [];
+      for (var scheduleResponse in scheduleResponses) {
+        allParticipants.addAll(scheduleResponse.mapToParticipants());
+      }
+
+      return Right(allParticipants);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleTourguide>>> getSchedulesByStaff({
+    required int staffId,
+  }) async {
+    try {
+      var responses = await _coreService.getGuidesByStaff(staffId: staffId);
+      var data = responses.data as List<dynamic>;
+
+      var scheduleResponses = data.map(
+        (json) =>
+            ScheduleTourguideResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var schedules =
+          scheduleResponses.map((response) => response.map()).toList();
+
+      return Right(schedules);
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
@@ -606,7 +724,8 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<ScheduleAssignment>>>getScheduleAssignmentsByTourId({required int tourId}) async {
+  Future<Either<Failure, List<ScheduleAssignment>>>
+  getScheduleAssignmentsByTourId({required int tourId}) async {
     try {
       var responses = await _coreService.getScheduleAssignments(tourId);
 

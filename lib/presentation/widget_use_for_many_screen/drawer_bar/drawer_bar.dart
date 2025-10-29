@@ -28,7 +28,7 @@ class DrawerBar extends StatelessWidget {
           ListTile(
             onTap:
                 () => {
-                  Navigator.pushNamed(context, RouteName.ScheduleTourmanager),
+                  Navigator.pushNamed(context, RouteName.scheduleTourmanager),
                 },
             leading: Icon(Icons.calendar_today),
             title: Text("Lịch trình"),
@@ -45,18 +45,15 @@ class DrawerBar extends StatelessWidget {
             title: Text("Địa danh"),
           ),
           ListTile(
-            onTap:
-                () => {
-                  Navigator.pushNamed(context, RouteName.danhSachHoatDong),
-                },
+            onTap: () => {Navigator.pushNamed(context, RouteName.hoatDong)},
             leading: Icon(Icons.group),
             title: Text("Hoạt động"),
           ),
-          ListTile(
-            onTap: () => {print("Hello")},
-            leading: Icon(Icons.local_taxi),
-            title: Text("Địa điểm hoạt động"),
-          ),
+          // ListTile(
+          //   onTap: () => {print("Hello")},
+          //   leading: Icon(Icons.local_taxi),
+          //   title: Text("Địa điểm hoạt động"),
+          // ),
         ],
       ),
     );

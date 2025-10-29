@@ -17,6 +17,8 @@ class AuthOtpScreen extends StatelessWidget {
 
   final String email = "nam@gmail.com";
 
+  AuthOtpScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

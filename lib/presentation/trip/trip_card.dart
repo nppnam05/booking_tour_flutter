@@ -7,6 +7,7 @@ class TripCard extends StatelessWidget {
   final VoidCallback onView;
 
   const TripCard({
+    super.key,
     required this.trip,
     required this.onDelete,
     required this.onView,

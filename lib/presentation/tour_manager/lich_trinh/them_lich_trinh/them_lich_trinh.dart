@@ -1,54 +1,150 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/tour_option.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/cubit/them_lich_trinh_cubit.dart';
+import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ThemLichTrinhScreen extends StatelessWidget {
-  ThemLichTrinhScreen({super.key});
+class ThemLichTrinhScreen extends StatefulWidget {
+  const ThemLichTrinhScreen({super.key});
 
-  final TextEditingController _controllerTour = TextEditingController();
+  @override
+  State<ThemLichTrinhScreen> createState() => _ThemLichTrinhScreenState();
+}
+
+class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
   final TextEditingController _controllerNguoiToiDa = TextEditingController();
   final TextEditingController _controllerGia = TextEditingController();
   final TextEditingController _controllerTienCoc = TextEditingController();
 
+  DateTime? _openDate;
+  DateTime? _startDate;
+  DateTime? _endDate;
+  TimeOfDay? _gatheringTime;
+  final ThemLichTrinhCubit _cubit = ThemLichTrinhCubit();
+  int? _selectedTourId;
+  List<TourOption> _tourOptions = const [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is List && _tourOptions.isEmpty) {
+      setState(() {
+        _tourOptions = TourOption.fromTrips(args);
+      });
+    }
+  }
+
+  Future<void> _handleSave() async {
+    if (_openDate == null ||
+        _startDate == null ||
+        _endDate == null ||
+        _gatheringTime == null ||
+        _selectedTourId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
+      );
+      return;
+    }
+    final maxSlot = int.tryParse(_controllerNguoiToiDa.text);
+    final finalPrice = int.tryParse(_controllerGia.text);
+    final desposit = int.tryParse(_controllerTienCoc.text);
+
+    if (maxSlot == null || maxSlot <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng nhập số người tối đa hợp lệ')),
+      );
+      return;
+    }
+
+    if (finalPrice == null || finalPrice <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Vui lòng nhập giá hợp lệ')));
+      return;
+    }
+
+    if (desposit == null || desposit < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng nhập số tiền cọc hợp lệ')),
+      );
+      return;
+    }
+
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+
+    final request = AddScheduleRequest(
+      tourId: _selectedTourId!,
+      startDate: _startDate!.toIso8601String(),
+      endDate: _endDate!.toIso8601String(),
+      openDate: _openDate!.toIso8601String(),
+      maxSlot: maxSlot,
+      finalPrice: finalPrice,
+      gatheringTime:
+          "${twoDigits(_gatheringTime!.hour)}:${twoDigits(_gatheringTime!.minute)}",
+      code: "string",
+      desposit: desposit,
+    );
+
+    try {
+      await _cubit.createSchedule(request);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tạo lịch trình thành công')),
+      );
+      Navigator.pushNamed(context, RouteName.scheduleTourmanager);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Tạo lịch trình thất bại: $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Thêm lịch trình",
-          style: AppFonts.textWhite.copyWith(fontWeight: FontWeight.bold),
+    return BlocProvider.value(
+      value: _cubit,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: Text(
+            "Thêm lịch trình",
+            style: AppFonts.textWhite.copyWith(fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: AppColors.button,
+          centerTitle: true,
         ),
-        backgroundColor: AppColors.button,
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsetsGeometry.all(20),
-              child: _buildTextField(),
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20).add(
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [_buildTextField(), const SizedBox(height: 24)],
             ),
           ),
-
-          // Nút lưu dùng lại của delete
-          DeleteButtonWidget(
-            onDelete: () {
-              Navigator.pushNamed(context, RouteName.danhSachLichTrinh);
-            },
+        ),
+        bottomNavigationBar: SafeArea(
+          minimum: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+          child: DeleteButtonWidget(
+            onDelete: _handleSave,
             text: "Lưu",
             textColor: Colors.white,
             backgroundColor: AppColors.button,
           ),
-
-          SizedBox(height: 50),
-        ],
+        ),
       ),
     );
   }
@@ -57,45 +153,44 @@ class ThemLichTrinhScreen extends StatelessWidget {
     return Column(
       children: [
         _buildTour(),
-
-        // Ngày mở and bắt đầu
         _buildNgayMoVaBatDau(),
-
         notIconToggleInputField(
           _controllerNguoiToiDa,
           "Người tối đa",
           AppColors.gray,
         ),
-
         notIconToggleInputField(_controllerGia, "Giá", AppColors.gray),
-
         notIconToggleInputField(
           _controllerTienCoc,
           "Số tiền cọc",
           AppColors.gray,
         ),
-
-        //Thời gian tập hợp
         _buildThoiGianTapHop(),
       ],
     );
   }
 
   Widget _buildTour() {
-    final List<String> provinces = [
-      "Hà Nội",
-      "Đà Nẵng",
-      "Hồ Chí Minh",
-      "Đà Lạt",
-    ];
-    String? selectedProvince;
+    TourOption? selectedOption;
+    if (_selectedTourId != null) {
+      for (final o in _tourOptions) {
+        if (o.id == _selectedTourId) {
+          selectedOption = o;
+          break;
+        }
+      }
+    }
 
-    return DropDownWidget(
+    return DropDownWidget<TourOption>(
       title: "Tour",
-      options: provinces,
-      itemToString: (item) => item,
-      onChanged: (value) {
-        selectedProvince = value;
+      options: _tourOptions,
+      value: selectedOption,
+      itemToString: (item) => item.title,
+      hintText: "Chọn tour",
+      onChanged: (option) {
+        setState(() {
+          _selectedTourId = option?.id;
+        });
       },
     );
   }
@@ -103,38 +198,44 @@ class ThemLichTrinhScreen extends StatelessWidget {
   Widget _buildNgayMoVaBatDau() {
     return Row(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
-              "Ngày mở đăng kí",
-            ),
-            DatePickerFieldWidget(
-              onDateSelected: (date) {
-                print("Ngày được chọn: $date");
-              },
-              primaryColor: AppColors.gray,
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Ngày mở đăng kí",
+                style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+              ),
+              DatePickerFieldWidget(
+                onDateSelected: (date) {
+                  setState(() {
+                    _openDate = date;
+                  });
+                },
+                primaryColor: AppColors.gray,
+              ),
+            ],
+          ),
         ),
-
-        SizedBox(width: 20),
-
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
-              "Ngày bắt đầu",
-            ),
-            DatePickerFieldWidget(
-              onDateSelected: (date) {
-                print("Ngày được chọn: $date");
-              },
-              primaryColor: AppColors.gray,
-            ),
-          ],
+        const SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Ngày bắt đầu",
+                style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+              ),
+              DatePickerFieldWidget(
+                onDateSelected: (date) {
+                  setState(() {
+                    _startDate = date;
+                  });
+                },
+                primaryColor: AppColors.gray,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -147,25 +248,33 @@ class ThemLichTrinhScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
               "Thời gian tập hợp",
+              style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
             ),
             TimePickerFieldWidget(
               onDateSelected: (time) {
-                print("holo");
+                setState(() {
+                  _gatheringTime = time;
+                });
               },
               primaryColor: AppColors.gray,
             ),
           ],
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            Text(
+              "Ngày kết thúc",
+              style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 6),
             DatePickerFieldWidget(
               onDateSelected: (date) {
-                print("Ngày được chọn: $date");
+                setState(() {
+                  _endDate = date;
+                });
               },
               primaryColor: AppColors.gray,
             ),

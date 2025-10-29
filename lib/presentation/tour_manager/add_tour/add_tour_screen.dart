@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:booking_tour_flutter/app/booking_dialog.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_error_fields.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
