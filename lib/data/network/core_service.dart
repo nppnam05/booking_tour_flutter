@@ -159,6 +159,11 @@ abstract class CoreService {
     @Body() UpdateLocationActivities request,
   );
 
+  @DELETE("/LocationActivity/{id}")
+  Future<LocationActivityResponse> deleteLocationActivities({
+    @Path("id") required int id,
+  });
+
   @POST("/Place")
   Future<AssignmentPlaceResponse> addPlace(
     @Body() Map<String, dynamic> request,

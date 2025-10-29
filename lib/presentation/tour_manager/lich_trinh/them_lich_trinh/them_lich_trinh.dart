@@ -65,6 +65,24 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
       return;
     }
 
+    if (_startDate!.isBefore(_openDate!)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ngày bắt đầu không được nhỏ hơn ngày mở đăng ký'),
+        ),
+      );
+      return;
+    }
+
+    if (_endDate!.isBefore(_startDate!)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ngày kết thúc không được nhỏ hơn ngày bắt đầu'),
+        ),
+      );
+      return;
+    }
+
     if (finalPrice == null || finalPrice <= 0) {
       ScaffoldMessenger.of(
         context,
@@ -207,6 +225,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
                 style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
               ),
               DatePickerFieldWidget(
+                initialDateText: DateTime.now(),
                 onDateSelected: (date) {
                   setState(() {
                     _openDate = date;
@@ -227,6 +246,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
                 style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
               ),
               DatePickerFieldWidget(
+                initialDateText: DateTime.now(),
                 onDateSelected: (date) {
                   setState(() {
                     _startDate = date;
@@ -271,6 +291,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
             ),
             SizedBox(height: 6),
             DatePickerFieldWidget(
+              initialDateText: DateTime.now(),
               onDateSelected: (date) {
                 setState(() {
                   _endDate = date;

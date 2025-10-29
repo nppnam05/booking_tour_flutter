@@ -148,6 +148,9 @@ abstract class BookingRepository {
   });
   Future<Either<Failure, List<ScheduleAssignment>>>
   getScheduleAssignmentsByTourId({required int tourId});
+  Future<Either<Failure, LocationActivityResponse>> deleteLocatinActivities(
+    int id,
+  );
 }
 
 @Singleton(as: BookingRepository)
@@ -742,6 +745,17 @@ class BookingRepositoryImp implements BookingRepository {
               .toList();
 
       return Right(scheduleAssignments);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  Future<Either<Failure, LocationActivityResponse>> deleteLocatinActivities(
+    int id,
+  ) async {
+    try {
+      final response = await _coreService.deleteLocationActivities(id: id);
+      return Right(response);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

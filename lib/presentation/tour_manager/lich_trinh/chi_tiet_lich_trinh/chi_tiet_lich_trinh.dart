@@ -117,6 +117,25 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
       );
       return;
     }
+
+    if (_startDate!.isBefore(_openDate!)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ngày bắt đầu không được nhỏ hơn ngày mở đăng ký'),
+        ),
+      );
+      return;
+    }
+
+    if (_endDate!.isBefore(_startDate!)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ngày kết thúc không được nhỏ hơn ngày bắt đầu'),
+        ),
+      );
+      return;
+    }
+
     if (finalPrice == null || finalPrice <= 0 || finalPrice > 100000000) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Giá phải trong (0, 100.000.000]')),

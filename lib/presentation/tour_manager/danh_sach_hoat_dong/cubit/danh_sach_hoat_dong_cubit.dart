@@ -8,6 +8,7 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
   DanhSachHoatDongCubit({int? placeId}) : super(const DanhSachHoatDongState()) {
     getDanhSachHoatDong(placeId: placeId);
   }
+  final bookingRepository = GetIt.instance<BookingRepository>();
 
   Future<void> getDanhSachHoatDong({int? placeId}) async {
     final finalPlaceId = placeId ?? state.placeId;
@@ -28,7 +29,7 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
         placeId: finalPlaceId,
       ),
     );
-    final bookingRepository = GetIt.instance<BookingRepository>();
+
     final result = await bookingRepository.getLocationActivities(
       placeId: finalPlaceId,
     );
@@ -46,6 +47,21 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
           originalDanhSachHoatDong: locationActivities,
         ),
       ),
+    );
+  }
+
+  Future<void> deleteLocationActivity(int id) async {
+    final result = await bookingRepository.deleteLocatinActivities(id);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          status: DanhSachHoatDongStatus.failure,
+          error: failure.message,
+        ),
+      ),
+      (response) {
+        getDanhSachHoatDong();
+      },
     );
   }
 
@@ -70,7 +86,6 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
   }
 
   void clearSearch() {
-    // Không cần truyền placeId vì đã có trong state
     getDanhSachHoatDong();
   }
 
