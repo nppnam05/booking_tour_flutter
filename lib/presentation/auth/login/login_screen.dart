@@ -56,7 +56,7 @@ class LoginScreen extends StatelessWidget {
             case 2:
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RouteName.tripList,
+                RouteName.scheduleTourguide,
                 (route) => false,
               );
               return;
