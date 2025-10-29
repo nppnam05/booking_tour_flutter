@@ -77,12 +77,7 @@ class TourGuideAssignmentCubit extends Cubit<TourGuideAssignmentState> {
           return guide;
         }).toList();
 
-    emit(
-      state.copyWith(
-        tourGuides: updatedList,
-        tourGuidesSearch: updatedTourGuidesSearch,
-      ),
-    );
+    emit(state.copyWith(tourGuides: updatedList, tourGuidesSearch: updatedTourGuidesSearch));
   }
 
   // click vào button
