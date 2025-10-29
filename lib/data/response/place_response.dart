@@ -15,7 +15,7 @@ class PlaceResponse {
 
   factory PlaceResponse.fromJson(Map<String, dynamic> json) =>
       _$PlaceResponseFromJson(json);
-      
+
   Map<String, dynamic> toJson() => _$PlaceResponseToJson(this);
 }
 

@@ -1,8 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
-import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
-import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 
 class CTTour {

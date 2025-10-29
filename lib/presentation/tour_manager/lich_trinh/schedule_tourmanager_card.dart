@@ -11,7 +11,7 @@ class ScheduleTourmanagerCard extends StatelessWidget {
   });
 
   String _formatDate(DateTime d) {
-    final two = (int n) => n.toString().padLeft(2, '0');
+    two(int n) => n.toString().padLeft(2, '0');
     return '${two(d.day)}/${two(d.month)}/${d.year}';
   }
 

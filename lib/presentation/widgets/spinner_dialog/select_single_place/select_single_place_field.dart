@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/presentation/widgets/spinner_dialog/select_single_place/select_single_place_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/spinner_dialog/select_single_place/select_single_place_state.dart';

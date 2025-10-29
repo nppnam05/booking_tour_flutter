@@ -17,6 +17,8 @@ class ChangePasswordScreen extends StatelessWidget {
       TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+  ChangePasswordScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

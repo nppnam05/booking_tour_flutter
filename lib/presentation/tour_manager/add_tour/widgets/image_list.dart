@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/bk_image.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/nullable_image.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
 

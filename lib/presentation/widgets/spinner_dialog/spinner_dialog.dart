@@ -1,5 +1,4 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:flutter/material.dart';
 
 class SpinnerDialog extends StatelessWidget {
