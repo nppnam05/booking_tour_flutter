@@ -237,6 +237,7 @@ class BookingRepositoryImp implements BookingRepository {
   }) async {
     try {
       var responses = await _coreService.getActivities(
+        locationActivityId: locationActivityId,
         sortBy: sortBy,
         order: order,
       );
