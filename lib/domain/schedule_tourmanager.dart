@@ -26,4 +26,20 @@ class ScheduleTourmanager {
     required this.desposit,
     required this.tour,
   });
+
+  factory ScheduleTourmanager.empty() {
+    return ScheduleTourmanager(
+      id: 0,
+      tourId: 0,
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
+      openDate: DateTime.now(),
+      maxSlot: 0,
+      finalPrice: 0,
+      gatheringTime: "00:00",
+      code: "",
+      desposit: 0,
+      tour: Trip.empty(),
+    );
+  }
 }

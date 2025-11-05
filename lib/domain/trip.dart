@@ -24,4 +24,18 @@ class Trip {
     required this.tourImages,
     required this.dayOfTours,
   });
+
+  factory Trip.empty() {
+    return Trip(
+      id: 0,
+      day: 0,
+      title: "",
+      price: 0,
+      percentDeposit: 0,
+      description: "",
+      provinces: [],
+      tourImages: [],
+      dayOfTours: [],
+    );
+  }
 }
