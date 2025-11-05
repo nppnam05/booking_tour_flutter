@@ -1,0 +1,261 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_test.dart';
+import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
+import 'package:flutter/material.dart';
+
+class TripCardDetail extends StatefulWidget {
+  final TripTest trip;
+  const TripCardDetail({super.key, required this.trip});
+
+  @override
+  State<TripCardDetail> createState() => _TripCardDetailState();
+}
+
+class _TripCardDetailState extends State<TripCardDetail> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isExpanded = !_isExpanded;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: AppColors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+              child: Image.network(
+                widget.trip.imageUrl,
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 150,
+                    color: AppColors.backgroundDisable,
+                    child: const Icon(Icons.image_not_supported),
+                  );
+                },
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.trip.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppFonts.fontSize18,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Thời gian',
+                            style: TextStyle(
+                              fontSize: AppFonts.fontSize14,
+                              color: AppColors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Địa điểm',
+                            style: TextStyle(
+                              fontSize: AppFonts.fontSize14,
+                              color: AppColors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            widget.trip.duration,
+                            style: const TextStyle(
+                              fontSize: AppFonts.fontSize14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.trip.location,
+                            style: const TextStyle(
+                              fontSize: AppFonts.fontSize14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Row(
+                    children: [
+                      ...List.generate(5, (index) {
+                        return Icon(
+                          Icons.star,
+                          color:
+                              index < widget.trip.rating.floor()
+                                  ? AppColors.warning
+                                  : AppColors.secondary,
+                          size: 18,
+                        );
+                      }),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${widget.trip.rating} (${widget.trip.reviewCount} đánh giá)',
+                        style: const TextStyle(
+                          fontSize: AppFonts.fontSize14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  AnimatedCrossFade(
+                    firstChild: const SizedBox.shrink(),
+                    secondChild: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
+                        const Divider(),
+                        const SizedBox(height: 16),
+
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.orange[50],
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Text(
+                                'Giá',
+                                style: TextStyle(
+                                  fontSize: AppFonts.fontSize14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 64),
+                            Text(
+                              '${widget.trip.price}/',
+                              style: const TextStyle(
+                                fontSize: AppFonts.fontSize16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.delete,
+                              ),
+                            ),
+                            const Text(
+                              'Người',
+                              style: TextStyle(
+                                fontSize: AppFonts.fontSize14,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Danh sách địa điểm đi chuyến',
+                          style: TextStyle(
+                            fontSize: AppFonts.fontSize14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        ...widget.trip.itinerary.map((item) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 18,
+                                  color: AppColors.delete,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: AppFonts.fontSize14,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+
+                        const SizedBox(height: 16),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            BkButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  "danh_sach_lich_trinh_user",
+                                );
+                              },
+                              title: "Chi tiết",
+                              borderRadius: 32,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    crossFadeState:
+                        _isExpanded
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                    duration: const Duration(milliseconds: 300),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

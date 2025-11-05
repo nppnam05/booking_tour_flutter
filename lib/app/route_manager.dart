@@ -24,6 +24,9 @@ import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/danh_sach_lich_trinh_user.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/thong_bao_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +64,9 @@ class RouteName {
   static final themDiaDanh = "them_dia_danh";
   static final suaDiaDanh = "sua_dia_danh";
   static final scheduleTourmanager = "scheduleTourmanager";
+  static final danhSachChuyenDi = "danh_sach_chuyen_di";
+  static final thongBao = "thong_bao";
+  static final danhSachLichTrinhUser = "danh_sach_lich_trinh_user";
 }
 
 class RouteManager {
@@ -97,5 +103,8 @@ class RouteManager {
           ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;
       return ParticipantsScreen(schedule: schedule);
     },
+    RouteName.danhSachChuyenDi: (context) => DanhSachChuyenDiScreen(),
+    RouteName.thongBao: (context) => ThongBaoScreen(),
+    RouteName.danhSachLichTrinhUser: (context) => DanhSachLichTrinhUser(),
   };
 }
