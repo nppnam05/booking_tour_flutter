@@ -5,12 +5,14 @@ class ToggleInputField extends StatefulWidget {
   final TextEditingController controller;
   final String title;
   final Color color;
+  final String? Function(String? value)? validator;
 
   const ToggleInputField({
     super.key,
     required this.controller,
     required this.title,
     required this.color,
+    required this.validator,
   });
 
   @override
@@ -30,7 +32,8 @@ class _ToggleInputFieldState extends State<ToggleInputField> {
 
         const SizedBox(height: 8.0),
 
-        TextField(
+        TextFormField(
+          validator: widget.validator,
           controller: widget.controller,
 
           // Điều khiển ẩn/hiện mật khẩu

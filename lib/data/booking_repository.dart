@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
+import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
@@ -54,6 +55,8 @@ import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:injectable/injectable.dart';
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
+
+  Future<Either<Failure, bool>> registerUser({required CreateUserRequest user});
 
   Future<Either<Failure, bool>> checkAssignment({
     required int scheduleId,
@@ -885,6 +888,18 @@ class BookingRepositoryImp implements BookingRepository {
 
       return Right(true);
     } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> registerUser({required CreateUserRequest user}) async {
+    try{
+      var response = await _coreService.registerUser(user);
+
+      return Right(true);
+    }
+    catch(e){
       return Left(ErrorHandler.handle(e).failure);
     }
   }
