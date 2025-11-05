@@ -18,6 +18,8 @@ class TripManagerResponse {
   List<String>? tourImages;
   List<ProvinceResponse>? locations;
   List<DayOfTourResponse>? dayOfTours;
+  int? totalReviews;
+  int? totalStars;
 
   TripManagerResponse({
     this.id,
@@ -29,6 +31,8 @@ class TripManagerResponse {
     this.tourImages,
     this.locations,
     this.dayOfTours,
+    this.totalReviews,
+    this.totalStars,
   });
 
   factory TripManagerResponse.fromJson(Map<String, dynamic> json) =>
@@ -56,6 +60,8 @@ extension TripManagerResponseMapper on TripManagerResponse {
       provinces: locations!.map((i) => i.map()).toList(),
       tourImages: tourImages!,
       dayOfTours: dayOfTours!.map((i) => i.map()).toList(),
+      totalReviews: totalReviews ?? 0 ,
+      totalStars: totalStars ?? 0  ,
     );
   }
 }
