@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:booking_tour_flutter/domain/day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 
@@ -12,7 +12,8 @@ class Trip {
   final List<Province> provinces;
   final List<String> tourImages;
   final List<DayOfTour> dayOfTours;
-
+  final int totalReviews ; 
+  final int totalStars; 
   Trip({
     required this.id,
     required this.day,
@@ -23,5 +24,7 @@ class Trip {
     required this.provinces,
     required this.tourImages,
     required this.dayOfTours,
+    required this.totalReviews,
+    required this.totalStars,
   });
 }

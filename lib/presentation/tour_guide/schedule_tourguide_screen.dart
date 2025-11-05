@@ -13,7 +13,7 @@ class ScheduleTourguideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ScheduleTourguideCubit()..loadSchedules(),
+      create: (_) => ScheduleTourguideCubit()..loadSchedules( ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Danh sách lịch trình'),

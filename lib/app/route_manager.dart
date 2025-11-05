@@ -24,9 +24,11 @@ import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
+
 
 class RouteName {
   RouteName._();
@@ -61,6 +63,7 @@ class RouteName {
   static final themDiaDanh = "them_dia_danh";
   static final suaDiaDanh = "sua_dia_danh";
   static final scheduleTourmanager = "scheduleTourmanager";
+  static final searchTour = "searchTour"; 
 }
 
 class RouteManager {
@@ -97,5 +100,6 @@ class RouteManager {
           ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;
       return ParticipantsScreen(schedule: schedule);
     },
+    RouteName.searchTour: (context) => SearchScreen(),
   };
 }
