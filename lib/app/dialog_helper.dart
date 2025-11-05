@@ -1,4 +1,7 @@
 import 'package:booking_tour_flutter/app/app_navigator.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
+import 'package:booking_tour_flutter/presentation/widgets_dialog/general_dialog.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import '../presentation/widgets_dialog/generic_selected_dialog.dart';
@@ -109,5 +112,62 @@ class DialogHelper {
 
     _isShowedDialog = false;
     return result;
+  }
+
+  static Future<void> showInformDialog(Widget body) {
+    return showDialog(
+      barrierDismissible: true,
+      context: AppNavigator.currentContext,
+      builder: (context) {
+        return GeneralDialog(
+          title: "Thông báo",
+          body: body,
+          footer: Center(
+            child: BkButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              title: "Xác nhận",
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Future<bool> showConfirmDialog({
+    required Widget body,
+  }) async {
+    var result = await showDialog<bool?>(
+      barrierDismissible: true,
+      context: AppNavigator.currentContext,
+      builder: (context) {
+        return GeneralDialog(
+          title: "Thông báo",
+          body: body,
+          footer: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              BkButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                backgroundColor: AppColors.error,
+                title: "Hủy",
+              ),
+              SizedBox(width: 10),
+              BkButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                title: "Xác nhận",
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    return result ?? false;
   }
 }
