@@ -34,7 +34,7 @@ class UpdateTourScreen extends StatelessWidget {
       child: AddTourScreen(
         title: "Sửa chuyến đi",
         onSave: () async {
-          DialogHelper.showLoadingDialog();
+          await DialogHelper.showLoadingDialog();
           var isUpdated = await context.read<AddTourCubit>().update();
           DialogHelper.dismissDialog();
           if (isUpdated) {

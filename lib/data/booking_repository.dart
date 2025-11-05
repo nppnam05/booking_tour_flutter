@@ -2,10 +2,13 @@ import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
+import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/booking_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/participant_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
@@ -21,6 +24,7 @@ import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/domain/assignment.dart';
@@ -140,6 +144,9 @@ abstract class BookingRepository {
   Future<Either<Failure, int>> addSchedule(AddScheduleRequest request);
   Future<Either<Failure, bool>> updateSchedule(UpdateScheduleRequest request);
   Future<Either<Failure, List<ScheduleTourmanager>>> getAllSchedule();
+  Future<Either<Failure, List<ScheduleTourmanager>>> getSchedulesByTourId(
+    int tourId,
+  );
   Future<Either<Failure, void>> deleteScheduleById({required int id});
   Future<Either<Failure, List<Participant>>> getParticipantsByScheduleId({
     required int scheduleId,
@@ -151,8 +158,26 @@ abstract class BookingRepository {
   Future<Either<Failure, TourAssignment>> getTourAssignmentByTourId({
     required int tourId,
   });
+
   Future<Either<Failure, List<ScheduleAssignment>>>
   getScheduleAssignmentsByTourId({required int tourId});
+
+  Future<Either<Failure, List<Booking>>> getBookingByUserId({
+    required int userId,
+  });
+  Future<Either<Failure, Booking>> changeBookingTour({
+    required int bookingId,
+    required int scheduleId,
+  });
+
+  Future<Either<Failure, Booking>> deleteBooking(int bookingId);
+
+  Future<Either<Failure, void>> createReview({
+    required int userId,
+    required int scheduleId,
+    required String content,
+    required int rating,
+  });
 }
 
 @Singleton(as: BookingRepository)
@@ -242,6 +267,7 @@ class BookingRepositoryImp implements BookingRepository {
   }) async {
     try {
       var responses = await _coreService.getActivities(
+        locationActivityId: locationActivityId,
         sortBy: sortBy,
         order: order,
       );
@@ -655,6 +681,30 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
+  Future<Either<Failure, List<ScheduleTourmanager>>> getSchedulesByTourId(
+    int tourId,
+  ) async {
+    try {
+      final response = await _coreService.getSchedulesByTourId(tourId: tourId);
+      final data = response.data as List<dynamic>;
+
+      final schedules =
+          data
+              .map(
+                (json) =>
+                    ScheduleTourmanagerResponse.fromJson(
+                      json as Map<String, dynamic>,
+                    ).map(),
+              )
+              .toList();
+
+      return Right(schedules);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> deleteScheduleById({required int id}) async {
     try {
       await _coreService.deleteScheduleById(id: id);
@@ -750,6 +800,90 @@ class BookingRepositoryImp implements BookingRepository {
               .toList();
 
       return Right(scheduleAssignments);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Booking>>> getBookingByUserId({
+    required int userId,
+  }) async {
+    try {
+      var responses = await _coreService.getBookingByUserId(userId);
+
+      var data = responses.data as List<dynamic>;
+
+      var bookingResponse = data.map(
+        (json) => BookingResponse.fromJson(json as Map<String, dynamic>),
+      );
+
+      var bookings = bookingResponse.map((response) => response.map()).toList();
+
+      return Right(bookings);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Booking>> changeBookingTour({
+    required int bookingId,
+    required int scheduleId,
+  }) async {
+    try {
+      var changeBookingRequest = ChangeBookingRequest(
+        scheduleId: scheduleId,
+        bookingId: bookingId,
+      );
+      var responses = await _coreService.changeBooking(changeBookingRequest);
+
+      var data = responses.data as Map<String, dynamic>;
+
+      var result = BookingResponse.fromJson(data);
+
+      return Right(result.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Booking>> deleteBooking(int bookingId) async {
+    try {
+      var responses = await _coreService.deleteBooking(bookingId);
+
+      var data = responses.data as Map<String, dynamic>;
+
+      var result = BookingResponse.fromJson(data);
+
+      return Right(result.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> createReview({
+    required int userId,
+    required int scheduleId,
+    required String content,
+    required int rating,
+  }) async {
+    try {
+      var createReviewRequest = CreateReviewRequest(
+        userId: userId,
+        scheduleId: scheduleId,
+        content: content,
+        rating: rating,
+      );
+      var responses = await _coreService.createReview(createReviewRequest);
+
+      // var data = responses.data as Map<String, dynamic>;
+
+      // var result = BookingResponse.fromJson(data);
+
+      return Right(true);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

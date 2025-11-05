@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
@@ -6,7 +7,10 @@ import 'package:booking_tour_flutter/presentation/auth/forget_password/forget_pa
 import 'package:booking_tour_flutter/presentation/auth/register/register_screen.dart';
 import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
+import 'package:booking_tour_flutter/presentation/profile/change_schedule/change_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/detail_paid_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
+import 'package:booking_tour_flutter/presentation/profile/review_schedule/review_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
@@ -35,6 +39,9 @@ class RouteName {
 
   static final home = "home";
   static final profile = "profile";
+  static final profileDetailPaidSchedule = "profile_detail_paid_schedule";
+  static final profileChangeSchedule = "profile_change_schedule";
+  static final profileReviewSchedule = "profile_review_schedule";
 
   static final menu = "menu";
   static final themLichTrinh = "them_lich_trinh";
@@ -101,5 +108,9 @@ class RouteManager {
       return ParticipantsScreen(schedule: schedule);
     },
     RouteName.searchTour: (context) => SearchScreen(),
+    RouteName.profileDetailPaidSchedule:
+        (context) => DetailPaidScheduleScreen(),
+    RouteName.profileChangeSchedule: (context) => const ChangeScheduleScreen(),
+    RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen(),
   };
 }

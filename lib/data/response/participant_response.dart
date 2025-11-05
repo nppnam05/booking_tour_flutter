@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/data/response/booking_response.dart';
 import 'package:booking_tour_flutter/domain/participants.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -27,23 +28,23 @@ class UserCompletedScheduleResponse {
   Map<String, dynamic> toJson() => _$UserCompletedScheduleResponseToJson(this);
 }
 
-@JsonSerializable()
-class BookingResponse {
-  int? userId;
-  int? numPeople;
-  String? phone;
+// @JsonSerializable()
+// class BookingResponse {
+//   int? userId;
+//   int? numPeople;
+//   String? phone;
 
-  BookingResponse({
-    this.userId,
-    this.numPeople,
-    this.phone,
-  });
+//   BookingResponse({
+//     this.userId,
+//     this.numPeople,
+//     this.phone,
+//   });
 
-  factory BookingResponse.fromJson(Map<String, dynamic> json) =>
-      _$BookingResponseFromJson(json);
+//   factory BookingResponse.fromJson(Map<String, dynamic> json) =>
+//       _$BookingResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$BookingResponseToJson(this);
-}
+//   Map<String, dynamic> toJson() => _$BookingResponseToJson(this);
+// }
 
 extension UserCompletedScheduleMapper on UserCompletedScheduleResponse {
   List<Participant> mapToParticipants() {

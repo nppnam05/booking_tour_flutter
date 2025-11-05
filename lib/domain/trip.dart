@@ -27,4 +27,20 @@ class Trip {
     required this.totalReviews,
     required this.totalStars,
   });
+
+  factory Trip.empty() {
+    return Trip(
+      id: 0,
+      day: 0,
+      title: "",
+      price: 0,
+      percentDeposit: 0,
+      description: "",
+      provinces: [],
+      tourImages: [],
+      dayOfTours: [],
+      totalReviews: 0,
+      totalStars : 0 , 
+    );
+  }
 }

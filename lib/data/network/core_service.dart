@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -60,6 +62,11 @@ abstract class CoreService {
 
   @GET("/Schedule")
   Future<RestResponse> getAllSchedules();
+
+  @GET("/Schedule/tour/{idtour}")
+  Future<RestResponse> getSchedulesByTourId({
+    @Path("idtour") required int tourId,
+  });
 
   @DELETE("/Schedule/{id}")
   Future<RestResponse> deleteScheduleById({@Path("id") required int id});
@@ -167,5 +174,16 @@ abstract class CoreService {
   Future<AssignmentPlaceResponse> addPlace(
     @Body() Map<String, dynamic> request,
   );
- 
+
+  @GET("/Booking/byUser/{userId}")
+  Future<RestResponse> getBookingByUserId(@Path("userId") int userId);
+
+  @POST("/Booking/changeBooking")
+  Future<RestResponse> changeBooking(@Body() ChangeBookingRequest request);
+
+  @DELETE("/Booking/{bookingId}")
+  Future<RestResponse> deleteBooking(@Path("bookingId") bookingId);
+
+  @POST("/Review")
+  Future<RestResponse> createReview(@Body() CreateReviewRequest request);
 }
