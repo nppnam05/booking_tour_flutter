@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'schedule_tourmanager_response.g.dart';
@@ -18,6 +19,7 @@ class ScheduleTourmanagerResponse {
   String? code;
   int? desposit;
   TripResponse? tour;
+ 
 
   ScheduleTourmanagerResponse({
     this.id,
@@ -53,6 +55,7 @@ class TripResponse {
     this.price,
     this.tourImages,
     this.locations,
+    
   });
 
   factory TripResponse.fromJson(Map<String, dynamic> json) =>
@@ -74,6 +77,10 @@ class TripResponse {
       provinces: provinceList,
       tourImages: images,
       dayOfTours: [],
+      totalReviews: 0 ,
+      totalStars: 0 ,
+
+
     );
   }
 }
@@ -124,6 +131,8 @@ extension ScheduleTourmanagerResponseMapper on ScheduleTourmanagerResponse {
             provinces: [],
             tourImages: [],
             dayOfTours: [],
+            totalReviews: 0, 
+            totalStars: 0,
           ),
     );
   }

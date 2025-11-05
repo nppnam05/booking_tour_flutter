@@ -1,6 +1,8 @@
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/assignment_card.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/cubit/assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/cubit/assignment_state.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/schedule_assignment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,14 +79,19 @@ class AssignmentScreen extends StatelessWidget {
                   final assignment = state.assignments[index];
                   return AssignmentCard(
                     assignment: assignment,
-                    onViewDetails: () {
+                    onViewDetails: () async {
+
+                      var cubit = context.read<ScheduleAssignmentCubit>();
+
+                      cubit.setTourId(tourId: assignment.id);
+                      
+                      await cubit.loadData();
+
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder:
-                              (context) => ScheduleAssignmentScreen(
-                                tourId: assignment.id,
-                              ),
+                          builder: (context) => ScheduleAssignmentScreen(),
                         ),
                       );
                     },
