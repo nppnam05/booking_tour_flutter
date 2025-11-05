@@ -1,5 +1,4 @@
 import 'package:booking_tour_flutter/app/route_manager.dart';
-import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
 import 'package:booking_tour_flutter/presentation/trip/cubit/trip_bloc.dart';
@@ -13,6 +12,8 @@ import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dra
 class TripScreen extends StatelessWidget {
   final _cubit = TripCubit()..loadTrips();
 
+  TripScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -23,12 +24,13 @@ class TripScreen extends StatelessWidget {
           backgroundColor: Colors.teal,
           foregroundColor: Colors.white,
           leading: Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
+            builder:
+                (context) => IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
           ),
         ),
         drawer: DrawerBar(),
@@ -81,10 +83,7 @@ class TripScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 border: Border(
-                  top: BorderSide(
-                    color: Colors.grey[100]!,
-                    width: 1,
-                  ),
+                  top: BorderSide(color: Colors.grey[100]!, width: 1),
                 ),
               ),
               child: ElevatedButton.icon(

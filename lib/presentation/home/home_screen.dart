@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomeScreen extends StatelessWidget {
   final _cubit = HomeCubit()..syncPost();
 
+  HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -17,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: Text("home")),
         body: BlocBuilder<HomeCubit, HomeState>(
-          bloc: _cubit, 
+          bloc: _cubit,
           builder:
               (context, state) => CustomScrollView(
                 slivers: [
@@ -40,7 +42,9 @@ class HomeScreen extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: ElevatedButton(
                       onPressed: () {
-                        BookingDialog.selectSingleActivity(locationActivityId: 1);
+                        BookingDialog.selectSingleActivity(
+                          locationActivityId: 1,
+                        );
                       },
                       child: Text("select activity"),
                     ),

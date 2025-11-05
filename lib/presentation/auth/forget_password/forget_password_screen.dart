@@ -15,6 +15,8 @@ class ForgetPasswordScreen extends StatelessWidget {
 
   final TextEditingController _controllerEmail = TextEditingController();
 
+  ForgetPasswordScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

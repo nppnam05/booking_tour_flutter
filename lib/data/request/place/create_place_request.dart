@@ -4,11 +4,11 @@ import 'package:json_annotation/json_annotation.dart';
 part 'create_place_request.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PlaceResponse {
+class CreatePlaceRequestData {
   String? name;
   ProvinceResponse? location;
 
-  PlaceResponse({this.name, this.location});
+  CreatePlaceRequestData({this.name, this.location});
 
-  Map<String, dynamic> toJson() => _$PlaceResponseToJson(this);
+  Map<String, dynamic> toJson() => _$CreatePlaceRequestDataToJson(this);
 }

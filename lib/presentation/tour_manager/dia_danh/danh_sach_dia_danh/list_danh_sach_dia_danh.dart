@@ -45,7 +45,7 @@ class ListDiaDanhItem extends StatelessWidget {
                       _buildIconText(
                         Icons.park,
                         Colors.green,
-                        "Tỉnh thành: ${diaDanh.province.name}",
+                        "Tỉnh thành: ${diaDanh.province?.name ?? ""}",
                       ),
                     ],
                   ),
