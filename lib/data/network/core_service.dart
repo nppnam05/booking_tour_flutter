@@ -112,12 +112,16 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
-  @GET("/Tour")
-  Future<RestResponse> getTrips({
-    @Query("SortBy") String sortBy = "Title",
-    @Query("SortOrder") String order = "ASC",
-    @Query("filter") String? filter,
-  });
+    @GET("/Tour")
+    Future<RestResponse> getTrips({
+      @Query("SortBy") String sortBy = "Title",
+      @Query("SortOrder") String order = "ASC",
+      @Query("filter") String? filter,
+      @Query("provinceId") int? provinceId ,
+      @Query("startDate") DateTime? startDate,
+      @Query("endDate") DateTime? endDate,
+      @Query("stars") int? stars,
+    });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({@Path("id") required int id});
 

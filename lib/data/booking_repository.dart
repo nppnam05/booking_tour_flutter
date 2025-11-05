@@ -52,7 +52,6 @@ import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:injectable/injectable.dart';
-
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
 
@@ -64,6 +63,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<TourGuide>>> getTourGuides({
     required int idschedule,
   });
+
 
   Future<Either<Failure, ScheduleAssignmentTourguide>>
   getScheduleAssignmentById({required int idSchedule});
@@ -96,7 +96,12 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getTrips({
     String sortBy = "Title",
     String order = "ASC",
-    String? filter,
+    String? filter, 
+    int? provinceId,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? stars,
+    
   });
   Future<Either<Failure, void>> deleteTrip({required int id});
 
@@ -357,13 +362,22 @@ class BookingRepositoryImp implements BookingRepository {
     String sortBy = "Title",
     String order = "ASC",
     String? filter,
+    int? provinceId,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? stars,
   }) async {
     try {
       var responses = await _coreService.getTrips(
         sortBy: sortBy,
         order: order,
-        filter: filter,
+        filter: filter?.isNotEmpty  == true ? filter : null ,
+        provinceId: provinceId,
+        startDate: startDate,
+        endDate: endDate,
+        stars: stars,
       );
+   
       var data = responses.data as List<dynamic>;
       var tripResponses = data.map(
         (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
@@ -389,7 +403,6 @@ class BookingRepositoryImp implements BookingRepository {
   Future<Either<Failure, List<Assignment>>> getAssignments() async {
     try {
       var responses = await _coreService.getAssignments();
-      print('=== DEBUG Assignment Response ===');
       print('Response data: ${responses.data}');
 
       var data = responses.data as List<dynamic>;
@@ -408,7 +421,7 @@ class BookingRepositoryImp implements BookingRepository {
       print('Assignments count: ${assignments.length}');
       return Right(assignments);
     } catch (e, stackTrace) {
-      print('=== ERROR in getAssignments ===');
+
       print('Error: $e');
       print('StackTrace: $stackTrace');
       return Left(ErrorHandler.handle(e).failure);
@@ -446,7 +459,6 @@ class BookingRepositoryImp implements BookingRepository {
 
       createTourRequest.tourImages = encodeImages;
 
-      //TODO: write api to receive ratainImage and file
       var response = await _coreService.createTour(createTourRequest);
       var json = response.data as Map<String, dynamic>;
       var trip = TripManagerResponse.fromJson(json).map();

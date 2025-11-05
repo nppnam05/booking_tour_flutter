@@ -608,12 +608,20 @@ class _CoreService implements CoreService {
     String sortBy = "Title",
     String order = "ASC",
     String? filter,
+    int? provinceId,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? stars,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'SortBy': sortBy,
       r'SortOrder': order,
       r'filter': filter,
+      r'provinceId': provinceId,
+      r'startDate': startDate?.toIso8601String(),
+      r'endDate': endDate?.toIso8601String(),
+      r'stars': stars,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
