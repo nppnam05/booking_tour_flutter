@@ -52,6 +52,7 @@ import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:injectable/injectable.dart';
+
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
 
@@ -63,7 +64,6 @@ abstract class BookingRepository {
   Future<Either<Failure, List<TourGuide>>> getTourGuides({
     required int idschedule,
   });
-
 
   Future<Either<Failure, ScheduleAssignmentTourguide>>
   getScheduleAssignmentById({required int idSchedule});
@@ -96,12 +96,11 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getTrips({
     String sortBy = "Title",
     String order = "ASC",
-    String? filter, 
+    String? filter,
     int? provinceId,
     DateTime? startDate,
     DateTime? endDate,
     int? stars,
-    
   });
   Future<Either<Failure, void>> deleteTrip({required int id});
 
@@ -181,6 +180,9 @@ abstract class BookingRepository {
     required String content,
     required int rating,
   });
+
+  Future<Either<Failure, List<Trip>>> getMostFavoriteTour();
+  Future<Either<Failure, List<Trip>>> getMostRecent();
 }
 
 @Singleton(as: BookingRepository)
@@ -371,13 +373,13 @@ class BookingRepositoryImp implements BookingRepository {
       var responses = await _coreService.getTrips(
         sortBy: sortBy,
         order: order,
-        filter: filter?.isNotEmpty  == true ? filter : null ,
+        filter: filter?.isNotEmpty == true ? filter : null,
         provinceId: provinceId,
         startDate: startDate,
         endDate: endDate,
         stars: stars,
       );
-   
+
       var data = responses.data as List<dynamic>;
       var tripResponses = data.map(
         (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
@@ -403,14 +405,8 @@ class BookingRepositoryImp implements BookingRepository {
   Future<Either<Failure, List<Assignment>>> getAssignments() async {
     try {
       var responses = await _coreService.getAssignments();
-      print('Response data: ${responses.data}');
 
       var data = responses.data as List<dynamic>;
-      print('Data length: ${data.length}');
-
-      if (data.isNotEmpty) {
-        print('First item: ${data.first}');
-      }
 
       var assignmentResponses = data.map(
         (json) => AssignmentResponse.fromJson(json as Map<String, dynamic>),
@@ -418,10 +414,8 @@ class BookingRepositoryImp implements BookingRepository {
       var assignments =
           assignmentResponses.map((response) => response.map()).toList();
 
-      print('Assignments count: ${assignments.length}');
       return Right(assignments);
     } catch (e, stackTrace) {
-
       print('Error: $e');
       print('StackTrace: $stackTrace');
       return Left(ErrorHandler.handle(e).failure);
@@ -898,6 +892,37 @@ class BookingRepositoryImp implements BookingRepository {
       // var result = BookingResponse.fromJson(data);
 
       return Right(true);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Trip>>> getMostFavoriteTour() async {
+    try {
+      final responses = await _coreService.getMostFavoriteTour();
+      var data = responses.data as List<dynamic>;
+      var tripResponses = data.map(
+        (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var trips = tripResponses.map((response) => response.map()).toList();
+
+      return Right(trips);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Trip>>> getMostRecent() async {
+    try {
+      final responses = await _coreService.getMostFavoriteTour();
+      var data = responses.data as List<dynamic>;
+      var tripResponses = data.map(
+        (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
+      );
+      var trips = tripResponses.map((response) => response.map()).toList();
+      return Right(trips);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

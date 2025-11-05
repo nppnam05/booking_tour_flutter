@@ -1,11 +1,11 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
-import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_test.dart';
+import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 
 class TripCardDetail extends StatefulWidget {
-  final TripTest trip;
+  final Trip trip;
   const TripCardDetail({super.key, required this.trip});
 
   @override
@@ -14,6 +14,16 @@ class TripCardDetail extends StatefulWidget {
 
 class _TripCardDetailState extends State<TripCardDetail> {
   bool _isExpanded = false;
+
+  List<String> _extractLocationNames(Trip trip) {
+    final names =
+        trip.dayOfTours
+            .expand((day) => day.dayActivities)
+            .map((act) => act.locationActivity.name)
+            .where((name) => name.isNotEmpty)
+            .toList();
+    return names;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +55,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                 topRight: Radius.circular(12),
               ),
               child: Image.network(
-                widget.trip.imageUrl,
+                widget.trip.tourImages.first,
                 height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -65,7 +75,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.trip.name,
+                    widget.trip.title,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: AppFonts.fontSize18,
@@ -101,7 +111,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            widget.trip.duration,
+                            widget.trip.day.toString(),
                             style: const TextStyle(
                               fontSize: AppFonts.fontSize14,
                               fontWeight: FontWeight.w600,
@@ -109,7 +119,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            widget.trip.location,
+                            widget.trip.provinces.first.name,
                             style: const TextStyle(
                               fontSize: AppFonts.fontSize14,
                               fontWeight: FontWeight.w600,
@@ -128,7 +138,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                         return Icon(
                           Icons.star,
                           color:
-                              index < widget.trip.rating.floor()
+                              index < widget.trip.totalStars
                                   ? AppColors.warning
                                   : AppColors.secondary,
                           size: 18,
@@ -136,7 +146,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                       }),
                       const SizedBox(width: 8),
                       Text(
-                        '${widget.trip.rating} (${widget.trip.reviewCount} đánh giá)',
+                        '${widget.trip.totalStars} (${widget.trip.totalReviews} đánh giá)',
                         style: const TextStyle(
                           fontSize: AppFonts.fontSize14,
                           fontWeight: FontWeight.w500,
@@ -200,7 +210,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
 
                         const SizedBox(height: 12),
 
-                        ...widget.trip.itinerary.map((item) {
+                        ..._extractLocationNames(widget.trip).map((item) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Row(

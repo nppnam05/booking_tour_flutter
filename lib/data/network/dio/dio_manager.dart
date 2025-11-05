@@ -10,8 +10,8 @@ class HTTPHeader {
 class HTTPValue {
   static final String contentJson = "application/json";
   // static final String baseURL = "http://192.168.16.89:8080/";
-  static final String baseURL = "http://10.221.170.133:8080/";
-  // static final String baseURL = "http://tt1220-001-site1.ntempurl.com";
+  //static final String baseURL = "http://10.221.170.133:8080/";
+  static final String baseURL = "http://tt1220-001-site1.ntempurl.com";
 }
 
 @module

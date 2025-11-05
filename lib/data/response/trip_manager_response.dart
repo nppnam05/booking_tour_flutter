@@ -42,9 +42,9 @@ class TripManagerResponse {
 
 extension TripManagerResponseMapper on TripManagerResponse {
   Trip map() {
-    if (locations == null) {
-      throw Exception("province is null");
-    }
+    // if (locations == null) {
+    //   throw Exception("province is null");
+    // }
 
     locations = locations ?? [];
     tourImages = tourImages ?? [];
@@ -60,8 +60,8 @@ extension TripManagerResponseMapper on TripManagerResponse {
       provinces: locations!.map((i) => i.map()).toList(),
       tourImages: tourImages!,
       dayOfTours: dayOfTours!.map((i) => i.map()).toList(),
-      totalReviews: totalReviews ?? 0 ,
-      totalStars: totalStars ?? 0  ,
+      totalReviews: totalReviews ?? 0,
+      totalStars: totalStars ?? 0,
     );
   }
 }

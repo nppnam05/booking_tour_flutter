@@ -10,6 +10,7 @@ import 'package:booking_tour_flutter/data/response/location_activity_response.da
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
@@ -112,16 +113,16 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
-    @GET("/Tour")
-    Future<RestResponse> getTrips({
-      @Query("SortBy") String sortBy = "Title",
-      @Query("SortOrder") String order = "ASC",
-      @Query("filter") String? filter,
-      @Query("provinceId") int? provinceId ,
-      @Query("startDate") DateTime? startDate,
-      @Query("endDate") DateTime? endDate,
-      @Query("stars") int? stars,
-    });
+  @GET("/Tour")
+  Future<RestResponse> getTrips({
+    @Query("SortBy") String sortBy = "Title",
+    @Query("SortOrder") String order = "ASC",
+    @Query("filter") String? filter,
+    @Query("provinceId") int? provinceId,
+    @Query("startDate") DateTime? startDate,
+    @Query("endDate") DateTime? endDate,
+    @Query("stars") int? stars,
+  });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({@Path("id") required int id});
 
@@ -191,4 +192,10 @@ abstract class CoreService {
 
   @POST("/Review")
   Future<RestResponse> createReview(@Body() CreateReviewRequest request);
+
+  @GET("/Tour/getMostFavoriteTour")
+  Future<RestResponse> getMostFavoriteTour();
+
+  @GET("/Tour/getMostRecent")
+  Future<RestResponse> getMostRecent();
 }
