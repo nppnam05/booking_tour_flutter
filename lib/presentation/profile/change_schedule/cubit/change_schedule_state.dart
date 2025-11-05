@@ -5,11 +5,22 @@ abstract class ChangeScheduleState {}
 
 class ChangeScheduleLoadSuccess extends ChangeScheduleState {
   final List<ScheduleTourmanager> schedules;
+  final int bookingId;
+  ChangeScheduleLoadSuccess({
+    required this.schedules,
+    required this.bookingId,
+  });
 
-  ChangeScheduleLoadSuccess({required this.schedules});
-
-  ChangeScheduleLoadSuccess copyWith({List<ScheduleTourmanager>? schedules}) {
-    return ChangeScheduleLoadSuccess(schedules: schedules ?? this.schedules);
+  ChangeScheduleLoadSuccess copyWith({
+    List<ScheduleTourmanager>? schedules,
+    int? bookingId,
+    String? errorMessage,
+    String? message
+  }) {
+    return ChangeScheduleLoadSuccess(
+      schedules: schedules ?? this.schedules,
+      bookingId: bookingId ?? this.bookingId,
+    );
   }
 }
 
@@ -20,3 +31,5 @@ class ChangeScheduleLoadFail extends ChangeScheduleState {
 }
 
 class ChangeScheduleLoading extends ChangeScheduleState {}
+
+class ChangedSchedule extends ChangeScheduleState {}

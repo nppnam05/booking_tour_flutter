@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
@@ -105,7 +106,7 @@ class RouteManager {
     },
     RouteName.profileDetailPaidSchedule:
         (context) => DetailPaidScheduleScreen(),
-    RouteName.profileChangeSchedule: (context) => ChangeScheduleScreen(),
-    RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen()
+    RouteName.profileChangeSchedule: (context) => const ChangeScheduleScreen(),
+    RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen(),
   };
 }

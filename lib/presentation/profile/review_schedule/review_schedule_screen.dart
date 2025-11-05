@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/widgets/stars_widget.dart';
@@ -111,8 +112,20 @@ class ReviewScheduleScreen extends StatelessWidget {
                           "Chất lượng chuyến đi",
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        BlocBuilder<ReviewScheduleCubit, ReviewScheduleState>(
+                        BlocConsumer<ReviewScheduleCubit, ReviewScheduleState>(
                           bloc: _cubit,
+                          listener: (context, state) async {
+                            if (state.errorMessage != null) {
+                              await DialogHelper.showInformDialog(
+                                Text(state.errorMessage!),
+                              );
+                            }
+                            if (state.sentReview) {
+                              await DialogHelper.showInformDialog(
+                                Text("Gửi đánh giá thành công"),
+                              );
+                            }
+                          },
                           builder: (context, state) {
                             return StarRating(
                               rating: state.stars,
@@ -141,7 +154,7 @@ class ReviewScheduleScreen extends StatelessWidget {
 
           SliverToBoxAdapter(child: SizedBox(height: 50)),
           SliverToBoxAdapter(
-            child: Center(child: BkButton(onPressed: () {}, title: "Gửi")),
+            child: Center(child: BkButton(onPressed: () {_cubit.sendReview();}, title: "Gửi")),
           ),
         ],
       ),

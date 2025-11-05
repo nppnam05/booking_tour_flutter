@@ -1,5 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/app/formatter_helper.dart';
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChangeScheduleScreen extends StatelessWidget {
-  final ChangeScheduleCubit _cubit = ChangeScheduleCubit()..loadData();
+  const ChangeScheduleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +20,22 @@ class ChangeScheduleScreen extends StatelessWidget {
   }
 
   Widget _buildAll(BuildContext context) {
-    return BlocBuilder(
-      bloc: _cubit,
+    return BlocConsumer<ChangeScheduleCubit, ChangeScheduleState>(
+      bloc: context.read<ChangeScheduleCubit>(),
+      listener: (context, state) async {
+        if (state is ChangedSchedule) {
+          await DialogHelper.showInformDialog(Text("Đổi chuyến đi thành công"));
+          if (context.mounted) {
+            Navigator.of(context).pop();
+          }
+        }
+        if (state is ChangeScheduleLoadFail) {
+          DialogHelper.showInformDialog(Text(state.message));
+          if (context.mounted) {
+            Navigator.of(context).pop();
+          }
+        }
+      },
       builder: (context, state) {
         if (state is ChangeScheduleLoadSuccess) {
           return _buildSuccess(context, state);
@@ -102,7 +118,11 @@ class ChangeScheduleScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Center(
                     child: BkButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await context.read<ChangeScheduleCubit>().changeBooking(
+                          schedule.id,
+                        );
+                      },
                       title: "Xác nhận",
                       backgroundColor: AppColors.warning,
                       textColor: AppColors.black,
