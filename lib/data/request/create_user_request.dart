@@ -26,5 +26,8 @@ class CreateUserRequest {
     required this.bankBranch,
   });
 
+  factory CreateUserRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserRequestFromJson(json);
+
   Map<String, dynamic> toJson() => _$CreateUserRequestToJson(this);
 }

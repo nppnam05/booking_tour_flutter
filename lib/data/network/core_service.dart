@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
@@ -30,8 +31,11 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
+  @POST("/User/check-account")
+  Future<RestResponse> checkAccount(@Body() Map<String, dynamic> checkAccount);
+
   @POST("/User")
-  Future<RestResponse> registerUser(CreateUserRequest user);
+  Future<RestResponse> registerUser(@Body() Map<String, dynamic> user);
 
   @GET("/Schedule/assignment/{tourId}")
   Future<RestResponse> getScheduleAssignments(@Path("tourId") int tourId);

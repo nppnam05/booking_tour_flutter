@@ -20,11 +20,40 @@ class _CoreService implements CoreService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<RestResponse> registerUser(CreateUserRequest user) async {
+  Future<RestResponse> checkAccount(Map<String, dynamic> checkAccount) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(checkAccount);
+    final _options = _setStreamType<RestResponse>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/User/check-account',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late RestResponse _value;
+    try {
+      _value = RestResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<RestResponse> registerUser(Map<String, dynamic> user) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(user);
     final _options = _setStreamType<RestResponse>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
