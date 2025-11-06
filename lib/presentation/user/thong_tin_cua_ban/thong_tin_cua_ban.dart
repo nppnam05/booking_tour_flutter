@@ -33,8 +33,8 @@ class ThongTinCuaBanScreen extends StatelessWidget {
             print("aaaa ${state.user.name}");
             return Column(
               children: [
-                SizedBox(height: 20),
-                _buidInformation(state.user),
+                // SizedBox(height: 20),
+                // _buidInformation(state.user),
 
                 SizedBox(height: 20),
                 _buildTextFeild(state.user, context, controller),
@@ -129,7 +129,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
     TextEditingController controller,
   ) {
     return Padding(
-      padding: EdgeInsetsGeometry.all(15),
+      padding: const EdgeInsets.all(15),
       child: Column(
         children: [
           TextfieldNotTilte(
