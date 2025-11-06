@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThongTinCuaBanScreen extends StatelessWidget {
   final _cubit = ThongTinCuaBanCubit()..syncUser(3);
+
   final TextEditingController controller = TextEditingController();
   ThongTinCuaBanScreen({super.key});
 
@@ -113,7 +114,9 @@ class ThongTinCuaBanScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: ClipOval(
-            child: Image.network(user.avatarPath, fit: BoxFit.cover),
+            child: Image.network(user.avatarPath, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
+              return Container(color: Colors.black,);
+            },),
           ),
         ),
 
@@ -151,6 +154,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
           ),
 
           SizedBox(height: 10),
+
           TextfieldNotTilte(
             label: "SDT",
             value: user.phone,
@@ -170,6 +174,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
           ),
 
           SizedBox(height: 10),
+
           TextfieldNotTilte(
             label: "Email",
             value: user.email,
