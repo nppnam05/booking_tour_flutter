@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_cubit.dart';
@@ -15,8 +16,6 @@ class ThongTinCuaBanScreen extends StatelessWidget {
   final TextEditingController controller = TextEditingController();
   ThongTinCuaBanScreen({super.key});
 
-  
-
   @override
   Widget build(BuildContext context) {
     //final user = context.read<AuthCubit>().state.id;
@@ -30,17 +29,17 @@ class ThongTinCuaBanScreen extends StatelessWidget {
         body: BlocConsumer<ThongTinCuaBanCubit, ThongTinCuaBanState>(
           listener: (context, state) {},
           builder: (context, state) {
-            print("aaaa ${state.user.name}");
+            final cubit = context.read<ThongTinCuaBanCubit>();
             return Column(
               children: [
-                // SizedBox(height: 20),
-                // _buidInformation(state.user),
+                SizedBox(height: 20),
+                _buidInformation(state.user),
 
                 SizedBox(height: 20),
-                _buildTextFeild(state.user, context, controller),
+                _buildTextFeild(cubit, state.user, context),
 
                 SizedBox(height: 50),
-                _buildButton(context),
+                _buildButton(cubit, context),
               ],
             );
           },
@@ -50,6 +49,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
   }
 
   Widget _buildDialog(
+    ThongTinCuaBanCubit cubit,
     BuildContext context,
     String label,
     String value,
@@ -78,7 +78,8 @@ class ThongTinCuaBanScreen extends StatelessWidget {
               //Xác nhận
               DeleteButtonWidget(
                 onDelete: () {
-                  print("heh");
+                  cubit.updateLocalFeild(label, controller.text);
+                  Navigator.pop(context);
                 },
                 text: "Xác nhận",
                 textColor: Colors.white,
@@ -113,7 +114,13 @@ class ThongTinCuaBanScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: ClipOval(
-            child: Image.network(user.avatarPath, fit: BoxFit.cover),
+            child: Image.network(
+              user.avatarPath,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(color: Colors.black);
+              },
+            ),
           ),
         ),
 
@@ -124,9 +131,9 @@ class ThongTinCuaBanScreen extends StatelessWidget {
   }
 
   Widget _buildTextFeild(
+    ThongTinCuaBanCubit cubit,
     User user,
     BuildContext context,
-    TextEditingController controller,
   ) {
     return Padding(
       padding: const EdgeInsets.all(15),
@@ -140,10 +147,17 @@ class ThongTinCuaBanScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
+                  final controller = TextEditingController(text: user.name);
                   return Dialog(
                     backgroundColor: Colors.transparent,
                     insetPadding: const EdgeInsets.all(20),
-                    child: _buildDialog(context, "Tên", user.name, controller),
+                    child: _buildDialog(
+                      cubit,
+                      context,
+                      "Tên",
+                      user.name,
+                      controller,
+                    ),
                   );
                 },
               );
@@ -159,10 +173,17 @@ class ThongTinCuaBanScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
+                  final controller = TextEditingController(text: user.phone);
                   return Dialog(
                     backgroundColor: Colors.transparent,
                     insetPadding: const EdgeInsets.all(20),
-                    child: _buildDialog(context, "SDT", user.phone, controller),
+                    child: _buildDialog(
+                      cubit,
+                      context,
+                      "SDT",
+                      user.phone,
+                      controller,
+                    ),
                   );
                 },
               );
@@ -178,10 +199,12 @@ class ThongTinCuaBanScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
+                  final controller = TextEditingController(text: user.email);
                   return Dialog(
                     backgroundColor: Colors.transparent,
                     insetPadding: const EdgeInsets.all(20),
                     child: _buildDialog(
+                      cubit,
                       context,
                       "Email",
                       user.email,
@@ -197,14 +220,34 @@ class ThongTinCuaBanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(BuildContext content) {
-    return DeleteButtonWidget(
-      onDelete: () {
-        print("hehe");
-      },
-      text: "Đổi mật khẩu",
-      textColor: Colors.white,
-      backgroundColor: AppColors.button,
+  Widget _buildButton(ThongTinCuaBanCubit cubit, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        DeleteButtonWidget(
+          onDelete: () {
+            Navigator.pushNamed(context, RouteName.vi);
+          },
+          text: "Đổi mật khẩu",
+          textColor: Colors.white,
+          backgroundColor: AppColors.button,
+        ),
+
+        SizedBox(width: 10),
+        DeleteButtonWidget(
+          onDelete: () {
+            cubit.saveChangeUpdate();
+
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Cập nhật thành công")));
+            Navigator.pop(context);
+          },
+          text: "Xác nhận",
+          textColor: Colors.white,
+          backgroundColor: AppColors.button,
+        ),
+      ],
     );
   }
 }

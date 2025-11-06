@@ -82,8 +82,12 @@ abstract class CoreService {
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
 
+  // user
   @GET("/User/{id}")
   Future<RestResponse> getUserById(@Path("id") int id);
+
+  @PUT("/User")
+  Future<RestResponse> updateUserId(@Body() Map<String, dynamic> body);
 
   @GET("/Activity")
   Future<RestResponse> getActivities({

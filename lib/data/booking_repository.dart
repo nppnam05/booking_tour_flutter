@@ -53,12 +53,12 @@ import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:injectable/injectable.dart';
+
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
 
   Future<Either<Failure, bool>> registerUser({required CreateUserRequest user});
 
-  
   Future<Either<Failure, User>> getUserById({required int id});
 
   Future<Either<Failure, bool>> checkAssignment({
@@ -69,7 +69,6 @@ abstract class BookingRepository {
   Future<Either<Failure, List<TourGuide>>> getTourGuides({
     required int idschedule,
   });
-
 
   Future<Either<Failure, ScheduleAssignmentTourguide>>
   getScheduleAssignmentById({required int idSchedule});
@@ -102,12 +101,11 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getTrips({
     String sortBy = "Title",
     String order = "ASC",
-    String? filter, 
+    String? filter,
     int? provinceId,
     DateTime? startDate,
     DateTime? endDate,
     int? stars,
-    
   });
   Future<Either<Failure, void>> deleteTrip({required int id});
 
@@ -130,6 +128,17 @@ abstract class BookingRepository {
     required int id,
     required String name,
     required int locationId,
+  });
+
+  Future<Either<Failure, User>> updateUserId({
+    required final int id,
+    required final String bank,
+    required final String avatarPath,
+    required final String bankBranch,
+    required final String bankNumber,
+    final String name,
+    final String email,
+    final String phone,
   });
 
   Future<Either<Failure, Place>> createPlace({
@@ -374,13 +383,13 @@ class BookingRepositoryImp implements BookingRepository {
       var responses = await _coreService.getTrips(
         sortBy: sortBy,
         order: order,
-        filter: filter?.isNotEmpty  == true ? filter : null ,
+        filter: filter?.isNotEmpty == true ? filter : null,
         provinceId: provinceId,
         startDate: startDate,
         endDate: endDate,
         stars: stars,
       );
-   
+
       var data = responses.data as List<dynamic>;
       var tripResponses = data.map(
         (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
@@ -424,7 +433,6 @@ class BookingRepositoryImp implements BookingRepository {
       print('Assignments count: ${assignments.length}');
       return Right(assignments);
     } catch (e, stackTrace) {
-
       print('Error: $e');
       print('StackTrace: $stackTrace');
       return Left(ErrorHandler.handle(e).failure);
@@ -894,26 +902,24 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
   @override
-  Future<Either<Failure, bool>> registerUser({required CreateUserRequest user}) async {
-    try{
+  Future<Either<Failure, bool>> registerUser({
+    required CreateUserRequest user,
+  }) async {
+    try {
       var response = await _coreService.registerUser(user);
 
       return Right(true);
-    }
-    catch(e){
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
   @override
   Future<Either<Failure, User>> getUserById({required int id}) async {
-    try{
-
+    try {
       var responses = await _coreService.getUserById(id);
-      print("Response data: ${responses.data}");
-
       var data = responses.data as Map<String, dynamic>;
 
       var userResponse = UserResponse.fromJson(data);
@@ -921,10 +927,42 @@ class BookingRepositoryImp implements BookingRepository {
       var user = userResponse.map();
 
       return Right(user);
-    }
-    catch(e){
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
+  @override
+  Future<Either<Failure, User>> updateUserId({
+    required int id,
+    String? name,
+    String? email,
+    String? phone,
+    String? bank,
+    String? avatarPath,
+    String? bankBranch,
+    String? bankNumber,
+  }) async {
+    try {
+      final body = {
+        "id": id,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "bank": bank,
+        "avatarPath": avatarPath,
+        "bankBranch": bankBranch,
+        "bankNumber": bankNumber,
+      };
+
+      final response = await _coreService.updateUserId(body);
+
+      final data = response.data as Map<String, dynamic>;
+
+      final userResponse = UserResponse.fromJson(data);
+      return Right(userResponse.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

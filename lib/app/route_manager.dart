@@ -30,7 +30,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_l
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/lich_trinh_da_hoan_thanh.dart';
-import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/thong_tin_cua_ban.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/thong_tin_cua_ban_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/vi/vi.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
