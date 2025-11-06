@@ -11,7 +11,7 @@ class ScheduleTourguideCubit extends Cubit<ScheduleTourguideState> {
 
   ScheduleTourguideCubit() : super(ScheduleTourguideInitial());
 
-  Future<void> loadSchedules({int staffId = 2}) async {
+  Future<void> loadSchedules({  int staffId  = 2}) async {
     emit(ScheduleTourguideLoading());
 
     final result = await bookingRepository.getSchedulesByStaff(

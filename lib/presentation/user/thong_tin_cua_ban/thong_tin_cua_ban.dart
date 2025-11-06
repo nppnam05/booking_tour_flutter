@@ -1,36 +1,60 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/domain/user.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/textfield_not_tilte.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThongTinCuaBanScreen extends StatelessWidget {
+  final _cubit = ThongTinCuaBanCubit()..syncUser(3);
   final TextEditingController controller = TextEditingController();
+  ThongTinCuaBanScreen({super.key});
+
+  
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Thông tin của bạn", style: AppFonts.textWhite),
-      ),
-      body: Expanded(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            _buidInformation(),
+    //final user = context.read<AuthCubit>().state.id;
 
-            SizedBox(height: 20),
-            _buildTextFeild(context, controller),
+    return BlocProvider(
+      create: (context) => _cubit,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Thông tin của bạn", style: AppFonts.textWhite),
+        ),
+        body: BlocConsumer<ThongTinCuaBanCubit, ThongTinCuaBanState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            print("aaaa ${state.user.name}");
+            return Column(
+              children: [
+                SizedBox(height: 20),
+                _buidInformation(state.user),
 
-            SizedBox(height: 50),
-            _buildButton(context),
-          ],
+                SizedBox(height: 20),
+                _buildTextFeild(state.user, context, controller),
+
+                SizedBox(height: 50),
+                _buildButton(context),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildDialog(BuildContext context, String label,String value, TextEditingController controller) {
+  Widget _buildDialog(
+    BuildContext context,
+    String label,
+    String value,
+    TextEditingController controller,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       width: 300,
@@ -45,7 +69,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
           Text("Cập nhật", style: AppFonts.text16),
 
           SizedBox(height: 10),
-          notIconToggleInputField(controller,label, value, AppColors.gray),
+          notIconToggleInputField(controller, label, value, AppColors.gray),
 
           SizedBox(height: 10),
           Row(
@@ -77,7 +101,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buidInformation() {
+  Widget _buidInformation(User user) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -89,17 +113,18 @@ class ThongTinCuaBanScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: ClipOval(
-            child: Image.asset("assets/images/close.png", fit: BoxFit.cover),
+            child: Image.network(user.avatarPath, fit: BoxFit.cover),
           ),
         ),
 
-        Text("Trần Trọng Tình", style: AppFonts.text18),
-        Text("test@gmail.com", style: AppFonts.text14),
+        Text(user.name, style: AppFonts.text18),
+        Text(user.email, style: AppFonts.text14),
       ],
     );
   }
 
   Widget _buildTextFeild(
+    User user,
     BuildContext context,
     TextEditingController controller,
   ) {
@@ -109,7 +134,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
         children: [
           TextfieldNotTilte(
             label: "Tên",
-            value: "Tinh",
+            value: user.name,
             icon: Icons.edit,
             onTap: () {
               showDialog(
@@ -118,7 +143,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
                   return Dialog(
                     backgroundColor: Colors.transparent,
                     insetPadding: const EdgeInsets.all(20),
-                    child: _buildDialog(context,"Tên", "Tinh", controller),
+                    child: _buildDialog(context, "Tên", user.name, controller),
                   );
                 },
               );
@@ -128,7 +153,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
           SizedBox(height: 10),
           TextfieldNotTilte(
             label: "SDT",
-            value: "0123456789",
+            value: user.phone,
             icon: Icons.edit,
             onTap: () {
               showDialog(
@@ -137,18 +162,17 @@ class ThongTinCuaBanScreen extends StatelessWidget {
                   return Dialog(
                     backgroundColor: Colors.transparent,
                     insetPadding: const EdgeInsets.all(20),
-                    child: _buildDialog(context,"SDT","0123456789", controller),
+                    child: _buildDialog(context, "SDT", user.phone, controller),
                   );
                 },
               );
-              
             },
           ),
 
           SizedBox(height: 10),
           TextfieldNotTilte(
             label: "Email",
-            value: "test@gmail.com",
+            value: user.email,
             icon: Icons.edit,
             onTap: () {
               showDialog(
@@ -157,7 +181,12 @@ class ThongTinCuaBanScreen extends StatelessWidget {
                   return Dialog(
                     backgroundColor: Colors.transparent,
                     insetPadding: const EdgeInsets.all(20),
-                    child: _buildDialog(context,"Email","test@gmail.com", controller),
+                    child: _buildDialog(
+                      context,
+                      "Email",
+                      user.email,
+                      controller,
+                    ),
                   );
                 },
               );

@@ -1,3 +1,6 @@
+import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/create_review_request.dart';
+import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -9,6 +12,7 @@ import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
+import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
@@ -26,6 +30,9 @@ part 'core_service.g.dart';
 abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
+
+  @POST("/User")
+  Future<RestResponse> registerUser(CreateUserRequest user);
 
   @GET("/Schedule/assignment/{tourId}")
   Future<RestResponse> getScheduleAssignments(@Path("tourId") int tourId);
@@ -61,6 +68,11 @@ abstract class CoreService {
   @GET("/Schedule")
   Future<RestResponse> getAllSchedules();
 
+  @GET("/Schedule/tour/{idtour}")
+  Future<RestResponse> getSchedulesByTourId({
+    @Path("idtour") required int tourId,
+  });
+
   @DELETE("/Schedule/{id}")
   Future<RestResponse> deleteScheduleById({@Path("id") required int id});
 
@@ -71,7 +83,7 @@ abstract class CoreService {
   Future<List<FakePostResponse>> getPost();
 
   @GET("/User/{id}")
-  Future<List<FakePostResponse>> getUserById(@Path("id") int id);
+  Future<RestResponse> getUserById(@Path("id") int id);
 
   @GET("/Activity")
   Future<RestResponse> getActivities({
@@ -108,12 +120,16 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
-  @GET("/Tour")
-  Future<RestResponse> getTrips({
-    @Query("SortBy") String sortBy = "Title",
-    @Query("SortOrder") String order = "ASC",
-    @Query("filter") String? filter,
-  });
+    @GET("/Tour")
+    Future<RestResponse> getTrips({
+      @Query("SortBy") String sortBy = "Title",
+      @Query("SortOrder") String order = "ASC",
+      @Query("filter") String? filter,
+      @Query("provinceId") int? provinceId ,
+      @Query("startDate") DateTime? startDate,
+      @Query("endDate") DateTime? endDate,
+      @Query("stars") int? stars,
+    });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({@Path("id") required int id});
 
@@ -166,4 +182,16 @@ abstract class CoreService {
   Future<AssignmentPlaceResponse> addPlace(
     @Body() Map<String, dynamic> request,
   );
+
+  @GET("/Booking/byUser/{userId}")
+  Future<RestResponse> getBookingByUserId(@Path("userId") int userId);
+
+  @POST("/Booking/changeBooking")
+  Future<RestResponse> changeBooking(@Body() ChangeBookingRequest request);
+
+  @DELETE("/Booking/{bookingId}")
+  Future<RestResponse> deleteBooking(@Path("bookingId") bookingId);
+
+  @POST("/Review")
+  Future<RestResponse> createReview(@Body() CreateReviewRequest request);
 }

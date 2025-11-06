@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
@@ -17,8 +18,6 @@ class LoginScreen extends StatelessWidget {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-
-  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +44,9 @@ class LoginScreen extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.login) {
+          
+          context.read<AuthCubit>().setUser(state.user);
+
           switch (state.user.roleId) {
             case 1:
               Navigator.pushNamedAndRemoveUntil(
@@ -60,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                 (route) => false,
               );
               return;
-              case 6:
+            case 6:
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 RouteName.tripList,
@@ -109,6 +111,7 @@ class LoginScreen extends StatelessWidget {
               controller: _controllerPassword,
               title: "Mật khẩu",
               color: Colors.grey.shade100,
+              validator: (value) {},
             ),
 
             const SizedBox(height: 20),
@@ -118,8 +121,8 @@ class LoginScreen extends StatelessWidget {
                 if (_controllerEmail.text.isNotEmpty &&
                     _controllerPassword.text.isNotEmpty) {
                   _cubit.syncPost(
-                    _controllerEmail.text,
-                    _controllerPassword.text,
+                    _controllerEmail.text.trim(),
+                    _controllerPassword.text.trim(),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

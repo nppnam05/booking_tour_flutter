@@ -10,4 +10,6 @@ class RestResponse {
 
   factory RestResponse.fromJson(Map<String, dynamic> json) =>
       _$RestResponseFromJson(json);
+      
+  Map<String, dynamic> toJson() => _$RestResponseToJson(this);
 }

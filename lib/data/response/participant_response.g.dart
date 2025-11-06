@@ -30,17 +30,3 @@ Map<String, dynamic> _$UserCompletedScheduleResponseToJson(
   'avatarPath': instance.avatarPath,
   'booking': instance.booking,
 };
-
-BookingResponse _$BookingResponseFromJson(Map<String, dynamic> json) =>
-    BookingResponse(
-      userId: (json['userId'] as num?)?.toInt(),
-      numPeople: (json['numPeople'] as num?)?.toInt(),
-      phone: json['phone'] as String?,
-    );
-
-Map<String, dynamic> _$BookingResponseToJson(BookingResponse instance) =>
-    <String, dynamic>{
-      'userId': instance.userId,
-      'numPeople': instance.numPeople,
-      'phone': instance.phone,
-    };
