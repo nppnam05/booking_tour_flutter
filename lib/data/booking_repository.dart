@@ -3,10 +3,12 @@ import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/change_password_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -57,9 +59,15 @@ import 'package:injectable/injectable.dart';
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
 
+  Future<Either<Failure, bool>> changePassword(ChangePasswordRequest changePassword);
+
+  Future<Either<Failure, bool>> verifyOTP(VerifyOtpRequest verifyOtp);
+
+  Future<Either<Failure, bool>> sendOTP(String email);
+
   Future<Either<Failure, List<bool>>> checkAccount({required CheckAccountRequest checkAccount});
 
-  Future<Either<Failure, bool>> registerUser({required CreateUserRequest user});
+  Future<Either<Failure, bool>> registerUser({required CreateUserRequest createUser});
 
   Future<Either<Failure, bool>> checkAssignment({
     required int scheduleId,
@@ -896,11 +904,11 @@ class BookingRepositoryImp implements BookingRepository {
   }
   
   @override
-  Future<Either<Failure, bool>> registerUser({required CreateUserRequest user}) async {
+  Future<Either<Failure, bool>> registerUser({required CreateUserRequest createUser}) async {
     try{
-      var createUser = user.toJson();
+      var user = createUser.toJson();
 
-      var response = await _coreService.registerUser(createUser);
+      var response = await _coreService.registerUser(user);
 
       return Right(true);
     }
@@ -921,6 +929,48 @@ class BookingRepositoryImp implements BookingRepository {
       var result = data.map((e) => e as bool).toList();
 
       return Right(result);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> sendOTP(String email) async {
+    try{
+      var response = await _coreService.sendOTP({"email": email});
+
+      var data = response.data as bool;
+
+      return Right(data);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> verifyOTP(VerifyOtpRequest verifyOtp) async {
+    try{
+      var response = await _coreService.verifyOTP(verifyOtp.toJson());
+
+      var data = response.data as bool;
+
+      return Right(data);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> changePassword(ChangePasswordRequest changePassword) async {
+    try{
+      var response = await _coreService.changePassword(changePassword.toJson());
+
+      var data = response.data as bool;
+
+      return Right(data);
     }
     catch(e){
       return Left(ErrorHandler.handle(e).failure);

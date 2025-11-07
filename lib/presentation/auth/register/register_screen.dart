@@ -3,6 +3,9 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
+import 'package:booking_tour_flutter/domain/user.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/register/cubit/register_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/register/cubit/register_state.dart';
@@ -58,9 +61,32 @@ class RegisterScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Mật khẩu đã có người sử dụng')),
           );
-        } else {
-          
-          Navigator.pushNamed(context, RouteName.authOtp);
+        } else if (!state.checkSendOTP) {
+          // gửi mã otp
+          var email = controllerEmail.text.trim();
+          _cubit.sendOTP(email);
+        } else if(state.checkSendOTP) {
+
+          var user = CreateUserRequest(
+            roleId: 1,
+            password: controllerPassword.text.trim(),
+            money: 0,
+            bankNumber: " ",
+            bank: " ",
+            name: controllerTenNguoiDung.text.trim(),
+            email: controllerEmail.text.trim(),
+            phone: controllerSoDienThoai.text.trim(),
+            avatarPath: " ",
+            bankBranch: " ",
+          );
+
+          final cubitOtp = context.read<AuthOtpCubit>();
+          cubitOtp.setUser(user);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AuthOtpScreen()),
+          );
         }
       },
       child: Padding(
@@ -119,6 +145,8 @@ class RegisterScreen extends StatelessWidget {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'bạn chưa viết gì vào ô này';
+                      } else if (!isEmailValid(value)) {
+                        return "Email này chưa đúng định dạng";
                       }
                       return null;
                     },
@@ -162,7 +190,6 @@ class RegisterScreen extends StatelessWidget {
             customButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-
                   var result = await _cubit.checkAccount(
                     controllerEmail.text.trim(),
                     controllerPassword.text.trim(),
@@ -209,5 +236,13 @@ class RegisterScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  bool isEmailValid(String email) {
+    final RegExp emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+    );
+
+    return emailRegex.hasMatch(email);
   }
 }

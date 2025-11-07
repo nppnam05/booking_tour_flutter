@@ -1,11 +1,15 @@
+import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
+import 'package:booking_tour_flutter/domain/user.dart';
 
 class AuthOtpState {
-  final List<FakePost> posts;
+  final CreateUserRequest user;
+  final bool verifyOtp;
+  final bool checkCreate;
 
-  AuthOtpState({required this.posts});
+  AuthOtpState({required this.user, required this.verifyOtp, required this.checkCreate});
 
-  AuthOtpState copyWith({List<FakePost>? posts}){
-    return AuthOtpState(posts: posts ?? this.posts);
+  AuthOtpState copyWith({bool? verifyOtp, CreateUserRequest? user, bool? checkCreate}){
+    return AuthOtpState(user: user ?? this.user, verifyOtp: verifyOtp ?? this.verifyOtp, checkCreate: checkCreate ?? this.checkCreate);
   }
 }

@@ -5,6 +5,7 @@ part 'create_user_request.g.dart';
 @JsonSerializable()
 class CreateUserRequest {
   int roleId = 1;
+  String password;
   int money;
   String bankNumber = " ";
   String bank = " ";
@@ -16,6 +17,7 @@ class CreateUserRequest {
 
   CreateUserRequest({
     required this.roleId,
+    required this.password,
     required this.money,
     required this.bankNumber,
     required this.bank,
@@ -25,6 +27,21 @@ class CreateUserRequest {
     required this.avatarPath,
     required this.bankBranch,
   });
+
+  static empty(){
+    return CreateUserRequest(
+      roleId: 1,
+      password: "",
+      money: 0,
+      bankNumber: "",
+      bank: "",
+      name: "",
+      email: "",
+      phone: "",
+      avatarPath: "",
+      bankBranch: "",
+    );
+  }
 
   factory CreateUserRequest.fromJson(Map<String, dynamic> json) =>
       _$CreateUserRequestFromJson(json);
