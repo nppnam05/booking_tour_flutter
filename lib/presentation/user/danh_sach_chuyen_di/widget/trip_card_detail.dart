@@ -245,6 +245,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                                 Navigator.pushNamed(
                                   context,
                                   "danh_sach_lich_trinh_user",
+                                  arguments: widget.trip.id,
                                 );
                               },
                               title: "Chi tiết",

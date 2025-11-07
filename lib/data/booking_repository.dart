@@ -415,9 +415,7 @@ class BookingRepositoryImp implements BookingRepository {
           assignmentResponses.map((response) => response.map()).toList();
 
       return Right(assignments);
-    } catch (e, stackTrace) {
-      print('Error: $e');
-      print('StackTrace: $stackTrace');
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
@@ -640,6 +638,7 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
+  @override
   Future<Either<Failure, bool>> updateSchedule(
     UpdateScheduleRequest request,
   ) async {
@@ -773,7 +772,7 @@ class BookingRepositoryImp implements BookingRepository {
       var tourAssignment = tourAssignmentResponse.map();
 
       return Right(tourAssignment);
-    } catch (e, stackTrace) {
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
@@ -802,6 +801,7 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
+  @override
   Future<Either<Failure, LocationActivityResponse>> deleteLocatinActivities(
     int id,
   ) async {

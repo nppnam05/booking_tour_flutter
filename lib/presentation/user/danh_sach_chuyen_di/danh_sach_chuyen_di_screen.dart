@@ -105,6 +105,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                                   Navigator.pushNamed(
                                     context,
                                     "danh_sach_lich_trinh_user",
+                                    arguments: trip.id,
                                   );
                                 },
                                 child: TripCard(trip: trip),

@@ -10,7 +10,6 @@ import 'package:booking_tour_flutter/data/response/location_activity_response.da
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
-import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
