@@ -28,6 +28,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/favorite/favorite_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
@@ -71,6 +72,7 @@ class RouteName {
   static final suaDiaDanh = "sua_dia_danh";
   static final scheduleTourmanager = "scheduleTourmanager";
   static final searchTour = "searchTour"; 
+  static final favoriteTour = "favoriteTour" ; 
 }
 
 class RouteManager {
@@ -112,5 +114,6 @@ class RouteManager {
         (context) => DetailPaidScheduleScreen(),
     RouteName.profileChangeSchedule: (context) => const ChangeScheduleScreen(),
     RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen(),
+    RouteName.favoriteTour:(context) => FavoriteTourScreen(userId: 2),
   };
 }

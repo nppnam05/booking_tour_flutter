@@ -186,4 +186,14 @@ abstract class CoreService {
 
   @POST("/Review")
   Future<RestResponse> createReview(@Body() CreateReviewRequest request);
+@GET("/Favorite/{userId}")
+Future<RestResponse> getTourFavoriteByUserId(@Path("userId") int userId);
+
+
+  @DELETE("/Favorite")  
+  Future<RestResponse> removeFavorite(
+    @Query("tourId") int tourId,
+    @Query("userId") int userId,
+  );
+
 }

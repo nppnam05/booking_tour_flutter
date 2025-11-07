@@ -1,13 +1,21 @@
+// File: presentation/user/search/cubit/search_cubit.dart
+// ✅ ĐÃ FIX: Đồng bộ query với text controller
+
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/presentation/user/search/cubit/search_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SearchCubit extends Cubit<SearchState> {
   final BookingRepository _repository = getIt<BookingRepository>();
   List<String> _history = [];
+  String _currentQuery = '';
+  int? provinceId;
+  String? provinceName;
+  DateTime? startDate;
+  DateTime? endDate;
+  int? stars;
 
   SearchCubit() : super(SearchInitial(history: [])) {
     _loadHistory();
@@ -26,23 +34,75 @@ class SearchCubit extends Cubit<SearchState> {
 
   Future<void> searchTrips(String query) async {
     final keyword = query.trim();
-    if (keyword.isEmpty) {
+    _currentQuery = keyword;
+
+    if (keyword.isEmpty && !hasActiveFilters) {
       emit(SearchInitial(history: _history));
       return;
     }
 
-    _addToHistory(keyword);
+    if (keyword.isNotEmpty) {
+      _addToHistory(keyword);
+    }
+
     emit(SearchLoading(history: _history));
 
-    final result = await _repository.getTrips(filter: keyword);
+    final result = await _repository.getTrips(
+      filter: keyword.isNotEmpty ? keyword : null,
+      provinceId: provinceId,
+      startDate: startDate,
+      endDate: endDate,
+      stars: stars,
+    );
 
     result.fold(
       (failure) => emit(SearchError(failure.message, history: _history)),
       (trips) => emit(SearchLoaded(trips, history: _history)),
     );
   }
+  void updateQuery(String query) {
+    _currentQuery = query.trim();
+  }
 
-  void reset() => emit(SearchInitial(history: _history));
+  void applyFilters({
+    int? provinceId,
+    String? provinceName,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? stars,
+  }) {
+    this.provinceId = provinceId;
+    this.provinceName = provinceName;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.stars = stars;
+
+    if (hasActiveFilters || _currentQuery.isNotEmpty) {
+      searchTrips(_currentQuery);
+    }
+  }
+
+  void clearFilters() {
+    provinceId = null;
+    provinceName = null;
+    startDate = null;
+    endDate = null;
+    stars = null;
+    searchTrips(_currentQuery);
+  }
+
+  bool get hasActiveFilters =>
+      provinceId != null ||
+      startDate != null ||
+      endDate != null ||
+      stars != null;
+  String get currentQuery => _currentQuery;
+
+  void reset() {
+    _currentQuery = '';
+    clearFilters();
+    emit(SearchInitial(history: _history));
+  }
 
   void _addToHistory(String keyword) {
     if (!_history.contains(keyword)) {
