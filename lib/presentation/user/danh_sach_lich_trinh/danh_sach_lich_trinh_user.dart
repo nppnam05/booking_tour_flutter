@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
@@ -6,7 +7,6 @@ import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/cubi
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class DanhSachLichTrinhUser extends StatelessWidget {
   const DanhSachLichTrinhUser({super.key});
@@ -44,7 +44,10 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         itemCount: state.schedules.length,
                         itemBuilder: (context, index) {
-                          return _buildLichTrinhCard(state.schedules[index]);
+                          return _buildLichTrinhCard(
+                            state.schedules[index],
+                            context,
+                          );
                         },
                       ),
                     ),
@@ -56,7 +59,7 @@ class DanhSachLichTrinhUser extends StatelessWidget {
     );
   }
 
-  Widget _buildLichTrinhCard(ScheduleTourmanager scheduleTourmanager) {
+  Widget _buildLichTrinhCard(ScheduleTourmanager scheduleTourmanager, context) {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -142,7 +145,13 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     BkButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          'chi_tiet_lich_trinh_screen',
+                          arguments: scheduleTourmanager,
+                        );
+                      },
                       title: "Chi tiết",
                       backgroundColor: AppColors.borderButton,
                       borderRadius: 32,
@@ -188,14 +197,5 @@ class DanhSachLichTrinhUser extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  String formatCurrency(num value) {
-    final formatter = NumberFormat("#,###", "vi_VN");
-    return formatter.format(value);
-  }
-
-  String formatDate(DateTime date) {
-    return DateFormat('dd/MM/yyyy').format(date);
   }
 }

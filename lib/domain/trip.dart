@@ -1,5 +1,5 @@
-
 import 'package:booking_tour_flutter/domain/day_of_tour.dart';
+import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 
 class Trip {
@@ -12,8 +12,9 @@ class Trip {
   final List<Province> provinces;
   final List<String> tourImages;
   final List<DayOfTour> dayOfTours;
-  final int totalReviews ; 
-  final int totalStars; 
+  final int totalReviews;
+  final int totalStars;
+  final List<Place> places;
   Trip({
     required this.id,
     required this.day,
@@ -26,6 +27,7 @@ class Trip {
     required this.dayOfTours,
     required this.totalReviews,
     required this.totalStars,
+    required this.places,
   });
 
   factory Trip.empty() {
@@ -40,7 +42,8 @@ class Trip {
       tourImages: [],
       dayOfTours: [],
       totalReviews: 0,
-      totalStars : 0 , 
+      totalStars: 0,
+      places: [],
     );
   }
 }

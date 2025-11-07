@@ -1,7 +1,7 @@
+import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'schedule_tourmanager_response.g.dart';
@@ -19,7 +19,6 @@ class ScheduleTourmanagerResponse {
   String? code;
   int? desposit;
   TripResponse? tour;
- 
 
   ScheduleTourmanagerResponse({
     this.id,
@@ -48,6 +47,7 @@ class TripResponse {
   int? price;
   List<dynamic>? tourImages;
   List<ProvinceResponse>? locations;
+  List<PlaceResponse>? places;
 
   TripResponse({
     this.id,
@@ -55,7 +55,7 @@ class TripResponse {
     this.price,
     this.tourImages,
     this.locations,
-    
+    this.places,
   });
 
   factory TripResponse.fromJson(Map<String, dynamic> json) =>
@@ -66,6 +66,7 @@ class TripResponse {
   Trip map() {
     final images = tourImages?.map((e) => e.toString()).toList() ?? [];
     final provinceList = locations?.map((e) => e.map()).toList() ?? [];
+    final placesList = places?.map((e) => e.map()).toList() ?? [];
 
     return Trip(
       id: id ?? 0,
@@ -77,10 +78,9 @@ class TripResponse {
       provinces: provinceList,
       tourImages: images,
       dayOfTours: [],
-      totalReviews: 0 ,
-      totalStars: 0 ,
-
-
+      totalReviews: 0,
+      totalStars: 0,
+      places: placesList,
     );
   }
 }
@@ -131,8 +131,9 @@ extension ScheduleTourmanagerResponseMapper on ScheduleTourmanagerResponse {
             provinces: [],
             tourImages: [],
             dayOfTours: [],
-            totalReviews: 0, 
+            totalReviews: 0,
             totalStars: 0,
+            places: [],
           ),
     );
   }
