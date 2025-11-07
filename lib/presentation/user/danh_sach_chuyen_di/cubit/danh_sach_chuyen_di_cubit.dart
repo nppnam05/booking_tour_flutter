@@ -28,12 +28,4 @@ class DanhSachChuyenDiCubit extends Cubit<DanhSachChuyenDiState> {
       emit(state.copyWith(mostRecent: trips));
     });
   }
-
-  void searchTrips(String query) {
-    emit(state.copyWith(searchQuery: query));
-  }
-
-  void clearSearch() {
-    emit(state.copyWith(searchQuery: ''));
-  }
 }

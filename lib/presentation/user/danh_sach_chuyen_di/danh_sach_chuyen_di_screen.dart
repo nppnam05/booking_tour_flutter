@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_state.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card.dart';
@@ -23,11 +24,6 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
   void initState() {
     super.initState();
     _cubit = DanhSachChuyenDiCubit();
-
-    // Listen to search text changes
-    _searchController.addListener(() {
-      _cubit.searchTrips(_searchController.text);
-    });
   }
 
   @override
@@ -70,79 +66,65 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                   SliverToBoxAdapter(
                     child: SearchBarWidget(
                       controller: _searchController,
-                      onClear: () {
-                        _searchController.clear();
-                        _cubit.clearSearch();
+                      enabled: false,
+                      onTap: () {
+                        Navigator.pushNamed(context, RouteName.searchTour);
                       },
                     ),
                   ),
 
                   const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                  if (state.searchQuery.isEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: const Text(
+                        'Chuyến đi nổi bật',
+                        style: TextStyle(
+                          fontSize: AppFonts.fontSize18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SliverToBoxAdapter(child: SizedBox(height: 8)),
+
+                  if (state.mostFavoriteTrips.isNotEmpty)
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16),
-                        child: const Text(
-                          'Chuyến đi nổi bật',
-                          style: TextStyle(
-                            fontSize: AppFonts.fontSize18,
-                            fontWeight: FontWeight.bold,
+                        child: SizedBox(
+                          height: 180,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.only(right: 16),
+                            itemBuilder: (context, index) {
+                              final trip = state.mostFavoriteTrips[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    "danh_sach_lich_trinh_user",
+                                  );
+                                },
+                                child: TripCard(trip: trip),
+                              );
+                            },
+                            separatorBuilder:
+                                (_, __) => const SizedBox(width: 12),
+                            itemCount: state.mostFavoriteTrips.length,
                           ),
                         ),
                       ),
                     ),
 
-                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
-                    if (state.mostFavoriteTrips.isNotEmpty)
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: SizedBox(
-                            height: 180,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(right: 16),
-                              itemBuilder: (context, index) {
-                                final trip = state.mostFavoriteTrips[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      "danh_sach_lich_trinh_user",
-                                    );
-                                  },
-                                  child: TripCard(trip: trip),
-                                );
-                              },
-                              separatorBuilder:
-                                  (_, __) => const SizedBox(width: 12),
-                              itemCount: state.mostFavoriteTrips.length,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                    const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                  ],
-
-                  if (state.searchQuery.isNotEmpty)
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                      ),
-                    ),
-
-                  if (state.filteredMostRecent.isNotEmpty)
+                  if (state.mostRecent.isNotEmpty)
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        return TripCardDetail(
-                          trip: state.filteredMostRecent[index],
-                        );
-                      }, childCount: state.filteredMostRecent.length),
+                        return TripCardDetail(trip: state.mostRecent[index]);
+                      }, childCount: state.mostRecent.length),
                     ),
                 ],
               );
