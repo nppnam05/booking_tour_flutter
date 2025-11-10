@@ -31,6 +31,10 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
+  @GET("/Bank")
+  Future<RestResponse> getBank();
+
+
   @POST("/User")
   Future<RestResponse> registerUser(CreateUserRequest user);
 
@@ -55,6 +59,9 @@ abstract class CoreService {
   Future<RestResponse> getTourGuideAssignmentById(
     @Path("idschedule") int idschedule,
   );
+
+  @GET("/Schedule/completed/{userId}")
+  Future<RestResponse> getScheduleCompletedByUserId(@Path("userId") int userId);
 
   @GET("/Schedule/{id}")
   Future<RestResponse> getScheduleAssignmentById(@Path("id") int id);

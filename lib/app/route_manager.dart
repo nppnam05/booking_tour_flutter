@@ -28,10 +28,11 @@ import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/danh_sach_lich_trinh_booking_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
-import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/lich_trinh_da_hoan_thanh.dart';
+import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/lich_trinh_da_hoan_thanh_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/thong_tin_cua_ban_screen.dart';
-import 'package:booking_tour_flutter/presentation/user/vi/vi.dart';
+import 'package:booking_tour_flutter/presentation/user/vi/vi_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,7 @@ class RouteName {
   static final thongTinCuaBan = "thongTinCuaBan";
   static final vi = "vi";
   static final lichTrinhDaHoanThanh = "lichTrinhDaHoanThanh";
+  static final danhSachLichTrinhBooking = "danhSachLichTrinhBooking";
 }
 
 class RouteManager {
@@ -113,6 +115,7 @@ class RouteManager {
     RouteName.thongTinCuaBan: (context) => ThongTinCuaBanScreen(),
     RouteName.vi: (context) => ViScreen(),
     RouteName.lichTrinhDaHoanThanh: (context) => LichTrinhDaHoanThanhScreen(),
+    RouteName.danhSachLichTrinhBooking: (context) => DanhSachLichTrinhBookingScreen(),
 
     RouteName.participants: (context) {
       final schedule =

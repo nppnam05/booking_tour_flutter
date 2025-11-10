@@ -12,13 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThongTinCuaBanScreen extends StatelessWidget {
-  final _cubit = ThongTinCuaBanCubit()..syncUser(3);
+  final _cubit = ThongTinCuaBanCubit();
   final TextEditingController controller = TextEditingController();
   ThongTinCuaBanScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     //final user = context.read<AuthCubit>().state.id;
+    _cubit.syncUser(12);
 
     return BlocProvider(
       create: (context) => _cubit,
