@@ -1,8 +1,10 @@
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
+import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
@@ -33,8 +35,23 @@ abstract class CoreService {
   @GET("/Bank")
   Future<RestResponse> getBank();
 
+  @GET("/Schedule/{id}")
+  Future<RestResponse> getScheduleById(@Path("id") int id);
+
+  @PATCH("/User/change-password/email")
+  Future<RestResponse> changePassword(@Body() Map<String, dynamic> body);
+
+  @POST("/OTP/verifyotp")
+  Future<RestResponse> verifyOTP(@Body() Map<String, dynamic> body);
+
+  @POST("/OTP/send")
+  Future<RestResponse> sendOTP(@Body() Map<String, dynamic> body);
+
+  @POST("/User/check-account")
+  Future<RestResponse> checkAccount(@Body() Map<String, dynamic> checkAccount);
+
   @POST("/User")
-  Future<RestResponse> registerUser(CreateUserRequest user);
+  Future<RestResponse> registerUser(@Body() Map<String, dynamic> user);
 
   @GET("/Schedule/assignment/{tourId}")
   Future<RestResponse> getScheduleAssignments(@Path("tourId") int tourId);

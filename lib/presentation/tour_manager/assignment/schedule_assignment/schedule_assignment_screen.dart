@@ -97,7 +97,7 @@ class ScheduleAssignmentScreen extends StatelessWidget {
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TourGuideAssignmentScreen(cubit: cubit),
+            builder: (context) => TourGuideAssignmentScreen(),
           ),
         );
 

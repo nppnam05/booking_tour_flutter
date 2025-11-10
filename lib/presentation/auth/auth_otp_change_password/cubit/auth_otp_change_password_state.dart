@@ -1,11 +1,13 @@
-import 'package:booking_tour_flutter/domain/fake_post.dart';
+
 
 class AuthOtpChangePasswordState {
-  final List<FakePost> posts;
-
-  AuthOtpChangePasswordState({required this.posts});
-
-  AuthOtpChangePasswordState copyWith({List<FakePost>? posts}){
-    return AuthOtpChangePasswordState(posts: posts ?? this.posts);
+  final bool verifyOtp;
+  final String email;
+  AuthOtpChangePasswordState({
+    required this.verifyOtp,
+    required this.email
+  });
+  AuthOtpChangePasswordState copyWith({bool? verifyOtp, String? email}){
+    return AuthOtpChangePasswordState(verifyOtp: verifyOtp ?? this.verifyOtp, email: email ?? this.email);
   }
 }

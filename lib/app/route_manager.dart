@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/domain/booking.dart';
+import 'package:booking_tour_flutter/domain/schedule_detail.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
@@ -27,6 +29,9 @@ import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/book_a_schedule/book_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/pay/pay_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/schedule_detail/schedule_detail_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/danh_sach_lich_trinh_booking_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/favorite/favorite_tour_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/profile/profileUser_screen.dart';
@@ -50,6 +55,7 @@ class RouteName {
   static final profileDetailPaidSchedule = "profile_detail_paid_schedule";
   static final profileChangeSchedule = "profile_change_schedule";
   static final profileReviewSchedule = "profile_review_schedule";
+  static final scheduleDetail = "schedule_detail";
 
   static final menu = "menu";
   static final themLichTrinh = "them_lich_trinh";
@@ -90,6 +96,8 @@ class RouteName {
   static final thongBao = "thong_bao";
   static final danhSachLichTrinhUser = "danh_sach_lich_trinh_user";
   static final chiTietLichTrinhScreen = "chi_tiet_lich_trinh_screen";
+  static final bookSchedule = "book_schedule";
+  static final paySchedule = "pay_schedule";
 }
 
 class RouteManager {
@@ -155,5 +163,8 @@ class RouteManager {
   final userId = ModalRoute.of(context)?.settings.arguments as int;
   return ProfileUserScreen(userId: userId);
 },*/
+    RouteName.scheduleDetail : (context) => ScheduleDetailScreen(),
+    RouteName.bookSchedule : (context) => BookScheduleScreen(),
+    RouteName.paySchedule : (context) => PayScheduleScreen(),
   };
 }

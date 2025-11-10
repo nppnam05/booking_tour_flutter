@@ -3,9 +3,12 @@ import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/change_password_request.dart';
+import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -19,6 +22,7 @@ import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/review_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart' hide LocationActivityResponse;
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
@@ -42,6 +46,7 @@ import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/review.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
+import 'package:booking_tour_flutter/domain/schedule_detail.dart' hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
@@ -79,7 +84,17 @@ abstract class BookingRepository {
   
   Future<Either<Failure, List<FakePost>>> getPost();
 
-  Future<Either<Failure, bool>> registerUser({required CreateUserRequest user});
+  Future<Either<Failure, ScheduleDetail>> getScheduleById(int id);
+
+  Future<Either<Failure, bool>> changePassword(ChangePasswordRequest changePassword);
+
+  Future<Either<Failure, bool>> verifyOTP(VerifyOtpRequest verifyOtp);
+
+  Future<Either<Failure, bool>> sendOTP(String email);
+
+  Future<Either<Failure, List<bool>>> checkAccount({required CheckAccountRequest checkAccount});
+
+  Future<Either<Failure, bool>> registerUser({required CreateUserRequest createUser});
 
   Future<Either<Failure, User>> getUserById({required int id});
 
@@ -1058,9 +1073,11 @@ class BookingRepositoryImp implements BookingRepository {
 
   @override
   Future<Either<Failure, bool>> registerUser({
-    required CreateUserRequest user,
+    required CreateUserRequest createUser,
   }) async {
     try {
+      var user = createUser.toJson();
+
       var response = await _coreService.registerUser(user);
 
       return Right(true);
@@ -1146,6 +1163,84 @@ class BookingRepositoryImp implements BookingRepository {
       return Right(schedules);
     }
     catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<bool>>> checkAccount({required CheckAccountRequest checkAccount}) async {
+    try{
+      final jsonData = checkAccount.toJson();
+
+      var responses = await _coreService.checkAccount(jsonData);
+
+      var data = responses.data as List<dynamic>;
+
+      var result = data.map((e) => e as bool).toList();
+
+      return Right(result);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> sendOTP(String email) async {
+    try{
+      var response = await _coreService.sendOTP({"email": email});
+
+      var data = response.data as bool;
+
+      return Right(data);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> verifyOTP(VerifyOtpRequest verifyOtp) async {
+    try{
+      var response = await _coreService.verifyOTP(verifyOtp.toJson());
+
+      var data = response.data as bool;
+
+      return Right(data);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> changePassword(ChangePasswordRequest changePassword) async {
+    try{
+      var response = await _coreService.changePassword(changePassword.toJson());
+
+      var data = response.data as bool;
+
+      return Right(data);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, ScheduleDetail>> getScheduleById(int id) async {
+    try{
+      var response = await _coreService.getScheduleById(id);
+
+      var data = response.data as Map<String, dynamic>;
+
+      var result = ScheduleDetailResponse.fromJson(data);
+
+      var schedule = result.map();
+
+      return Right(schedule);
+    }
+    catch(e){
       return Left(ErrorHandler.handle(e).failure);
     }
   }
