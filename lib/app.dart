@@ -15,7 +15,11 @@ class MyApp extends StatelessWidget {
         theme: AppThemes.lightTheme,
         navigatorKey: AppNavigator.navigatorKey,
         routes: RouteManager.routes,
+<<<<<<< HEAD
         initialRoute: RouteName.login,
+=======
+        initialRoute: RouteName.profileDetailPaidSchedule,
+>>>>>>> 232fc7887269f9077e5c38e57eb5202579982dbd
       ),
     );
   }

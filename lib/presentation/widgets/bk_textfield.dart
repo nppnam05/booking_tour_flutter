@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class BkTextfield extends StatelessWidget {
   final TextEditingController controller;
-  final String title;
+  final String? title;
   final Color? fillColor;
   final String hint;
   final ValueChanged<String>? onChange;
@@ -16,7 +16,7 @@ class BkTextfield extends StatelessWidget {
   const BkTextfield({
     super.key,
     required this.controller,
-    required this.title,
+    this.title,
     this.fillColor,
     required this.hint,
     this.onChange,
@@ -38,8 +38,17 @@ class BkTextfield extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: Theme.of(context).textTheme.labelLarge),
-        const SizedBox(height: 4.0),
+        Visibility(
+          visible: title != null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(title ?? "", style: Theme.of(context).textTheme.labelLarge),
+              const SizedBox(height: 4.0),
+            ],
+          ),
+        ),
 
         TextField(
           maxLength: maxLength,

@@ -25,6 +25,8 @@ class AppColors {
   static const backgroundButtonOnTap = Color(0xFF85A7BC);
   static const borderButton = Color(0xFF026CAD);
 
+  static final Color lightBlue = Colors.lightBlue[50]!;
+
   static const Color error = Color(0xFFDE6767);
   static const Color info = Color(0xFF6D9ADA);
   static const Color warning = Color(0xFFE4E178);

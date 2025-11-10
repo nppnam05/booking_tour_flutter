@@ -48,7 +48,7 @@ class TripCard extends StatelessWidget {
                   Text(
                     trip.title,
                     maxLines: 1,
-                    overflow:  TextOverflow.ellipsis,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -57,9 +57,9 @@ class TripCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Địa điểm: ${trip.provinces.join(", ")}',
+                    'Địa điểm: ${trip.provinces.map((i) => i.name).join(", ")}',
                     maxLines: 1,
-                    overflow:  TextOverflow.ellipsis,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -70,7 +70,7 @@ class TripCard extends StatelessWidget {
                   Text(
                     '${trip.price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')} vnd',
                     maxLines: 1,
-                    overflow:  TextOverflow.ellipsis,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -78,7 +78,7 @@ class TripCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  // Các nút bấm
+    
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
