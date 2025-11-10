@@ -196,4 +196,5 @@ abstract class CoreService {
   );
   @GET("/User/{userId}")
   Future<RestResponse> getUserById(@Path("userId") int userId);
+
 }
