@@ -59,12 +59,18 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: _controllerFirstPassword,
                 title: "Mật khẩu mới",
                 color: Colors.grey.shade100,
+                validator: (value) {
+                  
+                },
               ),
               const SizedBox(height: 12),
               ToggleInputField(
                 controller: _controllerPassword,
                 title: "Mật khẩu",
                 color: Colors.grey.shade100,
+                validator: (value) {
+                  
+                },
               ),
             ],
           ),

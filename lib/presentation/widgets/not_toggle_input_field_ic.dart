@@ -1,11 +1,12 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
-Widget notToggleInputFieldNotIcon(
-  TextEditingController controller,
-  String title,
-  Color color,
-) {
+Widget notToggleInputFieldNotIcon({
+  required TextEditingController controller,
+  required String title,
+  required Color color,
+  required String? Function(String? value)? validator,
+}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -13,7 +14,8 @@ Widget notToggleInputFieldNotIcon(
 
       const SizedBox(height: 8.0),
 
-      TextField(
+      TextFormField(
+        validator: validator,
         controller: controller,
 
         decoration: InputDecoration(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 Widget notIconToggleInputField(
   TextEditingController controller,
+  String label,
   String text,
   Color color, {
   ValueChanged<String>? onChanged,
@@ -16,7 +17,7 @@ Widget notIconToggleInputField(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          text,
+          label,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8.0),

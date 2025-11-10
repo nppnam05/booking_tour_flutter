@@ -9,7 +9,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> loadUser(int userId) async {
     emit(ProfileLoading());
-    final result = await bookingRepository.getUserById(userId: userId);
+    final result = await bookingRepository.getUserById(id: userId);
     result.fold(
       (failure) => emit(ProfileError(failure.message)),
       (user) => emit(ProfileLoaded(user)),

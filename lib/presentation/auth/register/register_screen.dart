@@ -1,5 +1,7 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/register/cubit/register_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
@@ -8,9 +10,11 @@ import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dar
 import 'package:booking_tour_flutter/presentation/widgets/wrapped_outside.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinput/pinput.dart';
 
 class RegisterScreen extends StatelessWidget {
-  final _cubit = RegisterCubit()..syncPost();
+  final _cubit = RegisterCubit();
+  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController controllerTenNguoiDung = TextEditingController();
   final TextEditingController controllerSoDienThoai = TextEditingController();
@@ -27,7 +31,7 @@ class RegisterScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(backgroundColor: AppColors.scaffoldBackgroundColor),
         body: SingleChildScrollView(
-          child: Center(child: wrappedOutside(context, columnOfWidget())),
+          child: Center(child: wrappedOutside(context, SingleChildScrollView(child: columnOfWidget()))),
         ),
       ),
     );
@@ -35,6 +39,8 @@ class RegisterScreen extends StatelessWidget {
 
   // gom các widget lại
   Widget columnOfWidget() {
+    final context = AppNavigator.currentContext;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
@@ -52,50 +58,91 @@ class RegisterScreen extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          Column(
-            children: [
-              notToggleInputFieldNotIcon(
-                controllerTenNguoiDung,
-                "Tên người dùng",
-                Colors.grey.shade100,
-              ),
-              const SizedBox(height: 12),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                notToggleInputFieldNotIcon(
+                  controller: controllerTenNguoiDung,
+                  title: "Tên người dùng",
+                  color: Colors.grey.shade100,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'bạn chưa viết gì vào ô này';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
 
-              notToggleInputFieldNotIcon(
-                controllerSoDienThoai,
-                "Số điện thoại",
-                Colors.grey.shade100,
-              ),
-              const SizedBox(height: 12),
+                notToggleInputFieldNotIcon(
+                  controller: controllerSoDienThoai,
+                  title: "Số điện thoại",
+                  color: Colors.grey.shade100,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'bạn chưa viết gì vào ô này';
+                    } else if (value.length < 10) {
+                      return "độ dài số điện thoại thiếu";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
 
-              notToggleInputFieldNotIcon(
-                controllerEmail,
-                "Email",
-                Colors.grey.shade100,
-              ),
-              const SizedBox(height: 12),
+                notToggleInputFieldNotIcon(
+                  controller: controllerEmail,
+                  title: "Email",
+                  color: Colors.grey.shade100,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'bạn chưa viết gì vào ô này';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
 
-              ToggleInputField(
-                controller: controllerPassword,
-                title: "Mật khẩu",
-                color: Colors.grey.shade100,
-              ),
-              const SizedBox(height: 12),
+                ToggleInputField(
+                  controller: controllerPassword,
+                  title: "Mật khẩu",
+                  color: Colors.grey.shade100,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'bạn chưa viết gì vào ô này';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
 
-              ToggleInputField(
-                controller: controllerNhapLai,
-                title: "Nhập lại mật khẩu",
-                color: Colors.grey.shade100,
-              ),
-              const SizedBox(height: 12),
-            ],
+                ToggleInputField(
+                  controller: controllerNhapLai,
+                  title: "Nhập lại mật khẩu",
+                  color: Colors.grey.shade100,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'bạn chưa viết gì vào ô này';
+                    } else if (value.trim() != controllerPassword.text.trim()) {
+                      return "Mật khẩu không khớp";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 30),
 
           customButton(
             onPressed: () {
-              print("Đăng nhập EEEEEEEEEEEEEEEEE");
+              if (_formKey.currentState!.validate()) {
+                var user = CreateUserRequest(roleId: 1, money: 0, bankNumber: " ", bank: " ", name: controllerTenNguoiDung.text.trim(), email: controllerEmail.text.trim(), phone: controllerSoDienThoai.text.trim(), avatarPath: " ", bankBranch: " ");
+
+                
+              }
             },
             text: "Tiếp theo",
           ),

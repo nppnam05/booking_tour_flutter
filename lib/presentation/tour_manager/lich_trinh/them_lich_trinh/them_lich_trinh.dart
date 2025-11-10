@@ -157,11 +157,13 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
         notIconToggleInputField(
           _controllerNguoiToiDa,
           "Người tối đa",
+          "Người tối đa",
           AppColors.gray,
         ),
-        notIconToggleInputField(_controllerGia, "Giá", AppColors.gray),
+        notIconToggleInputField(_controllerGia, "Giá","Giá", AppColors.gray),
         notIconToggleInputField(
           _controllerTienCoc,
+          "Số tiền cọc",
           "Số tiền cọc",
           AppColors.gray,
         ),

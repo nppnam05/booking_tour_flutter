@@ -122,6 +122,7 @@ class ThemDiaDanhScreen extends StatelessWidget {
         name,
         onChanged: cubit.setName,
         "Tên địa danh",
+        "Tên địa danh",
         AppColors.gray,
       ),
     );

@@ -4,10 +4,12 @@ import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
+import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/bank_response.dart';
 import 'package:booking_tour_flutter/data/response/booking_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/participant_response.dart';
@@ -18,12 +20,14 @@ import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
+import 'package:booking_tour_flutter/data/response/schedule_user_completed_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/domain/activity.dart';
+import 'package:booking_tour_flutter/domain/bank.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
@@ -37,6 +41,7 @@ import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dar
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
@@ -55,8 +60,26 @@ import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
+
 abstract class BookingRepository {
+   Future<Either<Failure, bool>> removeFavorite({
+    required int tourId,
+    required int userId,
+  });
+  
+  Future<Either<Failure, List<Favorite>>> getTourFavoriteByUserId({
+    required int userId,
+  });
+
+  Future<Either<Failure, List<Bank>>> getBank();
+  
   Future<Either<Failure, List<FakePost>>> getPost();
+
+  Future<Either<Failure, bool>> registerUser({required CreateUserRequest user});
+
+  Future<Either<Failure, User>> getUserById({required int id});
+
+  Future<Either<Failure, List<ScheduleUserCompleted>>> getScheduleUserCompletedByUserId({required int userId});
 
   Future<Either<Failure, bool>> checkAssignment({
     required int scheduleId,
@@ -65,15 +88,6 @@ abstract class BookingRepository {
 
   Future<Either<Failure, List<TourGuide>>> getTourGuides({
     required int idschedule,
-  });
-
-  Future<Either<Failure, List<Favorite>>> getTourFavoriteByUserId({
-    required int userId,
-  });
-
-  Future<Either<Failure, bool>> removeFavorite({
-    required int tourId,
-    required int userId,
   });
 
   Future<Either<Failure, ScheduleAssignmentTourguide>>
@@ -136,6 +150,18 @@ abstract class BookingRepository {
     required int locationId,
   });
 
+  Future<Either<Failure, User>> updateUserId({
+    required final int id,
+    required final String bank,
+    required final String avatarPath,
+    required final String bankBranch,
+    required final String bankNumber,
+    final int money,
+    final String name,
+    final String email,
+    final String phone,
+  });
+
   Future<Either<Failure, Place>> createPlace({
     required String name,
     required int locationId,
@@ -188,7 +214,6 @@ abstract class BookingRepository {
     required String content,
     required int rating,
   });
-  Future<Either<Failure, User>> getUserById({required int userId});
 }
 
 @Singleton(as: BookingRepository)
@@ -385,6 +410,7 @@ class BookingRepositoryImp implements BookingRepository {
         endDate: endDate,
         stars: stars,
       );
+
 
       var data = responses.data as List<dynamic>;
       var tripResponses = data.map(
@@ -942,26 +968,95 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, User>> getUserById({required int userId}) async {
+  Future<Either<Failure, bool>> registerUser({
+    required CreateUserRequest user,
+  }) async {
     try {
-      final response = await _coreService.getUserById(userId);
-      if (response.data == null) {
-        throw Exception(
-          "response.data is null – không có dữ liệu trả về từ API",
-        );
-      }
-      if (response.data is! Map<String, dynamic>) {
-        throw Exception(
-          "response.data không phải Map<String, dynamic>: ${response.data.runtimeType}",
-        );
-      }
+      var response = await _coreService.registerUser(user);
 
-      final data = response.data as Map<String, dynamic>;
-      final userResponse = UserResponse.fromJson(data);
-      final user = userResponse.map();
+      return Right(true);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> getUserById({required int id}) async {
+    try {
+      var responses = await _coreService.getUserById(id);
+      var data = responses.data as Map<String, dynamic>;
+
+      var userResponse = UserResponse.fromJson(data);
+
+      var user = userResponse.map();
 
       return Right(user);
     } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> updateUserId({
+    required int id,
+    int? money,
+    String? name,
+    String? email,
+    String? phone,
+    String? bank,
+    String? avatarPath,
+    String? bankBranch,
+    String? bankNumber,
+  }) async {
+    try {
+      final body = {
+        "id": id,
+        "money": money,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "bank": bank,
+        "avatarPath": avatarPath,
+        "bankBranch": bankBranch,
+        "bankNumber": bankNumber,
+      };
+
+      final response = await _coreService.updateUserId(body);
+
+      final data = response.data as Map<String, dynamic>;
+
+      final userResponse = UserResponse.fromJson(data);
+      return Right(userResponse.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<Bank>>> getBank() async {
+    try {
+      var responses = await _coreService.getBank();
+      var data = responses.data as List<dynamic>;
+
+      var bankResponses = data.map((e) => BankResponse.fromJson(e as Map<String, dynamic>),);
+      var banks = bankResponses.map((e) => e.map(),).toList();
+      return Right(banks);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<ScheduleUserCompleted>>> getScheduleUserCompletedByUserId({required int userId}) async {
+    try{
+      var responses = await _coreService.getScheduleCompletedByUserId(userId);
+      var data = responses.data as List<dynamic>;
+
+      var scheduleRPs = data.map((e) => ScheduleUserCompletedResponse.fromJson(e as Map<String, dynamic>));
+      var schedules = scheduleRPs.map((e) => e.map()).toList();
+      return Right(schedules);
+    }
+    catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
