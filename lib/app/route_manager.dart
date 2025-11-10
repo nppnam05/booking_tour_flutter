@@ -122,7 +122,7 @@ class RouteManager {
 },*/
 
  
-RouteName.profileScreen: (context) => ProfileUserScreen(userId : 2 ),
+RouteName.profileScreen: (context) => ProfileUserScreen(userId : 1 ),
   /*RouteName.profile: (context) {
   final userId = ModalRoute.of(context)?.settings.arguments as int;
   return ProfileUserScreen(userId: userId);
