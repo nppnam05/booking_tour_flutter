@@ -52,13 +52,24 @@ import 'package:booking_tour_flutter/domain/requests/add_location_activity_reque
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
 import 'package:dartz/dartz.dart';
-
+import 'package:booking_tour_flutter/data/response/favorite_response.dart';
+import 'package:booking_tour_flutter/domain/favorite.dart';
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
+
 abstract class BookingRepository {
+   Future<Either<Failure, bool>> removeFavorite({
+    required int tourId,
+    required int userId,
+  });
+  
+  Future<Either<Failure, List<Favorite>>> getTourFavoriteByUserId({
+    required int userId,
+  });
 
   Future<Either<Failure, List<Bank>>> getBank();
   
@@ -399,6 +410,7 @@ class BookingRepositoryImp implements BookingRepository {
         endDate: endDate,
         stars: stars,
       );
+
 
       var data = responses.data as List<dynamic>;
       var tripResponses = data.map(
@@ -824,6 +836,48 @@ class BookingRepositoryImp implements BookingRepository {
               .toList();
 
       return Right(scheduleAssignments);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Favorite>>> getTourFavoriteByUserId({
+    required int userId,
+  }) async {
+    try {
+      final responses = await _coreService.getTourFavoriteByUserId(userId);
+
+      final jsonData = responses.data;
+      final List<dynamic> data =
+          (jsonData is Map<String, dynamic>)
+              ? (jsonData['data'] as List<dynamic>)
+              : (jsonData as List<dynamic>);
+
+      final favorites =
+          data
+              .map(
+                (json) =>
+                    FavoriteResponse.fromJson(
+                      json as Map<String, dynamic>,
+                    ).map(),
+              )
+              .toList();
+
+      return Right(favorites);
+    } catch (e, st) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> removeFavorite({
+    required int tourId,
+    required int userId,
+  }) async {
+    try {
+      await _coreService.removeFavorite(tourId, userId);
+      return const Right(true);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

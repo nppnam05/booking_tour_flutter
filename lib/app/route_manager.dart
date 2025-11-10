@@ -29,6 +29,8 @@ import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_ti
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/danh_sach_lich_trinh_booking_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/favorite/favorite_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/profile/profileUser_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/lich_trinh_da_hoan_thanh_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/thong_tin_cua_ban_screen.dart';
@@ -36,7 +38,6 @@ import 'package:booking_tour_flutter/presentation/user/vi/vi_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
-
 
 class RouteName {
   RouteName._();
@@ -80,6 +81,8 @@ class RouteName {
   static final vi = "vi";
   static final lichTrinhDaHoanThanh = "lichTrinhDaHoanThanh";
   static final danhSachLichTrinhBooking = "danhSachLichTrinhBooking";
+  static final favoriteTour = "favoriteTour";
+  static final profileScreen = "profileScreen";
 }
 
 class RouteManager {
@@ -127,5 +130,19 @@ class RouteManager {
         (context) => DetailPaidScheduleScreen(),
     RouteName.profileChangeSchedule: (context) => const ChangeScheduleScreen(),
     RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen(),
+    RouteName.favoriteTour: (context) => FavoriteTourScreen(userId: 2),
+    /*RouteName.favoriteTour: (context) {
+  final userId = ModalRoute.of(context)?.settings.arguments as int;
+  return FavoriteTourScreen(userId: userId);
+},*/
+
+ 
+RouteName.profileScreen: (context) => ProfileUserScreen(userId : 1 ),
+  /*RouteName.profile: (context) {
+  final userId = ModalRoute.of(context)?.settings.arguments as int;
+  return ProfileUserScreen(userId: userId);
+},*/
+
+
   };
 }
