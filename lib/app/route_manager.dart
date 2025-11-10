@@ -32,11 +32,20 @@ import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/book_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/pay_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/schedule_detail_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/danh_sach_lich_trinh_booking_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/favorite/favorite_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/profile/profileUser_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/lich_trinh_da_hoan_thanh_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/thong_tin_cua_ban_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/vi/vi_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/chi_tiet_lich_trinh_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/danh_sach_lich_trinh_user.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/thong_bao_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
-
 
 class RouteName {
   RouteName._();
@@ -75,7 +84,18 @@ class RouteName {
   static final themDiaDanh = "them_dia_danh";
   static final suaDiaDanh = "sua_dia_danh";
   static final scheduleTourmanager = "scheduleTourmanager";
-  static final searchTour = "searchTour"; 
+  static final searchTour = "searchTour";
+
+  static final thongTinCuaBan = "thongTinCuaBan";
+  static final vi = "vi";
+  static final lichTrinhDaHoanThanh = "lichTrinhDaHoanThanh";
+  static final danhSachLichTrinhBooking = "danhSachLichTrinhBooking";
+  static final favoriteTour = "favoriteTour";
+  static final profileScreen = "profileScreen";
+  static final danhSachChuyenDi = "danh_sach_chuyen_di";
+  static final thongBao = "thong_bao";
+  static final danhSachLichTrinhUser = "danh_sach_lich_trinh_user";
+  static final chiTietLichTrinhScreen = "chi_tiet_lich_trinh_screen";
   static final bookSchedule = "book_schedule";
   static final paySchedule = "pay_schedule";
 }
@@ -109,16 +129,40 @@ class RouteManager {
     RouteName.updateTour: (context) => UpdateTourScreen(),
     RouteName.scheduleTourguide: (context) => ScheduleTourguideScreen(),
     RouteName.ScheduleTourmanager: (context) => ScheduleTourmanagerScreen(),
+
+    RouteName.thongTinCuaBan: (context) => ThongTinCuaBanScreen(),
+    RouteName.vi: (context) => ViScreen(),
+    RouteName.lichTrinhDaHoanThanh: (context) => LichTrinhDaHoanThanhScreen(),
+    RouteName.danhSachLichTrinhBooking:
+        (context) => DanhSachLichTrinhBookingScreen(),
+
     RouteName.participants: (context) {
       final schedule =
           ModalRoute.of(context)?.settings.arguments as ScheduleTourguide;
       return ParticipantsScreen(schedule: schedule);
     },
     RouteName.searchTour: (context) => SearchScreen(),
+    RouteName.searchTour: (context) => SearchScreen(),
+    RouteName.danhSachChuyenDi: (context) => DanhSachChuyenDiScreen(),
+    RouteName.thongBao: (context) => ThongBaoScreen(),
+    RouteName.danhSachLichTrinhUser: (context) => DanhSachLichTrinhUser(),
     RouteName.profileDetailPaidSchedule:
         (context) => DetailPaidScheduleScreen(),
     RouteName.profileChangeSchedule: (context) => const ChangeScheduleScreen(),
     RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen(),
+    RouteName.chiTietLichTrinhScreen: (context) => ChiTietLichTrinhScreen(),
+    RouteName.favoriteTour: (context) => FavoriteTourScreen(userId: 2),
+
+    /*RouteName.favoriteTour: (context) {
+  final userId = ModalRoute.of(context)?.settings.arguments as int;
+  return FavoriteTourScreen(userId: userId);
+},*/
+    RouteName.profileScreen: (context) => ProfileUserScreen(userId: 1),
+
+    /*RouteName.profile: (context) {
+  final userId = ModalRoute.of(context)?.settings.arguments as int;
+  return ProfileUserScreen(userId: userId);
+},*/
     RouteName.scheduleDetail : (context) => ScheduleDetailScreen(),
     RouteName.bookSchedule : (context) => BookScheduleScreen(),
     RouteName.paySchedule : (context) => PayScheduleScreen(),

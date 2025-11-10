@@ -22,11 +22,7 @@ class ListDiaDanhItem extends StatelessWidget {
       child: InkWell(
         // bấm vào item chuyển qua địa điểm hạot động
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            RouteName.danhSachHoatDong,
-            arguments: diaDanh,
-          );
+          Navigator.pushNamed(context, RouteName.danhSachHoatDong, arguments: diaDanh);
         },
 
         child: Card(

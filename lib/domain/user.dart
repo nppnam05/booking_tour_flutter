@@ -35,7 +35,7 @@ class User {
       name: '',
       email: '',
       phone: '',
-      avatarPath: '',
+      avatarPath: 'https://photo.znews.vn/w1920/Uploaded/mdf_eioxrd/2021_07_06/1q.jpg',
       bankBranch: ''
     );
   }

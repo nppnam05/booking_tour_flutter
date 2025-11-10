@@ -138,6 +138,7 @@ class _SuaDiaDanhView extends StatelessWidget {
       child: notIconToggleInputField(
         onChanged: (_){},
         nameController,
+        "Địa danh",
         "Tên địa danh",
         AppColors.gray,
       ),

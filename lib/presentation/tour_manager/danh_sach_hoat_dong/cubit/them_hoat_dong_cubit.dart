@@ -45,7 +45,7 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
     final result = await bookingRepository.addLocationActivities(
       AddLocationActivityRequest(
         placeId: placeId,
-        name: tenDiaDiem,
+        name: tenDiaDiem.trim(),
         activityIds: activityIds,
       ),
     );
@@ -75,8 +75,9 @@ class ThemHoatDongCubit extends Cubit<ThemHoatDongState> {
       final filtered =
           state.activities
               .where(
-                (activity) =>
-                    activity.action.toLowerCase().contains(query.toLowerCase()),
+                (activity) => activity.action.toLowerCase().contains(
+                  query.trim().toLowerCase(),
+                ),
               )
               .toList();
 

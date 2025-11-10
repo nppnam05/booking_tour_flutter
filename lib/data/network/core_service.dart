@@ -32,6 +32,9 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
+  @GET("/Bank")
+  Future<RestResponse> getBank();
+
   @GET("/Schedule/{id}")
   Future<RestResponse> getScheduleById(@Path("id") int id);
 
@@ -72,6 +75,9 @@ abstract class CoreService {
     @Path("idschedule") int idschedule,
   );
 
+  @GET("/Schedule/completed/{userId}")
+  Future<RestResponse> getScheduleCompletedByUserId(@Path("userId") int userId);
+
   @GET("/Schedule/{id}")
   Future<RestResponse> getScheduleAssignmentById(@Path("id") int id);
 
@@ -97,6 +103,13 @@ abstract class CoreService {
 
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
+
+  // user
+  @GET("/User/{id}")
+  Future<RestResponse> getUserById(@Path("id") int id);
+
+  @PUT("/User")
+  Future<RestResponse> updateUserId(@Body() Map<String, dynamic> body);
 
   @GET("/Activity")
   Future<RestResponse> getActivities({
@@ -133,16 +146,16 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
-    @GET("/Tour")
-    Future<RestResponse> getTrips({
-      @Query("SortBy") String sortBy = "Title",
-      @Query("SortOrder") String order = "ASC",
-      @Query("filter") String? filter,
-      @Query("provinceId") int? provinceId ,
-      @Query("startDate") DateTime? startDate,
-      @Query("endDate") DateTime? endDate,
-      @Query("stars") int? stars,
-    });
+  @GET("/Tour")
+  Future<RestResponse> getTrips({
+    @Query("SortBy") String sortBy = "Title",
+    @Query("SortOrder") String order = "ASC",
+    @Query("filter") String? filter,
+    @Query("provinceId") int? provinceId,
+    @Query("startDate") DateTime? startDate,
+    @Query("endDate") DateTime? endDate,
+    @Query("stars") int? stars,
+  });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({@Path("id") required int id});
 
@@ -191,6 +204,11 @@ abstract class CoreService {
     @Body() UpdateLocationActivities request,
   );
 
+  @DELETE("/LocationActivity/{id}")
+  Future<LocationActivityResponse> deleteLocationActivities({
+    @Path("id") required int id,
+  });
+
   @POST("/Place")
   Future<AssignmentPlaceResponse> addPlace(
     @Body() Map<String, dynamic> request,
@@ -207,4 +225,24 @@ abstract class CoreService {
 
   @POST("/Review")
   Future<RestResponse> createReview(@Body() CreateReviewRequest request);
+
+  @GET("/Tour/getMostFavoriteTour")
+  Future<RestResponse> getMostFavoriteTour();
+
+  @GET("/Tour/getMostRecent")
+  Future<RestResponse> getMostRecent();
+
+  @GET("/Notification/{userId}")
+  Future<RestResponse> getNotification(@Path("userId") int userId);
+
+  @GET("/Review/{tourId}")
+  Future<RestResponse> getReview(@Path("tourId") int tourId);
+  @GET("/Favorite/{userId}")
+  Future<RestResponse> getTourFavoriteByUserId(@Path("userId") int userId);
+
+  @DELETE("/Favorite")
+  Future<RestResponse> removeFavorite(
+    @Query("tourId") int tourId,
+    @Query("userId") int userId,
+  );
 }

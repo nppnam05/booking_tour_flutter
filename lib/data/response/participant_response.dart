@@ -53,17 +53,17 @@ extension UserCompletedScheduleMapper on UserCompletedScheduleResponse {
     }
 
     String avatar = avatarPath ?? "";
-    
+
     if (avatar.isNotEmpty && !avatar.startsWith('http')) {
       avatar = "http://tt1220-001-site1.ntempurl.com$avatar";
     }
     if (avatar.isEmpty) {
-      avatar = "https://ui-avatars.com/api/?name=${Uri.encodeComponent(name ?? 'User')}&background=random";
+      avatar =
+          "https://ui-avatars.com/api/?name=${Uri.encodeComponent(name ?? 'User')}&background=random";
     }
 
     return booking!.map((b) {
       return Participant(
-        
         name: name ?? "Unknown",
         quantity: b.numPeople ?? 0,
         phoneNumber: b.phone ?? "N/A",

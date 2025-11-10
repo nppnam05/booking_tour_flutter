@@ -1,10 +1,10 @@
-import 'package:booking_tour_flutter/data/booking_repository.dart';
+
 import 'package:booking_tour_flutter/presentation/user/search/cubit/search_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/search/cubit/search_state.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_card.dart';
+import 'package:booking_tour_flutter/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -22,10 +22,35 @@ class _SearchScreenState extends State<SearchScreen> {
     super.dispose();
   }
 
+  void _showFilterBottomSheet(BuildContext context, SearchCubit cubit) async {
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => FilterBottomSheet(
+        initialProvinceId: cubit.provinceId,
+        initialProvinceName: cubit.provinceName,
+        initialStartDate: cubit.startDate,
+        initialEndDate: cubit.endDate,
+        initialStars: cubit.stars,
+      ),
+    );
+
+    if (result != null) {
+      cubit.applyFilters(
+        provinceId: result['provinceId'],
+        provinceName: result['provinceName'],
+        startDate: result['startDate'],
+        endDate: result['endDate'],
+        stars: result['stars'],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SearchCubit(), 
+      create: (_) => SearchCubit(),
       child: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {
           final cubit = context.read<SearchCubit>();
@@ -41,83 +66,193 @@ class _SearchScreenState extends State<SearchScreen> {
                 decoration: const InputDecoration(
                   hintText: 'Nhập tên địa điểm...',
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Color.fromARGB(255, 239, 236, 236)),
+                  hintStyle: TextStyle(
+                    color: Color.fromARGB(255, 239, 236, 236),
+                  ),
                 ),
                 onSubmitted: (_) =>
                     cubit.searchTrips(_searchController.text.trim()),
                 textInputAction: TextInputAction.search,
               ),
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.filter_alt_outlined),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Bộ lọc sẽ được thêm sau'),
+                Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.filter_alt_outlined),
+                      onPressed: () => _showFilterBottomSheet(context, cubit),
+                    ),
+                    if (cubit.hasActiveFilters)
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
                       ),
-                    );
-                  },
+                  ],
                 ),
               ],
             ),
-            body: _buildBody(context, state, cubit),
+            body: Column(
+              children: [
+                if (cubit.hasActiveFilters)
+                  _buildActiveFiltersChips(cubit),
+                Expanded(
+                  child: _buildBody(context, state, cubit),
+                ),
+              ],
+            ),
           );
         },
       ),
     );
   }
 
+  Widget _buildActiveFiltersChips(SearchCubit cubit) {
+    final chips = <Widget>[];
+    if (cubit.provinceId != null && cubit.provinceName != null) {
+      chips.add(_buildFilterChip(
+        label: cubit.provinceName!,
+        onDeleted: () {
+          cubit.applyFilters(
+            provinceId: null,
+            provinceName: null,
+            startDate: cubit.startDate,
+            endDate: cubit.endDate,
+            stars: cubit.stars,
+          );
+        },
+      ));
+    }
+    if (cubit.startDate != null && cubit.endDate != null) {
+      final dateText =
+          '${_formatDate(cubit.startDate!)} - ${_formatDate(cubit.endDate!)}';
+      chips.add(_buildFilterChip(
+        label: dateText,
+        onDeleted: () {
+          cubit.applyFilters(
+            provinceId: cubit.provinceId,
+            provinceName: cubit.provinceName,
+            startDate: null,
+            endDate: null,
+            stars: cubit.stars,
+          );
+        },
+      ));
+    }
+    if (cubit.stars != null) {
+      chips.add(_buildFilterChip(
+        label: '${cubit.stars} ⭐',
+        onDeleted: () {
+          cubit.applyFilters(
+            provinceId: cubit.provinceId,
+            provinceName: cubit.provinceName,
+            startDate: cubit.startDate,
+            endDate: cubit.endDate,
+            stars: null,
+          );
+        },
+      ));
+    }
 
-  Widget _buildBody(
-      BuildContext context, SearchState state, SearchCubit cubit) {
- 
-    if (state is SearchInitial) {
-  if (state.history.isEmpty) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    if (chips.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Colors.grey[100],
+      child: Row(
         children: [
-          Icon(Icons.search, size: 80, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            'Nhập từ khóa để tìm kiếm tour',
-            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: chips,
+            ),
+          ),
+          TextButton(
+            onPressed: () => cubit.clearFilters(),
+            child: const Text('Xóa tất cả'),
           ),
         ],
       ),
     );
-  } else {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text('Lịch sử tìm kiếm',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        ...state.history.map((keyword) => ListTile(
-              leading: const Icon(Icons.history),
-              title: Text(keyword),
-              trailing: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => cubit.removeFromHistory(keyword),
-              ),
-              onTap: () {
-                _searchController.text = keyword;
-                cubit.searchTrips(keyword);
-              },
-            )),
-        const SizedBox(height: 8),
-        TextButton.icon(
-          onPressed: cubit.clearHistory,
-          icon: const Icon(Icons.delete_forever),
-          label: const Text('Xóa toàn bộ lịch sử'),
-        ),  
-      ],
+  }
+
+  Widget _buildFilterChip({
+    required String label,
+    required VoidCallback onDeleted,
+  }) {
+    return Chip(
+      label: Text(label),
+      deleteIcon: const Icon(Icons.close, size: 18),
+      onDeleted: onDeleted,
+      backgroundColor: Colors.teal[50],
+      labelStyle: const TextStyle(fontSize: 12),
+      visualDensity: VisualDensity.compact,
     );
   }
-}
 
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
 
-    
+  Widget _buildBody(
+    BuildContext context,
+    SearchState state,
+    SearchCubit cubit,
+  ) {
+    if (state is SearchInitial) {
+      if (state.history.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.search, size: 80, color: Colors.grey[400]),
+              const SizedBox(height: 16),
+              Text(
+                'Nhập từ khóa để tìm kiếm tour',
+                style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 69, 69, 69)),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const Text(
+              'Lịch sử tìm kiếm',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            ...state.history.map((keyword) => ListTile(
+                  leading: const Icon(Icons.history),
+                  title: Text(keyword),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => cubit.removeFromHistory(keyword),
+                  ),
+                  onTap: () {
+                    _searchController.text = keyword;
+                    cubit.searchTrips(keyword);
+                  },
+                )),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: cubit.clearHistory,
+              icon: const Icon(Icons.delete_forever),
+              label: const Text('Xóa toàn bộ lịch sử'),
+            ),
+          ],
+        );
+      }
+    }
+
     if (state is SearchLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -145,6 +280,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       );
     }
+
     if (state is SearchLoaded) {
       final trips = state.trips;
 
@@ -161,7 +297,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Thử với từ khóa khác',
+                'Thử với từ khóa khác hoặc điều chỉnh bộ lọc',
                 style: TextStyle(fontSize: 14, color: Colors.grey[500]),
               ),
             ],
@@ -191,6 +327,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       );
     }
+
     return const SizedBox();
   }
 }

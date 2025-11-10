@@ -1,6 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/cubit/dia_danh_state.dart';
@@ -8,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DiaDanhCubit extends Cubit<DiaDanhState> {
-  static final bookingRepository = getIt<BookingRepository>();
+  final bookingRepository = getIt<BookingRepository>();
 
   DiaDanhCubit() : super(DiaDanhState(provinces: [], places: []));
 

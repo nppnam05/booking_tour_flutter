@@ -27,6 +27,10 @@ TripManagerResponse _$TripManagerResponseFromJson(
           .toList(),
   totalReviews: (json['totalReviews'] as num?)?.toInt(),
   totalStars: (json['totalStars'] as num?)?.toInt(),
+  places:
+      (json['places'] as List<dynamic>?)
+          ?.map((e) => PlaceResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
 );
 
 Map<String, dynamic> _$TripManagerResponseToJson(
@@ -43,4 +47,5 @@ Map<String, dynamic> _$TripManagerResponseToJson(
   'dayOfTours': instance.dayOfTours,
   'totalReviews': instance.totalReviews,
   'totalStars': instance.totalStars,
+  'places': instance.places,
 };

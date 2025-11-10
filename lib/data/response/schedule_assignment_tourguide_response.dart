@@ -40,7 +40,9 @@ extension ScheduleAssignmentTourguideResponseMapper
       endDate: endDate ?? DateTime.now(),
       code: code ?? '',
       maxSlot: maxSlot ?? 0,
-      tour: tour?.map() ?? schedule.Tour(title: '', locations: []),
+      tour:
+          tour?.map() ??
+          schedule.Tour(title: '', locations: [], description: ''),
     );
   }
 }
@@ -48,9 +50,10 @@ extension ScheduleAssignmentTourguideResponseMapper
 @JsonSerializable()
 class TourResponse {
   final String? title;
+  final String? description;
   final List<LocationResponse>? locations;
 
-  TourResponse({this.title, this.locations});
+  TourResponse({this.title, this.locations, this.description});
 
   factory TourResponse.fromJson(Map<String, dynamic> json) =>
       _$TourResponseFromJson(json);
@@ -60,6 +63,7 @@ extension TourResponseMapper on TourResponse {
   schedule.Tour map() {
     return schedule.Tour(
       title: title ?? '',
+      description: '',
       locations:
           locations
               ?.map((locationResponse) => locationResponse.map())
