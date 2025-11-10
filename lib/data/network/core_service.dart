@@ -12,7 +12,6 @@ import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
-import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
@@ -33,7 +32,6 @@ abstract class CoreService {
 
   @GET("/Bank")
   Future<RestResponse> getBank();
-
 
   @POST("/User")
   Future<RestResponse> registerUser(CreateUserRequest user);
@@ -189,6 +187,11 @@ abstract class CoreService {
     @Body() UpdateLocationActivities request,
   );
 
+  @DELETE("/LocationActivity/{id}")
+  Future<LocationActivityResponse> deleteLocationActivities({
+    @Path("id") required int id,
+  });
+
   @POST("/Place")
   Future<AssignmentPlaceResponse> addPlace(
     @Body() Map<String, dynamic> request,
@@ -205,6 +208,18 @@ abstract class CoreService {
 
   @POST("/Review")
   Future<RestResponse> createReview(@Body() CreateReviewRequest request);
+
+  @GET("/Tour/getMostFavoriteTour")
+  Future<RestResponse> getMostFavoriteTour();
+
+  @GET("/Tour/getMostRecent")
+  Future<RestResponse> getMostRecent();
+
+  @GET("/Notification/{userId}")
+  Future<RestResponse> getNotification(@Path("userId") int userId);
+
+  @GET("/Review/{tourId}")
+  Future<RestResponse> getReview(@Path("tourId") int tourId);
   @GET("/Favorite/{userId}")
   Future<RestResponse> getTourFavoriteByUserId(@Path("userId") int userId);
 

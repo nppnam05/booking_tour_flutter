@@ -8,6 +8,7 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
   DanhSachHoatDongCubit({int? placeId}) : super(const DanhSachHoatDongState()) {
     getDanhSachHoatDong(placeId: placeId);
   }
+  final bookingRepository = GetIt.instance<BookingRepository>();
 
   Future<void> getDanhSachHoatDong({int? placeId}) async {
     final finalPlaceId = placeId ?? state.placeId;
@@ -28,7 +29,7 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
         placeId: finalPlaceId,
       ),
     );
-    final bookingRepository = GetIt.instance<BookingRepository>();
+
     final result = await bookingRepository.getLocationActivities(
       placeId: finalPlaceId,
     );
@@ -49,6 +50,21 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
     );
   }
 
+  Future<void> deleteLocationActivity(int id) async {
+    final result = await bookingRepository.deleteLocatinActivities(id);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          status: DanhSachHoatDongStatus.failure,
+          error: failure.message,
+        ),
+      ),
+      (response) {
+        getDanhSachHoatDong();
+      },
+    );
+  }
+
   void searchLocationActivities(String query) {
     if (query.isEmpty) {
       emit(
@@ -61,8 +77,9 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
       final filtered =
           state.originalDanhSachHoatDong
               .where(
-                (activity) =>
-                    activity.name.toLowerCase().contains(query.toLowerCase()),
+                (activity) => activity.name.toLowerCase().contains(
+                  query.trim().toLowerCase(),
+                ),
               )
               .toList();
       emit(state.copyWith(searchQuery: query, danhSachHoatDong: filtered));
@@ -70,7 +87,6 @@ class DanhSachHoatDongCubit extends Cubit<DanhSachHoatDongState> {
   }
 
   void clearSearch() {
-    // Không cần truyền placeId vì đã có trong state
     getDanhSachHoatDong();
   }
 

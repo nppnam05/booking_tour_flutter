@@ -13,11 +13,7 @@ class FavoriteResponse {
   int? tourId;
   TripManagerResponse? tour;
 
-  FavoriteResponse({
-    this.userId,
-    this.tourId,
-    this.tour,
-  });
+  FavoriteResponse({this.userId, this.tourId, this.tour});
 
   factory FavoriteResponse.fromJson(Map<String, dynamic> json) =>
       _$FavoriteResponseFromJson(json);
@@ -26,26 +22,24 @@ class FavoriteResponse {
 
 extension FavoriteResponseMapper on FavoriteResponse {
   Favorite map() {
-    final Trip mappedTrip = tour != null
-        ? tour!.map()
-        : Trip(
-            id: 0,
-            day: 0,
-            title: '',
-            price: 0,
-            percentDeposit: 0,
-            description: '',
-            provinces: [],
-            tourImages: [],
-            dayOfTours: [],
-            totalReviews: 0,
-            totalStars: 0,
-          );
+    final Trip mappedTrip =
+        tour != null
+            ? tour!.map()
+            : Trip(
+              id: 0,
+              day: 0,
+              title: '',
+              price: 0,
+              percentDeposit: 0,
+              description: '',
+              provinces: [],
+              tourImages: [],
+              dayOfTours: [],
+              totalReviews: 0,
+              totalStars: 0,
+              places: [],
+            );
 
-    return Favorite(
-      userId: userId ?? 0,
-      tourId: tourId ?? 0,
-      tour: mappedTrip,
-    );
+    return Favorite(userId: userId ?? 0, tourId: tourId ?? 0, tour: mappedTrip);
   }
 }

@@ -47,7 +47,7 @@ class SuaHoatDongCubit extends Cubit<SuaHoatDongState> {
     final request = UpdateLocationActivities(
       id: locationActivityId,
       placeId: placeId,
-      name: name,
+      name: name.trim(),
       activityIds: activityIds,
     );
 
@@ -75,8 +75,9 @@ class SuaHoatDongCubit extends Cubit<SuaHoatDongState> {
       final filtered =
           allActivities
               .where(
-                (activity) =>
-                    activity.action.toLowerCase().contains(query.toLowerCase()),
+                (activity) => activity.action.toLowerCase().contains(
+                  query.trim().toLowerCase(),
+                ),
               )
               .toList();
 

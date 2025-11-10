@@ -70,6 +70,12 @@ class LoginScreen extends StatelessWidget {
               );
               return;
             default:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.danhSachChuyenDi,
+                (route) => false,
+                arguments: state.user,
+              );
               return;
           }
         } else {
