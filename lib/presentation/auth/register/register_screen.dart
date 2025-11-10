@@ -124,7 +124,7 @@ class RegisterScreen extends StatelessWidget {
                   const SizedBox(height: 12),
 
                   notToggleInputFieldNotIcon(
-                    controller: controllerSoDienThoai,
+                    controller: controllerSoDienThoai,  
                     title: "Số điện thoại",
                     color: Colors.grey.shade100,
                     validator: (value) {

@@ -19,6 +19,7 @@ import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart' hide LocationActivityResponse;
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
@@ -39,6 +40,7 @@ import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
+import 'package:booking_tour_flutter/domain/schedule_detail.dart' hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
@@ -58,6 +60,8 @@ import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:injectable/injectable.dart';
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
+
+  Future<Either<Failure, ScheduleDetail>> getScheduleById(int id);
 
   Future<Either<Failure, bool>> changePassword(ChangePasswordRequest changePassword);
 
@@ -971,6 +975,24 @@ class BookingRepositoryImp implements BookingRepository {
       var data = response.data as bool;
 
       return Right(data);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, ScheduleDetail>> getScheduleById(int id) async {
+    try{
+      var response = await _coreService.getScheduleById(id);
+
+      var data = response.data as Map<String, dynamic>;
+
+      var result = ScheduleDetailResponse.fromJson(data);
+
+      var schedule = result.map();
+
+      return Right(schedule);
     }
     catch(e){
       return Left(ErrorHandler.handle(e).failure);

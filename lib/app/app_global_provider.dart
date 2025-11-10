@@ -25,7 +25,8 @@ class AppGlobalProvider extends StatelessWidget{
       BlocProvider(create: (_) => TourGuideAssignmentCubit()),
       BlocProvider(create: (_) => ScheduleAssignmentCubit()),
       BlocProvider(create: (_) => ChangeScheduleCubit()),
-    ], child: child);
+    ], 
+    child: child);
   }
 
 }

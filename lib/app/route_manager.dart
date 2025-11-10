@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/domain/booking.dart';
+import 'package:booking_tour_flutter/domain/schedule_detail.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
@@ -28,6 +29,9 @@ import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_tiet_lich_trinh/chi_tiet_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/book_a_schedule/book_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/pay/pay_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/schedule_detail/schedule_detail_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
@@ -42,6 +46,7 @@ class RouteName {
   static final profileDetailPaidSchedule = "profile_detail_paid_schedule";
   static final profileChangeSchedule = "profile_change_schedule";
   static final profileReviewSchedule = "profile_review_schedule";
+  static final scheduleDetail = "schedule_detail";
 
   static final menu = "menu";
   static final themLichTrinh = "them_lich_trinh";
@@ -71,6 +76,8 @@ class RouteName {
   static final suaDiaDanh = "sua_dia_danh";
   static final scheduleTourmanager = "scheduleTourmanager";
   static final searchTour = "searchTour"; 
+  static final bookSchedule = "book_schedule";
+  static final paySchedule = "pay_schedule";
 }
 
 class RouteManager {
@@ -112,5 +119,8 @@ class RouteManager {
         (context) => DetailPaidScheduleScreen(),
     RouteName.profileChangeSchedule: (context) => const ChangeScheduleScreen(),
     RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen(),
+    RouteName.scheduleDetail : (context) => ScheduleDetailScreen(),
+    RouteName.bookSchedule : (context) => BookScheduleScreen(),
+    RouteName.paySchedule : (context) => PayScheduleScreen(),
   };
 }

@@ -32,6 +32,9 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
+  @GET("/Schedule/{id}")
+  Future<RestResponse> getScheduleById(@Path("id") int id);
+
   @PATCH("/User/change-password/email")
   Future<RestResponse> changePassword(@Body() Map<String, dynamic> body);
 
