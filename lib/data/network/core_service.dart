@@ -200,4 +200,7 @@ abstract class CoreService {
 
   @GET("/Notification/{userId}")
   Future<RestResponse> getNotification(@Path("userId") int userId);
+
+  @GET("/Review/{tourId}")
+  Future<RestResponse> getReview(@Path("tourId") int tourId);
 }

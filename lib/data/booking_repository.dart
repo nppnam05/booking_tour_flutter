@@ -14,6 +14,7 @@ import 'package:booking_tour_flutter/data/response/notification_response.dart';
 import 'package:booking_tour_flutter/data/response/participant_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
+import 'package:booking_tour_flutter/data/response/review_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
@@ -35,6 +36,7 @@ import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
+import 'package:booking_tour_flutter/domain/review.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
@@ -186,6 +188,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getMostFavoriteTour();
   Future<Either<Failure, List<Trip>>> getMostRecent();
   Future<Either<Failure, List<Notification>>> getNotification(int userId);
+  Future<Either<Failure, List<Review>>> getReview(int tourId);
 }
 
 @Singleton(as: BookingRepository)
@@ -948,6 +951,25 @@ class BookingRepositoryImp implements BookingRepository {
               )
               .toList()
               .cast<Notification>();
+
+      return Right(items);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Review>>> getReview(int tourId) async {
+    try {
+      final responses = await _coreService.getReview(tourId);
+      final data = responses.data as List<dynamic>;
+      final items =
+          data
+              .map(
+                (json) =>
+                    ReviewResponse.fromJson(json as Map<String, dynamic>).map(),
+              )
+              .toList();
 
       return Right(items);
     } catch (e) {

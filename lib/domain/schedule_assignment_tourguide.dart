@@ -5,7 +5,6 @@ class ScheduleAssignmentTourguide {
   final DateTime endDate;
   final int maxSlot;
   final String code;
-
   final Tour tour;
 
   ScheduleAssignmentTourguide({
@@ -56,7 +55,6 @@ class Tour {
   final List<Location> locations;
   Tour({required this.title, required this.locations});
 }
-
 
 class Location {
   final String name;
