@@ -6,19 +6,46 @@ import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/sea
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ThongBaoScreen extends StatelessWidget {
+class ThongBaoScreen extends StatefulWidget {
   const ThongBaoScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final searchController = TextEditingController();
+  State<ThongBaoScreen> createState() => _ThongBaoScreenState();
+}
+
+class _ThongBaoScreenState extends State<ThongBaoScreen> {
+  late final TextEditingController searchController;
+  late final ThongBaoCubit cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+    cubit = ThongBaoCubit();
+
+    searchController.addListener(() {
+      cubit.search(searchController.text);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final userId = ModalRoute.of(context)?.settings.arguments as int?;
-    final cubit = ThongBaoCubit();
-
     if (userId != null) {
-      Future.microtask(() => cubit.load(userId));
+      cubit.load(userId);
     }
+  }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    cubit.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocProvider.value(
       value: cubit,
       child: Scaffold(
@@ -39,9 +66,9 @@ class ThongBaoScreen extends StatelessWidget {
                   builder: (context, state) {
                     return ListView.builder(
                       padding: const EdgeInsets.all(16),
-                      itemCount: state.items.length,
+                      itemCount: state.filteredItems.length,
                       itemBuilder: (context, index) {
-                        final n = state.items[index];
+                        final n = state.filteredItems[index];
                         return _buildThongBaoItem(
                           dateTime: n.createdAt,
                           content: n.content,

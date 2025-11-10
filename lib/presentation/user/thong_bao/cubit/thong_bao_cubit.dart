@@ -14,7 +14,30 @@ class ThongBaoCubit extends Cubit<ThongBaoState> {
 
     final result = await _repository.getNotification(userId);
     result.fold((failure) => emit(state.copyWith(isLoading: false)), (items) {
-      emit(state.copyWith(items: items.cast<Notification>(), isLoading: false));
+      final notificationList = items.cast<Notification>();
+      emit(
+        state.copyWith(
+          items: notificationList,
+          filteredItems: notificationList,
+          isLoading: false,
+        ),
+      );
     });
+  }
+
+  void search(String query) {
+    final lowerQuery = query.toLowerCase().trim();
+
+    if (lowerQuery.isEmpty) {
+      emit(state.copyWith(filteredItems: state.items, searchQuery: ''));
+      return;
+    }
+
+    final filtered =
+        state.items.where((notification) {
+          return notification.content.toLowerCase().contains(lowerQuery);
+        }).toList();
+
+    emit(state.copyWith(filteredItems: filtered, searchQuery: query));
   }
 }
