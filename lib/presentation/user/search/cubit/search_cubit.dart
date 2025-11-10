@@ -1,5 +1,4 @@
-// File: presentation/user/search/cubit/search_cubit.dart
-// ✅ ĐÃ FIX: Đồng bộ query với text controller
+
 
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
