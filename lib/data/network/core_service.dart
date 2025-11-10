@@ -112,16 +112,16 @@ abstract class CoreService {
     @Query("sortBy") String order = "ASC",
     @Query("filter") String? filter,
   });
-    @GET("/Tour")
-    Future<RestResponse> getTrips({
-      @Query("SortBy") String sortBy = "Title",
-      @Query("SortOrder") String order = "ASC",
-      @Query("filter") String? filter,
-      @Query("provinceId") int? provinceId ,
-      @Query("startDate") DateTime? startDate,
-      @Query("endDate") DateTime? endDate,
-      @Query("stars") int? stars,
-    });
+  @GET("/Tour")
+  Future<RestResponse> getTrips({
+    @Query("SortBy") String sortBy = "Title",
+    @Query("SortOrder") String order = "ASC",
+    @Query("filter") String? filter,
+    @Query("provinceId") int? provinceId,
+    @Query("startDate") DateTime? startDate,
+    @Query("endDate") DateTime? endDate,
+    @Query("stars") int? stars,
+  });
   @DELETE("/Tour/{id}")
   Future<void> deleteTrip({@Path("id") required int id});
 
@@ -186,4 +186,14 @@ abstract class CoreService {
 
   @POST("/Review")
   Future<RestResponse> createReview(@Body() CreateReviewRequest request);
+  @GET("/Favorite/{userId}")
+  Future<RestResponse> getTourFavoriteByUserId(@Path("userId") int userId);
+
+  @DELETE("/Favorite")
+  Future<RestResponse> removeFavorite(
+    @Query("tourId") int tourId,
+    @Query("userId") int userId,
+  );
+  @GET("/User/{userId}")
+  Future<RestResponse> getUserById(@Path("userId") int userId);
 }

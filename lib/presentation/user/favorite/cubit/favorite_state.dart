@@ -1,11 +1,17 @@
-import 'package:booking_tour_flutter/domain/trip.dart';
+import 'package:booking_tour_flutter/domain/favorite.dart';
 
-abstract class TripState {}
+abstract class FavoriteState {}
 
-class TripInitial extends TripState {}
+class FavoriteInitial extends FavoriteState {}
 
-class TripLoaded extends TripState {
-  final List<Trip> trips;
+class FavoriteLoading extends FavoriteState {}
 
-  TripLoaded(this.trips);
+class FavoriteLoaded extends FavoriteState {
+  final List<Favorite> favorites;
+  FavoriteLoaded(this.favorites);
+}
+
+class FavoriteError extends FavoriteState {
+  final String message;
+  FavoriteError(this.message);
 }

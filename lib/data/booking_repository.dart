@@ -47,11 +47,14 @@ import 'package:booking_tour_flutter/domain/requests/add_location_activity_reque
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
 import 'package:dartz/dartz.dart';
-
+import 'package:booking_tour_flutter/data/response/favorite_response.dart';
+import 'package:booking_tour_flutter/domain/favorite.dart';
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+
 abstract class BookingRepository {
   Future<Either<Failure, List<FakePost>>> getPost();
 
@@ -64,6 +67,14 @@ abstract class BookingRepository {
     required int idschedule,
   });
 
+  Future<Either<Failure, List<Favorite>>> getTourFavoriteByUserId({
+    required int userId,
+  });
+
+  Future<Either<Failure, bool>> removeFavorite({
+    required int tourId,
+    required int userId,
+  });
 
   Future<Either<Failure, ScheduleAssignmentTourguide>>
   getScheduleAssignmentById({required int idSchedule});
@@ -96,12 +107,11 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getTrips({
     String sortBy = "Title",
     String order = "ASC",
-    String? filter, 
+    String? filter,
     int? provinceId,
     DateTime? startDate,
     DateTime? endDate,
     int? stars,
-    
   });
   Future<Either<Failure, void>> deleteTrip({required int id});
 
@@ -178,6 +188,7 @@ abstract class BookingRepository {
     required String content,
     required int rating,
   });
+  Future<Either<Failure, User>> getUserById({required int userId});
 }
 
 @Singleton(as: BookingRepository)
@@ -368,13 +379,13 @@ class BookingRepositoryImp implements BookingRepository {
       var responses = await _coreService.getTrips(
         sortBy: sortBy,
         order: order,
-        filter: filter?.isNotEmpty  == true ? filter : null ,
+        filter: filter?.isNotEmpty == true ? filter : null,
         provinceId: provinceId,
         startDate: startDate,
         endDate: endDate,
         stars: stars,
       );
-   
+
       var data = responses.data as List<dynamic>;
       var tripResponses = data.map(
         (json) => TripManagerResponse.fromJson(json as Map<String, dynamic>),
@@ -418,7 +429,6 @@ class BookingRepositoryImp implements BookingRepository {
       print('Assignments count: ${assignments.length}');
       return Right(assignments);
     } catch (e, stackTrace) {
-
       print('Error: $e');
       print('StackTrace: $stackTrace');
       return Left(ErrorHandler.handle(e).failure);
@@ -806,6 +816,48 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
+  Future<Either<Failure, List<Favorite>>> getTourFavoriteByUserId({
+    required int userId,
+  }) async {
+    try {
+      final responses = await _coreService.getTourFavoriteByUserId(userId);
+
+      final jsonData = responses.data;
+      final List<dynamic> data =
+          (jsonData is Map<String, dynamic>)
+              ? (jsonData['data'] as List<dynamic>)
+              : (jsonData as List<dynamic>);
+
+      final favorites =
+          data
+              .map(
+                (json) =>
+                    FavoriteResponse.fromJson(
+                      json as Map<String, dynamic>,
+                    ).map(),
+              )
+              .toList();
+
+      return Right(favorites);
+    } catch (e, st) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> removeFavorite({
+    required int tourId,
+    required int userId,
+  }) async {
+    try {
+      await _coreService.removeFavorite(tourId, userId);
+      return const Right(true);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
   Future<Either<Failure, List<Booking>>> getBookingByUserId({
     required int userId,
   }) async {
@@ -884,6 +936,31 @@ class BookingRepositoryImp implements BookingRepository {
       // var result = BookingResponse.fromJson(data);
 
       return Right(true);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> getUserById({required int userId}) async {
+    try {
+      final response = await _coreService.getUserById(userId);
+      if (response.data == null) {
+        throw Exception(
+          "response.data is null – không có dữ liệu trả về từ API",
+        );
+      }
+      if (response.data is! Map<String, dynamic>) {
+        throw Exception(
+          "response.data không phải Map<String, dynamic>: ${response.data.runtimeType}",
+        );
+      }
+
+      final data = response.data as Map<String, dynamic>;
+      final userResponse = UserResponse.fromJson(data);
+      final user = userResponse.map();
+
+      return Right(user);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
