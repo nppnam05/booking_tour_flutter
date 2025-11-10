@@ -197,4 +197,7 @@ abstract class CoreService {
 
   @GET("/Tour/getMostRecent")
   Future<RestResponse> getMostRecent();
+
+  @GET("/Notification/{userId}")
+  Future<RestResponse> getNotification(@Path("userId") int userId);
 }

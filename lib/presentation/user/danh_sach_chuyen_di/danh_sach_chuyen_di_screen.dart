@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_state.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card.dart';
@@ -47,7 +48,11 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
           actions: [
             IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, "thong_bao");
+                final user =
+                    ModalRoute.of(context)?.settings.arguments as User?;
+                if (user != null) {
+                  Navigator.pushNamed(context, "thong_bao", arguments: user.id);
+                }
               },
               icon: Icon(Icons.notifications),
             ),

@@ -173,14 +173,18 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 8),
                   Text(tour.description),
                   const SizedBox(height: 20),
 
                   SizedBox(
                     width: double.infinity,
-                    child: BkButton(onPressed: () {}, title: "Đặt ngay"),
+                    child: BkButton(
+                      onPressed: () {
+                        // TODO: chuyển sang màn hình đặt ngay
+                      },
+                      title: "Đặt ngay",
+                    ),
                   ),
 
                   const SizedBox(height: 20),

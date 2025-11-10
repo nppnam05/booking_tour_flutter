@@ -1,84 +1,69 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
-import 'package:booking_tour_flutter/presentation/user/thong_bao/thong_bao.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ThongBaoScreen extends StatefulWidget {
+class ThongBaoScreen extends StatelessWidget {
   const ThongBaoScreen({super.key});
 
   @override
-  State<ThongBaoScreen> createState() => _ThongBaoScreenState();
-}
-
-class _ThongBaoScreenState extends State<ThongBaoScreen> {
-  final TextEditingController searchController = TextEditingController();
-
-  final List<ThongBao> danhSachThongBao = [
-    ThongBao(
-      thoiGian: DateTime(2025, 10, 19, 10, 25),
-      loiThongBao:
-          "Quý khách vừa thành tham gia một chuyến đi của Đà Lạc 2 ngày 2 đêm\nNếu quý khách muốn nhận các ưu đãi về du lịch bên chúng tôi, quý khách sẽ đc không nhận kế sổ tiền nay vận lý của quý khách:\nLiên hệ để thanh toán, chúng tôi đề tòu sẽ chắm tác vận lý của quý khách\nChúng tôi rất vinh hạn để liên các của quý khách",
-    ),
-    ThongBao(
-      thoiGian: DateTime(2025, 10, 18, 10, 25),
-      loiThongBao:
-          "Quý khách vừa thành toán hoàn chuyến đi của Đà Lạc 2 ngày 2 đêm\nNếu quý khách có thắc mắc hoặc phản ảnh về chỗn dịch vụ bên chúng tôi",
-    ),
-    ThongBao(
-      thoiGian: DateTime(2025, 10, 17, 14, 30),
-      loiThongBao:
-          "Chuyến du lịch Hạ Long 3 ngày 2 đêm của bạn sẽ bắt đầu vào ngày mai. Vui lòng chuẩn bị hành lý và có mặt đúng giờ tại điểm hẹn.",
-    ),
-    ThongBao(
-      thoiGian: DateTime(2025, 10, 15, 9, 15),
-      loiThongBao:
-          "Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi. Chuyến đi Phú Quốc của bạn đã được xác nhận thành công. Chúc quý khách có chuyến đi vui vẻ!",
-    ),
-    ThongBao(
-      thoiGian: DateTime(2025, 10, 12, 16, 45),
-      loiThongBao:
-          "Khuyến mãi đặc biệt! Giảm 20% cho tất cả các tour du lịch trong tháng 11. Đặt ngay để nhận ưu đãi hấp dẫn này!",
-    ),
-  ];
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Thông báo", style: TextStyle(color: AppColors.white)),
-      ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: Column(
-          children: [
-            SearchBarWidget(
-              controller: searchController,
-              onClear: searchController.clear,
-              hintText: "Tìm kiếm thông báo",
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.all(16),
-                itemCount: danhSachThongBao.length,
-                itemBuilder: (context, index) {
-                  final thongBao = danhSachThongBao[index];
-                  return _buildThongBaoItem(thongBao);
-                },
+    final searchController = TextEditingController();
+    final userId = ModalRoute.of(context)?.settings.arguments as int?;
+    final cubit = ThongBaoCubit();
+
+    if (userId != null) {
+      Future.microtask(() => cubit.load(userId));
+    }
+
+    return BlocProvider.value(
+      value: cubit,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Thông báo", style: TextStyle(color: Colors.white)),
+        ),
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Column(
+            children: [
+              SearchBarWidget(
+                controller: searchController,
+                hintText: "Tìm kiếm thông báo",
               ),
-            ),
-          ],
+              Expanded(
+                child: BlocBuilder<ThongBaoCubit, ThongBaoState>(
+                  builder: (context, state) {
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: state.items.length,
+                      itemBuilder: (context, index) {
+                        final n = state.items[index];
+                        return _buildThongBaoItem(
+                          dateTime: n.createdAt,
+                          content: n.content,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildThongBaoItem(ThongBao thongBao) {
+  Widget _buildThongBaoItem({
+    required DateTime dateTime,
+    required String content,
+  }) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -87,33 +72,33 @@ class _ThongBaoScreenState extends State<ThongBaoScreen> {
             color: AppColors.secondary,
             spreadRadius: 1,
             blurRadius: 3,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${thongBao.thoiGian.day}/${thongBao.thoiGian.month}/${thongBao.thoiGian.year} ${thongBao.thoiGian.hour}:${thongBao.thoiGian.minute.toString().padLeft(2, '0')}",
+              "${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}",
               style: TextStyle(
                 fontSize: AppFonts.fontSize12,
                 color: AppColors.secondary,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              thongBao.loiThongBao,
+              content,
               style: TextStyle(
                 fontSize: AppFonts.fontSize14,
-                color: Colors.black87,
+                color: AppColors.black,
                 height: 1.4,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -129,11 +114,5 @@ class _ThongBaoScreenState extends State<ThongBaoScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
   }
 }

@@ -158,7 +158,9 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     BkButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        //TODO: chuyển sang màn hình đặt chuyến đi
+                      },
                       title: "Đặt ngay",
                       borderRadius: 32,
                     ),

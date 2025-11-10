@@ -10,6 +10,7 @@ import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/booking_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
+import 'package:booking_tour_flutter/data/response/notification_response.dart';
 import 'package:booking_tour_flutter/data/response/participant_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
@@ -51,6 +52,7 @@ import 'package:dartz/dartz.dart';
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class BookingRepository {
@@ -183,6 +185,7 @@ abstract class BookingRepository {
 
   Future<Either<Failure, List<Trip>>> getMostFavoriteTour();
   Future<Either<Failure, List<Trip>>> getMostRecent();
+  Future<Either<Failure, List<Notification>>> getNotification(int userId);
 }
 
 @Singleton(as: BookingRepository)
@@ -923,6 +926,30 @@ class BookingRepositoryImp implements BookingRepository {
       );
       var trips = tripResponses.map((response) => response.map()).toList();
       return Right(trips);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Notification>>> getNotification(
+    int userId,
+  ) async {
+    try {
+      final responses = await _coreService.getNotification(userId);
+      final data = responses.data as List<dynamic>;
+      final items =
+          data
+              .map(
+                (json) =>
+                    NotificationResponse.fromJson(
+                      json as Map<String, dynamic>,
+                    ).map(),
+              )
+              .toList()
+              .cast<Notification>();
+
+      return Right(items);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
