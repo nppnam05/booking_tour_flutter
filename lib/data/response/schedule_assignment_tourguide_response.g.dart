@@ -45,10 +45,15 @@ TourResponse _$TourResponseFromJson(Map<String, dynamic> json) => TourResponse(
       (json['locations'] as List<dynamic>?)
           ?.map((e) => LocationResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
+  description: json['description'] as String?,
 );
 
 Map<String, dynamic> _$TourResponseToJson(TourResponse instance) =>
-    <String, dynamic>{'title': instance.title, 'locations': instance.locations};
+    <String, dynamic>{
+      'title': instance.title,
+      'description': instance.description,
+      'locations': instance.locations,
+    };
 
 LocationResponse _$LocationResponseFromJson(Map<String, dynamic> json) =>
     LocationResponse(name: json['name'] as String?);

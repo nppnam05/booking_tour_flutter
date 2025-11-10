@@ -2,8 +2,11 @@ import 'package:booking_tour_flutter/app/dependency_injection/format_date_number
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class ChiTietLichTrinhScreen extends StatelessWidget {
@@ -15,184 +18,326 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as ScheduleTourmanager;
     final tour = schedule.tour;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(tour.title), centerTitle: false),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              tour.tourImages.isNotEmpty ? tour.tourImages.first : '',
-              height: 240,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-
-            Container(
-              height: 90,
-              margin: const EdgeInsets.symmetric(vertical: 12),
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                scrollDirection: Axis.horizontal,
-                itemCount: tour.tourImages.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (_, index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      tour.tourImages[index],
-                      width: 120,
-                      height: 90,
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
+    return BlocProvider(
+      create: (context) => ChiTietLichTrinhCubit()..loadRviews(tour.id),
+      child: Scaffold(
+        appBar: AppBar(title: Text(tour.title), centerTitle: false),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(
+                tour.tourImages.isNotEmpty ? tour.tourImages.first : '',
+                height: 240,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    tour.title,
-                    style: TextStyle(
-                      fontSize: AppFonts.fontSize20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              Container(
+                height: 90,
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tour.tourImages.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (_, index) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        tour.tourImages[index],
+                        width: 120,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  },
+                ),
+              ),
 
-                  const SizedBox(height: 12),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Row(
-                      children: [
-                        Icon(Icons.calendar_month_outlined, size: 20),
-                        const SizedBox(width: 6),
-                        Text(
-                          "${formatDate(schedule.startDate)} - ${formatDate(schedule.endDate)}",
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text("${schedule.maxSlot} người"),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      "${NumberFormat("#,###", "vi_VN").format(tour.price)} VNĐ / người",
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tour.title,
                       style: TextStyle(
-                        color: AppColors.delete,
+                        fontSize: AppFonts.fontSize20,
                         fontWeight: FontWeight.bold,
-                        fontSize: AppFonts.fontSize16,
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 12),
 
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Row(
-                      children: [
-                        Icon(Icons.location_on_outlined, size: 20),
-                        const SizedBox(width: 6),
-                        Text(
-                          tour.provinces.map((e) => e.name).join(", "),
-                          style: TextStyle(fontSize: AppFonts.fontSize14),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  Text(
-                    "Các điểm đến",
-                    style: TextStyle(
-                      fontSize: AppFonts.fontSize20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  ...tour.places.map((place) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12, left: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.location_on, color: Colors.red, size: 20),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              place.name,
-                              style: TextStyle(fontSize: AppFonts.fontSize14),
-                            ),
+                          Icon(Icons.calendar_month_outlined, size: 20),
+                          const SizedBox(width: 6),
+                          Text(
+                            "${formatDate(schedule.startDate)} - ${formatDate(schedule.endDate)}",
                           ),
                         ],
                       ),
-                    );
-                  }),
-                  const SizedBox(height: 8),
-                  InkWell(
-                    onTap: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Chi tiết lịch trình",
-                          style: TextStyle(
-                            fontSize: AppFonts.fontSize16,
-                            color: AppColors.gray,
-                            fontWeight: FontWeight.bold,
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Text("${schedule.maxSlot} người"),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Text(
+                        "${NumberFormat("#,###", "vi_VN").format(tour.price)} VNĐ / người",
+                        style: TextStyle(
+                          color: AppColors.delete,
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppFonts.fontSize16,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_on_outlined, size: 20),
+                          const SizedBox(width: 6),
+                          Text(
+                            tour.provinces.map((e) => e.name).join(", "),
+                            style: TextStyle(fontSize: AppFonts.fontSize14),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.chevron_right,
-                          color: AppColors.gray,
-                          size: 20,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "Mô tả",
-                    style: TextStyle(
-                      fontSize: AppFonts.fontSize20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(tour.description),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: BkButton(
-                      onPressed: () {
-                        // TODO: chuyển sang màn hình đặt ngay
+                    Text(
+                      "Các điểm đến",
+                      style: TextStyle(
+                        fontSize: AppFonts.fontSize20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ...tour.places.map((place) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12, left: 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                place.name,
+                                style: TextStyle(fontSize: AppFonts.fontSize14),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      onTap: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Chi tiết lịch trình",
+                            style: TextStyle(
+                              fontSize: AppFonts.fontSize16,
+                              color: AppColors.gray,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.chevron_right,
+                            color: AppColors.gray,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      "Mô tả",
+                      style: TextStyle(
+                        fontSize: AppFonts.fontSize20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(tour.description),
+                    const SizedBox(height: 20),
+                    Text(
+                      "Đánh giá",
+                      style: TextStyle(
+                        fontSize: AppFonts.fontSize20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    BlocBuilder<ChiTietLichTrinhCubit, ChiTietLichTrinhState>(
+                      builder: (context, state) {
+                        if (state.isLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+
+                        final reviews = state.reviews;
+                        if (reviews.isEmpty) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              "Chưa có đánh giá nào",
+                              style: TextStyle(
+                                fontSize: AppFonts.fontSize14,
+                                color: AppColors.gray,
+                              ),
+                            ),
+                          );
+                        }
+
+                        final averageRating =
+                            reviews.isNotEmpty
+                                ? reviews
+                                        .map((r) => r.rating)
+                                        .reduce((a, b) => a + b) /
+                                    reviews.length
+                                : 0.0;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  averageRating.toStringAsFixed(1),
+                                  style: TextStyle(
+                                    fontSize: AppFonts.fontSize20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                _buildStarRating(averageRating, size: 20),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            ...reviews.take(2).map((review) {
+                              return _buildReviewItem(review);
+                            }),
+
+                            if (reviews.length > 2)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    // TODO: đến màn hình review
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Xem thêm >",
+                                        style: TextStyle(
+                                          fontSize: AppFonts.fontSize14,
+                                          color: AppColors.gray,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(height: 20),
+                          ],
+                        );
                       },
-                      title: "Đặt ngay",
                     ),
-                  ),
 
-                  const SizedBox(height: 20),
-                ],
+                    SizedBox(
+                      width: double.infinity,
+                      child: BkButton(
+                        onPressed: () {
+                          // TODO: chuyển sang màn hình đặt ngay
+                        },
+                        title: "Đặt ngay",
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStarRating(double rating, {double size = 16}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (index) {
+        if (index < rating.floor()) {
+          return Icon(Icons.star, color: Colors.amber, size: size);
+        } else if (index < rating) {
+          return Icon(Icons.star_half, color: Colors.amber, size: size);
+        } else {
+          return Icon(Icons.star_border, color: Colors.grey[400], size: size);
+        }
+      }),
+    );
+  }
+
+  Widget _buildReviewItem(review) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            review.user.name,
+            style: TextStyle(
+              fontSize: AppFonts.fontSize16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+
+          _buildStarRating(review.rating.toDouble()),
+          const SizedBox(height: 8),
+
+          Text(review.content, style: TextStyle(fontSize: AppFonts.fontSize14)),
+          const SizedBox(height: 8),
+          if (review.guide.isNotEmpty)
+            Text(
+              "Hướng dẫn viên: ${review.guide.first.tour.title}",
+              style: TextStyle(
+                fontSize: AppFonts.fontSize12,
+                color: AppColors.gray,
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

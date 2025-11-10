@@ -25,7 +25,7 @@ class ScheduleAssignmentTourguide {
       endDate: DateTime.now(),
       code: '',
       maxSlot: 0,
-      tour: Tour(title: '', locations: []),
+      tour: Tour(title: '', locations: [], description: ''),
     );
   }
 
@@ -52,8 +52,17 @@ class ScheduleAssignmentTourguide {
 
 class Tour {
   final String title;
+  final String description;
   final List<Location> locations;
-  Tour({required this.title, required this.locations});
+  Tour({
+    required this.title,
+    required this.locations,
+    required this.description,
+  });
+
+  static Tour empty() {
+    return Tour(title: '', locations: [], description: '');
+  }
 }
 
 class Location {
