@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
+import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -29,6 +30,12 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
+  @GET("/Bank")
+  Future<RestResponse> getBank();
+
+  @POST("/User")
+  Future<RestResponse> registerUser(CreateUserRequest user);
+
   @GET("/Schedule/assignment/{tourId}")
   Future<RestResponse> getScheduleAssignments(@Path("tourId") int tourId);
 
@@ -50,6 +57,9 @@ abstract class CoreService {
   Future<RestResponse> getTourGuideAssignmentById(
     @Path("idschedule") int idschedule,
   );
+
+  @GET("/Schedule/completed/{userId}")
+  Future<RestResponse> getScheduleCompletedByUserId(@Path("userId") int userId);
 
   @GET("/Schedule/{id}")
   Future<RestResponse> getScheduleAssignmentById(@Path("id") int id);
@@ -76,6 +86,13 @@ abstract class CoreService {
 
   @GET("/posts")
   Future<List<FakePostResponse>> getPost();
+
+  // user
+  @GET("/User/{id}")
+  Future<RestResponse> getUserById(@Path("id") int id);
+
+  @PUT("/User")
+  Future<RestResponse> updateUserId(@Body() Map<String, dynamic> body);
 
   @GET("/Activity")
   Future<RestResponse> getActivities({
@@ -203,4 +220,12 @@ abstract class CoreService {
 
   @GET("/Review/{tourId}")
   Future<RestResponse> getReview(@Path("tourId") int tourId);
+  @GET("/Favorite/{userId}")
+  Future<RestResponse> getTourFavoriteByUserId(@Path("userId") int userId);
+
+  @DELETE("/Favorite")
+  Future<RestResponse> removeFavorite(
+    @Query("tourId") int tourId,
+    @Query("userId") int userId,
+  );
 }

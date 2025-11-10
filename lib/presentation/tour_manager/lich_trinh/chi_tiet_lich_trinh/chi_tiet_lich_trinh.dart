@@ -188,6 +188,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
           child: notIconToggleInputField(
             _controllerMaLich,
             "Mã lịch trình",
+            "Mã lịch trình",
             AppColors.gray,
           ),
         ),
@@ -196,6 +197,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
           absorbing: true,
           child: notIconToggleInputField(
             _controllerTour,
+            "Mã Tour",
             "Tour",
             AppColors.gray,
           ),
@@ -207,13 +209,15 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
         notIconToggleInputField(
           _controllerNguoiToiDa,
           "Người tối đa",
+          "Người tối đa",
           Colors.grey.shade100,
         ),
 
-        notIconToggleInputField(_controllerGia, "Giá", AppColors.gray),
+        notIconToggleInputField(_controllerGia,"Giá", "Giá", AppColors.gray),
 
         notIconToggleInputField(
           _controllerTienCoc,
+          "Số tiền cọc",
           "Số tiền cọc",
           AppColors.gray,
         ),

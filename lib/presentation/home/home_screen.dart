@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/booking_dialog.dart';
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/home/cubit/home_cubit.dart';
 import 'package:booking_tour_flutter/presentation/home/cubit/home_state.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   final _cubit = HomeCubit()..syncPost();
+  
 
   HomeScreen({super.key});
 
@@ -26,7 +28,9 @@ class HomeScreen extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(RouteName.profile);
+                        int userId = context.read<AuthCubit>().userId;
+
+                        print(userId);
                       },
                       child: Text("profile"),
                     ),

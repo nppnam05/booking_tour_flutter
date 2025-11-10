@@ -53,9 +53,12 @@ class ForgetPasswordScreen extends StatelessWidget {
           const SizedBox(height: 50),
 
           notToggleInputFieldNotIcon(
-            _controllerEmail,
-            "Email",
-            Colors.grey.shade100,
+            controller: _controllerEmail,
+            title: "Email",
+           color:  Colors.grey.shade100,
+            validator: (value) {
+              
+            },
           ),
 
           const SizedBox(height: 30),
