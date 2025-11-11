@@ -8,6 +8,7 @@ import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
@@ -241,6 +242,8 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getMostRecent();
   Future<Either<Failure, List<Notification>>> getNotification(int userId);
   Future<Either<Failure, List<Review>>> getReview(int tourId);
+  Future<Either<Failure, void>> updatePasswordUserById({
+     required int userId, required String oldPassword, required String newPassword, }) ; 
 }
 
 @Singleton(as: BookingRepository)
@@ -1244,4 +1247,13 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+  @override
+   Future<Either<Failure, void>> updatePasswordUserById({
+     required int userId, required String oldPassword, required String newPassword, })
+     async {
+       try { 
+        final request = UpdatePasswordRequest( oldPassword: oldPassword, newPassword: newPassword, );
+       final response = await _coreService.updatePassword(userId, request); 
+       return Right(null); } 
+       catch (e) { return Left(ErrorHandler.handle(e).failure); } }
 }
