@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
+import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
@@ -245,4 +246,8 @@ abstract class CoreService {
     @Query("tourId") int tourId,
     @Query("userId") int userId,
   );
+  @PATCH("/User/update-password/{userId}") 
+  Future<RestResponse> updatePassword(
+     @Path("userId") int userId, 
+     @Body() UpdatePasswordRequest request, );
 }

@@ -38,6 +38,8 @@ import 'package:booking_tour_flutter/presentation/user/profile/profileUser_scree
 import 'package:booking_tour_flutter/presentation/user/search/search_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/lich_trinh_da_hoan_thanh_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/thong_tin_cua_ban_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/update_password/update_password_card.dart';
+import 'package:booking_tour_flutter/presentation/user/update_password/update_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/vi/vi_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/chi_tiet_lich_trinh_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
@@ -98,6 +100,7 @@ class RouteName {
   static final chiTietLichTrinhScreen = "chi_tiet_lich_trinh_screen";
   static final bookSchedule = "book_schedule";
   static final paySchedule = "pay_schedule";
+  static final update_password_user  = "update_password_user";
 }
 
 class RouteManager {
@@ -152,19 +155,10 @@ class RouteManager {
     RouteName.profileReviewSchedule: (context) => ReviewScheduleScreen(),
     RouteName.chiTietLichTrinhScreen: (context) => ChiTietLichTrinhScreen(),
     RouteName.favoriteTour: (context) => FavoriteTourScreen(userId: 2),
-
-    /*RouteName.favoriteTour: (context) {
-  final userId = ModalRoute.of(context)?.settings.arguments as int;
-  return FavoriteTourScreen(userId: userId);
-},*/
     RouteName.profileScreen: (context) => ProfileUserScreen(userId: 1),
-
-    /*RouteName.profile: (context) {
-  final userId = ModalRoute.of(context)?.settings.arguments as int;
-  return ProfileUserScreen(userId: userId);
-},*/
     RouteName.scheduleDetail : (context) => ScheduleDetailScreen(),
     RouteName.bookSchedule : (context) => BookScheduleScreen(),
     RouteName.paySchedule : (context) => PayScheduleScreen(),
+    RouteName.update_password_user :(context) => UpdatePasswordScreen( userId:  2),
   };
 }
