@@ -11,6 +11,7 @@ class Review {
   final User user;
   final Guide guide;
   final Booking booking;
+  final bool isHelpful;
   Review({
     required this.id,
     required this.rating,
@@ -19,5 +20,6 @@ class Review {
     required this.user,
     required this.guide,
     required this.booking,
+    required this.isHelpful,
   });
 }

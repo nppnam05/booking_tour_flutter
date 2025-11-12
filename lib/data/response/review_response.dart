@@ -18,6 +18,7 @@ class ReviewResponse {
   UserResponse? user;
   GuideResponse? guide;
   BookingResponse? booking;
+  bool? isHelpful;
 
   ReviewResponse({
     this.id,
@@ -27,6 +28,7 @@ class ReviewResponse {
     this.user,
     this.guide,
     this.booking,
+    this.isHelpful,
   });
 
   factory ReviewResponse.fromJson(Map<String, dynamic> json) =>
@@ -44,6 +46,7 @@ extension ReviewResponseMapper on ReviewResponse {
       user: user?.map() ?? User.empty(),
       guide: guide?.map() ?? Guide.empty(),
       booking: booking?.map() ?? Booking.empty(),
+      isHelpful: isHelpful ?? false,
     );
   }
 }
