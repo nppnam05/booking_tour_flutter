@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -91,25 +92,33 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
                   icon: Icons.person,
                   title: 'Tài Khoản Của Tôi',
                   subtitle: 'Thay đổi thông tin tài khoản của bạn',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteName.thongTinCuaBan);
+                  },
                 ),
                 buildItem(
                   icon: Icons.account_balance_wallet,
                   title: 'Ví',
                   subtitle: 'nơi chứa tiền dư của bạn',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteName.vi);
+                  },
                 ),
                 buildItem(
                   icon: Icons.check_circle,
                   title: 'Hoàn Thành',
                   subtitle: 'các lịch trình đã hoàn thành',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteName.lichTrinhDaHoanThanh);
+                  },
                 ),
                 buildItem(
                   icon: Icons.receipt_long,
                   title: 'Lịch Sử Thanh Toán',
                   subtitle: 'xem lại lịch trình đã thanh toán',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteName.danhSachLichTrinhBooking);
+                  },
                 ),
                 buildItem(
                   icon: Icons.logout,
