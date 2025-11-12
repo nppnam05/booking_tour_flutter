@@ -36,6 +36,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context)?.settings.arguments as User?;
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
@@ -48,8 +49,6 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
           actions: [
             IconButton(
               onPressed: () {
-                final user =
-                    ModalRoute.of(context)?.settings.arguments as User?;
                 if (user != null) {
                   Navigator.pushNamed(context, "thong_bao", arguments: user.id);
                 }
@@ -110,7 +109,10 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                                   Navigator.pushNamed(
                                     context,
                                     "danh_sach_lich_trinh_user",
-                                    arguments: trip.id,
+                                    arguments: {
+                                      'tourId': trip.id,
+                                      'userId': user?.id ?? 0,
+                                    },
                                   );
                                 },
                                 child: TripCard(trip: trip),
@@ -129,7 +131,10 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                   if (state.mostRecent.isNotEmpty)
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        return TripCardDetail(trip: state.mostRecent[index]);
+                        return TripCardDetail(
+                          trip: state.mostRecent[index],
+                          userId: user?.id ?? 0,
+                        );
                       }, childCount: state.mostRecent.length),
                     ),
                 ],

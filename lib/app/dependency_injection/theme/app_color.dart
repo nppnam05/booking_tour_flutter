@@ -29,7 +29,7 @@ class AppColors {
 
   static const Color error = Color(0xFFDE6767);
   static const Color info = Color(0xFF6D9ADA);
-  static const Color warning = Color(0xFFE4E178);
+  static const Color warning = Color(0xFFFFEB3B);
   static const Color success = Color(0xFF98DB7B);
   static const Color button = Color(0xFF23A892);
   static const Color delete = Colors.red;

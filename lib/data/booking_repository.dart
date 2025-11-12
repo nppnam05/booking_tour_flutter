@@ -6,6 +6,7 @@ import 'package:booking_tour_flutter/data/request/booking/change_booking_request
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -61,29 +62,28 @@ import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
-
 abstract class BookingRepository {
-   Future<Either<Failure, bool>> removeFavorite({
+  Future<Either<Failure, bool>> removeFavorite({
     required int tourId,
     required int userId,
   });
-  
+
   Future<Either<Failure, List<Favorite>>> getTourFavoriteByUserId({
     required int userId,
   });
 
   Future<Either<Failure, List<Bank>>> getBank();
-  
+
   Future<Either<Failure, List<FakePost>>> getPost();
 
   Future<Either<Failure, bool>> registerUser({required CreateUserRequest user});
 
   Future<Either<Failure, User>> getUserById({required int id});
 
-  Future<Either<Failure, List<ScheduleUserCompleted>>> getScheduleUserCompletedByUserId({required int userId});
+  Future<Either<Failure, List<ScheduleUserCompleted>>>
+  getScheduleUserCompletedByUserId({required int userId});
 
   Future<Either<Failure, bool>> checkAssignment({
     required int scheduleId,
@@ -225,7 +225,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getMostFavoriteTour();
   Future<Either<Failure, List<Trip>>> getMostRecent();
   Future<Either<Failure, List<Notification>>> getNotification(int userId);
-  Future<Either<Failure, List<Review>>> getReview(int tourId);
+  Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1038,9 +1038,11 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<Review>>> getReview(int tourId) async {
+  Future<Either<Failure, List<Review>>> getReview(
+    GetReviewsRequest request,
+  ) async {
     try {
-      final responses = await _coreService.getReview(tourId);
+      final responses = await _coreService.getReview(request);
       final data = responses.data as List<dynamic>;
       final items =
           data
@@ -1120,32 +1122,37 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
   @override
   Future<Either<Failure, List<Bank>>> getBank() async {
     try {
       var responses = await _coreService.getBank();
       var data = responses.data as List<dynamic>;
 
-      var bankResponses = data.map((e) => BankResponse.fromJson(e as Map<String, dynamic>),);
-      var banks = bankResponses.map((e) => e.map(),).toList();
+      var bankResponses = data.map(
+        (e) => BankResponse.fromJson(e as Map<String, dynamic>),
+      );
+      var banks = bankResponses.map((e) => e.map()).toList();
       return Right(banks);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<ScheduleUserCompleted>>> getScheduleUserCompletedByUserId({required int userId}) async {
-    try{
+  Future<Either<Failure, List<ScheduleUserCompleted>>>
+  getScheduleUserCompletedByUserId({required int userId}) async {
+    try {
       var responses = await _coreService.getScheduleCompletedByUserId(userId);
       var data = responses.data as List<dynamic>;
 
-      var scheduleRPs = data.map((e) => ScheduleUserCompletedResponse.fromJson(e as Map<String, dynamic>));
+      var scheduleRPs = data.map(
+        (e) =>
+            ScheduleUserCompletedResponse.fromJson(e as Map<String, dynamic>),
+      );
       var schedules = scheduleRPs.map((e) => e.map()).toList();
       return Right(schedules);
-    }
-    catch (e) {
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }

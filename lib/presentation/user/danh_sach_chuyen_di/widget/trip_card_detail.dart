@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class TripCardDetail extends StatefulWidget {
   final Trip trip;
-  const TripCardDetail({super.key, required this.trip});
+  final int userId;
+  const TripCardDetail({super.key, required this.trip, required this.userId});
 
   @override
   State<TripCardDetail> createState() => _TripCardDetailState();
@@ -245,7 +246,10 @@ class _TripCardDetailState extends State<TripCardDetail> {
                                 Navigator.pushNamed(
                                   context,
                                   "danh_sach_lich_trinh_user",
-                                  arguments: widget.trip.id,
+                                  arguments: {
+                                    'tourId': widget.trip.id,
+                                    'userId': widget.userId,
+                                  },
                                 );
                               },
                               title: "Chi tiết",

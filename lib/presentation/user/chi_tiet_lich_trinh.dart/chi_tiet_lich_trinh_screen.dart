@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/domain/review.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_state.dart';
@@ -14,12 +15,12 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final schedule =
-        ModalRoute.of(context)!.settings.arguments as ScheduleTourmanager;
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final schedule = arguments['scheduleTourmanager'] as ScheduleTourmanager;
     final tour = schedule.tour;
-
+    final userId = arguments['userId'] as int? ?? 0;
     return BlocProvider(
-      create: (context) => ChiTietLichTrinhCubit()..loadRviews(tour.id),
+      create: (context) => ChiTietLichTrinhCubit()..loadRviews(tour.id, userId),
       child: Scaffold(
         appBar: AppBar(title: Text(tour.title), centerTitle: false),
         body: SingleChildScrollView(
@@ -87,20 +88,31 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
 
                     Padding(
                       padding: const EdgeInsets.only(left: 16),
-                      child: Text("${schedule.maxSlot} người"),
+                      child: Row(
+                        children: [
+                          Icon(Icons.group, size: 20),
+                          const SizedBox(width: 6),
+                          Text("${schedule.maxSlot} người"),
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 8),
 
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0),
-                      child: Text(
-                        "${NumberFormat("#,###", "vi_VN").format(tour.price)} VNĐ / người",
-                        style: TextStyle(
-                          color: AppColors.delete,
-                          fontWeight: FontWeight.bold,
-                          fontSize: AppFonts.fontSize16,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.money, size: 20),
+                          const SizedBox(width: 6),
+                          Text(
+                            "${NumberFormat("#,###", "vi_VN").format(tour.price)} VNĐ / người",
+                            style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: AppFonts.fontSize14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -110,7 +122,11 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 16),
                       child: Row(
                         children: [
-                          Icon(Icons.location_on_outlined, size: 20),
+                          Icon(
+                            Icons.location_on,
+                            color: AppColors.delete,
+                            size: 20,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             tour.provinces.map((e) => e.name).join(", "),
@@ -137,7 +153,7 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.location_on,
-                              color: Colors.red,
+                              color: AppColors.delete,
                               size: 20,
                             ),
                             const SizedBox(width: 8),
@@ -195,29 +211,7 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     BlocBuilder<ChiTietLichTrinhCubit, ChiTietLichTrinhState>(
                       builder: (context, state) {
-                        if (state.isLoading) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-
                         final reviews = state.reviews;
-                        if (reviews.isEmpty) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Text(
-                              "Chưa có đánh giá nào",
-                              style: TextStyle(
-                                fontSize: AppFonts.fontSize14,
-                                color: AppColors.gray,
-                              ),
-                            ),
-                          );
-                        }
-
                         final averageRating =
                             reviews.isNotEmpty
                                 ? reviews
@@ -243,7 +237,7 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            ...reviews.take(2).map((review) {
+                            ...reviews.take(5).map((review) {
                               return _buildReviewItem(review);
                             }),
 
@@ -299,17 +293,17 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(5, (index) {
         if (index < rating.floor()) {
-          return Icon(Icons.star, color: Colors.amber, size: size);
+          return Icon(Icons.star, color: AppColors.warning, size: size);
         } else if (index < rating) {
-          return Icon(Icons.star_half, color: Colors.amber, size: size);
+          return Icon(Icons.star_half, color: AppColors.warning, size: size);
         } else {
-          return Icon(Icons.star_border, color: Colors.grey[400], size: size);
+          return Icon(Icons.star_border, color: AppColors.gray, size: size);
         }
       }),
     );
   }
 
-  Widget _buildReviewItem(review) {
+  Widget _buildReviewItem(Review review) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
@@ -324,19 +318,22 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
 
-          _buildStarRating(review.rating.toDouble()),
+          Row(
+            children: [
+              _buildStarRating(review.rating.toDouble()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${review.guide.staffId}"),
+                  Icon(Icons.find_in_page),
+                ],
+              ),
+            ],
+          ),
           const SizedBox(height: 8),
 
           Text(review.content, style: TextStyle(fontSize: AppFonts.fontSize14)),
           const SizedBox(height: 8),
-          if (review.guide.isNotEmpty)
-            Text(
-              "Hướng dẫn viên: ${review.guide.first.tour.title}",
-              style: TextStyle(
-                fontSize: AppFonts.fontSize12,
-                color: AppColors.gray,
-              ),
-            ),
         ],
       ),
     );

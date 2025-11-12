@@ -13,8 +13,9 @@ class DanhSachLichTrinhUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tourId = ModalRoute.of(context)!.settings.arguments as int;
-
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final tourId = arguments['tourId'] as int;
+    final userId = arguments['userId'] as int? ?? 0;
     return BlocProvider(
       create: (_) => DanhSachLichTrinhUserCubit()..loadSchedules(tourId),
       child: Scaffold(
@@ -47,6 +48,7 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                           return _buildLichTrinhCard(
                             state.schedules[index],
                             context,
+                            userId,
                           );
                         },
                       ),
@@ -59,7 +61,11 @@ class DanhSachLichTrinhUser extends StatelessWidget {
     );
   }
 
-  Widget _buildLichTrinhCard(ScheduleTourmanager scheduleTourmanager, context) {
+  Widget _buildLichTrinhCard(
+    ScheduleTourmanager scheduleTourmanager,
+    context,
+    int userId,
+  ) {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -149,7 +155,10 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           'chi_tiet_lich_trinh_screen',
-                          arguments: scheduleTourmanager,
+                          arguments: {
+                            'scheduleTourmanager': scheduleTourmanager,
+                            'userId': userId,
+                          },
                         );
                       },
                       title: "Chi tiết",
