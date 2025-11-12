@@ -1,7 +1,10 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/cubit/danh_sach_lich_trinh_user_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/cubit/danh_sach_lich_trinh_user_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
@@ -9,11 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DanhSachLichTrinhUser extends StatelessWidget {
-  const DanhSachLichTrinhUser({super.key});
+  DanhSachLichTrinhUser({super.key});
+
+  late BookScheduleCubit cubit;
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    cubit = context.read<BookScheduleCubit>();
+
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final tourId = arguments['tourId'] as int;
     final userId = arguments['userId'] as int? ?? 0;
     return BlocProvider(
@@ -167,8 +175,15 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     BkButton(
-                      onPressed: () {
-                        //TODO: chuyển sang màn hình đặt chuyến đi
+                      onPressed: () async {
+                        cubit.setIdSchedule(scheduleTourmanager.id);
+
+                        cubit.loadData();
+
+                        await Navigator.pushNamed(
+                          context,
+                          RouteName.bookSchedule,
+                        );
                       },
                       title: "Đặt ngay",
                       borderRadius: 32,

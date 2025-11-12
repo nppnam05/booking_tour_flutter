@@ -1,10 +1,13 @@
 import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/review.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_state.dart';
+import 'package:booking_tour_flutter/presentation/user/schedule_detail/cubit/schedule_detail_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -170,7 +173,18 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                     }),
                     const SizedBox(height: 8),
                     InkWell(
-                      onTap: () {},
+                      onTap: () async {
+                        var cubit = context.read<ScheduleDetailCubit>();
+
+                        cubit.setIdSchedule(schedule.id);
+
+                        cubit.loadData();
+
+                        await Navigator.pushNamed(
+                          context,
+                          RouteName.scheduleDetail,
+                        );
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -271,8 +285,17 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: BkButton(
-                        onPressed: () {
-                          // TODO: chuyển sang màn hình đặt ngay
+                        onPressed: () async {
+                          var cubit = context.read<BookScheduleCubit>();
+
+                          cubit.setIdSchedule(schedule.id);
+
+                          cubit.loadData();
+
+                          await Navigator.pushNamed(
+                            context,
+                            RouteName.bookSchedule,
+                          );
                         },
                         title: "Đặt ngay",
                       ),

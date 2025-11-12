@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
@@ -10,6 +11,8 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginState(user: User.empty()));
   
   Future<void> syncPost(String email, String password) async {
+    await DialogHelper.showLoadingDialog();
+
     var result = await userRepository.postLogin(email: email, password: password);
 
     result.fold((failure) {
@@ -17,5 +20,7 @@ class LoginCubit extends Cubit<LoginState> {
     }, (user){
       emit(state.copyWith(user: user));
     });
+
+    DialogHelper.dismissDialog();
   }
 }

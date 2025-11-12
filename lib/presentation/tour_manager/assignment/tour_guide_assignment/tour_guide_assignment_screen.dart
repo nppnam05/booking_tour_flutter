@@ -15,16 +15,10 @@ class TourGuideAssignmentScreen extends StatelessWidget {
 
   final TextEditingController _controllerSearch = TextEditingController();
 
-  TourGuideAssignmentScreen({
-    super.key,
-    required TourGuideAssignmentCubit cubit,
-  }) {
-    _cubit = cubit;
-  }
-
   @override
   Widget build(BuildContext context) {
-    
+    _cubit = context.read<TourGuideAssignmentCubit>();
+
     return BlocProvider<TourGuideAssignmentCubit>.value(
       value: _cubit,
       child: Scaffold(
@@ -147,10 +141,20 @@ class TourGuideAssignmentScreen extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(40),
                     child: Image.network(
-                      "https://lh3.googleusercontent.com/a/ACg8ocJm9cIxvh1X-PHJVIaKPA6LrC5aeChHzskzPlvne6ggWnnY3Fg",
+                      tourGuide.user.avatarPath,
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            width: 60,
+                            height: 60,
+                            child: const Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.grey,
+                            ),
+                          ),
                     ),
                   ),
                 ],

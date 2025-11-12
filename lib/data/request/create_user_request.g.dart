@@ -9,6 +9,7 @@ part of 'create_user_request.dart';
 CreateUserRequest _$CreateUserRequestFromJson(Map<String, dynamic> json) =>
     CreateUserRequest(
       roleId: (json['roleId'] as num).toInt(),
+      password: json['password'] as String,
       money: (json['money'] as num).toInt(),
       bankNumber: json['bankNumber'] as String,
       bank: json['bank'] as String,
@@ -22,6 +23,7 @@ CreateUserRequest _$CreateUserRequestFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CreateUserRequestToJson(CreateUserRequest instance) =>
     <String, dynamic>{
       'roleId': instance.roleId,
+      'password': instance.password,
       'money': instance.money,
       'bankNumber': instance.bankNumber,
       'bank': instance.bank,
