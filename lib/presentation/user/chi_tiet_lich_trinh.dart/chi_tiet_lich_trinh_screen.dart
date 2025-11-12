@@ -15,7 +15,8 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final schedule = arguments['scheduleTourmanager'] as ScheduleTourmanager;
     final tour = schedule.tour;
     final userId = arguments['userId'] as int? ?? 0;
@@ -318,22 +319,15 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
 
-          Row(
-            children: [
-              _buildStarRating(review.rating.toDouble()),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("${review.guide.staffId}"),
-                  Icon(Icons.find_in_page),
-                ],
-              ),
-            ],
-          ),
+          _buildStarRating(review.rating.toDouble()),
           const SizedBox(height: 8),
 
           Text(review.content, style: TextStyle(fontSize: AppFonts.fontSize14)),
           const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [Text("Hướng dẫn viên: ${review.guide.staffId}")],
+          ),
         ],
       ),
     );
