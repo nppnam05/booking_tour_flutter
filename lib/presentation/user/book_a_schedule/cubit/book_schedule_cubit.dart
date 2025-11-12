@@ -14,6 +14,7 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
     : super(
         BookScheduleState(
           schedule: ScheduleBook.empty(),
+          idSchedule: 0,
           idBooking: 0,
           hinhThuc: HinhThuc.thanhtoantoanbo,
           tienThanhToanHet: 0,
@@ -23,8 +24,8 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
         ),
       );
 
-  Future<void> loadData(int id) async {
-    var result = await bookScheduleRepository.getScheduleBookById(id);
+  Future<void> loadData() async {
+    var result = await bookScheduleRepository.getScheduleBookById(state.idSchedule);
 
     result.fold((failure) {}, (schedule) {
       emit(
@@ -38,6 +39,10 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
         ),
       );
     });
+  }
+
+  void setIdSchedule(int idSchedule){
+    emit(state.copyWith(idSchedule: idSchedule));
   }
 
   void setHinhThuc({required HinhThuc hinhThuc}) {
@@ -61,16 +66,16 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
   }
 
   Future<void> booking({
-    required int scheduleId,
     required int userId,
     required int numPeople,
     required String email,
     required String phone,
   }) async {
     await DialogHelper.showLoadingDialog();
+
     var result = await bookScheduleRepository.createBooking(
       booking: BookingScheduleRequest(
-        scheduleId: scheduleId,
+        scheduleId: state.idSchedule,
         userId: userId,
         numPeople: numPeople,
         email: email,

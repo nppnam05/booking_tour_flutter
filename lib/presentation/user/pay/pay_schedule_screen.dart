@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/domain/pay_booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
@@ -94,7 +95,7 @@ class PayScheduleScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Tổng số tiền", style: AppFonts.text18),
-                    Text("${pay.totalPrice}", style: AppFonts.text18),
+                    Text("${FormatterHelper.formatCurrency(pay.totalPrice)}", style: AppFonts.text18),
                   ],
                 ),
                 SizedBox(height: 12),

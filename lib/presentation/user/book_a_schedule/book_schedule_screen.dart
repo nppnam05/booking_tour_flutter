@@ -1,7 +1,9 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
@@ -14,7 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class BookScheduleScreen extends StatelessWidget {
   BookScheduleScreen({super.key});
 
-  final _cubit = BookScheduleCubit()..loadData(22);
+  late final BookScheduleCubit _cubit;
+  late final AuthCubit authCubit;
 
   final TextEditingController controllerNumPeople = TextEditingController();
   final TextEditingController controllerEmail = TextEditingController();
@@ -24,8 +27,11 @@ class BookScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _cubit,
+    _cubit = context.read<BookScheduleCubit>();
+    authCubit = context.read<AuthCubit>();
+
+    return BlocProvider.value(
+      value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text("Đặt chuyến đi")),
         body: SingleChildScrollView(child: Center(child: columnOfWidget())),
@@ -133,7 +139,7 @@ class BookScheduleScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${((state.hinhThuc == HinhThuc.thanhtoantoanbo ? state.tienThanhToanHet : state.tienThanhToanCoc) * (int.tryParse(controllerNumPeople.text.trim()) ?? 1))}",
+                      "${FormatterHelper.formatCurrency(((state.hinhThuc == HinhThuc.thanhtoantoanbo ? state.tienThanhToanHet : state.tienThanhToanCoc) * (int.tryParse(controllerNumPeople.text.trim()) ?? 1)))}",
                       style: AppFonts.text14.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -173,8 +179,7 @@ class BookScheduleScreen extends StatelessWidget {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _cubit.booking(
-                        scheduleId: 22,
-                        userId: 1,
+                        userId: authCubit.userId,
                         numPeople: int.parse(controllerNumPeople.text.trim()),
                         email: controllerEmail.text.trim(),
                         phone: controllerSoDienThoai.text.trim(),

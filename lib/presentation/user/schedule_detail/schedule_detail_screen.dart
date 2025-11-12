@@ -7,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleDetailScreen extends StatelessWidget {
-  final _cubit = ScheduleDetailCubit()..getData(22);
+
+  late final ScheduleDetailCubit _cubit;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _cubit,
+    _cubit = context.read<ScheduleDetailCubit>();
+
+    return BlocProvider.value(
+      value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text("Chi tiết lịch trình")),
         body: Center(child: columnOfWidget()),
@@ -91,7 +94,7 @@ class ScheduleDetailScreen extends StatelessWidget {
             ),
             SliverToBoxAdapter(
               child: scheduleDetail(
-                state.scheduleDetail.tour.dayOfTours[_cubit.getDay() - 1],
+                state.scheduleDetail.tour.dayOfTours[state.daySelected - 1],
               ),
             ),
           ],

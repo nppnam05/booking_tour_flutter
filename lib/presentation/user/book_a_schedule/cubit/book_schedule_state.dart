@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/presentation/widgets/payment_option.dart';
 
 class BookScheduleState {
   final ScheduleBook schedule;
+  final int idSchedule;
   final int idBooking;
   final HinhThuc hinhThuc;
   final int tienThanhToanHet;
@@ -13,6 +14,7 @@ class BookScheduleState {
   final bool isBooking;
   BookScheduleState({
     required this.schedule,
+    required this.idSchedule,
     required this.idBooking,
     required this.hinhThuc,
     required this.tienThanhToanHet,
@@ -23,6 +25,7 @@ class BookScheduleState {
 
   BookScheduleState copyWith({
     ScheduleBook? schedule,
+    int? idSchedule,
     int? idBooking,
     HinhThuc? hinhThuc,
     int? tienThanhToanHet,
@@ -32,6 +35,7 @@ class BookScheduleState {
   }) {
     return BookScheduleState(
       schedule: schedule ?? this.schedule,
+      idSchedule: idSchedule ?? this.idSchedule,
       idBooking: idBooking ?? this.idBooking,
       hinhThuc: hinhThuc ?? this.hinhThuc,
       tienThanhToanHet: tienThanhToanHet ?? this.tienThanhToanHet,
