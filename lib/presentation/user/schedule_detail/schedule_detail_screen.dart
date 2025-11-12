@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleDetailScreen extends StatelessWidget {
-  final _cubit = ScheduleDetailCubit()..getData(2);
+  final _cubit = ScheduleDetailCubit()..getData(22);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => _cubit,
       child: Scaffold(
-        appBar: AppBar(title: Text("Du lịch vịnh hạ long")),
+        appBar: AppBar(title: Text("Chi tiết lịch trình")),
         body: Center(child: columnOfWidget()),
       ),
     );
@@ -27,8 +27,8 @@ class ScheduleDetailScreen extends StatelessWidget {
         var startDate = state.scheduleDetail.startDate;
         var endDate = state.scheduleDetail.endDate;
 
-
-        if (state.scheduleDetail.tour.dayOfTours.isEmpty) {
+        // load dữ liệu
+        if (state.isLoading) {
           return Center(
             child: CircularProgressIndicator(),
           );

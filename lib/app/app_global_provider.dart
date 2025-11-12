@@ -7,6 +7,7 @@ import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_cubit.d
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,6 +28,7 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => TourGuideAssignmentCubit()),
         BlocProvider(create: (_) => ScheduleAssignmentCubit()),
         BlocProvider(create: (_) => ChangeScheduleCubit()),
+        BlocProvider(create: (_) => PayScheduleCubit())
       ], 
    
       child: child,
