@@ -227,7 +227,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
       children: [
         DeleteButtonWidget(
           onDelete: () {
-            Navigator.pushNamed(context, RouteName.vi);
+            Navigator.pushNamed(context, RouteName.changePassword);
           },
           text: "Đổi mật khẩu",
           textColor: Colors.white,

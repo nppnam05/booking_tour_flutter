@@ -31,6 +31,13 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
   }
 
   Widget _buidListBooking(List<Booking> bookings) {
+    // sap xep
+    bookings.sort((a, b) {
+      var adate = a.createdAt;
+      var bdate = b.createdAt;
+      return -adate.compareTo(bdate); 
+    },);
+
     return ListView.builder(
       itemCount: bookings.length,
       itemBuilder: (context, index) {
