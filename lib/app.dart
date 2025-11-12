@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         theme: AppThemes.lightTheme,
         navigatorKey: AppNavigator.navigatorKey,
         routes: RouteManager.routes,
-        initialRoute: RouteName.update_password_user,
+        initialRoute: RouteName.scheduleTourmanager,
       ),
     );
   }

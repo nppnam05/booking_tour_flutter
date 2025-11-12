@@ -1,13 +1,17 @@
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
-import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
 import 'package:booking_tour_flutter/presentation/trip/cubit/trip_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:booking_tour_flutter/presentation/trip/cubit/trip_state.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_card.dart';
-import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
+
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dartz/dartz.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_state.dart';
 
 class TripScreen extends StatelessWidget {
   final _cubit = TripCubit()..loadTrips();
@@ -36,7 +40,6 @@ class TripScreen extends StatelessWidget {
         drawer: DrawerBar(),
         body: Column(
           children: [
-            // ListView chiếm phần còn lại
             Expanded(
               child: BlocBuilder<TripCubit, TripState>(
                 bloc: _cubit,
@@ -44,27 +47,49 @@ class TripScreen extends StatelessWidget {
                   if (state is TripLoaded) {
                     return ListView(
                       padding: EdgeInsets.all(8),
-                      children: state.trips.map((trip) {
-                        return TripCard(
-                          trip: trip,
-                          onDelete: () async {
-                            final confirmed = await DialogNoti.confirm(
-                              context: context,
-                              title: 'Xác nhận xóa',
-                              message: 'Bạn có chắc muốn xóa chuyến đi này?',
-                              highlightPhrases: ['xóa chuyến đi'],
+                      children:
+                          state.trips.map((trip) {
+                            return TripCard(
+                              trip: trip,
+                              onDelete: () async {
+                                final confirmed =
+                                    await DialogHelper.showConfirmDialog(
+                                      body: Text(
+                                        'Bạn có chắc muốn xóa chuyến đi này?',
+                                      ),
+                                    );
+
+                                if (!confirmed) return;
+                                await DialogHelper.showLoadingDialog();
+
+                                final Either<Failure, void> result =
+                                    await _cubit.deleteTrip(trip);
+                                DialogHelper.dismissDialog();
+
+                                result.fold((failure) async {
+                                  await DialogHelper.showInformDialog(
+                                    Text(
+                                      'Bạn không thể xóa tour này!',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  );
+                                }, (_) {});
+                              },
+                              onView: () async {
+                                context.read<AddTourCubit>().setState(
+                                  trip.toAddTourState(),
+                                );
+                                await Navigator.pushNamed(
+                                  context,
+                                  RouteName.updateTour,
+                                );
+                                _cubit.loadTrips();
+                              },
                             );
-                            if (confirmed) {
-                              _cubit.deleteTrip(trip);
-                            }
-                          },
-                          onView: () async{
-                            context.read<AddTourCubit>().setState(trip.toAddTourState());
-                            await Navigator.pushNamed(context, RouteName.updateTour);
-                            _cubit.loadTrips();
-                          },
-                        );
-                      }).toList(),
+                          }).toList(),
                     );
                   }
 
@@ -76,7 +101,6 @@ class TripScreen extends StatelessWidget {
                 },
               ),
             ),
-            // Nút thêm chuyến đi cố định ở dưới
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(16),
@@ -87,7 +111,7 @@ class TripScreen extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton.icon(
-                onPressed: () async{
+                onPressed: () async {
                   await Navigator.pushNamed(context, RouteName.addTour);
                   _cubit.loadTrips();
                 },
