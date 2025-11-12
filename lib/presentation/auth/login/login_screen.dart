@@ -18,6 +18,8 @@ class LoginScreen extends StatelessWidget {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,12 @@ class LoginScreen extends StatelessWidget {
               );
               return;
             default:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.danhSachChuyenDi,
+                (route) => false,
+                arguments: state.user,
+              );
               return;
           }
         } else {

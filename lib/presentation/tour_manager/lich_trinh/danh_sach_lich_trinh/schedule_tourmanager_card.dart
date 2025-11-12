@@ -64,12 +64,14 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                           children: [
                             const Icon(
                               Icons.calendar_today,
-                              size: 16,
+                              size: 14,
                               color: Colors.black87,
                             ),
                             const SizedBox(width: 6),
                             Text(
                               _formatDate(shedule_tour_manager.startDate),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                               ),

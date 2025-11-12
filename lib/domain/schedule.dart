@@ -15,5 +15,3 @@ class Schedule {
     required this.capacity,
   });
 }
-
-

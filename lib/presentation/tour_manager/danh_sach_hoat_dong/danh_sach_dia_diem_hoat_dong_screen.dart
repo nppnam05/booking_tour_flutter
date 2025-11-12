@@ -158,6 +158,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
           ),
         ),
         onTap: () => _navigateToEditScreen(locationActivity),
+        onLongPress: () => _showDeleteConfirmation(context, locationActivity),
       ),
     );
   }
@@ -184,6 +185,35 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
     if (mounted && result == true) {
       _cubit.getDanhSachHoatDong();
     }
+  }
+
+  void _showDeleteConfirmation(
+    BuildContext context,
+    LocationActivity locationActivity,
+  ) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Xác nhận xóa'),
+            content: Text(
+              'Bạn có muốn xóa hoạt động "${locationActivity.name}"?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Hủy'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _cubit.deleteLocationActivity(locationActivity.id);
+                },
+                child: const Text('Xóa', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+    );
   }
 
   Widget _buildHeaderInfo(LocationActivity locationActivity) {

@@ -1,11 +1,14 @@
-import 'package:booking_tour_flutter/domain/fake_post.dart';
-
 class ForgetState {
-  final List<FakePost> posts;
+  final bool checkEmail;
+  final bool existedEmail;
+  final String email;
+  ForgetState({
+    required this.checkEmail,
+    required this.existedEmail,
+    required this.email
+  });
 
-  ForgetState({required this.posts});
-
-  ForgetState copyWith({List<FakePost>? posts}){
-    return ForgetState(posts: posts ?? this.posts);
+  ForgetState copyWith({bool? checkEmail,bool? existedEmail, String? email}){
+    return ForgetState(checkEmail: checkEmail ?? this.checkEmail,existedEmail: existedEmail ?? this.existedEmail, email: email ?? this.email);
   }
 }

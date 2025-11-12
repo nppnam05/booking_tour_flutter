@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:intl/number_symbols_data.dart';
 
 class FormatterHelper {
   static String formatDate(DateTime d) {

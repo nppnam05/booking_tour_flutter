@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:booking_tour_flutter/data/response/day_of_tour_response.dart';
@@ -20,6 +20,7 @@ class TripManagerResponse {
   List<DayOfTourResponse>? dayOfTours;
   int? totalReviews;
   int? totalStars;
+  List<PlaceResponse>? places;
 
   TripManagerResponse({
     this.id,
@@ -33,6 +34,7 @@ class TripManagerResponse {
     this.dayOfTours,
     this.totalReviews,
     this.totalStars,
+    this.places,
   });
 
   factory TripManagerResponse.fromJson(Map<String, dynamic> json) =>
@@ -61,8 +63,9 @@ extension TripManagerResponseMapper on TripManagerResponse {
 
       tourImages: tourImages!,
       dayOfTours: dayOfTours!.map((i) => i.map()).toList(),
-      totalReviews: totalReviews ?? 0 ,
-      totalStars: totalStars ?? 0  ,
+      totalReviews: totalReviews ?? 0,
+      totalStars: totalStars ?? 0,
+      places: places!.map((i) => i.map()).toList(),
     );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
+import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
+import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
@@ -12,7 +15,6 @@ import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
-import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
@@ -34,9 +36,23 @@ abstract class CoreService {
   @GET("/Bank")
   Future<RestResponse> getBank();
 
+  @GET("/Schedule/{id}")
+  Future<RestResponse> getScheduleById(@Path("id") int id);
+
+  @PATCH("/User/change-password/email")
+  Future<RestResponse> changePassword(@Body() Map<String, dynamic> body);
+
+  @POST("/OTP/verifyotp")
+  Future<RestResponse> verifyOTP(@Body() Map<String, dynamic> body);
+
+  @POST("/OTP/send")
+  Future<RestResponse> sendOTP(@Body() Map<String, dynamic> body);
+
+  @POST("/User/check-account")
+  Future<RestResponse> checkAccount(@Body() Map<String, dynamic> checkAccount);
 
   @POST("/User")
-  Future<RestResponse> registerUser(CreateUserRequest user);
+  Future<RestResponse> registerUser(@Body() Map<String, dynamic> user);
 
   @GET("/Schedule/assignment/{tourId}")
   Future<RestResponse> getScheduleAssignments(@Path("tourId") int tourId);
@@ -189,6 +205,11 @@ abstract class CoreService {
     @Body() UpdateLocationActivities request,
   );
 
+  @DELETE("/LocationActivity/{id}")
+  Future<LocationActivityResponse> deleteLocationActivities({
+    @Path("id") required int id,
+  });
+
   @POST("/Place")
   Future<AssignmentPlaceResponse> addPlace(
     @Body() Map<String, dynamic> request,
@@ -205,6 +226,18 @@ abstract class CoreService {
 
   @POST("/Review")
   Future<RestResponse> createReview(@Body() CreateReviewRequest request);
+
+  @GET("/Tour/getMostFavoriteTour")
+  Future<RestResponse> getMostFavoriteTour();
+
+  @GET("/Tour/getMostRecent")
+  Future<RestResponse> getMostRecent();
+
+  @GET("/Notification/{userId}")
+  Future<RestResponse> getNotification(@Path("userId") int userId);
+
+  @GET("/Review/{tourId}")
+  Future<RestResponse> getReview(@Path("tourId") int tourId);
   @GET("/Favorite/{userId}")
   Future<RestResponse> getTourFavoriteByUserId(@Path("userId") int userId);
 
@@ -213,4 +246,8 @@ abstract class CoreService {
     @Query("tourId") int tourId,
     @Query("userId") int userId,
   );
+  @PATCH("/User/update-password/{userId}") 
+  Future<RestResponse> updatePassword(
+     @Path("userId") int userId, 
+     @Body() UpdatePasswordRequest request, );
 }

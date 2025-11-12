@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         theme: AppThemes.lightTheme,
         navigatorKey: AppNavigator.navigatorKey,
         routes: RouteManager.routes,
-        initialRoute: RouteName.danhSachLichTrinhBooking,
+        initialRoute: RouteName.update_password_user,
       ),
     );
   }
