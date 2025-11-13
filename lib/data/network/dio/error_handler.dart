@@ -6,7 +6,7 @@ class ErrorHandler {
 
   ErrorHandler.handle(Object e) {
     if (e is DioException) {
-      failure = Failure(code: -1, message: "have error");
+      failure = Failure( code: -1, message: "have error");
     } else {
       failure = Failure(code: -1, message: "have error");
     }
