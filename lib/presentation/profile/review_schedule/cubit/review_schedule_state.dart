@@ -7,7 +7,7 @@ class ReviewScheduleState {
   final int stars;
   final String review;
   final int userId;
-  final ScheduleUserCompleted? schedule;
+  final ScheduleTourmanager? schedule;
   final bool sentReview;
   final String? errorMessage;
 
@@ -24,7 +24,7 @@ class ReviewScheduleState {
     int? stars,
     String? review,
     int? userId,
-    ScheduleUserCompleted? schedule,
+    ScheduleTourmanager? schedule,
     bool? sentReview,
     String? errorMessage,
   }) {

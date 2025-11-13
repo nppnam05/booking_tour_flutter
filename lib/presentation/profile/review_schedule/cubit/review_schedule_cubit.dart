@@ -15,7 +15,7 @@ class ReviewScheduleCubit extends Cubit<ReviewScheduleState> {
     emit(state.copyWith(userId: userId));
   }
 
-  void setScheduleId(ScheduleUserCompleted schedule) {
+  void setSchedule(ScheduleTourmanager schedule) {
     emit(state.copyWith(schedule: schedule));
   }
 
@@ -36,9 +36,7 @@ class ReviewScheduleCubit extends Cubit<ReviewScheduleState> {
       rating: state.stars,
     );
 
-    result.fold((failure) {
-
-    }, (success) {
+    result.fold((failure) {}, (success) {
       emit(state.copyWith(sentReview: true));
     });
     DialogHelper.dismissDialog();

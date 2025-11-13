@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart' as FormatterHelper;
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_cubit.dart';
@@ -18,9 +19,7 @@ class ReviewScheduleScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(title: Text("Đánh giá chuyến đi")),
-      body: BlocBuilder<ReviewScheduleCubit, ReviewScheduleState>(
-        builder: (context, state) {
-          return CustomScrollView(
+      body: CustomScrollView(
             slivers: [
               //tour
               SliverToBoxAdapter(
@@ -40,7 +39,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                           height: 32,
                         ),
                         title: Text(
-                          "Chuyến đi ${state.schedule!.tour.title}",
+                          "Chuyến đi ${cubit.state.schedule!.tour.title}",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headlineMedium!
                               .copyWith(color: AppColors.white),
@@ -53,7 +52,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                           height: 32,
                         ),
                         title: Text(
-                          "Mã chuyến đi: ${state.schedule!.code}",
+                          "Mã chuyến đi: ${cubit.state.schedule!.code}",
                           style: Theme.of(context).textTheme.bodyLarge!
                               .copyWith(color: AppColors.white),
                         ),
@@ -65,7 +64,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                           height: 32,
                         ),
                         title: Text(
-                          "${state.schedule!.startDate} - ${state.schedule!.endDate}",
+                          "${FormatterHelper.formatDate(cubit.state.schedule!.startDate)} - ${FormatterHelper.formatDate(cubit.state.schedule!.endDate)}",
                           style: Theme.of(context).textTheme.bodyLarge!
                               .copyWith(color: AppColors.white),
                         ),
@@ -130,6 +129,9 @@ class ReviewScheduleScreen extends StatelessWidget {
                                   await DialogHelper.showInformDialog(
                                     Text("Gửi đánh giá thành công"),
                                   );
+                                  if (context.mounted){
+                                    Navigator.pop(context);
+                                  }
                                 }
                               },
                               builder: (context, state) {
@@ -170,8 +172,6 @@ class ReviewScheduleScreen extends StatelessWidget {
                 ),
               ),
             ],
-          );
-        },
       ),
     );
   }
