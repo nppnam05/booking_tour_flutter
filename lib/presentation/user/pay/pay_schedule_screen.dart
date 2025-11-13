@@ -1,16 +1,25 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/formatter_helper.dart';
+import 'package:booking_tour_flutter/domain/pay_booking.dart';
+import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PayScheduleScreen extends StatelessWidget {
   PayScheduleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Du lịch Vũng Tàu")),
-      body: SingleChildScrollView(child: Center(child: columnOfWidget())),
+    return BlocProvider.value(
+      value: context.read<PayScheduleCubit>(),
+      child: Scaffold(
+        appBar: AppBar(title: Text("Thanh toán chuyến đi")),
+        body: SingleChildScrollView(child: Center(child: columnOfWidget())),
+      ),
     );
   }
 
@@ -18,31 +27,46 @@ class PayScheduleScreen extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 20),
-        scheduleInfoCard(),
+        BlocBuilder<PayScheduleCubit, PayScheduleState>(
+          builder: (context, state) {
+            return scheduleInfoCard(state.schedule);
+          },
+        ),
         SizedBox(height: 15),
-        inforUserCard(),
-        SizedBox(height: 15,),
-        qrCode()
+        BlocBuilder<PayScheduleCubit, PayScheduleState>(
+          builder: (context, state) {
+            return inforUserCard(state.paySchedule);
+          },
+        ),
+        SizedBox(height: 15),
+        BlocBuilder<PayScheduleCubit, PayScheduleState>(
+          builder: (context, state) {
+            return qrCode(state.linkQR);
+          },
+        ),
       ],
     );
   }
 
-  Widget qrCode(){
+  Widget qrCode(String linkQR) {
     return Column(
       children: [
-        Text("Quét mã tại đây để thanh toán", style: AppFonts.text18,),
-        SizedBox(height: 12,),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: customButton(onPressed: (){
-          
-          }, text: "Tải Mã QR"),
-        )
+        SizedBox(height: 12),
+        Image.network(
+          linkQR,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Text('Không thể tải ảnh');
+          },
+        ),
+        SizedBox(height: 12),
+        Text("Quét mã tại đây để thanh toán", style: AppFonts.text18),
+        SizedBox(height: 12),
       ],
     );
   }
 
-  Widget inforUserCard() {
+  Widget inforUserCard(PayBooking pay) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -59,8 +83,10 @@ class PayScheduleScreen extends StatelessWidget {
                   children: [
                     Text("Loại thanh toán", style: AppFonts.text18),
                     Text(
-                      "Toàn bộ",
-                      style: AppFonts.text18.copyWith(color: Color(0xFF00FF88)),
+                      pay.payType ? "Toàn bộ" : "Đặt cọc",
+                      style: AppFonts.text18.copyWith(
+                        color: pay.payType ? Color(0xFF00FF88) : Colors.red,
+                      ),
                     ),
                   ],
                 ),
@@ -69,56 +95,50 @@ class PayScheduleScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Tổng số tiền", style: AppFonts.text18),
-                    Text(
-                      "1.000.000 VNĐ",
-                      style: AppFonts.text18,
-                    ),
+                    Text("${FormatterHelper.formatCurrency(pay.totalPrice)}", style: AppFonts.text18),
                   ],
                 ),
-                 SizedBox(height: 12),
+                SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Email", style: AppFonts.text18),
-                    Text(
-                      "myEmail@gmail.com",
-                      style: AppFonts.text18,
-                    ),
+                    Text("${pay.email}", style: AppFonts.text18),
                   ],
                 ),
-                 SizedBox(height: 12),
+                SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Số điện thoại", style: AppFonts.text18),
-                    Text(
-                      "0123456789",
-                      style: AppFonts.text18,
-                    ),
+                    Text("${pay.phone}", style: AppFonts.text18),
                   ],
                 ),
-                 SizedBox(height: 12),
+                SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Tổng số người", style: AppFonts.text18),
+                    Text("${pay.numPeople} Người", style: AppFonts.text18),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Row(
+                  children: [
                     Text(
-                      "10 Người",
-                      style: AppFonts.text18,
+                      "Lưu ý:",
+                      style: AppFonts.text18.copyWith(color: Colors.red),
                     ),
                   ],
                 ),
-                SizedBox(height: 12,),
-                Row(
-                  children: [
-                    Text("Lưu ý:", style: AppFonts.text18.copyWith(color: Colors.red),),
-                  ],
-                ),
-                SizedBox(height: 12,),
+                SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Nếu sau 2 tiếng bạn chưa thanh toán thì chuyến đi của bạn sẽ bị hủy", style: AppFonts.text18,),
-                )
+                  child: Text(
+                    "Nếu sau 2 tiếng bạn chưa thanh toán thì chuyến đi của bạn sẽ bị hủy",
+                    style: AppFonts.text18,
+                  ),
+                ),
               ],
             ),
           ),
@@ -127,7 +147,15 @@ class PayScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget scheduleInfoCard() {
+  Widget scheduleInfoCard(ScheduleBook schedule) {
+    var startDate = schedule.startDate;
+    var endDate = schedule.endDate;
+
+    var locationName = schedule.tour.locations
+        .map((loc) => loc.name)
+        .toSet() // Loại bỏ trùng lặp
+        .join(', ');
+
     return Container(
       width: double.infinity,
       color: AppColors.button,
@@ -136,11 +164,10 @@ class PayScheduleScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("🌴", style: TextStyle(fontSize: 30)),
-              SizedBox(width: 30),
               Text(
-                "Chuyến đi phú quốc ",
+                schedule.tour.title,
                 style: AppFonts.text28.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -162,7 +189,7 @@ class PayScheduleScreen extends StatelessWidget {
               ),
               const SizedBox(width: 30),
               Text(
-                "25 người",
+                "${schedule.maxSlot} người",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
@@ -178,7 +205,7 @@ class PayScheduleScreen extends StatelessWidget {
               const SizedBox(width: 20),
 
               Text(
-                "15/10/2024 - 17/10/2024",
+                "${startDate.day}/${startDate.month}/${startDate.year} - ${endDate.day}/${endDate.month}/${endDate.year}",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
@@ -193,7 +220,7 @@ class PayScheduleScreen extends StatelessWidget {
               const Icon(Icons.location_on, size: 30, color: Colors.red),
               const SizedBox(width: 20),
               Text(
-                "Khởi hành từ thành phố HCM",
+                "Địa điểm là ${locationName}",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],

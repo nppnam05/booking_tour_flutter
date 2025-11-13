@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
@@ -35,6 +36,12 @@ abstract class CoreService {
 
   @GET("/Bank")
   Future<RestResponse> getBank();
+
+  @GET("/Booking/{id}")
+  Future<RestResponse> getBookingById(@Path("id") int id);
+
+  @POST("/Booking")
+  Future<RestResponse> createBooking(@Body() BookingScheduleRequest booking);
 
   @GET("/Schedule/{id}")
   Future<RestResponse> getScheduleById(@Path("id") int id);

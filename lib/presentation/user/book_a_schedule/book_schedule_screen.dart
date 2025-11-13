@@ -1,13 +1,25 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/formatter_helper.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_state.dart';
+import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field_ic.dart';
 import 'package:booking_tour_flutter/presentation/widgets/payment_option.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookScheduleScreen extends StatelessWidget {
   BookScheduleScreen({super.key});
 
+  late final BookScheduleCubit _cubit;
+  late final AuthCubit authCubit;
+
+  final TextEditingController controllerNumPeople = TextEditingController();
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerSoDienThoai = TextEditingController();
 
@@ -15,9 +27,15 @@ class BookScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Du lịch vũng tàu")),
-      body: SingleChildScrollView(child: Center(child: columnOfWidget())),
+    _cubit = context.read<BookScheduleCubit>();
+    authCubit = context.read<AuthCubit>();
+
+    return BlocProvider.value(
+      value: _cubit,
+      child: Scaffold(
+        appBar: AppBar(title: Text("Đặt chuyến đi")),
+        body: SingleChildScrollView(child: Center(child: columnOfWidget())),
+      ),
     );
   }
 
@@ -28,7 +46,11 @@ class BookScheduleScreen extends StatelessWidget {
       children: [
         SizedBox(height: 20),
 
-        scheduleInfoCard(),
+        BlocBuilder<BookScheduleCubit, BookScheduleState>(
+          builder: (context, state) {
+            return scheduleInfoCard(state.schedule);
+          },
+        ),
 
         SizedBox(height: 20),
 
@@ -40,7 +62,7 @@ class BookScheduleScreen extends StatelessWidget {
             child: Column(
               children: [
                 notToggleInputFieldNotIcon(
-                  controller: controllerEmail,
+                  controller: controllerNumPeople,
                   title: "Số lượng người tham gia",
                   color: Colors.grey.shade100,
                   validator: (value) {
@@ -91,43 +113,99 @@ class BookScheduleScreen extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: PaymentRadioGroup(onChanged: (value) {}),
+          child: PaymentRadioGroup(
+            onChanged: (value) {
+              _cubit.setHinhThuc(hinhThuc: value);
+            },
+          ),
         ),
 
-        SizedBox(height: 12,),
+        SizedBox(height: 12),
 
-        Container(
-          width: double.infinity,
-          color: Color(0xFFF6FDFF),
+        BlocBuilder<BookScheduleCubit, BookScheduleState>(
+          builder: (context, state) {
+            return Container(
+              width: double.infinity,
+              color: Color(0xFFF6FDFF),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Tổng số tiền: ",
+                      style: AppFonts.text14.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "${FormatterHelper.formatCurrency(((state.hinhThuc == HinhThuc.thanhtoantoanbo ? state.tienThanhToanHet : state.tienThanhToanCoc) * (int.tryParse(controllerNumPeople.text.trim()) ?? 1)))}",
+                      style: AppFonts.text14.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+
+        SizedBox(height: 12),
+
+        BlocListener<BookScheduleCubit, BookScheduleState>(
+          listener: (context, state) async {
+            if (state.isBooking) {
+              final cubit = context.read<PayScheduleCubit>();
+
+              // đẩy id qua cubit của màn đích
+              cubit.setId(
+                idSchedule: state.schedule.id,
+                idBooking: state.idBooking,
+              );
+
+              cubit.loadData();
+
+              await Navigator.pushNamed(context, RouteName.paySchedule);
+
+              _cubit.setIsBooking();
+            }
+          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Tổng số tiền: ", style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold)),
-                Text("1.500.000 VNĐ", style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold)),
-              ],
+            child: BlocBuilder<BookScheduleCubit, BookScheduleState>(
+              builder: (context, state) {
+                return customButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _cubit.booking(
+                        userId: authCubit.userId,
+                        numPeople: int.parse(controllerNumPeople.text.trim()),
+                        email: controllerEmail.text.trim(),
+                        phone: controllerSoDienThoai.text.trim(),
+                      );
+                    }
+                  },
+                  text: "Thanh toán ngay",
+                );
+              },
             ),
           ),
         ),
-
-        SizedBox(height: 12,),
-
-
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: customButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {}
-            },
-            text: "Thanh toán ngay",
-          ),
-        ),
+        SizedBox(height: 10),
       ],
     );
   }
 
-  Widget scheduleInfoCard() {
+  Widget scheduleInfoCard(ScheduleBook schedule) {
+    var startDate = schedule.startDate;
+    var endDate = schedule.endDate;
+
+    var locationName = schedule.tour.locations
+        .map((loc) => loc.name)
+        .toSet() // Loại bỏ trùng lặp
+        .join(', ');
+
     return Container(
       width: double.infinity,
       color: AppColors.button,
@@ -136,11 +214,10 @@ class BookScheduleScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("🌴", style: TextStyle(fontSize: 30)),
-              SizedBox(width: 30),
               Text(
-                "Chuyến đi phú quốc ",
+                "${schedule.tour.title}",
                 style: AppFonts.text28.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -162,7 +239,7 @@ class BookScheduleScreen extends StatelessWidget {
               ),
               const SizedBox(width: 30),
               Text(
-                "25 người",
+                "${schedule.maxSlot}",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
@@ -178,7 +255,7 @@ class BookScheduleScreen extends StatelessWidget {
               const SizedBox(width: 20),
 
               Text(
-                "15/10/2024 - 17/10/2024",
+                "${startDate.day}/${startDate.month}/${startDate.year} - ${endDate.day}/${endDate.month}/${endDate.year}",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
@@ -193,7 +270,7 @@ class BookScheduleScreen extends StatelessWidget {
               const Icon(Icons.location_on, size: 30, color: Colors.red),
               const SizedBox(width: 20),
               Text(
-                "Khởi hành từ thành phố HCM",
+                "Địa điểm là $locationName",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
@@ -207,7 +284,6 @@ class BookScheduleScreen extends StatelessWidget {
     final RegExp emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
     );
-
     return emailRegex.hasMatch(email);
   }
 }
