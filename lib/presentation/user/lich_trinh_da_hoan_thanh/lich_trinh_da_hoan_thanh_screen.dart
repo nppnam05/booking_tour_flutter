@@ -161,7 +161,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
             final userId = context.read<AuthCubit>().state.id;
 
             cubitReview.setUserId(userId);
-            cubitReview.setScheduleId(schedule.id);
+            cubitReview.setScheduleId(schedule);
 
             await Navigator.pushNamed(context, RouteName.profileReviewSchedule);
           },

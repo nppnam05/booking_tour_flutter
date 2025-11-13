@@ -13,7 +13,7 @@ class ReviewScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _cubit = context.read<ReviewScheduleCubit>();
+    var cubit = context.read<ReviewScheduleCubit>();
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -40,7 +40,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                           height: 32,
                         ),
                         title: Text(
-                          "state",
+                          "Chuyến đi ${state.schedule!.tour.title}",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headlineMedium!
                               .copyWith(color: AppColors.white),
@@ -53,7 +53,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                           height: 32,
                         ),
                         title: Text(
-                          "Mã chuyến đi: CD23TT3",
+                          "Mã chuyến đi: ${state.schedule!.code}",
                           style: Theme.of(context).textTheme.bodyLarge!
                               .copyWith(color: AppColors.white),
                         ),
@@ -65,7 +65,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                           height: 32,
                         ),
                         title: Text(
-                          "15/10/2025 - 17/10/2025",
+                          "${state.schedule!.startDate} - ${state.schedule!.endDate}",
                           style: Theme.of(context).textTheme.bodyLarge!
                               .copyWith(color: AppColors.white),
                         ),
@@ -119,7 +119,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                               ReviewScheduleCubit,
                               ReviewScheduleState
                             >(
-                              bloc: _cubit,
+                              bloc: cubit,
                               listener: (context, state) async {
                                 if (state.errorMessage != null) {
                                   await DialogHelper.showInformDialog(
@@ -136,7 +136,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                                 return StarRating(
                                   rating: state.stars,
                                   onRatingChanged: (stars) {
-                                    _cubit.setStars(stars);
+                                    cubit.setStars(stars);
                                   },
                                 );
                               },
@@ -150,7 +150,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                           hint: "Viết đánh giá của bạn tại đây",
                           minLines: 12,
                           maxLines: 20,
-                          onChange: (comment) => _cubit.setComment(comment),
+                          onChange: (comment) => cubit.setComment(comment),
                         ),
                       ],
                     ),
@@ -163,7 +163,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                 child: Center(
                   child: BkButton(
                     onPressed: () {
-                      _cubit.sendReview();
+                      cubit.sendReview();
                     },
                     title: "Gửi",
                   ),
