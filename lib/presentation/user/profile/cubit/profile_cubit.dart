@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'profile_state.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:booking_tour_flutter/domain/user.dart';
+
 
 class ProfileCubit extends Cubit<ProfileState> {
   final BookingRepository bookingRepository;

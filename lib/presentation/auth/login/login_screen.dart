@@ -120,7 +120,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 if (_controllerEmail.text.isNotEmpty &&
                     _controllerPassword.text.isNotEmpty) {
-                  _cubit.syncPost(
+                  _cubit.login(
                     _controllerEmail.text.trim(),
                     _controllerPassword.text.trim(),
                   );
@@ -204,7 +204,10 @@ class LoginScreen extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            print("Login fb");
+            // login bằng google 
+            _cubit.signInWithGoogle();
+
+            
           },
           child: Padding(
             padding: EdgeInsets.all(4.0),
@@ -217,7 +220,7 @@ class LoginScreen extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            print("Login gg");
+            
           },
           child: Padding(
             padding: EdgeInsets.all(4.0),
