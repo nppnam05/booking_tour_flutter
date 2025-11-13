@@ -10,6 +10,7 @@ import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
@@ -18,6 +19,7 @@ import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/bank_response.dart';
 import 'package:booking_tour_flutter/data/response/booking_response.dart';
+import 'package:booking_tour_flutter/data/response/helpfull_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/notification_response.dart';
 import 'package:booking_tour_flutter/data/response/participant_response.dart';
@@ -45,6 +47,7 @@ import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/create_tour/CT_tour.dart';
 import 'package:booking_tour_flutter/domain/assignment.dart';
+import 'package:booking_tour_flutter/domain/helpful.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/participants.dart';
 import 'package:booking_tour_flutter/domain/pay_booking.dart';
@@ -269,6 +272,7 @@ abstract class BookingRepository {
     required String newPassword,
   });
   Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
+  Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1339,6 +1343,29 @@ class BookingRepositoryImp implements BookingRepository {
       );
       final response = await _coreService.updatePassword(userId, request);
       return Right(null);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Helpful>>> getHelpFul(
+    GetHelpFullRequest request,
+  ) async {
+    try {
+      final response = await _coreService.getHelpFul(request);
+      final data = response.data as List<dynamic>;
+      final items =
+          data
+              .map(
+                (json) =>
+                    HelpfullResponse.fromJson(
+                      json as Map<String, dynamic>,
+                    ).toEntity(),
+              )
+              .toList();
+
+      return Right(items);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

@@ -1,11 +1,13 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
-import 'package:booking_tour_flutter/domain/user.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_state.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card_detail.dart';
+import 'package:booking_tour_flutter/presentation/user/favorite/favorite_tour_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/profile/profileUser_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,7 @@ class DanhSachChuyenDiScreen extends StatefulWidget {
 class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
   final TextEditingController _searchController = TextEditingController();
   late final DanhSachChuyenDiCubit _cubit;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -34,9 +37,38 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
     super.dispose();
   }
 
+  void _onTabTapped(int index) {
+    if (_currentIndex == index) return;
+
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const FavoriteTourScreen(),
+          ),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProfileUserScreen(),
+          ),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = ModalRoute.of(context)?.settings.arguments as User?;
+    final userId = context.read<AuthCubit>().userId;
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
@@ -46,14 +78,13 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
             'Booking Tour',
             style: TextStyle(color: AppColors.white),
           ),
+          backgroundColor: AppColors.backgroundAppBarTheme,
           actions: [
             IconButton(
               onPressed: () {
-                if (user != null) {
-                  Navigator.pushNamed(context, "thong_bao", arguments: user.id);
-                }
+                Navigator.pushNamed(context, "thong_bao");
               },
-              icon: Icon(Icons.notifications),
+              icon: const Icon(Icons.notifications),
             ),
           ],
         ),
@@ -111,7 +142,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                                     "danh_sach_lich_trinh_user",
                                     arguments: {
                                       'tourId': trip.id,
-                                      'userId': user?.id ?? 0,
+                                      'userId': userId,
                                     },
                                   );
                                 },
@@ -133,7 +164,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                       delegate: SliverChildBuilderDelegate((context, index) {
                         return TripCardDetail(
                           trip: state.mostRecent[index],
-                          userId: user?.id ?? 0,
+                          userId: userId,
                         );
                       }, childCount: state.mostRecent.length),
                     ),
@@ -141,6 +172,25 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
               );
             },
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: _onTabTapped,
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Yêu thích',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Tài khoản',
+            ),
+          ],
+          selectedItemColor: AppColors.white,
+          unselectedItemColor: AppColors.textPrimary,
+          backgroundColor: AppColors.backgroundAppBarTheme,
         ),
       ),
     );

@@ -2,7 +2,6 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
-import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
@@ -227,7 +226,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
       children: [
         DeleteButtonWidget(
           onDelete: () {
-            Navigator.pushNamed(context, RouteName.changePassword);
+            Navigator.pushNamed(context, RouteName.update_password_user);
           },
           text: "Đổi mật khẩu",
           textColor: Colors.white,

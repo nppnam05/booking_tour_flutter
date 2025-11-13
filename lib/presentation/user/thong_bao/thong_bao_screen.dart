@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
@@ -16,6 +17,7 @@ class ThongBaoScreen extends StatefulWidget {
 class _ThongBaoScreenState extends State<ThongBaoScreen> {
   late final TextEditingController searchController;
   late final ThongBaoCubit cubit;
+  bool _hasLoaded = false;
 
   @override
   void initState() {
@@ -31,9 +33,10 @@ class _ThongBaoScreenState extends State<ThongBaoScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final userId = ModalRoute.of(context)?.settings.arguments as int?;
-    if (userId != null) {
+    if (!_hasLoaded) {
+      final userId = context.read<AuthCubit>().userId;
       cubit.load(userId);
+      _hasLoaded = true;
     }
   }
 

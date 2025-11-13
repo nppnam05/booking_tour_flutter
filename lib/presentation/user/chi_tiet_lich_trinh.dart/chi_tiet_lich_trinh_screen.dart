@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dar
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/review.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_state.dart';
@@ -22,7 +23,7 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final schedule = arguments['scheduleTourmanager'] as ScheduleTourmanager;
     final tour = schedule.tour;
-    final userId = arguments['userId'] as int? ?? 0;
+    final userId = context.read<AuthCubit>().userId;
     return BlocProvider(
       create: (context) => ChiTietLichTrinhCubit()..loadRviews(tour.id, userId),
       child: Scaffold(
