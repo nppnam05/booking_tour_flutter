@@ -1,12 +1,10 @@
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
-import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
-import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
+import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
-import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
@@ -260,4 +258,7 @@ abstract class CoreService {
     @Path("userId") int userId,
     @Body() UpdatePasswordRequest request,
   );
+
+  @POST("/Helpful")
+  Future<RestResponse> getHelpFul(@Body() GetHelpFullRequest request);
 }

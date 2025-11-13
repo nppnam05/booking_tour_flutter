@@ -15,7 +15,8 @@ class UpdatePasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => UpdatePasswordCubit(getIt<BookingRepository>()), // Sửa tại đây
+      create:
+          (_) => UpdatePasswordCubit(getIt<BookingRepository>()), // Sửa tại đây
       child: Scaffold(
         appBar: AppBar(title: const Text("Đổi mật khẩu")),
         body: Padding(
@@ -37,9 +38,10 @@ class UpdatePasswordScreen extends StatelessWidget {
               return Column(
                 children: [
                   UpdatePasswordCard(
-                    onSubmit: (data) => context
-                        .read<UpdatePasswordCubit>()
-                        .updatePassword(userId, data),
+                    onSubmit:
+                        (data) => context
+                            .read<UpdatePasswordCubit>()
+                            .updatePassword(userId, data),
                   ),
                   if (state is UpdatePasswordLoading)
                     const Center(child: CircularProgressIndicator()),
