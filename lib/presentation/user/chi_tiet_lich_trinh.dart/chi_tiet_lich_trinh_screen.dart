@@ -22,7 +22,12 @@ class ChiTietLichTrinhScreen extends StatefulWidget {
 }
 
 class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
+  static const int _initialReviewCount = 3;
+  static const int _reviewsIncrement = 3;
+  static const int _maxLoadMorePresses = 5;
   int _selectedImageIndex = 0;
+  int _displayedReviewCount = _initialReviewCount;
+  int _loadMorePressCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +59,13 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                     height: 240,
                     width: double.infinity,
                     color: AppColors.gray.withOpacity(0.2),
-                    child: imageCount > 0
-                        ? Image.network(
-                            tourImages[selectedImageIndex],
-                            fit: BoxFit.cover,
-                          )
-                        : const Icon(Icons.image_not_supported, size: 48),
+                    child:
+                        imageCount > 0
+                            ? Image.network(
+                              tourImages[selectedImageIndex],
+                              fit: BoxFit.cover,
+                            )
+                            : const Icon(Icons.image_not_supported, size: 48),
                   ),
                   if (imageCount > 1 && selectedImageIndex > 0)
                     Positioned(
@@ -96,8 +102,10 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: BlocBuilder<ChiTietLichTrinhCubit,
-                        ChiTietLichTrinhState>(
+                    child: BlocBuilder<
+                      ChiTietLichTrinhCubit,
+                      ChiTietLichTrinhState
+                    >(
                       builder: (context, state) {
                         return InkWell(
                           onTap: () {
@@ -115,9 +123,10 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                               state.isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_border,
-                              color: state.isFavorite
-                                  ? AppColors.delete
-                                  : AppColors.gray,
+                              color:
+                                  state.isFavorite
+                                      ? AppColors.delete
+                                      : AppColors.gray,
                               size: 24,
                             ),
                           ),
@@ -148,9 +157,10 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: isSelected
-                                ? AppColors.secondary
-                                : Colors.transparent,
+                            color:
+                                isSelected
+                                    ? AppColors.secondary
+                                    : Colors.transparent,
                             width: 2,
                           ),
                         ),
@@ -346,6 +356,27 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                                     reviews.length
                                 : 0.0;
 
+                        final totalReviews = reviews.length;
+                        final maxDisplayableReviews =
+                            _initialReviewCount +
+                                _reviewsIncrement * _maxLoadMorePresses;
+                        final allowedDisplayCount =
+                            totalReviews < maxDisplayableReviews
+                                ? totalReviews
+                                : maxDisplayableReviews;
+                        final effectiveDisplayCount =
+                            _displayedReviewCount < allowedDisplayCount
+                                ? _displayedReviewCount
+                                : allowedDisplayCount;
+                        final visibleReviews =
+                            reviews.take(effectiveDisplayCount).toList();
+                        final bool canLoadMore =
+                            totalReviews > effectiveDisplayCount &&
+                                _loadMorePressCount < _maxLoadMorePresses &&
+                                effectiveDisplayCount < maxDisplayableReviews;
+                        final bool canCollapse =
+                            effectiveDisplayCount > _initialReviewCount;
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -363,28 +394,79 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            ...reviews.take(5).map((review) {
+                            ...visibleReviews.map((review) {
                               return _buildReviewItem(review, context, userId);
                             }),
-
-                            if (reviews.length > 2)
+                            if (canLoadMore || canCollapse)
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
-                                child: InkWell(
-                                  onTap: () {
-                                    // TODO: đến màn hình review
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "Xem thêm >",
-                                        style: TextStyle(
-                                          fontSize: AppFonts.fontSize14,
-                                          color: AppColors.gray,
+                                child: Row(
+                                  children: [
+                                    if (canLoadMore)
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            final maxAllowed =
+                                                _initialReviewCount +
+                                                    _reviewsIncrement *
+                                                        _maxLoadMorePresses;
+                                            _displayedReviewCount +=
+                                                _reviewsIncrement;
+                                            if (_displayedReviewCount >
+                                                maxAllowed) {
+                                              _displayedReviewCount =
+                                                  maxAllowed;
+                                            }
+                                            if (_displayedReviewCount >
+                                                totalReviews) {
+                                              _displayedReviewCount =
+                                                  totalReviews;
+                                            }
+                                            _loadMorePressCount += 1;
+                                          });
+                                        },
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          child: Text(
+                                            "Xem thêm >",
+                                            style: TextStyle(
+                                              fontSize: AppFonts.fontSize14,
+                                              color: AppColors.gray,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    if (canLoadMore && canCollapse)
+                                      const SizedBox(width: 16),
+                                    if (canCollapse)
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _displayedReviewCount =
+                                                _initialReviewCount;
+                                            _loadMorePressCount = 0;
+                                          });
+                                        },
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          child: Text(
+                                            "Ẩn bớt",
+                                            style: TextStyle(
+                                              fontSize: AppFonts.fontSize14,
+                                              color: AppColors.gray,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               ),
                             const SizedBox(height: 20),
@@ -524,11 +606,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
           shape: BoxShape.circle,
         ),
         padding: const EdgeInsets.all(8),
-        child: Icon(
-          icon,
-          color: AppColors.black,
-          size: 28,
-        ),
+        child: Icon(icon, color: AppColors.black, size: 28),
       ),
     );
   }
