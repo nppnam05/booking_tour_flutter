@@ -25,18 +25,62 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
     final tour = schedule.tour;
     final userId = context.read<AuthCubit>().userId;
     return BlocProvider(
-      create: (context) => ChiTietLichTrinhCubit()..loadRviews(tour.id, userId),
+      create: (context) {
+        final cubit = ChiTietLichTrinhCubit();
+        cubit.loadRviews(tour.id, userId);
+        cubit.loadFavoriteStatus(userId, tour.id);
+        return cubit;
+      },
       child: Scaffold(
         appBar: AppBar(title: Text(tour.title), centerTitle: false),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                tour.tourImages.isNotEmpty ? tour.tourImages.first : '',
-                height: 240,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              Stack(
+                children: [
+                  Image.network(
+                    tour.tourImages.isNotEmpty ? tour.tourImages.first : '',
+                    height: 240,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: BlocBuilder<
+                      ChiTietLichTrinhCubit,
+                      ChiTietLichTrinhState
+                    >(
+                      builder: (context, state) {
+                        return InkWell(
+                          onTap: () {
+                            final cubit = context.read<ChiTietLichTrinhCubit>();
+                            cubit.toggleFavorite(userId, tour.id);
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              state.isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color:
+                                  state.isFavorite
+                                      ? AppColors.delete
+                                      : AppColors.gray,
+                              size: 24,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
 
               Container(

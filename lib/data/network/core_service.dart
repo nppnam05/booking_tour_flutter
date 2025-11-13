@@ -261,4 +261,7 @@ abstract class CoreService {
 
   @POST("/Helpful")
   Future<RestResponse> getHelpFul(@Body() GetHelpFullRequest request);
+
+  @POST("/Favorite")
+  Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
 }

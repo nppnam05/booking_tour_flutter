@@ -273,6 +273,7 @@ abstract class BookingRepository {
   });
   Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
+  Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1366,6 +1367,17 @@ class BookingRepositoryImp implements BookingRepository {
               .toList();
 
       return Right(items);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> postFavorite(GetReviewsRequest request) async {
+    try {
+      final response = await _coreService.postFavorite(request);
+      final data = response.data as int;
+      return Right(data);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
