@@ -12,7 +12,7 @@ class ScheduleTourmanagerCubit extends Cubit<ScheduleTourmanagerState> {
   final BookingRepository _repository;
 
   ScheduleTourmanagerCubit(this._repository)
-    : super(ScheduleTourmanagerInitial());
+      : super(ScheduleTourmanagerInitial());
 
   Future<void> loadSchedules() async {
     emit(ScheduleTourmanagerLoading());
@@ -23,21 +23,26 @@ class ScheduleTourmanagerCubit extends Cubit<ScheduleTourmanagerState> {
     );
   }
 
-  Future<void> deleteSchedule(ScheduleTourmanager schedule) async {
-    if (state is ScheduleTourmanagerLoaded) {
-      final currentSchedule = (state as ScheduleTourmanagerLoaded).schedules;
-      emit(ScheduleTourmanagerLoading());
-      final result = await _repository.deleteScheduleById(id: schedule.id);
-      result.fold(
-        (failure) => emit(ScheduleTourmanagerError(failure.message)),
-        (_) {
-          final updatedSchedules =
-              currentSchedule.where((t) => t.id != schedule.id).toList();
-          emit(ScheduleTourmanagerLoaded(updatedSchedules));
-        },
-      );
-    }
+Future<void> deleteSchedule(ScheduleTourmanager schedule) async {
+  if (state is ScheduleTourmanagerLoaded) {
+    final currentSchedules = (state as ScheduleTourmanagerLoaded).schedules;
+    emit(ScheduleTourmanagerLoading());
+
+    final result = await _repository.deleteScheduleById(id: schedule.id);
+    result.fold(
+      (failure) {
+        emit(ScheduleTourmanagerError("Bạn không thể xóa lịch trình này !"));
+
+        emit(ScheduleTourmanagerLoaded(currentSchedules));
+      },
+      (_) {
+        final updatedSchedules =
+            currentSchedules.where((t) => t.id != schedule.id).toList();
+        emit(ScheduleTourmanagerLoaded(updatedSchedules));
+      },
+    );
   }
+}
 
   Future<Either<Failure, List<Trip>>> getTours() async {
     return await _repository.getTrips();
