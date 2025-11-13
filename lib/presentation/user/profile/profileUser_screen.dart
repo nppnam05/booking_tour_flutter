@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/profile_cubit.dart';
 import 'cubit/profile_state.dart';
 import 'profile_card.dart';
+import '../danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
+import '../favorite/favorite_tour_screen.dart';
 
 class ProfileUserScreen extends StatefulWidget {
   final int userId;
-  const ProfileUserScreen({Key? key, required this.userId}) : super(key: key);
+  const ProfileUserScreen({super.key, required this.userId});
 
   @override
   State<ProfileUserScreen> createState() => _ProfileUserScreenState();
@@ -17,6 +20,7 @@ class ProfileUserScreen extends StatefulWidget {
 
 class _ProfileUserScreenState extends State<ProfileUserScreen> {
   late final ProfileCubit _cubit;
+  int _currentIndex = 2;
 
   @override
   void initState() {
@@ -29,6 +33,33 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
   void dispose() {
     _cubit.close();
     super.dispose();
+  }
+
+  void _onTabTapped(int index) {
+    if (_currentIndex == index) return;
+
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DanhSachChuyenDiScreen()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FavoriteTourScreen(userId: widget.userId),
+          ),
+        );
+        break;
+      case 2:
+        break;
+    }
   }
 
   Widget buildItem({
@@ -54,7 +85,10 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   Text(subtitle, style: const TextStyle(fontSize: 13)),
                 ],
               ),
@@ -70,9 +104,12 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thông tin cá nhân'),
+        title: const Text(
+          'Thông tin cá nhân',
+          style: TextStyle(color: AppColors.white),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: AppColors.backgroundAppBarTheme,
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         bloc: _cubit,
@@ -109,7 +146,10 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
                   title: 'Hoàn Thành',
                   subtitle: 'các lịch trình đã hoàn thành',
                   onTap: () {
-                    Navigator.pushNamed(context, RouteName.lichTrinhDaHoanThanh);
+                    Navigator.pushNamed(
+                      context,
+                      RouteName.lichTrinhDaHoanThanh,
+                    );
                   },
                 ),
                 buildItem(
@@ -117,20 +157,41 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
                   title: 'Lịch Sử Thanh Toán',
                   subtitle: 'xem lại lịch trình đã thanh toán',
                   onTap: () {
-                    Navigator.pushNamed(context, RouteName.danhSachLichTrinhBooking);
+                    Navigator.pushNamed(
+                      context,
+                      RouteName.danhSachLichTrinhBooking,
+                    );
                   },
                 ),
                 buildItem(
                   icon: Icons.logout,
                   title: 'Đăng Xuất',
                   subtitle: 'đăng xuất khỏi app',
-                  onTap: () {print("Hi");},
+                  onTap: () {
+                    print("Hi");
+                  },
                 ),
               ],
             );
           }
           return const SizedBox.shrink();
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onTabTapped,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Yêu thích',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Tài khoản'),
+        ],
+        selectedItemColor: AppColors.white,
+        unselectedItemColor: AppColors.textPrimary,
+        backgroundColor: AppColors.backgroundAppBarTheme,
       ),
     );
   }
