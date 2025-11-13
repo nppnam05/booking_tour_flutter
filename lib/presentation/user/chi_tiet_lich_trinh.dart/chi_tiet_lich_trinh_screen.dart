@@ -14,8 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class ChiTietLichTrinhScreen extends StatelessWidget {
+class ChiTietLichTrinhScreen extends StatefulWidget {
   const ChiTietLichTrinhScreen({super.key});
+
+  @override
+  State<ChiTietLichTrinhScreen> createState() => _ChiTietLichTrinhScreenState();
+}
+
+class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
+  int _selectedImageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +31,10 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
     final schedule = arguments['scheduleTourmanager'] as ScheduleTourmanager;
     final tour = schedule.tour;
     final userId = context.read<AuthCubit>().userId;
+    final tourImages = tour.tourImages;
+    final imageCount = tourImages.length;
+    final int selectedImageIndex =
+        imageCount > 0 ? _selectedImageIndex.clamp(0, imageCount - 1) : 0;
     return BlocProvider(
       create: (context) {
         final cubit = ChiTietLichTrinhCubit();
@@ -39,19 +50,54 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Image.network(
-                    tour.tourImages.isNotEmpty ? tour.tourImages.first : '',
+                  Container(
                     height: 240,
                     width: double.infinity,
-                    fit: BoxFit.cover,
+                    color: AppColors.gray.withOpacity(0.2),
+                    child: imageCount > 0
+                        ? Image.network(
+                            tourImages[selectedImageIndex],
+                            fit: BoxFit.cover,
+                          )
+                        : const Icon(Icons.image_not_supported, size: 48),
                   ),
+                  if (imageCount > 1 && selectedImageIndex > 0)
+                    Positioned(
+                      left: 8,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: _buildImageNavButton(
+                          icon: Icons.chevron_left,
+                          onTap: () {
+                            setState(() {
+                              _selectedImageIndex = selectedImageIndex - 1;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  if (imageCount > 1 && selectedImageIndex < imageCount - 1)
+                    Positioned(
+                      right: 8,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: _buildImageNavButton(
+                          icon: Icons.chevron_right,
+                          onTap: () {
+                            setState(() {
+                              _selectedImageIndex = selectedImageIndex + 1;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: BlocBuilder<
-                      ChiTietLichTrinhCubit,
-                      ChiTietLichTrinhState
-                    >(
+                    child: BlocBuilder<ChiTietLichTrinhCubit,
+                        ChiTietLichTrinhState>(
                       builder: (context, state) {
                         return InkWell(
                           onTap: () {
@@ -69,10 +115,9 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                               state.isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_border,
-                              color:
-                                  state.isFavorite
-                                      ? AppColors.delete
-                                      : AppColors.gray,
+                              color: state.isFavorite
+                                  ? AppColors.delete
+                                  : AppColors.gray,
                               size: 24,
                             ),
                           ),
@@ -89,16 +134,35 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   scrollDirection: Axis.horizontal,
-                  itemCount: tour.tourImages.length,
+                  itemCount: tourImages.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 8),
                   itemBuilder: (_, index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        tour.tourImages[index],
-                        width: 120,
-                        height: 90,
-                        fit: BoxFit.cover,
+                    final isSelected = index == selectedImageIndex;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedImageIndex = index;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.secondary
+                                : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            tourImages[index],
+                            width: 120,
+                            height: 90,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     );
                   },
@@ -443,6 +507,28 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
             children: [Text("Hướng dẫn viên: ${review.guide.staffId}")],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImageNavButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white70,
+          shape: BoxShape.circle,
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Icon(
+          icon,
+          color: AppColors.black,
+          size: 28,
+        ),
       ),
     );
   }
