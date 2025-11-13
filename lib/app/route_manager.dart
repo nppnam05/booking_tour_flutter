@@ -28,6 +28,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_ti
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/book_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/user/bottombar_navigation.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/pay_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/schedule_detail_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/danh_sach_lich_trinh_booking_screen.dart';
@@ -98,6 +99,7 @@ class RouteName {
   static final bookSchedule = "book_schedule";
   static final paySchedule = "pay_schedule";
   static final update_password_user = "update_password_user";
+  static final bottomBarNavigation = "bottom_bar_navigation";
 }
 
 class RouteManager {
@@ -158,5 +160,6 @@ class RouteManager {
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user:
         (context) => UpdatePasswordScreen(userId: 2),
+    RouteName.bottomBarNavigation: (context) => BootombarNavigation(),
   };
 }
