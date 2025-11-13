@@ -11,25 +11,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentScreen extends StatelessWidget {
-  late final TourGuideAssignmentCubit _cubit;
 
   final TextEditingController _controllerSearch = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _cubit = context.read<TourGuideAssignmentCubit>();
+    final _cubit = context.read<TourGuideAssignmentCubit>();
 
     return BlocProvider<TourGuideAssignmentCubit>.value(
       value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text('Phân công hướng dẫn viên')),
-        body: columnOfWidget(),
+        body: columnOfWidget(_cubit),
       ),
     );
   }
 
   // gom các widget lại
-  Widget columnOfWidget() {
+  Widget columnOfWidget(TourGuideAssignmentCubit _cubit) {
     final context = AppNavigator.currentContext;
 
     return Column(
@@ -81,13 +80,13 @@ class TourGuideAssignmentScreen extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(child: tourGuideCard()),
+        Expanded(child: tourGuideCard(_cubit)),
       ],
     );
   }
 
   // quản lý tourGuide
-  Widget tourGuideCard() {
+  Widget tourGuideCard(TourGuideAssignmentCubit _cubit) {
     return BlocSelector<
       TourGuideAssignmentCubit,
       TourGuideAssignmentState,

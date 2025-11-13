@@ -11,8 +11,8 @@ import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DanhSachLichTrinhUser extends StatelessWidget {
-  DanhSachLichTrinhUser({super.key});
+class DanhSachLichTrinhUserScreen extends StatelessWidget {
+  DanhSachLichTrinhUserScreen({super.key});
 
   late BookScheduleCubit cubit;
 
@@ -165,7 +165,6 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                           'chi_tiet_lich_trinh_screen',
                           arguments: {
                             'scheduleTourmanager': scheduleTourmanager,
-                            'userId': userId,
                           },
                         );
                       },
