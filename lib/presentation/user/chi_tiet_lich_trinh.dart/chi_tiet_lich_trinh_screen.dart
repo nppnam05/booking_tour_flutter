@@ -569,28 +569,25 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: isHelpful ? AppColors.warning : Colors.transparent,
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: isHelpful ? AppColors.warning : AppColors.gray,
-                    ),
+                    border: Border.all(color: AppColors.gray.withOpacity(0.4)),
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        isHelpful ? Icons.thumb_up : Icons.thumb_up_outlined,
-                        size: 18,
-                        color: isHelpful ? AppColors.warning : AppColors.gray,
-                      ),
-                      const SizedBox(width: 6),
                       Text(
                         "Hữu ích",
                         style: TextStyle(
                           fontSize: AppFonts.fontSize14,
-                          color: isHelpful ? AppColors.black : AppColors.gray,
-                          fontWeight:
-                              isHelpful ? FontWeight.w600 : FontWeight.w400,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w500,
                         ),
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        isHelpful ? Icons.thumb_up : Icons.thumb_up_outlined,
+                        size: 18,
+                        color: isHelpful ? AppColors.warning : AppColors.gray,
                       ),
                     ],
                   ),
