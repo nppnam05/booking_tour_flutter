@@ -4,11 +4,9 @@ import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/forget_password/forget_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/register/register_screen.dart';
-import 'package:booking_tour_flutter/presentation/home/home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/change_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/detail_paid_schedule_screen.dart';
-import 'package:booking_tour_flutter/presentation/profile/profile_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/review_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
@@ -50,8 +48,6 @@ import 'package:flutter/material.dart';
 class RouteName {
   RouteName._();
 
-  static final home = "home";
-  static final profile = "profile";
   static final profileDetailPaidSchedule = "profile_detail_paid_schedule";
   static final profileChangeSchedule = "profile_change_schedule";
   static final profileReviewSchedule = "profile_review_schedule";
@@ -99,15 +95,13 @@ class RouteName {
   static final bookSchedule = "book_schedule";
   static final paySchedule = "pay_schedule";
   static final update_password_user = "update_password_user";
-  static final bottomBarNavigation = "bottom_bar_navigation";
+  static final main_user = "main_user";
 }
 
 class RouteManager {
   RouteManager._();
 
   static final routes = <String, WidgetBuilder>{
-    RouteName.home: (context) => HomeScreen(),
-    RouteName.profile: (context) => ProfileScreen(),
     RouteName.menu: (context) => DrawerBar(),
     RouteName.themLichTrinh: (context) => ThemLichTrinhScreen(),
     RouteName.chiTietLichTrinh: (context) => ChiTietTrinhScreen(),
@@ -160,6 +154,6 @@ class RouteManager {
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user:
         (context) => UpdatePasswordScreen(userId: 2),
-    RouteName.bottomBarNavigation: (context) => BootombarNavigation(),
+    RouteName.main_user: (context) => MainUser(),
   };
 }

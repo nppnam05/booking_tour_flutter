@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/cubit/lich_trinh_da_hoan_thanh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/cubit/lich_trinh_da_hoan_thanh_state.dart';
@@ -12,8 +13,8 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
   final _cubit = LichTrinhDaHoanThanhCubit();
   @override
   Widget build(BuildContext context) {
-    //final user = context.read<AuthCubit>().state.id;
-    _cubit.syncSchedule(1);
+    final userId = context.read<AuthCubit>().state.id;
+    _cubit.syncSchedule(userId);
 
     return BlocProvider(
       create: (context) => _cubit,
