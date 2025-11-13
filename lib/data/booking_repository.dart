@@ -1330,23 +1330,31 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
-  @override
-  Future<Either<Failure, void>> updatePasswordUserById({
-    required int userId,
-    required String oldPassword,
-    required String newPassword,
-  }) async {
-    try {
-      final request = UpdatePasswordRequest(
-        oldPassword: oldPassword,
-        newPassword: newPassword,
-      );
-      final response = await _coreService.updatePassword(userId, request);
+ @override
+Future<Either<Failure, void>> updatePasswordUserById({
+  required int userId,
+  required String oldPassword,
+  required String newPassword,
+}) async {
+  try {
+    final request = UpdatePasswordRequest(
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    );
+    final response = await _coreService.updatePassword(userId, request);
+    if (response.data == true) {
       return Right(null);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
+    } else {
+     
+      return Left(Failure(
+        code: 400,
+        message: "Mật khẩu cũ không đúng ! ",
+      ));
     }
+  } catch (e) {
+    return Left(ErrorHandler.handle(e).failure);
   }
+}
 
   @override
   Future<Either<Failure, List<Helpful>>> getHelpFul(
