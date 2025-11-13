@@ -46,16 +46,10 @@ class LoginScreen extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.login) {
+          // đẩy dữ liệu user vào auth
           context.read<AuthCubit>().setUser(state.user);
 
           switch (state.user.roleId) {
-            case 1:
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                RouteName.home,
-                (route) => false,
-              );
-              return;
             case 2:
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -70,10 +64,10 @@ class LoginScreen extends StatelessWidget {
                 (route) => false,
               );
               return;
-            default:
+            case 3:
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RouteName.bottomBarNavigation,
+                RouteName.main_user,
                 (route) => false,
               );
               return;

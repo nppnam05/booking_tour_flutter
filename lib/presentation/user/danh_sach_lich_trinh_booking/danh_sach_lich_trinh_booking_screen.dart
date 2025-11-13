@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_state.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _cubit.syncBooking(6);
+    var userId = context.read<AuthCubit>().state.id;
+    
+    _cubit.syncBooking(userId);
 
     return BlocProvider(
       create: (context) => _cubit,
