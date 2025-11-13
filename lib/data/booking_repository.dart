@@ -123,7 +123,7 @@ abstract class BookingRepository {
 
   Future<Either<Failure, User>> getUserById({required int id});
 
-  Future<Either<Failure, List<ScheduleUserCompleted>>>
+  Future<Either<Failure, List<ScheduleTourmanager>>>
   getScheduleUserCompletedByUserId({required int userId});
 
   Future<Either<Failure, bool>> checkAssignment({
@@ -1189,7 +1189,7 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<ScheduleUserCompleted>>>
+  Future<Either<Failure, List<ScheduleTourmanager>>>
   getScheduleUserCompletedByUserId({required int userId}) async {
     try {
       var responses = await _coreService.getScheduleCompletedByUserId(userId);
@@ -1197,7 +1197,7 @@ class BookingRepositoryImp implements BookingRepository {
 
       var scheduleRPs = data.map(
         (e) =>
-            ScheduleUserCompletedResponse.fromJson(e as Map<String, dynamic>),
+            ScheduleTourmanagerResponse.fromJson(e as Map<String, dynamic>),
       );
       var schedules = scheduleRPs.map((e) => e.map()).toList();
       return Right(schedules);

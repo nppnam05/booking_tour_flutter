@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_cubit.dart';
@@ -30,7 +31,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListScheduleCompleted(List<ScheduleUserCompleted> schedules) {
+  Widget _buildListScheduleCompleted(List<ScheduleTourmanager> schedules) {
     return ListView.builder(
       itemCount: schedules.length,
       itemBuilder: (context, index) {
@@ -42,7 +43,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
 
   Widget _buildCardSchedule(
     BuildContext context,
-    ScheduleUserCompleted schedule,
+    ScheduleTourmanager schedule,
   ) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
