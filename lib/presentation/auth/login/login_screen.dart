@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  
+
   LoginScreen({super.key});
 
   @override
@@ -46,7 +46,6 @@ class LoginScreen extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.login) {
-          
           context.read<AuthCubit>().setUser(state.user);
 
           switch (state.user.roleId) {
@@ -74,9 +73,8 @@ class LoginScreen extends StatelessWidget {
             default:
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RouteName.danhSachChuyenDi,
+                RouteName.bottomBarNavigation,
                 (route) => false,
-                arguments: state.user,
               );
               return;
           }

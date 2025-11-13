@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/favorite_cubit.dart';
 import 'cubit/favorite_state.dart';
 import 'favorite_tour_card.dart';
-import '../danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
-import '../profile/profileUser_screen.dart';
 
 class FavoriteTourScreen extends StatefulWidget {
   const FavoriteTourScreen({super.key});
@@ -17,7 +15,6 @@ class FavoriteTourScreen extends StatefulWidget {
 
 class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
   late final FavoriteCubit _cubit;
-  int _currentIndex = 1;
   bool _hasLoaded = false;
 
   @override
@@ -40,33 +37,6 @@ class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
   void dispose() {
     _cubit.close();
     super.dispose();
-  }
-
-  void _onTabTapped(int index) {
-    if (_currentIndex == index) return;
-
-    setState(() {
-      _currentIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => DanhSachChuyenDiScreen()),
-        );
-        break;
-      case 1:
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ProfileUserScreen(),
-          ),
-        );
-        break;
-    }
   }
 
   @override
@@ -118,22 +88,6 @@ class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
 
           return const SizedBox.shrink();
         },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _onTabTapped,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Yêu thích',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Tài khoản'),
-        ],
-        selectedItemColor: AppColors.white,
-        unselectedItemColor: AppColors.textPrimary,
-        backgroundColor: AppColors.backgroundAppBarTheme,
       ),
     );
   }
