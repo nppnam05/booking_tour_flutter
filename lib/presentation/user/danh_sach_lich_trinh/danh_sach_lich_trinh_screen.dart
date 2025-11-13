@@ -1,4 +1,3 @@
-import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
@@ -11,8 +10,8 @@ import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DanhSachLichTrinhUser extends StatelessWidget {
-  DanhSachLichTrinhUser({super.key});
+class DanhSachLichTrinhScreen extends StatelessWidget {
+  DanhSachLichTrinhScreen({super.key});
 
   late BookScheduleCubit cubit;
 

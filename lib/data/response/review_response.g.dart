@@ -8,6 +8,7 @@ part of 'review_response.dart';
 
 ReviewResponse _$ReviewResponseFromJson(Map<String, dynamic> json) =>
     ReviewResponse(
+      id: (json['id'] as num?)?.toInt(),
       rating: (json['rating'] as num?)?.toInt(),
       content: json['content'] as String?,
       createdAt:
@@ -19,23 +20,26 @@ ReviewResponse _$ReviewResponseFromJson(Map<String, dynamic> json) =>
               ? null
               : UserResponse.fromJson(json['user'] as Map<String, dynamic>),
       guide:
-          (json['guide'] as List<dynamic>?)
-              ?.map((e) => GuideResponse.fromJson(e as Map<String, dynamic>))
-              .toList(),
+          json['guide'] == null
+              ? null
+              : GuideResponse.fromJson(json['guide'] as Map<String, dynamic>),
       booking:
           json['booking'] == null
               ? null
               : BookingResponse.fromJson(
                 json['booking'] as Map<String, dynamic>,
               ),
+      isHelpful: json['isHelpful'] as bool?,
     );
 
 Map<String, dynamic> _$ReviewResponseToJson(ReviewResponse instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'rating': instance.rating,
       'content': instance.content,
       'createdAt': instance.createdAt?.toIso8601String(),
       'user': instance.user,
       'guide': instance.guide,
       'booking': instance.booking,
+      'isHelpful': instance.isHelpful,
     };

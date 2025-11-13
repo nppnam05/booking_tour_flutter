@@ -12,6 +12,7 @@ import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
+import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -74,7 +75,6 @@ import 'package:booking_tour_flutter/domain/favorite.dart';
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
@@ -263,9 +263,12 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Trip>>> getMostFavoriteTour();
   Future<Either<Failure, List<Trip>>> getMostRecent();
   Future<Either<Failure, List<Notification>>> getNotification(int userId);
-  Future<Either<Failure, List<Review>>> getReview(int tourId);
   Future<Either<Failure, void>> updatePasswordUserById({
-     required int userId, required String oldPassword, required String newPassword, }) ; 
+    required int userId,
+    required String oldPassword,
+    required String newPassword,
+  });
+  Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1078,9 +1081,11 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<Review>>> getReview(int tourId) async {
+  Future<Either<Failure, List<Review>>> getReview(
+    GetReviewsRequest request,
+  ) async {
     try {
-      final responses = await _coreService.getReview(tourId);
+      final responses = await _coreService.getReview(request);
       final data = responses.data as List<dynamic>;
       final items =
           data
@@ -1320,13 +1325,22 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
   @override
-   Future<Either<Failure, void>> updatePasswordUserById({
-     required int userId, required String oldPassword, required String newPassword, })
-     async {
-       try { 
-        final request = UpdatePasswordRequest( oldPassword: oldPassword, newPassword: newPassword, );
-       final response = await _coreService.updatePassword(userId, request); 
-       return Right(null); } 
-       catch (e) { return Left(ErrorHandler.handle(e).failure); } }
+  Future<Either<Failure, void>> updatePasswordUserById({
+    required int userId,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final request = UpdatePasswordRequest(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      );
+      final response = await _coreService.updatePassword(userId, request);
+      return Right(null);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

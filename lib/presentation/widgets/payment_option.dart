@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 enum HinhThuc { thanhtoantoanbo, coc }
 
 class PaymentRadioGroup extends StatefulWidget {
-  final Function(HinhThuc) onChanged;
+  final Function(HinhThuc) onChangedHinhThuc;
 
-  PaymentRadioGroup({required this.onChanged});
+  const PaymentRadioGroup({super.key, required this.onChangedHinhThuc});
 
   @override
-  _PaymentRadioGroupState createState() => _PaymentRadioGroupState();
+  State<PaymentRadioGroup> createState() => _PaymentRadioGroupState();
 }
 
 class _PaymentRadioGroupState extends State<PaymentRadioGroup> {
@@ -16,36 +16,26 @@ class _PaymentRadioGroupState extends State<PaymentRadioGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return RadioGroup<HinhThuc>(
-      groupValue: hinhThuc,
-      onChanged: (HinhThuc? value) {
-        setState(() {
-          hinhThuc = value;
-        });
-        
-        widget.onChanged(value!);
-      },
-      child: Column(
-        children: [
-          // Radio 1: Thanh toán toàn bộ
-          buildRadioOption(
-            value: HinhThuc.thanhtoantoanbo,
-            icon: Icons.credit_card,
-            iconColor: Colors.blue,
-            label: 'Thanh toán toàn bộ',
-          ),
+    return Column(
+      children: [
+        // Radio 1: Thanh toán toàn bộ
+        buildRadioOption(
+          value: HinhThuc.thanhtoantoanbo,
+          icon: Icons.credit_card,
+          iconColor: Colors.blue,
+          label: 'Thanh toán toàn bộ',
+        ),
 
-          SizedBox(height: 12),
+        const SizedBox(height: 12),
 
-          // Radio 2: Đặt cọc
-          buildRadioOption(
-            value: HinhThuc.coc,
-            icon: Icons.wallet,
-            iconColor: Colors.orange,
-            label: 'Đặt cọc',
-          ),
-        ],
-      ),
+        // Radio 2: Đặt cọc
+        buildRadioOption(
+          value: HinhThuc.coc,
+          icon: Icons.wallet,
+          iconColor: Colors.orange,
+          label: 'Đặt cọc',
+        ),
+      ],
     );
   }
 
@@ -61,24 +51,32 @@ class _PaymentRadioGroupState extends State<PaymentRadioGroup> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-          color: isSelected ? Color(0xFF0D9488) : Colors.grey.shade300,
+          color: isSelected ? const Color(0xFF0D9488) : Colors.grey.shade300,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(8),
       ),
       child: RadioListTile<HinhThuc>(
         value: value,
+        groupValue: hinhThuc,
+        onChanged: (HinhThuc? newValue) {
+          setState(() {
+            hinhThuc = newValue;
+          });
+
+          widget.onChangedHinhThuc(newValue!);
+        },
         title: Row(
           children: [
             Icon(icon, color: iconColor, size: 24),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               label,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ],
         ),
-        activeColor: Color(0xFF0D9488),
+        activeColor: const Color(0xFF0D9488),
       ),
     );
   }

@@ -114,7 +114,8 @@ class BookScheduleScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: PaymentRadioGroup(
-            onChanged: (value) {
+            // thay đổi hình thức
+            onChangedHinhThuc: (value) {
               _cubit.setHinhThuc(hinhThuc: value);
             },
           ),
