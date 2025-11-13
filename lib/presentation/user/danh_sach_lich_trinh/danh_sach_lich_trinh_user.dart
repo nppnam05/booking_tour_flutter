@@ -165,7 +165,6 @@ class DanhSachLichTrinhUser extends StatelessWidget {
                           'chi_tiet_lich_trinh_screen',
                           arguments: {
                             'scheduleTourmanager': scheduleTourmanager,
-                            'userId': userId,
                           },
                         );
                       },

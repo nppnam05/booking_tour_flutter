@@ -215,7 +215,9 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(tour.description),
+
+                    Text('Mô tả: ${tour.description}'),
+
                     const SizedBox(height: 20),
                     Text(
                       "Đánh giá",
@@ -254,7 +256,7 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             ...reviews.take(5).map((review) {
-                              return _buildReviewItem(review);
+                              return _buildReviewItem(review, context, userId);
                             }),
 
                             if (reviews.length > 2)
@@ -328,18 +330,62 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewItem(Review review) {
+  Widget _buildReviewItem(Review review, BuildContext context, userId) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            review.user.name,
-            style: TextStyle(
-              fontSize: AppFonts.fontSize16,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                review.user.name,
+                style: TextStyle(
+                  fontSize: AppFonts.fontSize16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  final cubit = context.read<ChiTietLichTrinhCubit>();
+
+                  cubit.postHelpFul(userId, review.id);
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Hữu ích",
+                        style: TextStyle(
+                          fontSize: AppFonts.fontSize14,
+                          color:
+                              review.isHelpful
+                                  ? AppColors.black
+                                  : AppColors.gray,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        review.isHelpful
+                            ? Icons.thumb_up
+                            : Icons.thumb_up_outlined,
+                        size: 18,
+                        color:
+                            review.isHelpful
+                                ? AppColors.warning
+                                : AppColors.gray,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 4),
 
