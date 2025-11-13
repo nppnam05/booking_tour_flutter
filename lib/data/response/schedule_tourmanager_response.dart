@@ -20,7 +20,6 @@ class ScheduleTourmanagerResponse {
   String? code;
   int? desposit;
   TripResponse? tour;
- 
 
   ScheduleTourmanagerResponse({
     this.id,
@@ -47,6 +46,7 @@ class TripResponse {
   int? id;
   String? title;
   int? price;
+  String? description;
   List<dynamic>? tourImages;
   List<ProvinceResponse>? locations;
   List<PlaceResponse>? places;
@@ -55,6 +55,7 @@ class TripResponse {
     this.id,
     this.title,
     this.price,
+    this.description,
     this.tourImages,
     this.locations,
     this.places,
@@ -76,7 +77,7 @@ class TripResponse {
       title: title ?? '',
       price: price ?? 0,
       percentDeposit: 0,
-      description: '',
+      description: description ?? "",
       provinces: provinceList,
       tourImages: images,
       dayOfTours: [],

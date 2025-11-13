@@ -45,6 +45,7 @@ TripResponse _$TripResponseFromJson(Map<String, dynamic> json) => TripResponse(
   id: (json['id'] as num?)?.toInt(),
   title: json['title'] as String?,
   price: (json['price'] as num?)?.toInt(),
+  description: json['description'] as String?,
   tourImages: json['tourImages'] as List<dynamic>?,
   locations:
       (json['locations'] as List<dynamic>?)
@@ -61,6 +62,7 @@ Map<String, dynamic> _$TripResponseToJson(TripResponse instance) =>
       'id': instance.id,
       'title': instance.title,
       'price': instance.price,
+      'description': instance.description,
       'tourImages': instance.tourImages,
       'locations': instance.locations,
       'places': instance.places,
