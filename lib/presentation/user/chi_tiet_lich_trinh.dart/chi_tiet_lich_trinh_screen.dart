@@ -28,6 +28,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
   int _selectedImageIndex = 0;
   int _displayedReviewCount = _initialReviewCount;
   int _loadMorePressCount = 0;
+  final Map<dynamic, bool> _helpfulOverrides = {};
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                   Container(
                     height: 240,
                     width: double.infinity,
-                    color: AppColors.gray.withOpacity(0.2),
+                    color: AppColors.gray,
                     child:
                         imageCount > 0
                             ? Image.network(
@@ -359,7 +360,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                         final totalReviews = reviews.length;
                         final maxDisplayableReviews =
                             _initialReviewCount +
-                                _reviewsIncrement * _maxLoadMorePresses;
+                            _reviewsIncrement * _maxLoadMorePresses;
                         final allowedDisplayCount =
                             totalReviews < maxDisplayableReviews
                                 ? totalReviews
@@ -372,8 +373,8 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                             reviews.take(effectiveDisplayCount).toList();
                         final bool canLoadMore =
                             totalReviews > effectiveDisplayCount &&
-                                _loadMorePressCount < _maxLoadMorePresses &&
-                                effectiveDisplayCount < maxDisplayableReviews;
+                            _loadMorePressCount < _maxLoadMorePresses &&
+                            effectiveDisplayCount < maxDisplayableReviews;
                         final bool canCollapse =
                             effectiveDisplayCount > _initialReviewCount;
 
@@ -408,8 +409,8 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                                           setState(() {
                                             final maxAllowed =
                                                 _initialReviewCount +
-                                                    _reviewsIncrement *
-                                                        _maxLoadMorePresses;
+                                                _reviewsIncrement *
+                                                    _maxLoadMorePresses;
                                             _displayedReviewCount +=
                                                 _reviewsIncrement;
                                             if (_displayedReviewCount >
@@ -521,6 +522,11 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
   }
 
   Widget _buildReviewItem(Review review, BuildContext context, userId) {
+    final bool isHelpful =
+        _helpfulOverrides.containsKey(review.id)
+            ? _helpfulOverrides[review.id]!
+            : review.isHelpful;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
@@ -541,12 +547,31 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                   final cubit = context.read<ChiTietLichTrinhCubit>();
 
                   cubit.postHelpFul(userId, review.id);
+                  setState(() {
+                    final current =
+                        _helpfulOverrides.containsKey(review.id)
+                            ? _helpfulOverrides[review.id]!
+                            : review.isHelpful;
+                    final toggled = !current;
+                    if (toggled == review.isHelpful) {
+                      _helpfulOverrides.remove(review.id);
+                    } else {
+                      _helpfulOverrides[review.id] = toggled;
+                    }
+                  });
                 },
                 borderRadius: BorderRadius.circular(8),
-                child: Padding(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.gray.withOpacity(0.4)),
                   ),
                   child: Row(
                     children: [
@@ -554,22 +579,15 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                         "Hữu ích",
                         style: TextStyle(
                           fontSize: AppFonts.fontSize14,
-                          color:
-                              review.isHelpful
-                                  ? AppColors.black
-                                  : AppColors.gray,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 6),
                       Icon(
-                        review.isHelpful
-                            ? Icons.thumb_up
-                            : Icons.thumb_up_outlined,
+                        isHelpful ? Icons.thumb_up : Icons.thumb_up_outlined,
                         size: 18,
-                        color:
-                            review.isHelpful
-                                ? AppColors.warning
-                                : AppColors.gray,
+                        color: isHelpful ? AppColors.warning : AppColors.gray,
                       ),
                     ],
                   ),
