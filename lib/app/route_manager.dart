@@ -159,7 +159,7 @@ class RouteManager {
     RouteName.bookSchedule: (context) => BookScheduleScreen(),
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user:
-        (context) => UpdatePasswordScreen(userId: 2),
+        (context) => UpdatePasswordScreen(userId:  3),
     RouteName.bottomBarNavigation: (context) => BootombarNavigation(),
   };
 }
