@@ -1,7 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
-import 'package:booking_tour_flutter/domain/user.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_state.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card.dart';
@@ -37,7 +37,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
     super.dispose();
   }
 
-  void _onTabTapped(int index, int userId) {
+  void _onTabTapped(int index) {
     if (_currentIndex == index) return;
 
     setState(() {
@@ -51,7 +51,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => FavoriteTourScreen(userId: userId),
+            builder: (context) => const FavoriteTourScreen(),
           ),
         );
         break;
@@ -59,7 +59,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfileUserScreen(userId: userId),
+            builder: (context) => const ProfileUserScreen(),
           ),
         );
         break;
@@ -68,8 +68,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ModalRoute.of(context)?.settings.arguments as User?;
-    final userId = user?.id ?? 0;
+    final userId = context.read<AuthCubit>().userId;
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
@@ -83,7 +82,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
           actions: [
             IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, "thong_bao", arguments: userId);
+                Navigator.pushNamed(context, "thong_bao");
               },
               icon: const Icon(Icons.notifications),
             ),
@@ -176,7 +175,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
-          onTap: (index) => _onTabTapped(index, userId),
+          onTap: _onTabTapped,
           type: BottomNavigationBarType.fixed,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),

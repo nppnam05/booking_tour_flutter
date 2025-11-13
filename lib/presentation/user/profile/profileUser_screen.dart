@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/configure_injectab
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/profile_cubit.dart';
@@ -11,8 +12,7 @@ import '../danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
 import '../favorite/favorite_tour_screen.dart';
 
 class ProfileUserScreen extends StatefulWidget {
-  final int userId;
-  const ProfileUserScreen({super.key, required this.userId});
+  const ProfileUserScreen({super.key});
 
   @override
   State<ProfileUserScreen> createState() => _ProfileUserScreenState();
@@ -21,12 +21,22 @@ class ProfileUserScreen extends StatefulWidget {
 class _ProfileUserScreenState extends State<ProfileUserScreen> {
   late final ProfileCubit _cubit;
   int _currentIndex = 2;
+  bool _hasLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _cubit = ProfileCubit(getIt<BookingRepository>());
-    _cubit.loadUser(widget.userId);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasLoaded) {
+      final userId = context.read<AuthCubit>().userId;
+      _cubit.loadUser(userId);
+      _hasLoaded = true;
+    }
   }
 
   @override
@@ -53,7 +63,7 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => FavoriteTourScreen(userId: widget.userId),
+            builder: (context) => const FavoriteTourScreen(),
           ),
         );
         break;

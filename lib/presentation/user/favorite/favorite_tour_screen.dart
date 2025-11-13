@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/favorite_cubit.dart';
@@ -8,9 +9,7 @@ import '../danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
 import '../profile/profileUser_screen.dart';
 
 class FavoriteTourScreen extends StatefulWidget {
-  final int userId;
-
-  const FavoriteTourScreen({super.key, required this.userId});
+  const FavoriteTourScreen({super.key});
 
   @override
   State<FavoriteTourScreen> createState() => _FavoriteTourScreenState();
@@ -19,12 +18,22 @@ class FavoriteTourScreen extends StatefulWidget {
 class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
   late final FavoriteCubit _cubit;
   int _currentIndex = 1;
+  bool _hasLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _cubit = FavoriteCubit();
-    _cubit.loadFavorites(userId: widget.userId);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasLoaded) {
+      final userId = context.read<AuthCubit>().userId;
+      _cubit.loadFavorites(userId: userId);
+      _hasLoaded = true;
+    }
   }
 
   @override
@@ -53,7 +62,7 @@ class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfileUserScreen(userId: widget.userId),
+            builder: (context) => const ProfileUserScreen(),
           ),
         );
         break;
