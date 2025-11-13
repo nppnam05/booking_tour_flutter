@@ -45,6 +45,7 @@ class ThongTinCuaBanCubit extends Cubit<ThongTinCuaBanState> {
     var user = state.user;
     final result = await bookingRepository.updateUserId(
       id: user.id,
+      money: user.money,
       name: user.name,
       email: user.email,
       phone: user.phone,

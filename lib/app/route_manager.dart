@@ -39,7 +39,7 @@ import 'package:booking_tour_flutter/presentation/user/update_password/update_pa
 import 'package:booking_tour_flutter/presentation/user/vi/vi_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/chi_tiet_lich_trinh_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
-import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/danh_sach_lich_trinh_user.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/danh_sach_lich_trinh_user_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/thong_bao_screen.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
@@ -141,7 +141,7 @@ class RouteManager {
     RouteName.searchTour: (context) => SearchScreen(),
     RouteName.danhSachChuyenDi: (context) => DanhSachChuyenDiScreen(),
     RouteName.thongBao: (context) => ThongBaoScreen(),
-    RouteName.danhSachLichTrinhUser: (context) => DanhSachLichTrinhUser(),
+    RouteName.danhSachLichTrinhUser: (context) => DanhSachLichTrinhUserScreen(),
     RouteName.profileDetailPaidSchedule:
         (context) => DetailPaidScheduleScreen(),
     RouteName.profileChangeSchedule: (context) => const ChangeScheduleScreen(),
@@ -152,8 +152,7 @@ class RouteManager {
     RouteName.scheduleDetail: (context) => ScheduleDetailScreen(),
     RouteName.bookSchedule: (context) => BookScheduleScreen(),
     RouteName.paySchedule: (context) => PayScheduleScreen(),
-    RouteName.update_password_user:
-        (context) => UpdatePasswordScreen(userId: 2),
+    RouteName.update_password_user: (context) => UpdatePasswordScreen(),
     RouteName.main_user: (context) => MainUser(),
   };
 }
