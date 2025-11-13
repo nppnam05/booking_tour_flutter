@@ -3,6 +3,7 @@ import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
+import 'package:booking_tour_flutter/domain/review.dart';
 import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/cubit/chi_tiet_lich_trinh_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,8 +36,8 @@ class ChiTietLichTrinhCubit extends Cubit<ChiTietLichTrinhState> {
       userId: userId,
       reviewId: reviewId,
     );
-    final result = await bookingRepository.getHelpFul(request);
-    result.fold(
+    final helpFul = await bookingRepository.getHelpFul(request);
+    helpFul.fold(
       (failure) {
         emit(state.copyWith(isLoading: false));
       },
