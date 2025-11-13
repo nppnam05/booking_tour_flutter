@@ -123,7 +123,7 @@ abstract class BookingRepository {
 
   Future<Either<Failure, User>> getUserById({required int id});
 
-  Future<Either<Failure, List<ScheduleUserCompleted>>>
+  Future<Either<Failure, List<ScheduleTourmanager>>>
   getScheduleUserCompletedByUserId({required int userId});
 
   Future<Either<Failure, bool>> checkAssignment({
@@ -273,6 +273,7 @@ abstract class BookingRepository {
   });
   Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
+  Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1189,7 +1190,7 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<ScheduleUserCompleted>>>
+  Future<Either<Failure, List<ScheduleTourmanager>>>
   getScheduleUserCompletedByUserId({required int userId}) async {
     try {
       var responses = await _coreService.getScheduleCompletedByUserId(userId);
@@ -1197,7 +1198,7 @@ class BookingRepositoryImp implements BookingRepository {
 
       var scheduleRPs = data.map(
         (e) =>
-            ScheduleUserCompletedResponse.fromJson(e as Map<String, dynamic>),
+            ScheduleTourmanagerResponse.fromJson(e as Map<String, dynamic>),
       );
       var schedules = scheduleRPs.map((e) => e.map()).toList();
       return Right(schedules);
@@ -1374,6 +1375,17 @@ Future<Either<Failure, void>> updatePasswordUserById({
               .toList();
 
       return Right(items);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> postFavorite(GetReviewsRequest request) async {
+    try {
+      final response = await _coreService.postFavorite(request);
+      final data = response.data as int;
+      return Right(data);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
