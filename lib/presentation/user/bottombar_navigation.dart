@@ -4,16 +4,16 @@ import 'package:booking_tour_flutter/presentation/user/favorite/favorite_tour_sc
 import 'package:booking_tour_flutter/presentation/user/profile/profileUser_screen.dart';
 import 'package:flutter/material.dart';
 
-class BootombarNavigation extends StatefulWidget {
+class MainUser extends StatefulWidget {
   final int initialIndex;
 
-  const BootombarNavigation({super.key, this.initialIndex = 0});
+  const MainUser({super.key, this.initialIndex = 0});
 
   @override
-  State<BootombarNavigation> createState() => _BootombarNavigationState();
+  State<MainUser> createState() => _MainUserState();
 }
 
-class _BootombarNavigationState extends State<BootombarNavigation> {
+class _MainUserState extends State<MainUser> {
   late int _currentIndex;
   static const List<Widget> _screens = [
     DanhSachChuyenDiScreen(),

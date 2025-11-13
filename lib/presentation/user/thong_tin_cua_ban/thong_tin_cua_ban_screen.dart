@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_state.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
@@ -17,8 +18,8 @@ class ThongTinCuaBanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final user = context.read<AuthCubit>().state.id;
-    _cubit.syncUser(12);
+    final userId = context.read<AuthCubit>().state.id;
+    _cubit.syncUser(userId);
 
     return BlocProvider(
       create: (context) => _cubit,
