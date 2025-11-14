@@ -62,7 +62,7 @@ class ChangeScheduleCubit extends Cubit<ChangeScheduleState> {
     result.fold(
       (failure) => emit(ChangeScheduleLoadFail(message: failure.message)),
       (booking) {
-        emit(ChangedSchedule());
+        emit(ChangedSchedule(booking: booking));
       },
     );
     DialogHelper.dismissDialog();

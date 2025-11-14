@@ -2,8 +2,11 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_state.dart';
+import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,12 +28,15 @@ class ChangeScheduleScreen extends StatelessWidget {
       listener: (context, state) async {
         if (state is ChangedSchedule) {
           await DialogHelper.showInformDialog(Text("Đổi chuyến đi thành công"));
+          context.read<DanhSachLichTrinhBookingCubit>().syncBooking(context.read<AuthCubit>().state.id);
+          context.read<DetailPaidScheduleCubit>().setBooking(state.booking);
           if (context.mounted) {
             Navigator.of(context).pop();
           }
         }
         if (state is ChangeScheduleLoadFail) {
-          DialogHelper.showInformDialog(Text(state.message));
+          //await DialogHelper.showInformDialog(Text(state.message));
+          await DialogHelper.showInformDialog(Text("Lỗi đã xảy ra"));
           if (context.mounted) {
             Navigator.of(context).pop();
           }
