@@ -109,7 +109,7 @@ abstract class BookingRepository {
 
   Future<Either<Failure, List<FakePost>>> getPost();
 
-  Future<Either<Failure, ScheduleBook>> getScheduleBookById(int id);
+  Future<Either<Failure, ScheduleTourmanager>> getScheduleBookById(int id);
 
   Future<Either<Failure, ScheduleDetail>> getScheduleById(int id);
 
@@ -1296,13 +1296,13 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, ScheduleBook>> getScheduleBookById(int id) async {
+  Future<Either<Failure, ScheduleTourmanager>> getScheduleBookById(int id) async {
     try {
       var response = await _coreService.getScheduleById(id);
 
       var data = response.data as Map<String, dynamic>;
 
-      var result = ScheduleBookResponse.fromJson(data);
+      var result = ScheduleTourmanagerResponse.fromJson(data);
 
       var schedule = result.map();
 
