@@ -9,6 +9,7 @@ import 'package:booking_tour_flutter/data/request/change_password_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
+import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
@@ -82,6 +83,13 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class BookingRepository {
+  Future<Either<Failure, User>> loginByEmail({
+    required String email,
+    required String name,
+    required String photoUrl,
+    required String password,
+  });
+
   Future<Either<Failure, bool>> removeFavorite({
     required int tourId,
     required int userId,
@@ -205,6 +213,7 @@ abstract class BookingRepository {
     final String name,
     final String email,
     final String phone,
+    final bool refundStatus
   });
 
   Future<Either<Failure, Place>> createPlace({
@@ -1148,6 +1157,7 @@ class BookingRepositoryImp implements BookingRepository {
     String? avatarPath,
     String? bankBranch,
     String? bankNumber,
+    bool? refundStatus
   }) async {
     try {
       final body = {
@@ -1160,6 +1170,7 @@ class BookingRepositoryImp implements BookingRepository {
         "avatarPath": avatarPath,
         "bankBranch": bankBranch,
         "bankNumber": bankNumber,
+        "refundStatus": refundStatus,
       };
 
       final response = await _coreService.updateUserId(body);
@@ -1331,31 +1342,27 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
- @override
-Future<Either<Failure, void>> updatePasswordUserById({
-  required int userId,
-  required String oldPassword,
-  required String newPassword,
-}) async {
-  try {
-    final request = UpdatePasswordRequest(
-      oldPassword: oldPassword,
-      newPassword: newPassword,
-    );
-    final response = await _coreService.updatePassword(userId, request);
-    if (response.data == true) {
-      return Right(null);
-    } else {
-     
-      return Left(Failure(
-        code: 400,
-        message: "Mật khẩu cũ không đúng ! ",
-      ));
+  @override
+  Future<Either<Failure, void>> updatePasswordUserById({
+    required int userId,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final request = UpdatePasswordRequest(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      );
+      final response = await _coreService.updatePassword(userId, request);
+      if (response.data == true) {
+        return Right(null);
+      } else {
+        return Left(Failure(code: 400, message: "Mật khẩu cũ không đúng ! "));
+      }
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
     }
-  } catch (e) {
-    return Left(ErrorHandler.handle(e).failure);
   }
-}
 
   @override
   Future<Either<Failure, List<Helpful>>> getHelpFul(
@@ -1387,6 +1394,26 @@ Future<Either<Failure, void>> updatePasswordUserById({
       final data = response.data as int;
       return Right(data);
     } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, User>> loginByEmail({required String email, required String name, required String photoUrl, required String password}) async {
+    try{
+      final login = LoginEmailRequest(email: email, name: name, password: password, photoUrl: photoUrl);
+
+      final response = await _coreService.loginByEmail(login);
+
+      final data = response.data as Map<String, dynamic>;
+
+      var userResponse = UserResponse.fromJson(data);
+
+      var user = userResponse.map();
+
+      return Right(user);
+    }
+    catch(e){
       return Left(ErrorHandler.handle(e).failure);
     }
   }

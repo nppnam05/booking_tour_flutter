@@ -71,6 +71,7 @@ class ViCubit extends Cubit<ViState> {
         phone: user.phone,
         avatarPath: user.avatarPath,
         bankBranch: bankBranch,
+        refundStatus: user.refundStatus,
       );
       emit(state.copyWith(user: updateUser, showBankFields: true));
     }
@@ -88,6 +89,7 @@ class ViCubit extends Cubit<ViState> {
       avatarPath: user.avatarPath,
       bankBranch: user.bankBranch,
       bankNumber: user.bankNumber,
+      refundStatus: true
     );
 
     result.fold(

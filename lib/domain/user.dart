@@ -11,6 +11,7 @@ class User {
   final String phone;
   final String avatarPath;
   final String bankBranch;
+  final bool refundStatus;
   
   User({
     required this.id,
@@ -22,7 +23,8 @@ class User {
     required this.email,
     required this.phone,
     required this.avatarPath,
-    required this.bankBranch
+    required this.bankBranch,
+    required this.refundStatus
   });
 
   static User empty() {
@@ -36,7 +38,8 @@ class User {
       email: '',
       phone: '',
       avatarPath: 'https://photo.znews.vn/w1920/Uploaded/mdf_eioxrd/2021_07_06/1q.jpg',
-      bankBranch: ''
+      bankBranch: '',
+      refundStatus: false
     );
   }
 }
