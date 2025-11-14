@@ -12,16 +12,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DanhSachLichTrinhBookingScreen extends StatelessWidget {
   DanhSachLichTrinhBookingScreen({super.key});
-  final _cubit = DanhSachLichTrinhBookingCubit();
 
   @override
   Widget build(BuildContext context) {
     var userId = context.read<AuthCubit>().state.id;
+    var _cubit = context.read<DanhSachLichTrinhBookingCubit>();
     
     _cubit.syncBooking(userId);
 
-    return BlocProvider(
-      create: (context) => _cubit,
+    return BlocProvider.value(
+      value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text("Danh sách lịch trình")),
         body: BlocBuilder<
@@ -48,12 +48,12 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
       itemCount: bookings.length,
       itemBuilder: (context, index) {
         final booking = bookings[index];
-        return _buildCard(booking);
+        return _buildCard(context, booking);
       },
     );
   }
 
-  Widget _buildCard(Booking booking) {
+  Widget _buildCard(BuildContext context, Booking booking) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
@@ -63,7 +63,7 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
 
           AppNavigator.currentContext.read<DetailPaidScheduleCubit>().setBooking(booking);
           await Navigator.pushNamed(AppNavigator.currentContext, RouteName.profileDetailPaidSchedule);
-          _cubit.syncBooking(AppNavigator.currentContext.read<AuthCubit>().state.id);
+          context.read<DanhSachLichTrinhBookingCubit>().syncBooking(AppNavigator.currentContext.read<AuthCubit>().state.id);
         },
         child: Container(
           width: double.infinity,

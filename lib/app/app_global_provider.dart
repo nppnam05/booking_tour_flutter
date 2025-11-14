@@ -10,6 +10,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedu
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/cubit/schedule_detail_cubit.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,9 @@ class AppGlobalProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-      BlocProvider(create: (_) => AuthOtpChangePasswordCubit()),
-      BlocProvider(create: (_) => ChangePasswordCubit()),
-      BlocProvider(create: (_) => AuthOtpCubit()),
+        BlocProvider(create: (_) => AuthOtpChangePasswordCubit()),
+        BlocProvider(create: (_) => ChangePasswordCubit()),
+        BlocProvider(create: (_) => AuthOtpCubit()),
         BlocProvider(create: (_) => AuthCubit()),
         BlocProvider(create: (_) => AddTourCubit()),
         BlocProvider(create: (_) => TourGuideAssignmentCubit()),
@@ -37,8 +38,9 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => BookScheduleCubit()),
         BlocProvider(create: (_) => ReviewScheduleCubit()),
         BlocProvider(create: (_) => DetailPaidScheduleCubit()),
-      ], 
-   
+        BlocProvider(create: (_) => DanhSachLichTrinhBookingCubit()),
+      ],
+
       child: child,
     );
   }
