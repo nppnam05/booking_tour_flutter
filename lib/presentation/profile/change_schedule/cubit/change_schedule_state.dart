@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 
 abstract class ChangeScheduleState {}
@@ -32,4 +33,10 @@ class ChangeScheduleLoadFail extends ChangeScheduleState {
 
 class ChangeScheduleLoading extends ChangeScheduleState {}
 
-class ChangedSchedule extends ChangeScheduleState {}
+class ChangedSchedule extends ChangeScheduleState {
+  final Booking booking; 
+
+  ChangedSchedule({
+    required this.booking,
+  });
+}
