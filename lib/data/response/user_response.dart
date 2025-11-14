@@ -15,6 +15,7 @@ class UserResponse {
   String? phone;
   String? avatarPath;
   String? bankBranch;
+  bool? refundStatus;
 
   UserResponse({
     this.id,
@@ -27,6 +28,7 @@ class UserResponse {
     this.phone,
     this.avatarPath,
     this.bankBranch,
+    this.refundStatus
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) =>
@@ -47,6 +49,7 @@ extension UserResponseMapper on UserResponse {
       phone: phone ?? "",
       avatarPath: avatarPath ?? "",
       bankBranch: bankBranch ?? "",
+      refundStatus: refundStatus ?? false
     );
   }
 }

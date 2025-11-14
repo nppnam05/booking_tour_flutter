@@ -29,6 +29,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
   int _displayedReviewCount = _initialReviewCount;
   int _loadMorePressCount = 0;
   final Map<dynamic, bool> _helpfulOverrides = {};
+  final Map<dynamic, int> _countHelpfulOverrides = {};
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
         final cubit = ChiTietLichTrinhCubit();
         cubit.loadRviews(tour.id, userId);
         cubit.loadFavoriteStatus(userId, tour.id);
+
         return cubit;
       },
       child: Scaffold(
@@ -527,6 +529,11 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
             ? _helpfulOverrides[review.id]!
             : review.isHelpful;
 
+    final int countHelpful =
+        _countHelpfulOverrides.containsKey(review.id)
+            ? _countHelpfulOverrides[review.id]!
+            : review.countHelpful;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
@@ -553,10 +560,24 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                             ? _helpfulOverrides[review.id]!
                             : review.isHelpful;
                     final toggled = !current;
+
+                    // Cập nhật trạng thái helpful
                     if (toggled == review.isHelpful) {
                       _helpfulOverrides.remove(review.id);
                     } else {
                       _helpfulOverrides[review.id] = toggled;
+                    }
+
+                    // Cập nhật countHelpful
+                    final currentCount =
+                        _countHelpfulOverrides.containsKey(review.id)
+                            ? _countHelpfulOverrides[review.id]!
+                            : review.countHelpful;
+
+                    if (toggled) {
+                      _countHelpfulOverrides[review.id] = currentCount + 1;
+                    } else {
+                      _countHelpfulOverrides[review.id] = currentCount - 1;
                     }
                   });
                 },
@@ -576,7 +597,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                   child: Row(
                     children: [
                       Text(
-                        "Hữu ích",
+                        "Hữu ích ($countHelpful)",
                         style: TextStyle(
                           fontSize: AppFonts.fontSize14,
                           color: AppColors.black,
@@ -604,7 +625,17 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [Text("Hướng dẫn viên: ${review.guide.staffId}")],
+            children: [
+              if (review.guideReviews.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Hướng dẫn viên: ${review.guideReviews.first.nameStaff}",
+                    ),
+                  ],
+                ),
+            ],
           ),
         ],
       ),

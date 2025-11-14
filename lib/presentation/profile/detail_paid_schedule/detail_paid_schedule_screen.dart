@@ -2,29 +2,32 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/widgets/info_row.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/widgets/info_two_row.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/widgets/text_confirm_cancel_schedule.dart';
+import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailPaidScheduleScreen extends StatelessWidget {
-  final DetailPaidScheduleCubit _cubit =
-      DetailPaidScheduleCubit()..loadFakeData();
 
   DetailPaidScheduleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var _cubit = context.read<DetailPaidScheduleCubit>();
+
     return Scaffold(
       appBar: AppBar(title: Text("Du lịch vũng tàu")),
       body: BlocConsumer<DetailPaidScheduleCubit, DetailPaidScheduleState>(
         bloc: _cubit,
         listener: (context, state) async {
+
           if (state.errorMessage != null) {
             await DialogHelper.showInformDialog(Text(state.errorMessage!));
           }
@@ -235,8 +238,7 @@ class DetailPaidScheduleScreen extends StatelessWidget {
                         if (!result) return;
 
                         if (context.mounted) {
-                          _cubit
-                              .deleteBooking();
+                          _cubit.deleteBooking();
                         }
                       },
                       title: "Hủy chuyến đi",

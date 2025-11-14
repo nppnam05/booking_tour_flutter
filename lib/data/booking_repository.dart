@@ -213,6 +213,7 @@ abstract class BookingRepository {
     final String name,
     final String email,
     final String phone,
+    final bool refundStatus
   });
 
   Future<Either<Failure, Place>> createPlace({
@@ -1156,6 +1157,7 @@ class BookingRepositoryImp implements BookingRepository {
     String? avatarPath,
     String? bankBranch,
     String? bankNumber,
+    bool? refundStatus
   }) async {
     try {
       final body = {
@@ -1168,6 +1170,7 @@ class BookingRepositoryImp implements BookingRepository {
         "avatarPath": avatarPath,
         "bankBranch": bankBranch,
         "bankNumber": bankNumber,
+        "refundStatus": refundStatus,
       };
 
       final response = await _coreService.updateUserId(body);

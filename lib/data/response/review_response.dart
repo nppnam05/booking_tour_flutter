@@ -1,8 +1,7 @@
 import 'package:booking_tour_flutter/data/response/booking_response.dart';
-import 'package:booking_tour_flutter/data/response/guide_response.dart';
+import 'package:booking_tour_flutter/data/response/guide_reviews_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
-import 'package:booking_tour_flutter/domain/guide.dart';
 import 'package:booking_tour_flutter/domain/review.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -16,9 +15,10 @@ class ReviewResponse {
   String? content;
   DateTime? createdAt;
   UserResponse? user;
-  GuideResponse? guide;
+  List<GuideReviewsResponse>? guides;
   BookingResponse? booking;
   bool? isHelpful;
+  int? countHelpful;
 
   ReviewResponse({
     this.id,
@@ -26,9 +26,10 @@ class ReviewResponse {
     this.content,
     this.createdAt,
     this.user,
-    this.guide,
+    this.guides,
     this.booking,
     this.isHelpful,
+    this.countHelpful,
   });
 
   factory ReviewResponse.fromJson(Map<String, dynamic> json) =>
@@ -44,9 +45,10 @@ extension ReviewResponseMapper on ReviewResponse {
       content: content ?? '',
       createdAt: createdAt ?? DateTime.now(),
       user: user?.map() ?? User.empty(),
-      guide: guide?.map() ?? Guide.empty(),
+      guideReviews: guides?.map((e) => e.map()).toList() ?? [],
       booking: booking?.map() ?? Booking.empty(),
       isHelpful: isHelpful ?? false,
+      countHelpful: countHelpful ?? 0,
     );
   }
 }
