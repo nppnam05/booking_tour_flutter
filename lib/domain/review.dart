@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:booking_tour_flutter/domain/booking.dart';
-import 'package:booking_tour_flutter/domain/guide.dart';
+import 'package:booking_tour_flutter/domain/guide_reviews.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 
 class Review {
@@ -9,7 +9,7 @@ class Review {
   final String content;
   final DateTime createdAt;
   final User user;
-  final Guide guide;
+  final List<GuideReviews> guideReviews;
   final Booking booking;
   final bool isHelpful;
   final int countHelpful;
@@ -19,7 +19,7 @@ class Review {
     required this.content,
     required this.createdAt,
     required this.user,
-    required this.guide,
+    required this.guideReviews,
     required this.booking,
     required this.isHelpful,
     required this.countHelpful,
