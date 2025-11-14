@@ -15,7 +15,7 @@ Widget notToggleInputFieldNotIcon({
       const SizedBox(height: 8.0),
 
       TextFormField(
-        validator: validator,
+        validator: (value) => validator?.call(value?.trim()),
         controller: controller,
 
         decoration: InputDecoration(

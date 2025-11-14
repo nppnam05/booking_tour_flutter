@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/app/validate_helper.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/cubit/auth_otp_change_password_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/forget_password/cubit/forget_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/forget_password/cubit/forget_state.dart';
@@ -83,6 +84,9 @@ class ForgetPasswordScreen extends StatelessWidget {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'bạn chưa viết gì vào ô này';
+                  }
+                  else if(!ValidateHelper.isEmailValid(value)){
+                    return "Email này chưa đúng định dạng";
                   }
                   return null;
                 },
