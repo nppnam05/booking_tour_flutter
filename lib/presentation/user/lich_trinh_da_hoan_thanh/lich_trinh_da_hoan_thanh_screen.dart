@@ -1,6 +1,10 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
+import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/assignment/schedule_assignment/cubit/schedule_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/cubit/lich_trinh_da_hoan_thanh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/lich_trinh_da_hoan_thanh/cubit/lich_trinh_da_hoan_thanh_state.dart';
@@ -10,10 +14,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LichTrinhDaHoanThanhScreen extends StatelessWidget {
   final _cubit = LichTrinhDaHoanThanhCubit();
+
   @override
   Widget build(BuildContext context) {
-    //final user = context.read<AuthCubit>().state.id;
-    _cubit.syncSchedule(1);
+    final userId = context.read<AuthCubit>().state.id;
+    _cubit.syncSchedule(userId);
 
     return BlocProvider(
       create: (context) => _cubit,
@@ -29,7 +34,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListScheduleCompleted(List<ScheduleUserCompleted> schedules) {
+  Widget _buildListScheduleCompleted(List<ScheduleTourmanager> schedules) {
     return ListView.builder(
       itemCount: schedules.length,
       itemBuilder: (context, index) {
@@ -41,7 +46,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
 
   Widget _buildCardSchedule(
     BuildContext context,
-    ScheduleUserCompleted schedule,
+    ScheduleTourmanager schedule,
   ) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -125,7 +130,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              _buildButton(context),
+              _buildButton(context, schedule),
             ],
           ),
         ),
@@ -133,13 +138,18 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(BuildContext context) {
+  Widget _buildButton(BuildContext context, ScheduleTourmanager schedule) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         DeleteButtonWidget(
           onDelete: () {
-            Navigator.pop(context);
+            // qua màn danh sách lịch trình
+            Navigator.pushNamed(
+              context,
+              RouteName.danhSachLichTrinhUser,
+              arguments: {'tourId': schedule.tour.id},
+            );
           },
           text: "Đặt Lại",
           textColor: Colors.white,
@@ -147,8 +157,14 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
         ),
         SizedBox(width: 10),
         DeleteButtonWidget(
-          onDelete: () {
-            Navigator.pop(context);
+          onDelete: () async {
+            var cubitReview = context.read<ReviewScheduleCubit>();
+            final userId = context.read<AuthCubit>().state.id;
+
+            cubitReview.setUserId(userId);
+            cubitReview.setSchedule(schedule);
+
+            await Navigator.pushNamed(context, RouteName.profileReviewSchedule);
           },
           text: "Đánh Giá",
           textColor: Colors.white,

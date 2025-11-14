@@ -37,6 +37,7 @@ class ThongTinCuaBanCubit extends Cubit<ThongTinCuaBanState> {
       phone: label == "SDT" ? newValue : user.phone,
       avatarPath: user.avatarPath,
       bankBranch: user.bankBranch,
+      refundStatus: user.refundStatus
     );
     emit(state.copyWith(user: updateUser));
   }
@@ -45,13 +46,15 @@ class ThongTinCuaBanCubit extends Cubit<ThongTinCuaBanState> {
     var user = state.user;
     final result = await bookingRepository.updateUserId(
       id: user.id,
+      money: user.money,
       name: user.name,
       email: user.email,
       phone: user.phone,
       bank: user.bank,
       avatarPath: user.avatarPath,
       bankBranch: user.bankBranch,
-      bankNumber: user.bankNumber
+      bankNumber: user.bankNumber,
+      refundStatus: user.refundStatus
     );
 
     result.fold((failure){

@@ -68,16 +68,16 @@ class RegisterScreen extends StatelessWidget {
         } else if(state.checkSendOTP) {
 
           var user = CreateUserRequest(
-            roleId: 1,
+            roleId: 3,
             password: controllerPassword.text.trim(),
             money: 0,
-            bankNumber: " ",
-            bank: " ",
+            bankNumber: "",
+            bank: "",
             name: controllerTenNguoiDung.text.trim(),
             email: controllerEmail.text.trim(),
             phone: controllerSoDienThoai.text.trim(),
-            avatarPath: " ",
-            bankBranch: " ",
+            avatarPath: "",
+            bankBranch: "",
           );
 
           final cubitOtp = context.read<AuthOtpCubit>();

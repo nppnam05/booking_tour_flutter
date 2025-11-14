@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
 import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';

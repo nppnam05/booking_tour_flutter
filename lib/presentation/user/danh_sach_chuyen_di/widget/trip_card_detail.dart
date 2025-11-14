@@ -112,7 +112,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            widget.trip.day.toString(),
+                            widget.trip.day.toString() + " Ngày",
                             style: const TextStyle(
                               fontSize: AppFonts.fontSize14,
                               fontWeight: FontWeight.w600,

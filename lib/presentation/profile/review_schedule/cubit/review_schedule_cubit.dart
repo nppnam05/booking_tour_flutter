@@ -1,6 +1,9 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +15,8 @@ class ReviewScheduleCubit extends Cubit<ReviewScheduleState> {
     emit(state.copyWith(userId: userId));
   }
 
-  void setScheduleId(int scheduleId) {
-    emit(state.copyWith(scheduleId: scheduleId));
+  void setSchedule(ScheduleTourmanager schedule) {
+    emit(state.copyWith(schedule: schedule));
   }
 
   void setStars(int stars) {
@@ -28,14 +31,12 @@ class ReviewScheduleCubit extends Cubit<ReviewScheduleState> {
     await DialogHelper.showLoadingDialog();
     var result = await _repository.createReview(
       userId: state.userId,
-      scheduleId: state.scheduleId,
+      scheduleId: state.schedule!.id,
       content: state.review,
       rating: state.stars,
     );
 
-    result.fold((failure) {
-
-    }, (success) {
+    result.fold((failure) {}, (success) {
       emit(state.copyWith(sentReview: true));
     });
     DialogHelper.dismissDialog();

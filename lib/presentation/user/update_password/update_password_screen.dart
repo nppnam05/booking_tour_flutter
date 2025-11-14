@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/update_password/cubit/update_password_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/update_password/cubit/update_password_state.dart';
 import 'package:booking_tour_flutter/presentation/user/update_password/update_password_card.dart';
@@ -9,11 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart'; // Thêm dòng này để dùng getIt
 
 class UpdatePasswordScreen extends StatelessWidget {
-  final int userId;
-  const UpdatePasswordScreen({super.key, required this.userId});
+  const UpdatePasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var userId = context.read<AuthCubit>().state.id;
+
     return BlocProvider(
       create:
           (_) => UpdatePasswordCubit(getIt<BookingRepository>()), // Sửa tại đây

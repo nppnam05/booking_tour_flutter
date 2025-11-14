@@ -22,8 +22,8 @@ class ViScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final user = context.read<AuthCubit>().state.id;
-    _cubit.syncUser(12);
+    final userId = context.read<AuthCubit>().state.id;
+    _cubit.syncUser(userId);
     _cubit.syncBank();
 
     return BlocProvider(

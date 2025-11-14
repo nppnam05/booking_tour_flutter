@@ -31,6 +31,7 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
     super.didChangeDependencies();
     if (!_hasLoaded) {
       final userId = context.read<AuthCubit>().userId;
+      
       _cubit.loadUser(userId);
       _hasLoaded = true;
     }

@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
+import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
@@ -32,6 +33,9 @@ part 'core_service.g.dart';
 abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
+
+  @POST("/User/loginbyemail")
+  Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
 
   @GET("/Bank")
   Future<RestResponse> getBank();
@@ -261,4 +265,7 @@ abstract class CoreService {
 
   @POST("/Helpful")
   Future<RestResponse> getHelpFul(@Body() GetHelpFullRequest request);
+
+  @POST("/Favorite")
+  Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
 }

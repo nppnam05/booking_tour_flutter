@@ -14,8 +14,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class ChiTietLichTrinhScreen extends StatelessWidget {
+class ChiTietLichTrinhScreen extends StatefulWidget {
   const ChiTietLichTrinhScreen({super.key});
+
+  @override
+  State<ChiTietLichTrinhScreen> createState() => _ChiTietLichTrinhScreenState();
+}
+
+class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
+  static const int _initialReviewCount = 3;
+  static const int _reviewsIncrement = 3;
+  static const int _maxLoadMorePresses = 5;
+  int _selectedImageIndex = 0;
+  int _displayedReviewCount = _initialReviewCount;
+  int _loadMorePressCount = 0;
+  final Map<dynamic, bool> _helpfulOverrides = {};
+  final Map<dynamic, int> _countHelpfulOverrides = {};
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +38,106 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
     final schedule = arguments['scheduleTourmanager'] as ScheduleTourmanager;
     final tour = schedule.tour;
     final userId = context.read<AuthCubit>().userId;
+    final tourImages = tour.tourImages;
+    final imageCount = tourImages.length;
+    final int selectedImageIndex =
+        imageCount > 0 ? _selectedImageIndex.clamp(0, imageCount - 1) : 0;
     return BlocProvider(
-      create: (context) => ChiTietLichTrinhCubit()..loadRviews(tour.id, userId),
+      create: (context) {
+        final cubit = ChiTietLichTrinhCubit();
+        cubit.loadRviews(tour.id, userId);
+        cubit.loadFavoriteStatus(userId, tour.id);
+
+        return cubit;
+      },
       child: Scaffold(
         appBar: AppBar(title: Text(tour.title), centerTitle: false),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                tour.tourImages.isNotEmpty ? tour.tourImages.first : '',
-                height: 240,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              Stack(
+                children: [
+                  Container(
+                    height: 240,
+                    width: double.infinity,
+                    color: AppColors.gray,
+                    child:
+                        imageCount > 0
+                            ? Image.network(
+                              tourImages[selectedImageIndex],
+                              fit: BoxFit.cover,
+                            )
+                            : const Icon(Icons.image_not_supported, size: 48),
+                  ),
+                  if (imageCount > 1 && selectedImageIndex > 0)
+                    Positioned(
+                      left: 8,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: _buildImageNavButton(
+                          icon: Icons.chevron_left,
+                          onTap: () {
+                            setState(() {
+                              _selectedImageIndex = selectedImageIndex - 1;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  if (imageCount > 1 && selectedImageIndex < imageCount - 1)
+                    Positioned(
+                      right: 8,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: _buildImageNavButton(
+                          icon: Icons.chevron_right,
+                          onTap: () {
+                            setState(() {
+                              _selectedImageIndex = selectedImageIndex + 1;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: BlocBuilder<
+                      ChiTietLichTrinhCubit,
+                      ChiTietLichTrinhState
+                    >(
+                      builder: (context, state) {
+                        return InkWell(
+                          onTap: () {
+                            final cubit = context.read<ChiTietLichTrinhCubit>();
+                            cubit.toggleFavorite(userId, tour.id);
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              state.isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color:
+                                  state.isFavorite
+                                      ? AppColors.delete
+                                      : AppColors.gray,
+                              size: 24,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
 
               Container(
@@ -45,16 +146,36 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   scrollDirection: Axis.horizontal,
-                  itemCount: tour.tourImages.length,
+                  itemCount: tourImages.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 8),
                   itemBuilder: (_, index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        tour.tourImages[index],
-                        width: 120,
-                        height: 90,
-                        fit: BoxFit.cover,
+                    final isSelected = index == selectedImageIndex;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedImageIndex = index;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color:
+                                isSelected
+                                    ? AppColors.secondary
+                                    : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            tourImages[index],
+                            width: 120,
+                            height: 90,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     );
                   },
@@ -215,7 +336,9 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(tour.description),
+
+                    Text('Mô tả: ${tour.description}'),
+
                     const SizedBox(height: 20),
                     Text(
                       "Đánh giá",
@@ -236,6 +359,27 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                                     reviews.length
                                 : 0.0;
 
+                        final totalReviews = reviews.length;
+                        final maxDisplayableReviews =
+                            _initialReviewCount +
+                            _reviewsIncrement * _maxLoadMorePresses;
+                        final allowedDisplayCount =
+                            totalReviews < maxDisplayableReviews
+                                ? totalReviews
+                                : maxDisplayableReviews;
+                        final effectiveDisplayCount =
+                            _displayedReviewCount < allowedDisplayCount
+                                ? _displayedReviewCount
+                                : allowedDisplayCount;
+                        final visibleReviews =
+                            reviews.take(effectiveDisplayCount).toList();
+                        final bool canLoadMore =
+                            totalReviews > effectiveDisplayCount &&
+                            _loadMorePressCount < _maxLoadMorePresses &&
+                            effectiveDisplayCount < maxDisplayableReviews;
+                        final bool canCollapse =
+                            effectiveDisplayCount > _initialReviewCount;
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -253,28 +397,79 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            ...reviews.take(5).map((review) {
-                              return _buildReviewItem(review);
+                            ...visibleReviews.map((review) {
+                              return _buildReviewItem(review, context, userId);
                             }),
-
-                            if (reviews.length > 2)
+                            if (canLoadMore || canCollapse)
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
-                                child: InkWell(
-                                  onTap: () {
-                                    // TODO: đến màn hình review
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "Xem thêm >",
-                                        style: TextStyle(
-                                          fontSize: AppFonts.fontSize14,
-                                          color: AppColors.gray,
+                                child: Row(
+                                  children: [
+                                    if (canLoadMore)
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            final maxAllowed =
+                                                _initialReviewCount +
+                                                _reviewsIncrement *
+                                                    _maxLoadMorePresses;
+                                            _displayedReviewCount +=
+                                                _reviewsIncrement;
+                                            if (_displayedReviewCount >
+                                                maxAllowed) {
+                                              _displayedReviewCount =
+                                                  maxAllowed;
+                                            }
+                                            if (_displayedReviewCount >
+                                                totalReviews) {
+                                              _displayedReviewCount =
+                                                  totalReviews;
+                                            }
+                                            _loadMorePressCount += 1;
+                                          });
+                                        },
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          child: Text(
+                                            "Xem thêm >",
+                                            style: TextStyle(
+                                              fontSize: AppFonts.fontSize14,
+                                              color: AppColors.gray,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    if (canLoadMore && canCollapse)
+                                      const SizedBox(width: 16),
+                                    if (canCollapse)
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _displayedReviewCount =
+                                                _initialReviewCount;
+                                            _loadMorePressCount = 0;
+                                          });
+                                        },
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          child: Text(
+                                            "Ẩn bớt",
+                                            style: TextStyle(
+                                              fontSize: AppFonts.fontSize14,
+                                              color: AppColors.gray,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               ),
                             const SizedBox(height: 20),
@@ -328,18 +523,98 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewItem(Review review) {
+  Widget _buildReviewItem(Review review, BuildContext context, userId) {
+    final bool isHelpful =
+        _helpfulOverrides.containsKey(review.id)
+            ? _helpfulOverrides[review.id]!
+            : review.isHelpful;
+
+    final int countHelpful =
+        _countHelpfulOverrides.containsKey(review.id)
+            ? _countHelpfulOverrides[review.id]!
+            : review.countHelpful;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            review.user.name,
-            style: TextStyle(
-              fontSize: AppFonts.fontSize16,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                review.user.name,
+                style: TextStyle(
+                  fontSize: AppFonts.fontSize16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  final cubit = context.read<ChiTietLichTrinhCubit>();
+
+                  cubit.postHelpFul(userId, review.id);
+                  setState(() {
+                    final current =
+                        _helpfulOverrides.containsKey(review.id)
+                            ? _helpfulOverrides[review.id]!
+                            : review.isHelpful;
+                    final toggled = !current;
+
+                    // Cập nhật trạng thái helpful
+                    if (toggled == review.isHelpful) {
+                      _helpfulOverrides.remove(review.id);
+                    } else {
+                      _helpfulOverrides[review.id] = toggled;
+                    }
+
+                    // Cập nhật countHelpful
+                    final currentCount =
+                        _countHelpfulOverrides.containsKey(review.id)
+                            ? _countHelpfulOverrides[review.id]!
+                            : review.countHelpful;
+
+                    if (toggled) {
+                      _countHelpfulOverrides[review.id] = currentCount + 1;
+                    } else {
+                      _countHelpfulOverrides[review.id] = currentCount - 1;
+                    }
+                  });
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.gray.withOpacity(0.4)),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Hữu ích ($countHelpful)",
+                        style: TextStyle(
+                          fontSize: AppFonts.fontSize14,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        isHelpful ? Icons.thumb_up : Icons.thumb_up_outlined,
+                        size: 18,
+                        color: isHelpful ? AppColors.warning : AppColors.gray,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 4),
 
@@ -353,6 +628,24 @@ class ChiTietLichTrinhScreen extends StatelessWidget {
             children: [Text("Hướng dẫn viên: ${review.guide.staffId}")],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImageNavButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white70,
+          shape: BoxShape.circle,
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Icon(icon, color: AppColors.black, size: 28),
       ),
     );
   }
