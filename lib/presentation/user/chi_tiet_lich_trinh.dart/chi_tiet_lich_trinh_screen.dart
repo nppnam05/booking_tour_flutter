@@ -47,6 +47,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
         final cubit = ChiTietLichTrinhCubit();
         cubit.loadRviews(tour.id, userId);
         cubit.loadFavoriteStatus(userId, tour.id);
+
         return cubit;
       },
       child: Scaffold(
