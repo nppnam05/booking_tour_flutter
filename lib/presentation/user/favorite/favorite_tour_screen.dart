@@ -81,6 +81,16 @@ class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
                       userId: favorite.userId,
                     );
                   },
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      'danh_sach_lich_trinh_user', 
+                      arguments: {
+                        'tourId': favorite.tourId,
+                        'userId': favorite.userId,
+                      },
+                    );
+                  },
                 );
               },
             );

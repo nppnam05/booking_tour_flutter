@@ -1,8 +1,11 @@
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:flutter/material.dart';
+
 class SearchCard extends StatelessWidget {
   final Trip trip;
-  const SearchCard({Key? key, required this.trip}) : super(key: key);
+  final VoidCallback? onTap;
+
+  const SearchCard({Key? key, required this.trip, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +14,7 @@ class SearchCard extends StatelessWidget {
         : "0.0";
 
     return GestureDetector(
-      onTap: () {
-       
-      },
+      onTap: onTap,
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Row(
@@ -21,10 +22,16 @@ class SearchCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                trip.tourImages.first,
+                trip.tourImages.isNotEmpty ? trip.tourImages.first : '',
                 width: 120,
                 height: 80,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 120,
+                  height: 80,
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.image, size: 40, color: Colors.grey),
+                ),
               ),
             ),
             const SizedBox(width: 12),
