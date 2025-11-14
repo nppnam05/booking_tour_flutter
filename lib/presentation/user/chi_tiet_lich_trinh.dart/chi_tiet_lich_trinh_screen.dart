@@ -592,7 +592,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.gray.withOpacity(0.4)),
+                    border: Border.all(color: AppColors.gray),
                   ),
                   child: Row(
                     children: [

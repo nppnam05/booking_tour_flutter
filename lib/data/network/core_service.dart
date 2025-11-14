@@ -5,6 +5,7 @@ import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
+import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -268,4 +269,7 @@ abstract class CoreService {
 
   @POST("/Favorite")
   Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
+
+  @PUT("/Notification")
+  Future<RestResponse> readReview(@Body() ReadReviewRequets request);
 }

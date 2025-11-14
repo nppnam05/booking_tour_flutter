@@ -1,6 +1,8 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/domain/notification.dart';
+import 'package:booking_tour_flutter/domain/read_review.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'thong_bao_state.dart';
 
@@ -22,6 +24,17 @@ class ThongBaoCubit extends Cubit<ThongBaoState> {
           isLoading: false,
         ),
       );
+    });
+  }
+
+  Future<void> readReview(int id, bool isRead) async {
+    ReadReviewRequets readReviewRequets = ReadReviewRequets(
+      id: id,
+      isRead: isRead,
+    );
+    final result = await _repository.readReview(readReviewRequets);
+    result.fold((failure) => emit(state.copyWith(isLoading: false)), (items) {
+      emit(state.copyWith(isLoading: false));
     });
   }
 

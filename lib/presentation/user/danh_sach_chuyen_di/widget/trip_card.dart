@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
@@ -29,21 +30,22 @@ class TripCard extends StatelessWidget {
           SizedBox(
             height: 100,
             width: double.infinity,
-            child: trip.tourImages.isNotEmpty
-                ? Image.network(
-                    trip.tourImages.first,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[300],
-                        child: Icon(Icons.image, color: Colors.grey[600]),
-                      );
-                    },
-                  )
-                : Container(
-                    color: Colors.grey[300],
-                    child: Icon(Icons.image, color: Colors.grey[600]),
-                  ),
+            child:
+                trip.tourImages.isNotEmpty
+                    ? Image.network(
+                      trip.tourImages.first,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: Icon(Icons.image, color: Colors.grey[600]),
+                        );
+                      },
+                    )
+                    : Container(
+                      color: Colors.grey[300],
+                      child: Icon(Icons.image, color: Colors.grey[600]),
+                    ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -71,7 +73,7 @@ class TripCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${trip.price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')} VND',
+                  formatCurrency(trip.price),
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: AppColors.gray,
