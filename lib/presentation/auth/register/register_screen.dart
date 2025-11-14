@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/app/validate_helper.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
@@ -65,8 +66,7 @@ class RegisterScreen extends StatelessWidget {
           // gửi mã otp
           var email = controllerEmail.text.trim();
           _cubit.sendOTP(email);
-        } else if(state.checkSendOTP) {
-
+        } else if (state.checkSendOTP) {
           var user = CreateUserRequest(
             roleId: 3,
             password: controllerPassword.text.trim(),
@@ -124,14 +124,14 @@ class RegisterScreen extends StatelessWidget {
                   const SizedBox(height: 12),
 
                   notToggleInputFieldNotIcon(
-                    controller: controllerSoDienThoai,  
+                    controller: controllerSoDienThoai,
                     title: "Số điện thoại",
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'bạn chưa viết gì vào ô này';
-                      } else if (value.length < 10) {
-                        return "độ dài số điện thoại thiếu";
+                      } else if (!ValidateHelper.kiemTraSoDienThoai(value)) {
+                        return "số điện thoại này chưa đúng định dạng";
                       }
                       return null;
                     },
@@ -145,7 +145,7 @@ class RegisterScreen extends StatelessWidget {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'bạn chưa viết gì vào ô này';
-                      } else if (!isEmailValid(value)) {
+                      } else if (!ValidateHelper.isEmailValid(value)) {
                         return "Email này chưa đúng định dạng";
                       }
                       return null;
@@ -173,8 +173,7 @@ class RegisterScreen extends StatelessWidget {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'bạn chưa viết gì vào ô này';
-                      } else if (value.trim() !=
-                          controllerPassword.text.trim()) {
+                      } else if (value != controllerPassword.text.trim()) {
                         return "Mật khẩu không khớp";
                       }
                       return null;
@@ -236,13 +235,5 @@ class RegisterScreen extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  bool isEmailValid(String email) {
-    final RegExp emailRegex = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-    );
-
-    return emailRegex.hasMatch(email);
   }
 }
