@@ -12,6 +12,7 @@ class Review {
   final Guide guide;
   final Booking booking;
   final bool isHelpful;
+  final int countHelpful;
   Review({
     required this.id,
     required this.rating,
@@ -21,5 +22,6 @@ class Review {
     required this.guide,
     required this.booking,
     required this.isHelpful,
+    required this.countHelpful,
   });
 }

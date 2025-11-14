@@ -30,6 +30,7 @@ ReviewResponse _$ReviewResponseFromJson(Map<String, dynamic> json) =>
                 json['booking'] as Map<String, dynamic>,
               ),
       isHelpful: json['isHelpful'] as bool?,
+      countHelpful: (json['countHelpful'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ReviewResponseToJson(ReviewResponse instance) =>
@@ -42,4 +43,5 @@ Map<String, dynamic> _$ReviewResponseToJson(ReviewResponse instance) =>
       'guide': instance.guide,
       'booking': instance.booking,
       'isHelpful': instance.isHelpful,
+      'countHelpful': instance.countHelpful,
     };
