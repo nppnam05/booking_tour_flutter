@@ -625,7 +625,17 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [Text("Hướng dẫn viên: ${review.guide.staffId}")],
+            children: [
+              if (review.guideReviews.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Hướng dẫn viên: ${review.guideReviews.first.nameStaff}",
+                    ),
+                  ],
+                ),
+            ],
           ),
         ],
       ),
