@@ -3,10 +3,11 @@ import 'dart:async';
 
 import 'package:booking_tour_flutter/domain/pay_booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 
 class PayScheduleState {
   final PayBooking paySchedule;
-  final ScheduleBook schedule;
+  final ScheduleTourmanager schedule;
   final String linkQR;
   final int idSchedule;
   final int idBooking;
@@ -20,7 +21,7 @@ class PayScheduleState {
 
   PayScheduleState copyWith({
     PayBooking? paySchedule,
-    ScheduleBook? schedule,
+    ScheduleTourmanager? schedule,
     String? linkQR,
     int? idSchedule,
     int? idBooking,

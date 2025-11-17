@@ -169,7 +169,7 @@ class DetailPaidScheduleScreen extends StatelessWidget {
                   child: InfoTwoRow(
                     title: "Tổng số tiền",
                     content: FormatterHelper.formatCurrency(
-                      state.booking.schedule.finalPrice,
+                      state.booking.schedule.finalPrice * state.booking.numPeople,
                     ),
                   ),
                 ),
@@ -201,7 +201,7 @@ class DetailPaidScheduleScreen extends StatelessWidget {
                   child: InfoTwoRow(
                     title: "Số tiền còn lại",
                     content: FormatterHelper.formatCurrency(
-                      state.booking.schedule.finalPrice -
+                      state.booking.schedule.finalPrice * state.booking.numPeople -
                           state.booking.totalPrice,
                     ),
                   ),

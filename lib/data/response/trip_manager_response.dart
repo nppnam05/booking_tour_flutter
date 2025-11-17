@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
