@@ -26,7 +26,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_ti
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/book_schedule_screen.dart';
-import 'package:booking_tour_flutter/presentation/user/bottombar_navigation.dart';
+import 'package:booking_tour_flutter/presentation/user/main_user.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/pay_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/schedule_detail_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/danh_sach_lich_trinh_booking_screen.dart';
