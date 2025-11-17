@@ -7,6 +7,8 @@ import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card_detail.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,11 +22,23 @@ class DanhSachChuyenDiScreen extends StatefulWidget {
 class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
   final TextEditingController _searchController = TextEditingController();
   late final DanhSachChuyenDiCubit _cubit;
+  bool _hasLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _cubit = DanhSachChuyenDiCubit();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasLoaded) {
+      final userId = context.read<AuthCubit>().userId;
+      // Load notifications để lấy unread count
+      context.read<ThongBaoCubit>().load(userId);
+      _hasLoaded = true;
+    }
   }
 
   @override
@@ -48,11 +62,52 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
           ),
           backgroundColor: AppColors.backgroundAppBarTheme,
           actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "thong_bao");
+            BlocBuilder<ThongBaoCubit, ThongBaoState>(
+              builder: (context, notificationState) {
+                // Tính số thông báo chưa đọc
+                final unreadCount =
+                    notificationState.items.where((n) => !n.isRead).length;
+
+                return Stack(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        await Navigator.pushNamed(context, "thong_bao");
+                        // Reload lại notifications khi quay về
+                        if (context.mounted) {
+                          context.read<ThongBaoCubit>().load(userId);
+                        }
+                      },
+                      icon: const Icon(Icons.notifications),
+                    ),
+                    if (unreadCount > 0)
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 18,
+                            minHeight: 18,
+                          ),
+                          child: Text(
+                            unreadCount > 99 ? '99+' : '$unreadCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
               },
-              icon: const Icon(Icons.notifications),
             ),
           ],
         ),

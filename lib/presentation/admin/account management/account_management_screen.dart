@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/presentation/admin/account%20management/widget/account_card.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +61,57 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 ),
               ],
             ),
-
+            Expanded(
+              child: ListView(
+                children: [
+                  AccountCardWidget(
+                    name: "Nguyễn Thị Anh",
+                    role: "Quản lý lịch trình",
+                    phone: "0123456789",
+                    onPermission: () {},
+                    onDelete: () {},
+                  ),
+                  AccountCardWidget(
+                    name: "Phạm Minh Quân",
+                    role: "Kế toán",
+                    phone: "0988776655",
+                    onPermission: () {},
+                    onDelete: () {},
+                  ),
+                  AccountCardWidget(
+                    name: "Trần Hoàng Duy",
+                    role: "Hướng dẫn viên",
+                    phone: "0909123456",
+                    onPermission: () {},
+                    onDelete: () {},
+                  ),
+                  AccountCardWidget(
+                    name: "Lê Mỹ Tiên",
+                    role: "Quản lý chuyến",
+                    phone: "0911223344",
+                    onPermission: () {},
+                    onDelete: () {},
+                  ),
+                  AccountCardWidget(
+                    name: "Trần Hoàng Duy",
+                    role: "Hướng dẫn viên",
+                    phone: "0909123456",
+                    onPermission: () {},
+                    onDelete: () {},
+                  ),
+                  AccountCardWidget(
+                    name: "Lê Mỹ Tiên",
+                    role: "Quản lý chuyến",
+                    phone: "0911223344",
+                    onPermission: () {},
+                    onDelete: () {},
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 4),
             BkButton(onPressed: () {}, title: "Thêm"),
+            const SizedBox(height: 4),
           ],
         ),
       ),

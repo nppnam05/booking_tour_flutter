@@ -73,8 +73,13 @@ class _ThongBaoScreenState extends State<ThongBaoScreen> {
                       itemBuilder: (context, index) {
                         final n = state.filteredItems[index];
                         return _buildThongBaoItem(
+                          id: n.id,
                           dateTime: n.createdAt,
                           content: n.content,
+                          isRead: n.isRead,
+                          onTap: () {
+                            cubit.readReview(n.id, true);
+                          },
                         );
                       },
                     );
@@ -89,58 +94,79 @@ class _ThongBaoScreenState extends State<ThongBaoScreen> {
   }
 
   Widget _buildThongBaoItem({
+    required int id,
     required DateTime dateTime,
     required String content,
+    required bool isRead,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.secondary,
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}",
-              style: TextStyle(
-                fontSize: AppFonts.fontSize12,
-                color: AppColors.secondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              content,
-              style: TextStyle(
-                fontSize: AppFonts.fontSize14,
-                color: AppColors.black,
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                "Trân trọng !",
-                style: TextStyle(
-                  fontSize: AppFonts.fontSize14,
-                  color: AppColors.borderButton,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: isRead ? AppColors.white : AppColors.success,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.secondary,
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 2),
             ),
           ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}",
+                    style: TextStyle(
+                      fontSize: AppFonts.fontSize12,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  if (!isRead)
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                content,
+                style: TextStyle(
+                  fontSize: AppFonts.fontSize14,
+                  color: AppColors.black,
+                  height: 1.4,
+                  fontWeight: isRead ? FontWeight.normal : FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "Trân trọng !",
+                  style: TextStyle(
+                    fontSize: AppFonts.fontSize14,
+                    color: AppColors.borderButton,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
