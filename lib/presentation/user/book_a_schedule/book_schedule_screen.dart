@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/app/validate_helper.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
@@ -29,6 +30,10 @@ class BookScheduleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _cubit = context.read<BookScheduleCubit>();
     authCubit = context.read<AuthCubit>();
+
+    // sét giá trị lúc ban đầu
+
+    
 
     return BlocProvider.value(
       value: _cubit,
@@ -69,6 +74,9 @@ class BookScheduleScreen extends StatelessWidget {
                     if (value == null || value.isEmpty) {
                       return 'bạn chưa viết gì vào ô này';
                     }
+                    else if(!ValidateHelper.kiemTraSo(value)){
+                      return "bạn nên điền số vào đây";
+                    }
                     return null;
                   },
                 ),
@@ -80,7 +88,7 @@ class BookScheduleScreen extends StatelessWidget {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'bạn chưa viết gì vào ô này';
-                    } else if (!isEmailValid(value)) {
+                    } else if (!ValidateHelper.isEmailValid(value)) {
                       return "Email này chưa đúng định dạng";
                     }
                     return null;
@@ -94,9 +102,10 @@ class BookScheduleScreen extends StatelessWidget {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'bạn chưa viết gì vào ô này';
-                    } else if (value.length < 10) {
-                      return "độ dài số điện thoại thiếu";
+                    } else if (!ValidateHelper.kiemTraSoDienThoai(value)) {
+                      return "số điện thoại chưa đúng định dạng";
                     }
+
                     return null;
                   },
                 ),
@@ -279,12 +288,5 @@ class BookScheduleScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  bool isEmailValid(String email) {
-    final RegExp emailRegex = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-    );
-    return emailRegex.hasMatch(email);
   }
 }
