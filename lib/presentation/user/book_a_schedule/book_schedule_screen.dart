@@ -31,6 +31,10 @@ class BookScheduleScreen extends StatelessWidget {
     _cubit = context.read<BookScheduleCubit>();
     authCubit = context.read<AuthCubit>();
 
+    // sét giá trị lúc ban đầu
+
+    
+
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
