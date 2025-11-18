@@ -8,6 +8,7 @@ import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/change_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/detail_paid_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/review_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/reception/lich_trinh_chua_hoan_thanh/lich_trinh_chua_hoan_thanh_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
@@ -96,6 +97,10 @@ class RouteName {
   static final paySchedule = "pay_schedule";
   static final update_password_user = "update_password_user";
   static final main_user = "main_user";
+
+  //reception
+  static final lichTrinhChuaHoanThanh = "lichTrinhChuaHoanThanh";
+  
 }
 
 class RouteManager {
@@ -154,5 +159,6 @@ class RouteManager {
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user: (context) => UpdatePasswordScreen(),
     RouteName.main_user: (context) => MainUser(),
+    RouteName.lichTrinhChuaHoanThanh: (context) => LichTrinhChuaHoanThanhScreen(),
   };
 }
