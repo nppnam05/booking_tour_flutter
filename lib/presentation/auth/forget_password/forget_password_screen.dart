@@ -40,7 +40,7 @@ class ForgetPasswordScreen extends StatelessWidget {
 
     return BlocListener<ForgetCubit, ForgetState>(
       listener: (context, state) {
-        if (state.checkEmail) {
+        if (state.existedEmail) {
           final cubitOtp = context.read<AuthOtpChangePasswordCubit>();
 
           cubitOtp.setEmail(state.email);
@@ -48,7 +48,7 @@ class ForgetPasswordScreen extends StatelessWidget {
           _cubit.sendOTP();
 
           Navigator.pushNamed(context, RouteName.authOtpChangePassword);
-        } else if (state.existedEmail) {
+        } else if (!state.existedEmail) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Center(child: Text('Email này không tồn tại')),
@@ -83,7 +83,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                 color: Colors.grey.shade100,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'bạn chưa viết gì vào ô này';
+                    return 'vui lòng điền email vao ô này';
                   }
                   else if(!ValidateHelper.isEmailValid(value)){
                     return "Email này chưa đúng định dạng";

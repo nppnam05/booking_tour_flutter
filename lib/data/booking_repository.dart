@@ -121,8 +121,8 @@ abstract class BookingRepository {
 
   Future<Either<Failure, bool>> sendOTP(String email);
 
-  Future<Either<Failure, List<bool>>> checkAccount({
-    required CheckAccountRequest checkAccount,
+  Future<Either<Failure, bool>> checkEmailAccount({
+    required CheckAccountRequest checkEmailAccount,
   });
 
   Future<Either<Failure, bool>> registerUser({
@@ -213,7 +213,7 @@ abstract class BookingRepository {
     final String name,
     final String email,
     final String phone,
-    final bool refundStatus
+    final bool refundStatus,
   });
 
   Future<Either<Failure, Place>> createPlace({
@@ -1157,7 +1157,7 @@ class BookingRepositoryImp implements BookingRepository {
     String? avatarPath,
     String? bankBranch,
     String? bankNumber,
-    bool? refundStatus
+    bool? refundStatus,
   }) async {
     try {
       final body = {
@@ -1208,30 +1208,10 @@ class BookingRepositoryImp implements BookingRepository {
       var data = responses.data as List<dynamic>;
 
       var scheduleRPs = data.map(
-        (e) =>
-            ScheduleTourmanagerResponse.fromJson(e as Map<String, dynamic>),
+        (e) => ScheduleTourmanagerResponse.fromJson(e as Map<String, dynamic>),
       );
       var schedules = scheduleRPs.map((e) => e.map()).toList();
       return Right(schedules);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<bool>>> checkAccount({
-    required CheckAccountRequest checkAccount,
-  }) async {
-    try {
-      final jsonData = checkAccount.toJson();
-
-      var responses = await _coreService.checkAccount(jsonData);
-
-      var data = responses.data as List<dynamic>;
-
-      var result = data.map((e) => e as bool).toList();
-
-      return Right(result);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
@@ -1397,11 +1377,21 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
   @override
-  Future<Either<Failure, User>> loginByEmail({required String email, required String name, required String photoUrl, required String password}) async {
-    try{
-      final login = LoginEmailRequest(email: email, name: name, password: password, photoUrl: photoUrl);
+  Future<Either<Failure, User>> loginByEmail({
+    required String email,
+    required String name,
+    required String photoUrl,
+    required String password,
+  }) async {
+    try {
+      final login = LoginEmailRequest(
+        email: email,
+        name: name,
+        password: password,
+        photoUrl: photoUrl,
+      );
 
       final response = await _coreService.loginByEmail(login);
 
@@ -1412,8 +1402,22 @@ class BookingRepositoryImp implements BookingRepository {
       var user = userResponse.map();
 
       return Right(user);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
     }
-    catch(e){
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkEmailAccount({
+    required CheckAccountRequest checkEmailAccount,
+  }) async {
+    try {
+      var responses = await _coreService.checkEmailAccount(checkEmailAccount);
+
+      var result = responses.data as bool;
+
+      return Right(result);
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }

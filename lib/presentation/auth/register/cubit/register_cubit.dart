@@ -11,13 +11,13 @@ class RegisterCubit extends Cubit<RegisterState> {
   static final registerRepository = getIt<BookingRepository>();
 
   RegisterCubit()
-    : super(RegisterState(isEmailValid: false, isPasswordValid: false, checkSendOTP: false));
+    : super(RegisterState(isEmailExist: false));
 
-  Future<void> checkAccount(String email, String password) async {
+  Future<void> checkEmailAccount(String email) async {
     await DialogHelper.showLoadingDialog();
 
-    var resualt = await registerRepository.checkAccount(
-      checkAccount: CheckAccountRequest(email: email, password: password),
+    var resualt = await registerRepository.checkEmailAccount(
+      checkEmailAccount: CheckAccountRequest(email: email),
     );
 
     resualt.fold(
@@ -26,7 +26,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       },
       (checkes) {
         emit(
-          state.copyWith(isEmailValid: checkes[0], isPasswordValid: checkes[1]),
+          state.copyWith(isEmailExist: checkes),
         );
       },
     );
@@ -46,7 +46,9 @@ class RegisterCubit extends Cubit<RegisterState> {
         );
       },
       (check) {
-        emit(state.copyWith(checkSendOTP: true));
+         ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đã gửi tin nhắn thành công')),
+        );
       },
     );
   }

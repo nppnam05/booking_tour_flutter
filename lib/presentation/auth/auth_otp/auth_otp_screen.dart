@@ -30,7 +30,7 @@ class AuthOtpScreen extends StatelessWidget {
   // gom các widget lại
   Widget columnOfWidget(AuthOtpCubit _cubit) {
     return BlocListener<AuthOtpCubit, AuthOtpState>(
-      listener: (BuildContext context, state) {
+      listener: (BuildContext context, state) async {
         if (state.checkCreate) {
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -38,7 +38,7 @@ class AuthOtpScreen extends StatelessWidget {
             (route) => false,
           );
         } else if (state.verifyOtp) {
-          _cubit.createUser();
+          await _cubit.createUser();
         }
       },
       child: Padding(
