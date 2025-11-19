@@ -67,11 +67,9 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(
-          "Chi tiết lịch trình",
-          style: AppFonts.textWhite.copyWith(fontWeight: FontWeight.bold),
-        ),
+        title: Text("Chi tiết lịch trình"),
         backgroundColor: AppColors.button,
         centerTitle: true,
       ),
@@ -190,6 +188,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
             "Mã lịch trình",
             "Mã lịch trình",
             AppColors.gray,
+            inputBackgroundColor: AppColors.backgroundDisable,
           ),
         ),
 
@@ -200,6 +199,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
             "Mã Tour",
             "Tour",
             AppColors.gray,
+            inputBackgroundColor: AppColors.backgroundDisable,
           ),
         ),
 
@@ -210,16 +210,16 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
           _controllerNguoiToiDa,
           "Người tối đa",
           "Người tối đa",
-          Colors.grey.shade100,
+          AppColors.white,
         ),
 
-        notIconToggleInputField(_controllerGia,"Giá", "Giá", AppColors.gray),
+        notIconToggleInputField(_controllerGia, "Giá", "Giá", AppColors.white),
 
         notIconToggleInputField(
           _controllerTienCoc,
           "Số tiền cọc",
           "Số tiền cọc",
-          AppColors.gray,
+          AppColors.white,
         ),
 
         //Thời gian tập hợp

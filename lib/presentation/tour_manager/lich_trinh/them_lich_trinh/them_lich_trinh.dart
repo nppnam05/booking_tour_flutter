@@ -132,6 +132,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
+        backgroundColor: AppColors.white,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text(
@@ -178,7 +179,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
           "Người tối đa",
           AppColors.gray,
         ),
-        notIconToggleInputField(_controllerGia, "Giá","Giá", AppColors.gray),
+        notIconToggleInputField(_controllerGia, "Giá", "Giá", AppColors.gray),
         notIconToggleInputField(
           _controllerTienCoc,
           "Số tiền cọc",

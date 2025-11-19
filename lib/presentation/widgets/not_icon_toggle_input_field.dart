@@ -7,6 +7,7 @@ Widget notIconToggleInputField(
   String text,
   Color color, {
   ValueChanged<String>? onChanged,
+  Color? inputBackgroundColor,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -16,18 +17,19 @@ Widget notIconToggleInputField(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8.0),
         TextField(
           controller: controller,
           decoration: InputDecoration(
             hintText: text,
             isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
+            filled: true,
+            fillColor: inputBackgroundColor ?? AppColors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
