@@ -86,6 +86,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ),
             const SizedBox(height: 12),
             SelectSingleProvinceField(
+              key:  UniqueKey(),
               onChange: (province) {
                 setState(() {
                   selectedProvince = province;
@@ -109,6 +110,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       ),
                       const SizedBox(height: 8),
                       DatePickerFieldWidget(
+                        key: UniqueKey(),
                         initialDateText: startDate,
                         onDateSelected: (date) {
                           setState(() {
@@ -137,6 +139,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       ),
                       const SizedBox(height: 8),
                       DatePickerFieldWidget(
+                        key : UniqueKey(),
                         initialDateText: endDate,
                         onDateSelected: (date) {
                           setState(() {

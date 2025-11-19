@@ -159,7 +159,9 @@ class _SelectionDialogState<T> extends State<SelectionDialog<T>> {
                     final display = widget.display(item);
                     final selected = _isSelected(item);
                     return InkWell(
-                      onTap: () => _toggleSelection(item),
+                      onTap: () =>
+                       _toggleSelection(item)
+                      ,
                       child: Container(
                         color: selected ? const Color(0xFFDDEEDB) : null,
                         padding: const EdgeInsets.symmetric(

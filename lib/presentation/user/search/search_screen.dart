@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/presentation/user/search/cubit/search_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/search/cubit/search_state.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_card.dart';
@@ -57,7 +58,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
           return Scaffold(
             appBar: AppBar(
+              backgroundColor: AppColors.white,
               leading: IconButton(
+                color: AppColors.black,
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -65,20 +68,26 @@ class _SearchScreenState extends State<SearchScreen> {
                 controller: _searchController,
                 decoration: const InputDecoration(
                   hintText: 'Nhập tên địa điểm...',
-                  border: InputBorder.none,
                   hintStyle: TextStyle(
-                    color: Color.fromARGB(255, 239, 236, 236),
+                    color: Color.fromARGB(255, 210, 209, 209),
                   ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  fillColor: AppColors.white,
                 ),
                 onSubmitted:
                     (_) => cubit.searchTrips(_searchController.text.trim()),
                 textInputAction: TextInputAction.search,
               ),
+
               actions: [
                 Stack(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.filter_alt_outlined),
+                      color: AppColors.black,
                       onPressed: () => _showFilterBottomSheet(context, cubit),
                     ),
                     if (cubit.hasActiveFilters)
@@ -231,7 +240,8 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 8),
             ...state.history.map(
-              (keyword) => ListTile(
+              (keyword) => ListTile( 
+                
                 leading: const Icon(Icons.history),
                 title: Text(keyword),
                 trailing: IconButton(
@@ -247,7 +257,7 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 8),
             TextButton.icon(
               onPressed: cubit.clearHistory,
-              icon: const Icon(Icons.delete_forever),
+              icon: const Icon(Icons.delete_forever, color: AppColors.delete),
               label: const Text('Xóa toàn bộ lịch sử'),
             ),
           ],
@@ -328,10 +338,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Navigator.pushNamed(
                       context,
                       'danh_sach_lich_trinh_user',
-                      arguments: {
-                        'tourId': trip.id,
-                        
-                      },
+                      arguments: {'tourId': trip.id},
                     );
                   },
                 );

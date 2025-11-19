@@ -32,6 +32,24 @@ class BookingDialog {
     );
   }
 
+  static Future<Province?> selectSingleProvince({
+    Province? initProvince,
+  }) async {
+    var result = await _repository.getProvinces();
+
+    return await result.fold((failure) => throw Exception(failure.message), (
+      provinces,
+    ) {
+      return DialogHelper.selectOne<Province>(
+        context: AppNavigator.navigatorKey.currentState!.context,
+        title: "Chọn tỉnh thành",
+        items: provinces,
+        display: (province) => province.name,
+        initial: initProvince,
+      );
+    });
+  }
+
   static Future<Activity?> selectSingleActivity({
     int? locationActivityId,
     Activity? initActivity,
