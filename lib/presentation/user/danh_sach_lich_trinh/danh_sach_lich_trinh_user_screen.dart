@@ -124,7 +124,7 @@ class DanhSachLichTrinhUserScreen extends StatelessWidget {
                 SizedBox(height: 8),
                 _buildInfoRow(
                   "Số người :",
-                  scheduleTourmanager.maxSlot.toString(),
+                  '${scheduleTourmanager.processingBooking + scheduleTourmanager.depositBooking + scheduleTourmanager.paidBooking} / ${scheduleTourmanager.maxSlot.toString()} ',
                 ),
                 SizedBox(height: 12),
                 _buildInfoRow(
