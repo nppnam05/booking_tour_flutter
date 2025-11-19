@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/presentation/admin/income_statistics/cubit/incom_statistic_cubit.dart';
+import 'package:booking_tour_flutter/presentation/admin/income_statistics/cubit/income_statistic_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/cubit/auth_otp_change_password_cubit.dart';
