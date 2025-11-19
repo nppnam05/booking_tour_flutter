@@ -51,7 +51,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
         return cubit;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         appBar: AppBar(title: Text(tour.title), centerTitle: false),
         body: SingleChildScrollView(
           child: Column(
@@ -641,11 +641,6 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.gray),
                   ),
                   child: Row(
                     children: [

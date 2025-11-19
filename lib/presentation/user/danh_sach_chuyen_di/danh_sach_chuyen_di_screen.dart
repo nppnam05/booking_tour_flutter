@@ -54,6 +54,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: AppBar(
           centerTitle: false,
           title: const Text(
