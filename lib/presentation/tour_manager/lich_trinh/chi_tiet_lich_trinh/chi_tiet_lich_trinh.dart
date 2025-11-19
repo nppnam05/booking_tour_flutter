@@ -45,7 +45,8 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
     _controllerTour.text = s.tour.title;
     _controllerNguoiToiDa.text = s.maxSlot.toString();
     _controllerGia.text = s.finalPrice.toString();
-    _controllerTienCoc.text = s.desposit.toString();
+    _controllerTienCoc.text =
+        (s.finalPrice * s.desposit / 100).round().toString();
     _openDate = s.openDate;
     _startDate = s.startDate;
     _endDate = s.endDate;
@@ -67,11 +68,9 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(
-          "Chi tiết lịch trình",
-          style: AppFonts.textWhite.copyWith(fontWeight: FontWeight.bold),
-        ),
+        title: Text("Chi tiết lịch trình"),
         backgroundColor: AppColors.button,
         centerTitle: true,
       ),
@@ -99,6 +98,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
 
   Future<void> _handleSave() async {
     if (_schedule == null) return;
+
     if (_openDate == null ||
         _startDate == null ||
         _endDate == null ||
@@ -108,9 +108,29 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
       );
       return;
     }
+
     final maxSlot = int.tryParse(_controllerNguoiToiDa.text);
     final finalPrice = int.tryParse(_controllerGia.text);
-    final desposit = int.tryParse(_controllerTienCoc.text);
+    final depositAmount = int.tryParse(_controllerTienCoc.text);
+
+    if (finalPrice == null || finalPrice <= 0 || finalPrice > 100000000) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Giá phải trong (0, 100.000.000]')),
+      );
+      return;
+    }
+
+    if (depositAmount == null ||
+        depositAmount < 0 ||
+        depositAmount > finalPrice) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tiền cọc phải <= giá tour và >= 0')),
+      );
+      return;
+    }
+
+    final percentDeposit = ((depositAmount / finalPrice) * 100).round();
+
     if (maxSlot == null || maxSlot <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vui lòng nhập số người tối đa hợp lệ')),
@@ -126,25 +146,11 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
       );
       return;
     }
-
     if (_endDate!.isBefore(_startDate!)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Ngày kết thúc không được nhỏ hơn ngày bắt đầu'),
         ),
-      );
-      return;
-    }
-
-    if (finalPrice == null || finalPrice <= 0 || finalPrice > 100000000) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Giá phải trong (0, 100.000.000]')),
-      );
-      return;
-    }
-    if (desposit == null || desposit < 0 || desposit > 100) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tiền cọc là phần trăm [0,100]')),
       );
       return;
     }
@@ -162,21 +168,23 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
       gatheringTime:
           "${twoDigits(_gatheringTime!.hour)}:${twoDigits(_gatheringTime!.minute)}",
       code: _schedule!.code,
-      desposit: desposit,
+      desposit: percentDeposit,
     );
 
     final cubit = ChiTietLichTrinhCubit();
     final ok = await cubit.updateSchedule(request);
     if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          ok ? 'Cập nhật lịch trình thành công' : 'Cập nhật thất bại',
+        ),
+      ),
+    );
+
     if (ok) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cập nhật lịch trình thành công')),
-      );
       Navigator.pushNamed(context, RouteName.scheduleTourmanager);
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Cập nhật thất bại')));
     }
   }
 
@@ -190,6 +198,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
             "Mã lịch trình",
             "Mã lịch trình",
             AppColors.gray,
+            inputBackgroundColor: AppColors.backgroundDisable,
           ),
         ),
 
@@ -200,6 +209,7 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
             "Mã Tour",
             "Tour",
             AppColors.gray,
+            inputBackgroundColor: AppColors.backgroundDisable,
           ),
         ),
 
@@ -210,16 +220,16 @@ class _ChiTietTrinhScreenState extends State<ChiTietTrinhScreen> {
           _controllerNguoiToiDa,
           "Người tối đa",
           "Người tối đa",
-          Colors.grey.shade100,
+          AppColors.white,
         ),
 
-        notIconToggleInputField(_controllerGia,"Giá", "Giá", AppColors.gray),
+        notIconToggleInputField(_controllerGia, "Giá", "Giá", AppColors.white),
 
         notIconToggleInputField(
           _controllerTienCoc,
           "Số tiền cọc",
           "Số tiền cọc",
-          AppColors.gray,
+          AppColors.white,
         ),
 
         //Thời gian tập hợp

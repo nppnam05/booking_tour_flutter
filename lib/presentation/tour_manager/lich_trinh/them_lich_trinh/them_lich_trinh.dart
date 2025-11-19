@@ -1,11 +1,11 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/domain/tour_option.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/cubit/them_lich_trinh_cubit.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
@@ -33,6 +33,14 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
   List<TourOption> _tourOptions = const [];
 
   @override
+  void initState() {
+    super.initState();
+    _openDate = DateTime.now();
+    _startDate = DateTime.now();
+    _endDate = DateTime.now();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)?.settings.arguments;
@@ -56,7 +64,15 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
     }
     final maxSlot = int.tryParse(_controllerNguoiToiDa.text);
     final finalPrice = int.tryParse(_controllerGia.text);
-    final desposit = int.tryParse(_controllerTienCoc.text);
+    final desposit = int.tryParse(_controllerTienCoc.text) ?? 0;
+
+    if (finalPrice == null || finalPrice <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Vui lòng nhập giá hợp lệ')));
+      return;
+    }
+    final percentDeposit = (desposit / finalPrice * 100).round();
 
     if (maxSlot == null || maxSlot <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -83,14 +99,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
       return;
     }
 
-    if (finalPrice == null || finalPrice <= 0) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Vui lòng nhập giá hợp lệ')));
-      return;
-    }
-
-    if (desposit == null || desposit < 0) {
+    if (percentDeposit < 0 || percentDeposit > 100) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vui lòng nhập số tiền cọc hợp lệ')),
       );
@@ -109,7 +118,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
       gatheringTime:
           "${twoDigits(_gatheringTime!.hour)}:${twoDigits(_gatheringTime!.minute)}",
       code: "string",
-      desposit: desposit,
+      desposit: percentDeposit,
     );
 
     try {
@@ -132,6 +141,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
+        backgroundColor: AppColors.white,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text(
@@ -178,7 +188,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
           "Người tối đa",
           AppColors.gray,
         ),
-        notIconToggleInputField(_controllerGia, "Giá","Giá", AppColors.gray),
+        notIconToggleInputField(_controllerGia, "Giá", "Giá", AppColors.gray),
         notIconToggleInputField(
           _controllerTienCoc,
           "Số tiền cọc",
@@ -191,27 +201,90 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
   }
 
   Widget _buildTour() {
-    TourOption? selectedOption;
-    if (_selectedTourId != null) {
-      for (final o in _tourOptions) {
-        if (o.id == _selectedTourId) {
-          selectedOption = o;
-          break;
-        }
-      }
-    }
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Tour",
+            style: AppFonts.text14.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8.0),
+          InkWell(
+            onTap: () async {
+              if (_tourOptions.isEmpty) return;
 
-    return DropDownWidget<TourOption>(
-      title: "Tour",
-      options: _tourOptions,
-      value: selectedOption,
-      itemToString: (item) => item.title,
-      hintText: "Chọn tour",
-      onChanged: (option) {
-        setState(() {
-          _selectedTourId = option?.id;
-        });
-      },
+              final selected = await DialogHelper.selectOne<TourOption>(
+                context: context,
+                title: "Chọn tour",
+                items: _tourOptions,
+                display: (item) => item.title,
+                searchHint: "Tìm kiếm tour...",
+                initial: _tourOptions.firstWhere(
+                  (e) => e.id == _selectedTourId,
+                  orElse:
+                      () => TourOption(
+                        id: 0,
+                        title: "Chọn tour",
+                        price: 0,
+                        percentDeposit: 0,
+                      ),
+                ),
+              );
+
+              if (selected != null) {
+                setState(() {
+                  _selectedTourId = selected.id;
+                  _controllerGia.text = selected.price.toString();
+                  _controllerTienCoc.text =
+                      ((selected.price * selected.percentDeposit) / 100)
+                          .round()
+                          .toString();
+                });
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _tourOptions
+                          .firstWhere(
+                            (e) => e.id == _selectedTourId,
+                            orElse:
+                                () => TourOption(
+                                  id: 0,
+                                  title: "Chọn tour",
+                                  price: 0,
+                                  percentDeposit: 0,
+                                ),
+                          )
+                          .title,
+                      style: TextStyle(
+                        color:
+                            _selectedTourId != null
+                                ? Colors.black
+                                : Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
