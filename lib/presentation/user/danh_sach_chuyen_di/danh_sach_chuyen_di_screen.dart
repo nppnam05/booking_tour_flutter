@@ -178,7 +178,6 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                     ),
 
                   const SliverToBoxAdapter(child: SizedBox(height: 16)),
-
                   if (state.mostRecent.isNotEmpty)
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {

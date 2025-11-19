@@ -37,14 +37,17 @@ class TripCard extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
-                          color: Colors.grey[300],
-                          child: Icon(Icons.image, color: Colors.grey[600]),
+                          color: AppColors.backgroundDisable,
+                          child: Icon(Icons.image, color: AppColors.white),
                         );
                       },
                     )
                     : Container(
-                      color: Colors.grey[300],
-                      child: Icon(Icons.image, color: Colors.grey[600]),
+                      color: AppColors.backgroundDisable,
+                      child: Icon(
+                        Icons.image,
+                        color: AppColors.backgroundDisable,
+                      ),
                     ),
           ),
           Padding(
