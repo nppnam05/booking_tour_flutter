@@ -13,6 +13,7 @@ import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/boo
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/cubit/schedule_detail_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,6 +40,7 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => ReviewScheduleCubit()),
         BlocProvider(create: (_) => DetailPaidScheduleCubit()),
         BlocProvider(create: (_) => DanhSachLichTrinhBookingCubit()),
+        BlocProvider(create: (_) => ThongBaoCubit()),
       ],
 
       child: child,

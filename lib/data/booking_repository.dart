@@ -12,6 +12,7 @@ import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
+import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
@@ -36,7 +37,6 @@ import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
-import 'package:booking_tour_flutter/data/response/schedule_user_completed_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
@@ -63,7 +63,6 @@ import 'package:booking_tour_flutter/domain/schedule_detail.dart'
     hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
-import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
@@ -213,7 +212,7 @@ abstract class BookingRepository {
     final String name,
     final String email,
     final String phone,
-    final bool refundStatus
+    final bool refundStatus,
   });
 
   Future<Either<Failure, Place>> createPlace({
@@ -283,6 +282,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
   Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
+  Future<Either<Failure, bool>> readReview(ReadReviewRequets request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1157,7 +1157,7 @@ class BookingRepositoryImp implements BookingRepository {
     String? avatarPath,
     String? bankBranch,
     String? bankNumber,
-    bool? refundStatus
+    bool? refundStatus,
   }) async {
     try {
       final body = {
@@ -1208,8 +1208,7 @@ class BookingRepositoryImp implements BookingRepository {
       var data = responses.data as List<dynamic>;
 
       var scheduleRPs = data.map(
-        (e) =>
-            ScheduleTourmanagerResponse.fromJson(e as Map<String, dynamic>),
+        (e) => ScheduleTourmanagerResponse.fromJson(e as Map<String, dynamic>),
       );
       var schedules = scheduleRPs.map((e) => e.map()).toList();
       return Right(schedules);
@@ -1397,11 +1396,21 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  
+
   @override
-  Future<Either<Failure, User>> loginByEmail({required String email, required String name, required String photoUrl, required String password}) async {
-    try{
-      final login = LoginEmailRequest(email: email, name: name, password: password, photoUrl: photoUrl);
+  Future<Either<Failure, User>> loginByEmail({
+    required String email,
+    required String name,
+    required String photoUrl,
+    required String password,
+  }) async {
+    try {
+      final login = LoginEmailRequest(
+        email: email,
+        name: name,
+        password: password,
+        photoUrl: photoUrl,
+      );
 
       final response = await _coreService.loginByEmail(login);
 
@@ -1412,8 +1421,20 @@ class BookingRepositoryImp implements BookingRepository {
       var user = userResponse.map();
 
       return Right(user);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
     }
-    catch(e){
+  }
+
+  @override
+  Future<Either<Failure, bool>> readReview(ReadReviewRequets request) async {
+    try {
+      final response = await _coreService.readReview(request);
+
+      final data = response.data as bool;
+
+      return Right(data);
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }

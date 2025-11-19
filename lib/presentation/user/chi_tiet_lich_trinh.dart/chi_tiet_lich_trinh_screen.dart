@@ -51,6 +51,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
         return cubit;
       },
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: AppBar(title: Text(tour.title), centerTitle: false),
         body: SingleChildScrollView(
           child: Column(
@@ -139,7 +140,6 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                   ),
                 ],
               ),
-
               Container(
                 height: 90,
                 margin: const EdgeInsets.symmetric(vertical: 12),
@@ -182,6 +182,9 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                 ),
               ),
 
+              const SizedBox(height: 8),
+              Divider(color: AppColors.secondary, thickness: 8, height: 1),
+              const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -261,8 +264,22 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
 
+              const SizedBox(height: 20),
+
+              const SizedBox(height: 8),
+              Divider(color: AppColors.secondary, thickness: 8, height: 1),
+              const SizedBox(height: 8),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
                     Text(
                       "Các điểm đến",
                       style: TextStyle(
@@ -327,6 +344,21 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              const SizedBox(height: 8),
+              Divider(color: AppColors.secondary, thickness: 8, height: 1),
+              const SizedBox(height: 8),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const SizedBox(height: 20),
                     Text(
                       "Mô tả",
@@ -338,7 +370,20 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                     const SizedBox(height: 8),
 
                     Text('Mô tả: ${tour.description}'),
+                  ],
+                ),
+              ),
 
+              const SizedBox(height: 20),
+              const SizedBox(height: 8),
+              Divider(color: AppColors.secondary, thickness: 8, height: 1),
+              const SizedBox(height: 8),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const SizedBox(height: 20),
                     Text(
                       "Đánh giá",
@@ -477,7 +522,15 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                         );
                       },
                     ),
+                  ],
+                ),
+              ),
 
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     SizedBox(
                       width: double.infinity,
                       child: BkButton(
@@ -589,11 +642,6 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                     horizontal: 10,
                     vertical: 6,
                   ),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.gray.withOpacity(0.4)),
-                  ),
                   child: Row(
                     children: [
                       Text(
@@ -637,6 +685,8 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                 ),
             ],
           ),
+          const SizedBox(height: 16),
+          Divider(color: AppColors.gray, thickness: 1, height: 1),
         ],
       ),
     );
