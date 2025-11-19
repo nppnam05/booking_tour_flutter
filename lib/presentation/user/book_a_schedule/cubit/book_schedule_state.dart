@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/widgets/payment_option.dart';
 
 class BookScheduleState {
-  final ScheduleBook schedule;
+  final ScheduleTourmanager schedule;
   final int idSchedule;
   final int idBooking;
   final HinhThuc hinhThuc;
@@ -24,7 +25,7 @@ class BookScheduleState {
   });
 
   BookScheduleState copyWith({
-    ScheduleBook? schedule,
+    ScheduleTourmanager? schedule,
     int? idSchedule,
     int? idBooking,
     HinhThuc? hinhThuc,
