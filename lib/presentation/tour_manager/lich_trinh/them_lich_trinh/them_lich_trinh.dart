@@ -64,7 +64,15 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
     }
     final maxSlot = int.tryParse(_controllerNguoiToiDa.text);
     final finalPrice = int.tryParse(_controllerGia.text);
-    final desposit = int.tryParse(_controllerTienCoc.text);
+    final desposit = int.tryParse(_controllerTienCoc.text) ?? 0;
+
+    if (finalPrice == null || finalPrice <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Vui lòng nhập giá hợp lệ')));
+      return;
+    }
+    final percentDeposit = (desposit / finalPrice * 100).round();
 
     if (maxSlot == null || maxSlot <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -91,14 +99,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
       return;
     }
 
-    if (finalPrice == null || finalPrice <= 0) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Vui lòng nhập giá hợp lệ')));
-      return;
-    }
-
-    if (desposit == null || desposit < 0) {
+    if (percentDeposit < 0 || percentDeposit > 100) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vui lòng nhập số tiền cọc hợp lệ')),
       );
@@ -117,7 +118,7 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
       gatheringTime:
           "${twoDigits(_gatheringTime!.hour)}:${twoDigits(_gatheringTime!.minute)}",
       code: "string",
-      desposit: desposit,
+      desposit: percentDeposit,
     );
 
     try {
@@ -200,16 +201,6 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
   }
 
   Widget _buildTour() {
-    TourOption? selectedOption;
-    if (_selectedTourId != null) {
-      for (final o in _tourOptions) {
-        if (o.id == _selectedTourId) {
-          selectedOption = o;
-          break;
-        }
-      }
-    }
-
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -233,12 +224,26 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
                 items: _tourOptions,
                 display: (item) => item.title,
                 searchHint: "Tìm kiếm tour...",
-                initial: selectedOption,
+                initial: _tourOptions.firstWhere(
+                  (e) => e.id == _selectedTourId,
+                  orElse:
+                      () => TourOption(
+                        id: 0,
+                        title: "Chọn tour",
+                        price: 0,
+                        percentDeposit: 0,
+                      ),
+                ),
               );
 
               if (selected != null) {
                 setState(() {
                   _selectedTourId = selected.id;
+                  _controllerGia.text = selected.price.toString();
+                  _controllerTienCoc.text =
+                      ((selected.price * selected.percentDeposit) / 100)
+                          .round()
+                          .toString();
                 });
               }
             },
@@ -253,10 +258,21 @@ class _ThemLichTrinhScreenState extends State<ThemLichTrinhScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      selectedOption?.title ?? "Chọn tour",
+                      _tourOptions
+                          .firstWhere(
+                            (e) => e.id == _selectedTourId,
+                            orElse:
+                                () => TourOption(
+                                  id: 0,
+                                  title: "Chọn tour",
+                                  price: 0,
+                                  percentDeposit: 0,
+                                ),
+                          )
+                          .title,
                       style: TextStyle(
                         color:
-                            selectedOption != null
+                            _selectedTourId != null
                                 ? Colors.black
                                 : Colors.grey[600],
                       ),
