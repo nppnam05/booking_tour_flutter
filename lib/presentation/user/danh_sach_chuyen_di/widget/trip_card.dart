@@ -66,20 +66,19 @@ class TripCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${trip.day} ngày  ${trip.provinces.map((p) => p.name).join(", ")}',
+                  '${trip.day}N  ${trip.provinces.map((p) => p.name).join(", ")}',
                   style: const TextStyle(
                     fontSize: AppFonts.fontSize12,
-                    color: AppColors.gray,
+                    fontWeight: FontWeight.bold,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  formatCurrency(trip.price),
+                  '${formatCurrency(trip.price)} VND',
                   style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.gray,
+                    fontWeight: FontWeight.bold,
                     fontSize: AppFonts.fontSize12,
                   ),
                 ),

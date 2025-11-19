@@ -96,6 +96,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                             style: TextStyle(
                               fontSize: AppFonts.fontSize14,
                               color: AppColors.black,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -104,6 +105,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                             style: TextStyle(
                               fontSize: AppFonts.fontSize14,
                               color: AppColors.black,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -133,27 +135,40 @@ class _TripCardDetailState extends State<TripCardDetail> {
 
                   const SizedBox(height: 12),
 
-                  Row(
-                    children: [
-                      ...List.generate(5, (index) {
-                        return Icon(
-                          Icons.star,
-                          color:
-                              index < widget.trip.totalStars
-                                  ? AppColors.warning
-                                  : AppColors.secondary,
-                          size: 18,
-                        );
-                      }),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${widget.trip.totalStars} (${widget.trip.totalReviews} đánh giá)',
-                        style: const TextStyle(
-                          fontSize: AppFonts.fontSize14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                  Builder(
+                    builder: (context) {
+                      final averageStars =
+                          widget.trip.totalReviews > 0
+                              ? widget.trip.totalStars /
+                                  widget.trip.totalReviews
+                              : 0.0;
+                      final roundedStars = averageStars.round();
+
+                      return Row(
+                        children: [
+                          ...List.generate(5, (index) {
+                            return Icon(
+                              Icons.star,
+                              color:
+                                  index < roundedStars
+                                      ? AppColors.warning
+                                      : AppColors.secondary,
+                              size: 18,
+                            );
+                          }),
+                          const SizedBox(width: 8),
+                          Text(
+                            widget.trip.totalReviews > 0
+                                ? '${averageStars.toStringAsFixed(1)} (${widget.trip.totalReviews} đánh giá)'
+                                : '0 (0 đánh giá)',
+                            style: const TextStyle(
+                              fontSize: AppFonts.fontSize14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
 
                   AnimatedCrossFade(
