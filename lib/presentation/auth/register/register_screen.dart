@@ -58,7 +58,7 @@ class RegisterScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Email đã có người sử dụng')),
           );
-        } else if (!state.isEmailExist) {
+        } else if (state.checkSendOtp) {
           // tạo user đẩy sang màn tiếp theo
           var user = CreateUserRequest(
             roleId: 3,
@@ -75,15 +75,15 @@ class RegisterScreen extends StatelessWidget {
 
           final cubitOtp = context.read<AuthOtpCubit>();
           cubitOtp.setUser(user);
-          
-          // gửi mã otp
-          var email = controllerEmail.text.trim();
-          await _cubit.sendOTP(email);
 
           await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AuthOtpScreen()),
           );
+        } else if (!state.isEmailExist) {
+          // gửi mã otp
+          var email = controllerEmail.text.trim();
+          await _cubit.sendOTP(email);
         }
       },
       child: Padding(
@@ -187,7 +187,7 @@ class RegisterScreen extends StatelessWidget {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   var result = await _cubit.checkEmailAccount(
-                    controllerEmail.text.trim()
+                    controllerEmail.text.trim(),
                   );
                 }
               },

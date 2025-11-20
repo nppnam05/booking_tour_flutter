@@ -11,7 +11,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   static final registerRepository = getIt<BookingRepository>();
 
   RegisterCubit()
-    : super(RegisterState(isEmailExist: false));
+    : super(RegisterState(isEmailExist: false, checkSendOtp: false));
 
   Future<void> checkEmailAccount(String email) async {
     await DialogHelper.showLoadingDialog();
@@ -20,16 +20,9 @@ class RegisterCubit extends Cubit<RegisterState> {
       checkEmailAccount: CheckAccountRequest(email: email),
     );
 
-    resualt.fold(
-      (left) {
-        emit(state.coppyWithError());
-      },
-      (checkes) {
-        emit(
-          state.copyWith(isEmailExist: checkes),
-        );
-      },
-    );
+    resualt.fold((left) {}, (checkes) {
+      emit(state.copyWith(isEmailExist: checkes));
+    });
 
     DialogHelper.dismissDialog();
   }
@@ -42,13 +35,13 @@ class RegisterCubit extends Cubit<RegisterState> {
     resualt.fold(
       (left) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Email này không gửi tin nhắn vào được')),
+          const SnackBar(
+            content: Text('Email này không gửi tin nhắn vào được'),
+          ),
         );
       },
       (check) {
-         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Đã gửi tin nhắn thành công')),
-        );
+        emit(state.copyWith(checkSendOtp: check));
       },
     );
   }
