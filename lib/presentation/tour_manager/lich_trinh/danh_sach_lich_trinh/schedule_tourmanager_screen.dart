@@ -11,7 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
 
 class ScheduleTourmanagerScreen extends StatelessWidget {
-  const ScheduleTourmanagerScreen({Key? key}) : super(key: key);
+  const ScheduleTourmanagerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

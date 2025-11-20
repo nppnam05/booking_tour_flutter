@@ -40,7 +40,7 @@ class _DatePickerFieldState extends State<DatePickerFieldWidget> {
             final pickerDate = await showDatePicker(
               context: context,
               initialEntryMode: DatePickerEntryMode.calendarOnly,
-              initialDate: DateTime.now(),
+              initialDate: selectedDate ?? DateTime.now(),
               firstDate: DateTime(2025),
               lastDate: DateTime(3000),
             );

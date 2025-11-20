@@ -103,7 +103,7 @@ class _ThemDiaDiemHoatDongScreenState extends State<ThemDiaDiemHoatDongScreen> {
                               controller: _tenDiaDiemController,
                               hintText: 'Nhập tên địa điểm',
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
+                                if (value == null || value.trim().isEmpty) {
                                   return 'Vui lòng nhập tên địa điểm';
                                 }
                                 return null;

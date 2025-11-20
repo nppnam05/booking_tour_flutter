@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
+import 'package:booking_tour_flutter/presentation/admin/account%20management/account_management_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -26,7 +27,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/chi_ti
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/them_lich_trinh.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/book_schedule_screen.dart';
-import 'package:booking_tour_flutter/presentation/user/bottombar_navigation.dart';
+import 'package:booking_tour_flutter/presentation/user/main_user.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/pay_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/schedule_detail_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/danh_sach_lich_trinh_booking_screen.dart';
@@ -96,6 +97,7 @@ class RouteName {
   static final paySchedule = "pay_schedule";
   static final update_password_user = "update_password_user";
   static final main_user = "main_user";
+  static final accountManagement = "account_management";
 }
 
 class RouteManager {
@@ -154,5 +156,6 @@ class RouteManager {
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user: (context) => UpdatePasswordScreen(),
     RouteName.main_user: (context) => MainUser(),
+    RouteName.accountManagement: (context) => AccountManagementScreen(),
   };
 }

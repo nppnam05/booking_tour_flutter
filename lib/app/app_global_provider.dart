@@ -3,7 +3,6 @@ import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_c
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/cubit/auth_otp_change_password_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/cubit/change_password_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_cubit.dart';
-import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/schedule_assignment/cubit/schedule_assignment_cubit.dart';
@@ -13,6 +12,7 @@ import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/boo
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/cubit/schedule_detail_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,6 +39,7 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => ReviewScheduleCubit()),
         BlocProvider(create: (_) => DetailPaidScheduleCubit()),
         BlocProvider(create: (_) => DanhSachLichTrinhBookingCubit()),
+        BlocProvider(create: (_) => ThongBaoCubit()),
       ],
 
       child: child,

@@ -28,6 +28,7 @@ class DanhSachLichTrinhUserScreen extends StatelessWidget {
       create: (_) => DanhSachLichTrinhUserCubit()..loadSchedules(tourId),
       child: Scaffold(
         appBar: AppBar(title: Text("Booking tour")),
+        backgroundColor: AppColors.white,
         body:
             BlocBuilder<DanhSachLichTrinhUserCubit, DanhSachLichTrinhUserState>(
               builder: (context, state) {

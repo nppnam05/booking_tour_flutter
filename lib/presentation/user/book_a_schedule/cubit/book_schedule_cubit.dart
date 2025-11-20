@@ -3,6 +3,7 @@ import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/payment_option.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,7 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
   BookScheduleCubit()
     : super(
         BookScheduleState(
-          schedule: ScheduleBook.empty(),
+          schedule: ScheduleTourmanager.empty(),
           idSchedule: 0,
           idBooking: 0,
           hinhThuc: HinhThuc.thanhtoantoanbo,
@@ -33,7 +34,7 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
           schedule: schedule,
           tienThanhToanHet: schedule.finalPrice,
           tienThanhToanCoc:
-              (schedule.finalPrice * schedule.tour.percentDeposit / 100)
+              (schedule.finalPrice * schedule.desposit / 100)
                   .toInt(),
           totalPrice: schedule.finalPrice,
         ),

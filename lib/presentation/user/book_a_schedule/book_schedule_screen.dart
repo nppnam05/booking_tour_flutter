@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/app/validate_helper.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_state.dart';
@@ -207,11 +208,11 @@ class BookScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget scheduleInfoCard(ScheduleBook schedule) {
+  Widget scheduleInfoCard(ScheduleTourmanager schedule) {
     var startDate = schedule.startDate;
     var endDate = schedule.endDate;
 
-    var locationName = schedule.tour.locations
+    var locationName = schedule.tour.provinces
         .map((loc) => loc.name)
         .toSet() // Loại bỏ trùng lặp
         .join(', ');

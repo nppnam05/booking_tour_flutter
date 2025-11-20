@@ -3,6 +3,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dar
 import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/domain/pay_booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
@@ -150,11 +151,11 @@ class PayScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget scheduleInfoCard(ScheduleBook schedule) {
+  Widget scheduleInfoCard(ScheduleTourmanager schedule) {
     var startDate = schedule.startDate;
     var endDate = schedule.endDate;
 
-    var locationName = schedule.tour.locations
+    var locationName = schedule.tour.provinces
         .map((loc) => loc.name)
         .join(', ');
 
