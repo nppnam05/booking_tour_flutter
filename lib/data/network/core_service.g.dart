@@ -241,17 +241,19 @@ class _CoreService implements CoreService {
   }
 
   @override
-  Future<RestResponse> checkAccount(Map<String, dynamic> checkAccount) async {
+  Future<RestResponse> checkEmailAccount(
+    CheckAccountRequest checkAccount,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(checkAccount);
+    _data.addAll(checkAccount.toJson());
     final _options = _setStreamType<RestResponse>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/User/check-account',
+            '/User/check-email-account',
             queryParameters: queryParameters,
             data: _data,
           )

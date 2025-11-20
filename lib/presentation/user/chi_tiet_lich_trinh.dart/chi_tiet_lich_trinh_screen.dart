@@ -317,7 +317,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
 
                         cubit.setIdSchedule(schedule.id);
 
-                        cubit.loadData();
+                        await cubit.loadData();
 
                         await Navigator.pushNamed(
                           context,

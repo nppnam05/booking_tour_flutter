@@ -52,7 +52,6 @@ class PayScheduleScreen extends StatelessWidget {
   Widget qrCode(String linkQR) {
     return Column(
       children: [
-        SizedBox(height: 12),
         Image.network(
           linkQR,
           fit: BoxFit.cover,
@@ -68,8 +67,9 @@ class PayScheduleScreen extends StatelessWidget {
   }
 
   Widget inforUserCard(PayBooking pay) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return Container(
+      color: AppColors.white,
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -96,7 +96,10 @@ class PayScheduleScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Tổng số tiền", style: AppFonts.text18),
-                    Text("${FormatterHelper.formatCurrency(pay.totalPrice)}", style: AppFonts.text18),
+                    Text(
+                      "${FormatterHelper.formatCurrency(pay.totalPrice)}",
+                      style: AppFonts.text18,
+                    ),
                   ],
                 ),
                 SizedBox(height: 12),
@@ -154,7 +157,6 @@ class PayScheduleScreen extends StatelessWidget {
 
     var locationName = schedule.tour.provinces
         .map((loc) => loc.name)
-        .toSet() // Loại bỏ trùng lặp
         .join(', ');
 
     return Container(

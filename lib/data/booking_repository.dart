@@ -120,8 +120,8 @@ abstract class BookingRepository {
 
   Future<Either<Failure, bool>> sendOTP(String email);
 
-  Future<Either<Failure, List<bool>>> checkAccount({
-    required CheckAccountRequest checkAccount,
+  Future<Either<Failure, bool>> checkEmailAccount({
+    required CheckAccountRequest checkEmailAccount,
   });
 
   Future<Either<Failure, bool>> registerUser({
@@ -1218,25 +1218,6 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<bool>>> checkAccount({
-    required CheckAccountRequest checkAccount,
-  }) async {
-    try {
-      final jsonData = checkAccount.toJson();
-
-      var responses = await _coreService.checkAccount(jsonData);
-
-      var data = responses.data as List<dynamic>;
-
-      var result = data.map((e) => e as bool).toList();
-
-      return Right(result);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
   Future<Either<Failure, bool>> sendOTP(String email) async {
     try {
       var response = await _coreService.sendOTP({"email": email});
@@ -1295,7 +1276,9 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, ScheduleTourmanager>> getScheduleBookById(int id) async {
+  Future<Either<Failure, ScheduleTourmanager>> getScheduleBookById(
+    int id,
+  ) async {
     try {
       var response = await _coreService.getScheduleById(id);
 
@@ -1434,6 +1417,21 @@ class BookingRepositoryImp implements BookingRepository {
       final data = response.data as bool;
 
       return Right(data);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkEmailAccount({
+    required CheckAccountRequest checkEmailAccount,
+  }) async {
+    try {
+      var responses = await _coreService.checkEmailAccount(checkEmailAccount);
+
+      var result = responses.data as bool;
+
+      return Right(result);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

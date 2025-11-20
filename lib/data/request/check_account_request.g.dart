@@ -7,11 +7,8 @@ part of 'check_account_request.dart';
 // **************************************************************************
 
 CheckAccountRequest _$CheckAccountRequestFromJson(Map<String, dynamic> json) =>
-    CheckAccountRequest(
-      email: json['email'] as String,
-      password: json['password'] as String,
-    );
+    CheckAccountRequest(email: json['email'] as String);
 
 Map<String, dynamic> _$CheckAccountRequestToJson(
   CheckAccountRequest instance,
-) => <String, dynamic>{'email': instance.email, 'password': instance.password};
+) => <String, dynamic>{'email': instance.email};
