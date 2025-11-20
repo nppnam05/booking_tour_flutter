@@ -18,14 +18,16 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
   final List<String> items = [
     "Tất cả",
+    "Quản lý chuyến",
     "Kế toán",
     "Hướng dẫn viên",
-    "Quản lý chuyến",
+    "Người tiếp nhận",
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: const Text('Quản lý tài khoản'),
         backgroundColor: AppColors.backgroundAppBarTheme,
@@ -110,7 +112,15 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
               ),
             ),
             const SizedBox(height: 4),
-            BkButton(onPressed: () {}, title: "Thêm"),
+            BkButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  "create_staff_account_part1_screen",
+                );
+              },
+              title: "Thêm",
+            ),
             const SizedBox(height: 4),
           ],
         ),
