@@ -26,6 +26,7 @@ class AppColors {
   static const borderButton = Color(0xFF026CAD);
 
   static final Color lightBlue = Colors.lightBlue[50]!;
+  static final Color lightRed = Color(0xFFfdf9f9);
 
   static const Color error = Color(0xFFDE6767);
   static const Color info = Color(0xFF6D9ADA);

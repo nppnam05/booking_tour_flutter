@@ -98,7 +98,7 @@ abstract class BookingRepository {
     required int userId,
   });
 
-  Future<Either<Failure, PayBooking>> getBookingById({required int id});
+  Future<Either<Failure, Booking>> getBookingById({required int id});
 
   Future<Either<Failure, int>> createBooking({
     required BookingScheduleRequest booking,
@@ -282,6 +282,11 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
   Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
+  Future<Either<Failure, List<ScheduleTourmanager>>> getScheduleForAccountant();
+
+  Future<Either<Failure, List<User>>> getRefundUsers();
+  Future<Either<Failure, User>> cancelRefund(int userId);
+  Future<Either<Failure, User>> submitRefund(int userId);
   Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request);
 }
 
@@ -1308,13 +1313,13 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, PayBooking>> getBookingById({required int id}) async {
+  Future<Either<Failure, Booking>> getBookingById({required int id}) async {
     try {
       var response = await _coreService.getBookingById(id);
 
       var data = response.data as Map<String, dynamic>;
 
-      var result = PayBookingResponse.fromJson(data);
+      var result = BookingResponse.fromJson(data);
 
       var payBooking = result.map();
 
@@ -1398,6 +1403,74 @@ class BookingRepositoryImp implements BookingRepository {
       final response = await _coreService.loginByEmail(login);
 
       final data = response.data as Map<String, dynamic>;
+
+      var userResponse = UserResponse.fromJson(data);
+
+      var user = userResponse.map();
+
+      return Right(user);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleTourmanager>>>
+  getScheduleForAccountant() async {
+    try {
+      var responses = await _coreService.getScheduleForAccountant();
+      var data = responses.data as List<dynamic>;
+
+      var scheduleRPs = data.map(
+        (e) => ScheduleTourmanagerResponse.fromJson(e as Map<String, dynamic>),
+      );
+      var schedules = scheduleRPs.map((e) => e.map()).toList();
+      return Right(schedules);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<User>>> getRefundUsers() async {
+    try {
+      var responses = await _coreService.getRefundUsers();
+      var data = responses.data as List<dynamic>;
+
+      var userResponses =
+          data
+              .map((i) => UserResponse.fromJson(i as Map<String, dynamic>))
+              .toList();
+
+      var user = userResponses.map((i) => i.map()).toList();
+
+      return Right(user);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> cancelRefund(int userId) async {
+    try {
+      var responses = await _coreService.cancelRefund(userId);
+      var data = responses.data as Map<String, dynamic>;
+
+      var userResponse = UserResponse.fromJson(data);
+
+      var user = userResponse.map();
+
+      return Right(user);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> submitRefund(int userId) async {
+    try {
+      var responses = await _coreService.submitRefund(userId);
+      var data = responses.data as Map<String, dynamic>;
 
       var userResponse = UserResponse.fromJson(data);
 
