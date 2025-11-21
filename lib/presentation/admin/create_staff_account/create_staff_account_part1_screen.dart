@@ -1,6 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/text_input.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/text_input.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
 import 'package:flutter/material.dart';

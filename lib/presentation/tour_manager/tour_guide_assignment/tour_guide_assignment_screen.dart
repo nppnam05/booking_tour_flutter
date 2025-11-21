@@ -5,13 +5,12 @@ import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assignment/cubit/tour_guide_assignment_state.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/search_bar_new.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/search_bar_new.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentScreen extends StatelessWidget {
-
   final TextEditingController _controllerSearch = TextEditingController();
 
   @override

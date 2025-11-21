@@ -45,8 +45,8 @@ import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/danh_sach_lich_trinh_user_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/thong_bao_screen.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/drawer_bar/drawer_bar.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
 
 class RouteName {
