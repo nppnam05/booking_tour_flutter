@@ -3,9 +3,9 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dar
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/domain/tour_option.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/date_picker.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/datepicker_and_time/date_picker.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/datepicker_and_time/time_picker.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/them_lich_trinh/cubit/them_lich_trinh_cubit.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';

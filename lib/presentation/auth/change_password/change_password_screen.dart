@@ -73,7 +73,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if(value == null || value.isEmpty){
-                        return "bạn chưa điền gì vào ô này";
+                        return "vui lòng điền mật khẩu mới vào ô này";
                       }
                       return null;
                     },
@@ -85,7 +85,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if(value == null || value.isEmpty){
-                        return "bạn chưa điền gì vào ô này";
+                        return "vui lòng điền lại mật khẩu mới vào ô này";
                       }
                       else if(value != _controllerFirstPassword.text.trim()){
                         return "Mật khẩu không trùng";

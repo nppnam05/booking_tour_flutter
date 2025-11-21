@@ -32,7 +32,7 @@ class ThongBaoCubit extends Cubit<ThongBaoState> {
       isRead: isRead,
     );
 
-    final result = await _repository.readReview(readReviewRequets);
+    final result = await _repository.notifaiIsRead(readReviewRequets);
     result.fold((failure) => emit(state.copyWith(isLoading: false)), (items) {
       final updatedItems =
           state.items.map((notification) {

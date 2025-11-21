@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
@@ -200,7 +201,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                             Row(
                               children: [
                                 Text(
-                                  '${widget.trip.price}/',
+                                  '${formatCurrency(widget.trip.price)} VND/',
                                   style: const TextStyle(
                                     fontSize: AppFonts.fontSize16,
                                     fontWeight: FontWeight.bold,
