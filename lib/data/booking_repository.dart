@@ -12,6 +12,7 @@ import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
+import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
@@ -36,7 +37,6 @@ import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
-import 'package:booking_tour_flutter/data/response/schedule_user_completed_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
@@ -63,7 +63,6 @@ import 'package:booking_tour_flutter/domain/schedule_detail.dart'
     hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
-import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
@@ -121,8 +120,8 @@ abstract class BookingRepository {
 
   Future<Either<Failure, bool>> sendOTP(String email);
 
-  Future<Either<Failure, List<bool>>> checkAccount({
-    required CheckAccountRequest checkAccount,
+  Future<Either<Failure, bool>> checkEmailAccount({
+    required CheckAccountRequest checkEmailAccount,
   });
 
   Future<Either<Failure, bool>> registerUser({
@@ -288,6 +287,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<User>>> getRefundUsers();
   Future<Either<Failure, User>> cancelRefund(int userId);
   Future<Either<Failure, User>> submitRefund(int userId);
+  Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1223,25 +1223,6 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<bool>>> checkAccount({
-    required CheckAccountRequest checkAccount,
-  }) async {
-    try {
-      final jsonData = checkAccount.toJson();
-
-      var responses = await _coreService.checkAccount(jsonData);
-
-      var data = responses.data as List<dynamic>;
-
-      var result = data.map((e) => e as bool).toList();
-
-      return Right(result);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
   Future<Either<Failure, bool>> sendOTP(String email) async {
     try {
       var response = await _coreService.sendOTP({"email": email});
@@ -1496,6 +1477,34 @@ class BookingRepositoryImp implements BookingRepository {
       var user = userResponse.map();
 
       return Right(user);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request) async {
+    try {
+      final response = await _coreService.notifaiIsRead(request);
+
+      final data = response.data as bool;
+
+      return Right(data);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkEmailAccount({
+    required CheckAccountRequest checkEmailAccount,
+  }) async {
+    try {
+      var responses = await _coreService.checkEmailAccount(checkEmailAccount);
+
+      var result = responses.data as bool;
+
+      return Right(result);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

@@ -196,7 +196,6 @@ class PayScheduleScreen extends StatelessWidget {
 
     var locationName = schedule.tour.provinces
         .map((loc) => loc.name)
-        .toSet() // Loại bỏ trùng lặp
         .join(', ');
 
     return Container(

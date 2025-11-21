@@ -118,8 +118,9 @@ class LoginScreen extends StatelessWidget {
 
             customButton(
               onPressed: () {
-                if (_controllerEmail.text.isNotEmpty &&
-                    _controllerPassword.text.isNotEmpty) {
+                if (_controllerEmail.text.trim().isNotEmpty &&
+                    _controllerPassword.text.trim().isNotEmpty) {
+                      
                   _cubit.login(
                     _controllerEmail.text.trim(),
                     _controllerPassword.text.trim(),
@@ -205,7 +206,7 @@ class LoginScreen extends StatelessWidget {
         InkWell(
           onTap: () {
             // login bằng google 
-            _cubit.signInWithGoogle();
+            _cubit.loginWithGoogle();
 
             
           },

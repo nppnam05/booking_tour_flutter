@@ -1,6 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button_cubit.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/pick_image_button.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/pick_image_button_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 

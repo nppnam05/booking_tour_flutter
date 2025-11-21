@@ -1,4 +1,3 @@
-
 import 'package:booking_tour_flutter/presentation/user/search/cubit/search_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/search/cubit/search_state.dart';
 import 'package:booking_tour_flutter/presentation/user/search/search_card.dart';
@@ -27,13 +26,14 @@ class _SearchScreenState extends State<SearchScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => FilterBottomSheet(
-        initialProvinceId: cubit.provinceId,
-        initialProvinceName: cubit.provinceName,
-        initialStartDate: cubit.startDate,
-        initialEndDate: cubit.endDate,
-        initialStars: cubit.stars,
-      ),
+      builder:
+          (context) => FilterBottomSheet(
+            initialProvinceId: cubit.provinceId,
+            initialProvinceName: cubit.provinceName,
+            initialStartDate: cubit.startDate,
+            initialEndDate: cubit.endDate,
+            initialStars: cubit.stars,
+          ),
     );
 
     if (result != null) {
@@ -70,8 +70,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     color: Color.fromARGB(255, 239, 236, 236),
                   ),
                 ),
-                onSubmitted: (_) =>
-                    cubit.searchTrips(_searchController.text.trim()),
+                onSubmitted:
+                    (_) => cubit.searchTrips(_searchController.text.trim()),
                 textInputAction: TextInputAction.search,
               ),
               actions: [
@@ -100,11 +100,8 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             body: Column(
               children: [
-                if (cubit.hasActiveFilters)
-                  _buildActiveFiltersChips(cubit),
-                Expanded(
-                  child: _buildBody(context, state, cubit),
-                ),
+                if (cubit.hasActiveFilters) _buildActiveFiltersChips(cubit),
+                Expanded(child: _buildBody(context, state, cubit)),
               ],
             ),
           );
@@ -116,48 +113,54 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildActiveFiltersChips(SearchCubit cubit) {
     final chips = <Widget>[];
     if (cubit.provinceId != null && cubit.provinceName != null) {
-      chips.add(_buildFilterChip(
-        label: cubit.provinceName!,
-        onDeleted: () {
-          cubit.applyFilters(
-            provinceId: null,
-            provinceName: null,
-            startDate: cubit.startDate,
-            endDate: cubit.endDate,
-            stars: cubit.stars,
-          );
-        },
-      ));
+      chips.add(
+        _buildFilterChip(
+          label: cubit.provinceName!,
+          onDeleted: () {
+            cubit.applyFilters(
+              provinceId: null,
+              provinceName: null,
+              startDate: cubit.startDate,
+              endDate: cubit.endDate,
+              stars: cubit.stars,
+            );
+          },
+        ),
+      );
     }
     if (cubit.startDate != null && cubit.endDate != null) {
       final dateText =
           '${_formatDate(cubit.startDate!)} - ${_formatDate(cubit.endDate!)}';
-      chips.add(_buildFilterChip(
-        label: dateText,
-        onDeleted: () {
-          cubit.applyFilters(
-            provinceId: cubit.provinceId,
-            provinceName: cubit.provinceName,
-            startDate: null,
-            endDate: null,
-            stars: cubit.stars,
-          );
-        },
-      ));
+      chips.add(
+        _buildFilterChip(
+          label: dateText,
+          onDeleted: () {
+            cubit.applyFilters(
+              provinceId: cubit.provinceId,
+              provinceName: cubit.provinceName,
+              startDate: null,
+              endDate: null,
+              stars: cubit.stars,
+            );
+          },
+        ),
+      );
     }
     if (cubit.stars != null) {
-      chips.add(_buildFilterChip(
-        label: '${cubit.stars} ⭐',
-        onDeleted: () {
-          cubit.applyFilters(
-            provinceId: cubit.provinceId,
-            provinceName: cubit.provinceName,
-            startDate: cubit.startDate,
-            endDate: cubit.endDate,
-            stars: null,
-          );
-        },
-      ));
+      chips.add(
+        _buildFilterChip(
+          label: '${cubit.stars} ⭐',
+          onDeleted: () {
+            cubit.applyFilters(
+              provinceId: cubit.provinceId,
+              provinceName: cubit.provinceName,
+              startDate: cubit.startDate,
+              endDate: cubit.endDate,
+              stars: null,
+            );
+          },
+        ),
+      );
     }
 
     if (chips.isEmpty) return const SizedBox.shrink();
@@ -167,13 +170,7 @@ class _SearchScreenState extends State<SearchScreen> {
       color: Colors.grey[100],
       child: Row(
         children: [
-          Expanded(
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: chips,
-            ),
-          ),
+          Expanded(child: Wrap(spacing: 8, runSpacing: 8, children: chips)),
           TextButton(
             onPressed: () => cubit.clearFilters(),
             child: const Text('Xóa tất cả'),
@@ -216,7 +213,10 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(height: 16),
               Text(
                 'Nhập từ khóa để tìm kiếm tour',
-                style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 69, 69, 69)),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: const Color.fromARGB(255, 69, 69, 69),
+                ),
               ),
             ],
           ),
@@ -230,18 +230,20 @@ class _SearchScreenState extends State<SearchScreen> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...state.history.map((keyword) => ListTile(
-                  leading: const Icon(Icons.history),
-                  title: Text(keyword),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => cubit.removeFromHistory(keyword),
-                  ),
-                  onTap: () {
-                    _searchController.text = keyword;
-                    cubit.searchTrips(keyword);
-                  },
-                )),
+            ...state.history.map(
+              (keyword) => ListTile(
+                leading: const Icon(Icons.history),
+                title: Text(keyword),
+                trailing: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => cubit.removeFromHistory(keyword),
+                ),
+                onTap: () {
+                  _searchController.text = keyword;
+                  cubit.searchTrips(keyword);
+                },
+              ),
+            ),
             const SizedBox(height: 8),
             TextButton.icon(
               onPressed: cubit.clearHistory,
@@ -271,8 +273,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: () =>
-                  cubit.searchTrips(_searchController.text.trim()),
+              onPressed: () => cubit.searchTrips(_searchController.text.trim()),
               icon: const Icon(Icons.refresh),
               label: const Text('Thử lại'),
             ),
@@ -320,7 +321,20 @@ class _SearchScreenState extends State<SearchScreen> {
             child: ListView.builder(
               itemCount: trips.length,
               itemBuilder: (context, index) {
-                return SearchCard(trip: trips[index]);
+                final trip = trips[index];
+                return SearchCard(
+                  trip: trip,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      'danh_sach_lich_trinh_user',
+                      arguments: {
+                        'tourId': trip.id,
+                        
+                      },
+                    );
+                  },
+                );
               },
             ),
           ),

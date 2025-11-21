@@ -28,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
     DialogHelper.dismissDialog();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> loginWithGoogle() async {
 
     try {
       await googleSignIn.signOut();

@@ -2,7 +2,6 @@ import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'schedule_tourmanager_response.g.dart';
