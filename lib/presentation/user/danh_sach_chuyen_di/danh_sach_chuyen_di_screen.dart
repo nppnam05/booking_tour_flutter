@@ -6,7 +6,7 @@ import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/cubit/danh_sach_chuyen_di_state.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/widget/trip_card_detail.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_state.dart';
 import 'package:flutter/material.dart';

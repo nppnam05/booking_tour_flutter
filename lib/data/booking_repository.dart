@@ -282,7 +282,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
   Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
-  Future<Either<Failure, bool>> readReview(ReadReviewRequets request);
+  Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1410,9 +1410,9 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> readReview(ReadReviewRequets request) async {
+  Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request) async {
     try {
-      final response = await _coreService.readReview(request);
+      final response = await _coreService.notifaiIsRead(request);
 
       final data = response.data as bool;
 

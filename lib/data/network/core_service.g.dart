@@ -1739,7 +1739,7 @@ class _CoreService implements CoreService {
   }
 
   @override
-  Future<RestResponse> readReview(ReadReviewRequets request) async {
+  Future<RestResponse> notifaiIsRead(ReadReviewRequets request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

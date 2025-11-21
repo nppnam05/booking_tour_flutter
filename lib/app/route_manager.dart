@@ -1,5 +1,8 @@
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/admin/account%20management/account_management_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part1_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part2_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/detail_staff_account/detail_staff_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -42,8 +45,8 @@ import 'package:booking_tour_flutter/presentation/user/chi_tiet_lich_trinh.dart/
 import 'package:booking_tour_flutter/presentation/user/danh_sach_chuyen_di/danh_sach_chuyen_di_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh/danh_sach_lich_trinh_user_screen.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/thong_bao_screen.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/test_button_choose_img_screen.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/drawer_bar/drawer_bar.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/test_button_choose_img_screen.dart';
 import 'package:flutter/material.dart';
 
 class RouteName {
@@ -98,6 +101,11 @@ class RouteName {
   static final update_password_user = "update_password_user";
   static final main_user = "main_user";
   static final accountManagement = "account_management";
+  static final detailStaffScreen = "detail_staff_screen";
+  static final createStaffAccountPart1Screen =
+      "create_staff_account_part1_screen";
+  static final createStaffAccountPart2Screen =
+      "create_staff_account_part2_screen";
 }
 
 class RouteManager {
@@ -157,5 +165,10 @@ class RouteManager {
     RouteName.update_password_user: (context) => UpdatePasswordScreen(),
     RouteName.main_user: (context) => MainUser(),
     RouteName.accountManagement: (context) => AccountManagementScreen(),
+    RouteName.detailStaffScreen: (context) => DetailStaffScreen(),
+    RouteName.createStaffAccountPart1Screen:
+        (context) => CreateStaffAccountPart1Screen(),
+    RouteName.createStaffAccountPart2Screen:
+        (context) => CreateStaffAccountPart2Screen(),
   };
 }
