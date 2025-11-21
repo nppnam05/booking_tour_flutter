@@ -3,7 +3,7 @@ import 'package:booking_tour_flutter/domain/activity.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/widget/dialog_hoat_dong.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/cubit/hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/hoat_dong/cubit/hoat_dong_state.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/drawer_bar/drawer_bar.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,6 +1,4 @@
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
-import 'package:booking_tour_flutter/domain/fake_post.dart';
-import 'package:booking_tour_flutter/domain/user.dart';
 
 class AuthOtpState {
   final CreateUserRequest user;

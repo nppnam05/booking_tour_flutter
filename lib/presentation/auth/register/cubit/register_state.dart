@@ -1,28 +1,16 @@
 class RegisterState {
-  bool isEmailValid;
-  bool isPasswordValid;
-  bool checkSendOTP;
+  bool isEmailExist;
+  bool checkSendOtp;
 
+  RegisterState({required this.isEmailExist, required this.checkSendOtp});
 
-  RegisterState({
-    required this.isEmailValid,
-    required this.isPasswordValid,
-    required this.checkSendOTP
-  });
-  
   RegisterState copyWith({
-    bool? isEmailValid,
-    bool? isPasswordValid,
-    bool? checkSendOTP
+    bool? isEmailExist,
+    bool? checkSendOtp,
   }) {
     return RegisterState(
-      isEmailValid: isEmailValid ?? this.isEmailValid,
-      isPasswordValid: isPasswordValid ?? this.isPasswordValid,
-      checkSendOTP: checkSendOTP ?? this.checkSendOTP
+      checkSendOtp: checkSendOtp ?? this.checkSendOtp,
+      isEmailExist: isEmailExist ?? this.isEmailExist,
     );
-  }
-
-  coppyWithError() {
-    return RegisterState(isEmailValid: false, isPasswordValid: false, checkSendOTP: false);
   }
 }

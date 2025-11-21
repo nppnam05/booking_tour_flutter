@@ -6,9 +6,9 @@ import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/cubit/dia_danh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/cubit/dia_danh_state.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/list_danh_sach_dia_danh.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/search_bar_new.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/delete_button_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/drawer_bar/drawer_bar.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/search_bar_new.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/generic_selected_dialog.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +85,9 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
 
                               final success = await cubit.deletePlace(place.id);
                               if (!context.mounted) return;
-                              cubit.clearSearchAndFilter(searchController: _searchController);
+                              cubit.clearSearchAndFilter(
+                                searchController: _searchController,
+                              );
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -109,8 +111,10 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
                                 final success = await cubit.updatedLocalPlace(
                                   result,
                                 );
-                                cubit.clearSearchAndFilter(searchController: _searchController);
-                                
+                                cubit.clearSearchAndFilter(
+                                  searchController: _searchController,
+                                );
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -149,7 +153,7 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
         );
         if (result is Place) {
           final success = await cubit.addLocalPlace(result);
-          cubit.clearSearchAndFilter(searchController:  _searchController);
+          cubit.clearSearchAndFilter(searchController: _searchController);
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -213,7 +217,6 @@ class DanhSachDiaDanhScreen extends StatelessWidget {
   }
 
   Widget _buildSearch(BuildContext context, DiaDanhCubit cubit) {
-
     void onClear() {
       _searchController.clear();
       cubit.filterPlaces("");

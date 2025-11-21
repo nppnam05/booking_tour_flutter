@@ -1,10 +1,12 @@
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
+import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -34,7 +36,7 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
-  @POST("/User/loginbyemail")
+  @POST("/User/login-or-create-byemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
 
   @GET("/Bank")
@@ -58,8 +60,10 @@ abstract class CoreService {
   @POST("/OTP/send")
   Future<RestResponse> sendOTP(@Body() Map<String, dynamic> body);
 
-  @POST("/User/check-account")
-  Future<RestResponse> checkAccount(@Body() Map<String, dynamic> checkAccount);
+  @POST("/User/check-email-account")
+  Future<RestResponse> checkEmailAccount(
+    @Body() CheckAccountRequest checkAccount,
+  );
 
   @POST("/User")
   Future<RestResponse> registerUser(@Body() Map<String, dynamic> user);
@@ -268,4 +272,19 @@ abstract class CoreService {
 
   @POST("/Favorite")
   Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
+
+  @GET("/Schedule/Accountant")
+  Future<RestResponse> getScheduleForAccountant();
+
+  @GET("/User/RefundUser")
+  Future<RestResponse> getRefundUsers();
+
+  @POST("/User/CancelRefund/{id}")
+  Future<RestResponse> cancelRefund(@Path("id") int id);
+
+  @POST("/User/SubmitRefund/{id}")
+  Future<RestResponse> submitRefund(@Path("id") int id);
+
+  @PUT("/Notification")
+  Future<RestResponse> notifaiIsRead(@Body() ReadReviewRequets request);
 }

@@ -42,6 +42,10 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
     });
   }
 
+  void rebuild(){ 
+    emit(state.copyWith());
+  }
+
   void setIdSchedule(int idSchedule){
     emit(state.copyWith(idSchedule: idSchedule));
   }

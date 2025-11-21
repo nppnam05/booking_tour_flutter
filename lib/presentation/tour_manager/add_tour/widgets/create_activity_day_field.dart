@@ -3,7 +3,7 @@ import 'package:booking_tour_flutter/domain/create_tour/CT_day_of_tour.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_error_fields.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/datepicker_and_time/time_picker/time_picker.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/datepicker_and_time/time_picker/time_picker.dart';
 import 'package:booking_tour_flutter/presentation/widgets/spinner_dialog/select_single_activity/select_single_activity_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/spinner_dialog/select_single_location_activity/select_single_location_activity_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/spinner_dialog/select_single_place/select_single_place_field.dart';
@@ -76,16 +76,20 @@ class CreateActivityDayField extends StatelessWidget {
                   title: "Giờ bắt đầu",
                   initialTimeText: thisActivity.time,
                   isShowError: addTourState.isValidated,
-                  errorMessage: addTourState.getErrorMessage(sprintf(AddTourErrorFields.dayActivityTime, [
+                  errorMessage: addTourState.getErrorMessage(
+                    sprintf(AddTourErrorFields.dayActivityTime, [
                       addTourState.selectedDayOfTour,
                       i,
-                  ])),
+                    ]),
+                  ),
                 ),
                 SelectSinglePlaceField(
                   padding: 0,
                   onChange: (place) {
                     thisActivity.place = place;
-                    context.read<AddTourCubit>().correctDayActivity(thisActivity);
+                    context.read<AddTourCubit>().correctDayActivity(
+                      thisActivity,
+                    );
                   },
                   place: thisActivity.place,
                   provinceIds: provinceIds,
@@ -102,7 +106,9 @@ class CreateActivityDayField extends StatelessWidget {
                   padding: 0,
                   onChange: (locationActivity) {
                     thisActivity.locationActivity = locationActivity;
-                    context.read<AddTourCubit>().correctDayActivity(thisActivity);
+                    context.read<AddTourCubit>().correctDayActivity(
+                      thisActivity,
+                    );
                   },
                   locationActivity: thisActivity.locationActivity,
                   placeId: thisActivity.place?.id,
@@ -119,7 +125,9 @@ class CreateActivityDayField extends StatelessWidget {
                   padding: 0,
                   onChange: (activity) {
                     thisActivity.activity = activity;
-                    context.read<AddTourCubit>().correctDayActivity(thisActivity);
+                    context.read<AddTourCubit>().correctDayActivity(
+                      thisActivity,
+                    );
                   },
                   activity: thisActivity.activity,
                   locationActivityId: thisActivity.locationActivity?.id,
