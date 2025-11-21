@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_home/accountant_home_screen.dart';
+import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/accountant_manage_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/account%20management/account_management_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part1_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part2_screen.dart';
@@ -109,6 +110,8 @@ class RouteName {
       "create_staff_account_part1_screen";
   static final createStaffAccountPart2Screen =
       "create_staff_account_part2_screen";
+  static final accountantManageScheduleScreen =
+      "accountant_manage_schedule_screen";
 }
 
 class RouteManager {
@@ -175,5 +178,7 @@ class RouteManager {
         (context) => CreateStaffAccountPart1Screen(),
     RouteName.createStaffAccountPart2Screen:
         (context) => CreateStaffAccountPart2Screen(),
+    RouteName.accountantManageScheduleScreen:
+        (context) => AccountantManageScheduleScreen(),
   };
 }

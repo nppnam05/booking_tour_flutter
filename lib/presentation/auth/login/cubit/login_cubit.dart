@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -36,7 +37,7 @@ class LoginCubit extends Cubit<LoginState> {
       // Đăng nhập Google
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-      // User hủy đăng nhập
+      
       if (googleUser == null) {
         DialogHelper.dismissDialog();
         return;
@@ -48,14 +49,12 @@ class LoginCubit extends Cubit<LoginState> {
       final String email = googleUser.email;
       final String name = googleUser.displayName ?? '';
       final String photoUrl = googleUser.photoUrl ?? '';
-      final String password = googleUser.serverAuthCode ?? "";
 
       
       var result = await userRepository.loginByEmail(
         email: email,
         name: name,
         photoUrl: photoUrl,
-        password: password,
       );
 
       result.fold((failure) {
@@ -67,8 +66,54 @@ class LoginCubit extends Cubit<LoginState> {
       DialogHelper.dismissDialog();
 
     } catch (error) {
+      DialogHelper.dismissDialog();
+      print("lỗi $error");
       emit(state.copyWithError());
     }
 
+  }
+
+  Future<void> loginWithFacebook() async {
+    try {
+      
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+      );
+
+      if (result.status != LoginStatus.success) {
+        return;
+      }
+
+      await DialogHelper.showLoadingDialog();
+
+      
+      final userData = await FacebookAuth.instance.getUserData(
+        fields: "name,email,picture.width(200)",
+      );
+
+      final String email = userData['email'] ?? '';
+      final String name = userData['name'] ?? '';
+      final String photoUrl = userData['picture']?['data']?['url'] ?? '';
+      
+      
+      var response = await userRepository.loginByEmail(
+        email: email,
+        name: name,
+        photoUrl: photoUrl,
+      );
+
+      response.fold((failure) {
+        emit(state.copyWithError());
+      }, (user){
+        emit(state.copyWith(user: user));
+      });
+
+      DialogHelper.dismissDialog();
+
+    } catch (error) {
+      DialogHelper.dismissDialog();
+      print("lỗi $error");
+      emit(state.copyWithError());
+    }
   }
 }
