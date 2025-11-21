@@ -61,7 +61,9 @@ abstract class CoreService {
   Future<RestResponse> sendOTP(@Body() Map<String, dynamic> body);
 
   @POST("/User/check-email-account")
-  Future<RestResponse> checkEmailAccount(@Body() CheckAccountRequest checkAccount);
+  Future<RestResponse> checkEmailAccount(
+    @Body() CheckAccountRequest checkAccount,
+  );
 
   @POST("/User")
   Future<RestResponse> registerUser(@Body() Map<String, dynamic> user);
@@ -272,5 +274,5 @@ abstract class CoreService {
   Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
 
   @PUT("/Notification")
-  Future<RestResponse> readReview(@Body() ReadReviewRequets request);
+  Future<RestResponse> notifaiIsRead(@Body() ReadReviewRequets request);
 }
