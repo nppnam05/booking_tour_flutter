@@ -17,6 +17,7 @@ UserResponse _$UserResponseFromJson(Map<String, dynamic> json) => UserResponse(
   phone: json['phone'] as String?,
   avatarPath: json['avatarPath'] as String?,
   bankBranch: json['bankBranch'] as String?,
+  refundStatus: json['refundStatus'] as bool?,
 );
 
 Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
@@ -31,4 +32,5 @@ Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
       'phone': instance.phone,
       'avatarPath': instance.avatarPath,
       'bankBranch': instance.bankBranch,
+      'refundStatus': instance.refundStatus,
     };

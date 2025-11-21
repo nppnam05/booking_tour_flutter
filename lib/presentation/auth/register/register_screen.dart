@@ -53,20 +53,13 @@ class RegisterScreen extends StatelessWidget {
     final context = AppNavigator.currentContext;
 
     return BlocListener<RegisterCubit, RegisterState>(
-      listener: (context, state) {
-        if (!state.isEmailValid) {
+      listener: (context, state) async {
+        if (state.isEmailExist) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Email đã có người sử dụng')),
           );
-        } else if (!state.isPasswordValid) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Mật khẩu đã có người sử dụng')),
-          );
-        } else if (!state.checkSendOTP) {
-          // gửi mã otp
-          var email = controllerEmail.text.trim();
-          _cubit.sendOTP(email);
-        } else if (state.checkSendOTP) {
+        } else if (state.checkSendOtp) {
+          // tạo user đẩy sang màn tiếp theo
           var user = CreateUserRequest(
             roleId: 3,
             password: controllerPassword.text.trim(),
@@ -83,10 +76,14 @@ class RegisterScreen extends StatelessWidget {
           final cubitOtp = context.read<AuthOtpCubit>();
           cubitOtp.setUser(user);
 
-          Navigator.push(
+          await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AuthOtpScreen()),
           );
+        } else if (!state.isEmailExist) {
+          // gửi mã otp
+          var email = controllerEmail.text.trim();
+          await _cubit.sendOTP(email);
         }
       },
       child: Padding(
@@ -116,7 +113,7 @@ class RegisterScreen extends StatelessWidget {
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'bạn chưa viết gì vào ô này';
+                        return 'Vui lòng nhập tên của bạn vào ô này';
                       }
                       return null;
                     },
@@ -129,7 +126,7 @@ class RegisterScreen extends StatelessWidget {
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'bạn chưa viết gì vào ô này';
+                        return 'vui lòng nhập số điện thoại vào ô này';
                       } else if (!ValidateHelper.kiemTraSoDienThoai(value)) {
                         return "số điện thoại này chưa đúng định dạng";
                       }
@@ -144,7 +141,7 @@ class RegisterScreen extends StatelessWidget {
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'bạn chưa viết gì vào ô này';
+                        return 'vui lòng nhập email vào ô này';
                       } else if (!ValidateHelper.isEmailValid(value)) {
                         return "Email này chưa đúng định dạng";
                       }
@@ -159,7 +156,7 @@ class RegisterScreen extends StatelessWidget {
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'bạn chưa viết gì vào ô này';
+                        return 'vui lòng điền mật khẩu vào ô này';
                       }
                       return null;
                     },
@@ -172,7 +169,7 @@ class RegisterScreen extends StatelessWidget {
                     color: Colors.grey.shade100,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'bạn chưa viết gì vào ô này';
+                        return 'vui lòng điền lại mật khẩu vào ô này';
                       } else if (value != controllerPassword.text.trim()) {
                         return "Mật khẩu không khớp";
                       }
@@ -189,9 +186,8 @@ class RegisterScreen extends StatelessWidget {
             customButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  var result = await _cubit.checkAccount(
+                  var result = await _cubit.checkEmailAccount(
                     controllerEmail.text.trim(),
-                    controllerPassword.text.trim(),
                   );
                 }
               },

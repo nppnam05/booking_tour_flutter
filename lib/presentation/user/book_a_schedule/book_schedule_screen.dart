@@ -248,9 +248,9 @@ class BookScheduleScreen extends StatelessWidget {
                 "số lượng tham gia: ",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
-              const SizedBox(width: 30),
+              const SizedBox(width: 50),
               Text(
-                "${schedule.maxSlot}",
+                "${schedule.maxSlot} Người",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],

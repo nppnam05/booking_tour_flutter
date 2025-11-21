@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleDetailScreen extends StatelessWidget {
-
   late final ScheduleDetailCubit _cubit;
 
   @override
@@ -30,13 +29,6 @@ class ScheduleDetailScreen extends StatelessWidget {
         var startDate = state.scheduleDetail.startDate;
         var endDate = state.scheduleDetail.endDate;
 
-        // load dữ liệu
-        if (state.isLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        
         return CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -87,14 +79,23 @@ class ScheduleDetailScreen extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: SizedBox(height: 60, child: days(state.scheduleDetail)),
+              child: Container(
+                color: AppColors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    height: 60,
+                    child: days(state.scheduleDetail),
+                  ),
+                ),
               ),
             ),
             SliverToBoxAdapter(
-              child: scheduleDetail(
-                state.scheduleDetail.tour.dayOfTours[state.daySelected - 1],
+              child: Container(
+                color: AppColors.white,
+                child: scheduleDetail(
+                  state.scheduleDetail.tour.dayOfTours[state.daySelected - 1],
+                ),
               ),
             ),
           ],
@@ -130,10 +131,10 @@ class ScheduleDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${dayOfTour.title}", style: AppFonts.text20),
+                  Text("${dayOfTour.title.trim()}", style: AppFonts.text20),
 
                   Text(
-                    "${dayOfTour.description}",
+                    "${dayOfTour.description.trim()}",
                     style: AppFonts.text14,
                     softWrap: true,
                   ),
@@ -175,7 +176,7 @@ class ScheduleDetailScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "${dayActivitie.time.substring(0,5)}",
+              "${dayActivitie.time.substring(0, 5)}",
               style: AppFonts.text14.copyWith(
                 color: const Color(0xFF0D9488),
                 fontWeight: FontWeight.bold,

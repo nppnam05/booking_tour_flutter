@@ -10,40 +10,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ForgetCubit extends Cubit<ForgetState> {
   static final forgetRepository = getIt<BookingRepository>();
 
-  ForgetCubit() : super(ForgetState(checkEmail: false,existedEmail: false ,email: ""));
+  ForgetCubit()
+    : super(ForgetState(existedEmail: false, email: ""));
 
   Future<void> checkEmail(String email) async {
-
     await DialogHelper.showLoadingDialog();
 
-    var result = await forgetRepository.checkAccount(checkAccount: CheckAccountRequest(email: email, password: "string"));
-    result.fold((left){
-    }, (right){
-      if(!right[0]){
-        emit(state.copyWith(email: email,checkEmail: true));
-      }
-      else{
-        emit(state.copyWith(existedEmail: true));
-      }
+    var result = await forgetRepository.checkEmailAccount(
+      checkEmailAccount: CheckAccountRequest(email: email),
+    );
+    result.fold((left) {}, (right) {
+      emit(state.copyWith(email: email, existedEmail: right));
     });
     DialogHelper.dismissDialog();
   }
 
   Future<void> sendOTP() async {
-
     var resualt = await forgetRepository.sendOTP(state.email);
 
     var context = AppNavigator.currentContext;
 
-    resualt.fold(
-      (left) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Email này không gửi tin nhắn vào được')),
-        );
-      },
-      (check) {
-      },
-    );
+    resualt.fold((left) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email này không gửi tin nhắn vào được')),
+      );
+    }, (check) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã gửi được tin nhắn')),
+      );
+    });
   }
-
 }
