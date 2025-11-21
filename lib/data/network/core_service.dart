@@ -34,6 +34,12 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
+  @PUT("/UserCompletedSchedule")
+  Future<RestResponse> updateUserCompletedScheduleCountPeople(@Body() Map<String, dynamic> body);
+
+  @GET("/UserCompletedSchedule/schedule/{scheduleid}")
+  Future<RestResponse> getUserCompletedScheduleByScheduleId(@Path("scheduleid") int scheduleId);
+
   @POST("/User/loginbyemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
 

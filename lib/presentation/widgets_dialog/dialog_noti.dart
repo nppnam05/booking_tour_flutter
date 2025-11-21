@@ -9,6 +9,7 @@ class DialogNoti {
     List<String> highlightPhrases = const [],
     String confirmText = 'Xác nhận',
     String cancelText = 'Hủy',
+    Color colorHighlight = Colors.red,
   }) async {
     final result = await showDialog<bool>(
       context: context,
@@ -20,6 +21,7 @@ class DialogNoti {
             highlightPhrases: highlightPhrases,
             confirmText: confirmText,
             cancelText: cancelText,
+            colorHighlight: colorHighlight
           ),
     );
     return result ?? false;
@@ -32,6 +34,7 @@ class _ConfirmDialog extends StatelessWidget {
   final List<String> highlightPhrases;
   final String confirmText;
   final String cancelText;
+  final Color colorHighlight;
 
   const _ConfirmDialog({
     required this.title,
@@ -39,6 +42,7 @@ class _ConfirmDialog extends StatelessWidget {
     this.highlightPhrases = const [],
     this.confirmText = 'Xác nhận',
     this.cancelText = 'Hủy',
+    this.colorHighlight = Colors.red
   });
 
   @override
@@ -155,7 +159,7 @@ class _ConfirmDialog extends StatelessWidget {
         ) ??
         const TextStyle();
     TextStyle highlight = normal.copyWith(
-      color: const Color(0xFFD64545),
+      color: colorHighlight,
       fontWeight: FontWeight.w600,
     );
 
