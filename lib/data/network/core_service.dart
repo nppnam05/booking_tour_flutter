@@ -268,4 +268,16 @@ abstract class CoreService {
 
   @POST("/Favorite")
   Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
+
+  @GET("/Schedule/Accountant")
+  Future<RestResponse> getScheduleForAccountant();
+
+  @GET("/User/RefundUser")
+  Future<RestResponse> getRefundUsers();
+
+  @POST("/User/CancelRefund/{id}")
+  Future<RestResponse> cancelRefund(@Path("id") int id);
+
+  @POST("/User/SubmitRefund/{id}")
+  Future<RestResponse> submitRefund(@Path("id") int id);
 }

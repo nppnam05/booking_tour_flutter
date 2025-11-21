@@ -1,12 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/pay_booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 
 class PayScheduleState {
-  final PayBooking paySchedule;
+  final Booking paySchedule;
   final ScheduleTourmanager schedule;
   final String linkQR;
   final int idSchedule;
@@ -20,7 +21,7 @@ class PayScheduleState {
   });
 
   PayScheduleState copyWith({
-    PayBooking? paySchedule,
+    Booking? paySchedule,
     ScheduleTourmanager? schedule,
     String? linkQR,
     int? idSchedule,

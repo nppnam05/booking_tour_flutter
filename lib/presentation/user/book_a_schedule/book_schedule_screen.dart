@@ -30,6 +30,8 @@ class BookScheduleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _cubit = context.read<BookScheduleCubit>();
     authCubit = context.read<AuthCubit>();
+    controllerEmail.text = authCubit.state.email;
+    controllerSoDienThoai.text = authCubit.state.phone;
 
     return BlocProvider.value(
       value: _cubit,
@@ -71,6 +73,9 @@ class BookScheduleScreen extends StatelessWidget {
                       return 'bạn chưa viết gì vào ô này';
                     }
                     return null;
+                  },
+                  onChange: (value) {
+                    _cubit.rebuild();
                   },
                 ),
                 SizedBox(height: 12),

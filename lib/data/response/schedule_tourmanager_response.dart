@@ -20,6 +20,9 @@ class ScheduleTourmanagerResponse {
   String? code;
   int? desposit;
   TripResponse? tour;
+  int? processingBooking;
+  int? depositBooking;
+  int? paidBooking;
 
   ScheduleTourmanagerResponse({
     this.id,
@@ -33,6 +36,9 @@ class ScheduleTourmanagerResponse {
     this.code,
     this.desposit,
     this.tour,
+    this.processingBooking,
+    this.depositBooking,
+    this.paidBooking,
   });
 
   factory ScheduleTourmanagerResponse.fromJson(Map<String, dynamic> json) =>
@@ -138,6 +144,9 @@ extension ScheduleTourmanagerResponseMapper on ScheduleTourmanagerResponse {
             totalStars: 0,
             places: [],
           ),
+      processingBooking: processingBooking ?? 0,
+      depositBooking: depositBooking ?? 0,
+      paidBooking: paidBooking ?? 0,
     );
   }
 

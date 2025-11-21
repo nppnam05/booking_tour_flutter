@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
+import 'package:booking_tour_flutter/presentation/accountant/accountant_home/accountant_home_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -96,6 +97,8 @@ class RouteName {
   static final paySchedule = "pay_schedule";
   static final update_password_user = "update_password_user";
   static final main_user = "main_user";
+
+  static final accountant_home = "accountant_home";
 }
 
 class RouteManager {
@@ -154,5 +157,7 @@ class RouteManager {
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user: (context) => UpdatePasswordScreen(),
     RouteName.main_user: (context) => MainUser(),
+
+    RouteName.accountant_home: (context) => AccountantHomeScreen(),
   };
 }

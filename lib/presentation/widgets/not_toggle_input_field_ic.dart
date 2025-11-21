@@ -1,11 +1,14 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget notToggleInputFieldNotIcon({
   required TextEditingController controller,
   required String title,
   required Color color,
   required String? Function(String? value)? validator,
+  bool isDigitOnly = false,
+  ValueChanged<String>? onChange,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,6 +20,9 @@ Widget notToggleInputFieldNotIcon({
       TextFormField(
         validator: validator,
         controller: controller,
+        onChanged: onChange,
+        inputFormatters:
+            isDigitOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
 
         decoration: InputDecoration(
           filled: true,
