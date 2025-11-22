@@ -1,46 +1,75 @@
-import 'package:booking_tour_flutter/presentation/admin/income_statistics/cubit/income_statistic_state.dart';
+import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'income_statistic_state.dart';
 
 class IncomeCubit extends Cubit<IncomeStatisticState> {
-  IncomeCubit() : super(IncomeStatisticInitial());
+  final BookingRepository _repository;
 
-  Future<void> loadIncome() async {
+  IncomeCubit(this._repository) : super(IncomeStatisticInitial());
+
+  Future<void> loadIncomeByMonth() async {
     emit(IncomeStatisticLoading());
 
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      final result = await _repository.getIncomeByMonth();
+
+      result.fold(
+        (failure) => emit(IncomeStatisticError(failure.message)),
+        (incomeMonth) {
+          final monthsList = incomeMonth.toList();
+          final total = monthsList.reduce((a, b) => a + b);
+          final average = monthsList.isEmpty ? 0 : total ~/ monthsList.length;
+          final highest = monthsList.isEmpty
+              ? 0
+              : monthsList.reduce((a, b) => a > b ? a : b);
+
+          emit(
+            IncomeStatisticLoaded(
+              totalIcome: total,
+              average: average,
+              highest: highest,
+              months: monthsList,
+              isMonthView: true,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      emit(IncomeStatisticError("Đã có lỗi xảy ra: ${e.toString()}"));
+    }
+  }
+
+  Future<void> loadIncomeByYear() async {
+    emit(IncomeStatisticLoading());
 
     try {
-     
-      final fakeMonths = [
-        8500000,
-        9000000,
-        10500000,
-        11200000,
-        9000000,
-        12000000,
-        13000000,
-        11000000,
-        12500000,
-        10800000,
-        14500000,
-        15000000,
-      ];
+      final result = await _repository.getIncomeByYear();
 
-      final total = fakeMonths.reduce((a, b) => a + b);
-      final average = total ~/ fakeMonths.length;
-      final highest = fakeMonths.reduce((a, b) => a > b ? a : b);
-       emit(
-        IncomeStatisticLoaded(
-          totalIcome: total,
-          average: average,
-          highest: highest,
-          months: fakeMonths,
-        ),
+      result.fold(
+        (failure) => emit(IncomeStatisticError(failure.message)),
+        (incomeYears) {
+          final values = incomeYears.map((item) => item.value).toList();
+          final years = incomeYears.map((item) => item.year).toList();
+
+          final total = values.isEmpty ? 0 : values.reduce((a, b) => a + b);
+          final average = values.isEmpty ? 0 : total ~/ values.length;
+          final highest =
+              values.isEmpty ? 0 : values.reduce((a, b) => a > b ? a : b);
+
+          emit(
+            IncomeStatisticLoaded(
+              totalIcome: total,
+              average: average,
+              highest: highest,
+              months: values,
+              years: years,
+              isMonthView: false,
+            ),
+          );
+        },
       );
-    }
-    catch (e) {
-        emit(IncomeStatisticError("Someting went wrong"));
+    } catch (e) {
+      emit(IncomeStatisticError("Đã có lỗi xảy ra: ${e.toString()}"));
     }
   }
 }

@@ -79,6 +79,10 @@ import 'package:booking_tour_flutter/domain/favorite.dart';
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
+import 'package:booking_tour_flutter/domain/income_month.dart';
+import 'package:booking_tour_flutter/domain/income_year.dart';
+import 'package:booking_tour_flutter/data/response/income_month_response.dart';
+import 'package:booking_tour_flutter/data/response/income_year_response.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
@@ -283,6 +287,9 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
   Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
+
+  Future<Either<Failure, IncomeMonth>> getIncomeByMonth();
+Future<Either<Failure, List<IncomeYear>>> getIncomeByYear();
 }
 
 @Singleton(as: BookingRepository)
@@ -1417,4 +1424,47 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
+@override
+Future<Either<Failure, IncomeMonth>> getIncomeByMonth() async {
+  try {
+    final response = await _coreService.getIncomeMonth();
+    final monthData = response.data as Map<String, dynamic>;
+    final incomeMonthData = IncomeMonthData.fromJson(monthData);
+    final incomeMonth = incomeMonthData.map();
+    
+    return Right(incomeMonth);
+  } catch (e, stackTrace) {
+    return Left(ErrorHandler.handle(e).failure);
+  }
+}
+
+@override
+Future<Either<Failure, List<IncomeYear>>> getIncomeByYear() async {
+  try {
+    final response = await _coreService.getIncomeYear();
+    final responseData = response.data;
+    List<dynamic> dataList;
+    
+    if (responseData is List) {
+      dataList = responseData;
+    } else if (responseData is Map<String, dynamic>) {
+      dataList = responseData['data'] as List<dynamic>;
+    } else {
+      throw Exception('Unexpected response format');
+    }
+    
+    final incomeYears = dataList.map((item) {
+      final itemMap = item as Map<String, dynamic>;
+      return IncomeYear(
+        year: itemMap['year'] as String,
+        value: itemMap['value'] as int? ?? 0,
+      );
+    }).toList();
+    
+    return Right(incomeYears);
+  } catch (e, stackTrace) {
+    return Left(ErrorHandler.handle(e).failure); 
+  }
+}
 }

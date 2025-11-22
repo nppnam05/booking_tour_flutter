@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class IncomeSummaryCard extends StatelessWidget {
@@ -30,17 +31,25 @@ class IncomeSummaryCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 26, color: Colors.green),
+          Icon(icon, size: 26, color: AppColors.backgroundAppBarTheme),
           const SizedBox(height: 6),
           Text(
             title,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             value,
+            textAlign: TextAlign.center,
             style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
         ],
       ),

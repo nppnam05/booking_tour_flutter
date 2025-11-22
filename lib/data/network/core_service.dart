@@ -268,4 +268,10 @@ abstract class CoreService {
 
   @POST("/Favorite")
   Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
+
+  @GET("/ActualCash/actualcash-month")
+  Future<RestResponse> getIncomeMonth();
+
+  @GET("/ActualCash/actualcash-year")
+  Future<RestResponse> getIncomeYear();
 }

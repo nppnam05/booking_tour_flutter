@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/presentation/admin/income_statistics/cubit/income_statistic_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
@@ -40,7 +42,9 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => ReviewScheduleCubit()),
         BlocProvider(create: (_) => DetailPaidScheduleCubit()),
         BlocProvider(create: (_) => DanhSachLichTrinhBookingCubit()),
-        BlocProvider(create: (_) =>IncomeCubit()),
+         BlocProvider(
+          create: (_) => IncomeCubit(getIt<BookingRepository>()),
+        ),
       ],
 
       child: child,

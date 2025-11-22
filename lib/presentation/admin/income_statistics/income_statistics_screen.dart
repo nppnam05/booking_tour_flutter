@@ -15,10 +15,26 @@ class IncomeStatisticScreen extends StatefulWidget {
 }
 
 class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
+  bool isMonthView = true;
+
   @override
   void initState() {
     super.initState();
-    context.read<IncomeCubit>().loadIncome();
+    context.read<IncomeCubit>().loadIncomeByMonth();
+  }
+
+  void _switchToMonth() {
+    if (!isMonthView) {
+      setState(() => isMonthView = true);
+      context.read<IncomeCubit>().loadIncomeByMonth();
+    }
+  }
+
+  void _switchToYear() {
+    if (isMonthView) {
+      setState(() => isMonthView = false);
+      context.read<IncomeCubit>().loadIncomeByYear();
+    }
   }
 
   @override
@@ -28,7 +44,47 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
       body: BlocBuilder<IncomeCubit, IncomeStatisticState>(
         builder: (context, state) {
           if (state is IncomeStatisticLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.backgroundAppBarTheme,
+              ),
+            );
+          }
+
+          if (state is IncomeStatisticError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 60,
+                    color: Colors.red,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.message,
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (isMonthView) {
+                        context.read<IncomeCubit>().loadIncomeByMonth();
+                      } else {
+                        context.read<IncomeCubit>().loadIncomeByYear();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.backgroundAppBarTheme,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Thử lại'),
+                  ),
+                ],
+              ),
+            );
           }
 
           if (state is IncomeStatisticLoaded) {
@@ -59,6 +115,7 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 16),
+
                           // Total Income Card
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -91,13 +148,13 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 12),
-                                    Text(
-                                       "${NumberFormat.decimalPattern().format(state.totalIcome)} VND",
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
+                                  Text(
+                                    "${NumberFormat.decimalPattern().format(state.totalIcome)} VND",
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -110,36 +167,53 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: AppColors.backgroundAppBarTheme,
-                                      width: 2,
+                                GestureDetector(
+                                  onTap: _switchToMonth,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 24,
                                     ),
-                                  ),
-                                  child: const Text(
-                                    "Theo tháng",
-                                    style: TextStyle(
-                                      color: AppColors.backgroundAppBarTheme,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
+                                    decoration: BoxDecoration(
+                                      color: isMonthView
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: isMonthView
+                                            ? AppColors.backgroundAppBarTheme
+                                            : Colors.transparent,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Theo tháng",
+                                      style: TextStyle(
+                                        color: isMonthView
+                                            ? AppColors.backgroundAppBarTheme
+                                            : Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 16),
-                                const Text(
-                                  "Theo năm",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
+                                GestureDetector(
+                                  onTap: _switchToYear,
+                                  child: Text(
+                                    "Theo năm",
+                                    style: TextStyle(
+                                      color: !isMonthView
+                                          ? AppColors.backgroundAppBarTheme
+                                          : Colors.grey,
+                                      fontWeight: !isMonthView
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -162,24 +236,25 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 6,
-                                    horizontal: 16,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Text(
-                                    "2025",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                                if (isMonthView)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 6,
+                                      horizontal: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Text(
+                                      "2025",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
@@ -190,16 +265,20 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                             child: AspectRatio(
-                              aspectRatio: 1.2,
+                              aspectRatio: 1,
                               child: Builder(
                                 builder: (context) {
-                                  // Tính maxY tự động từ dữ liệu
-                                  final maxIncome = state.months.isEmpty 
-                                    ? 0.0 
-                                    : state.months.reduce((a, b) => a > b ? a : b) / 1000000;
-                                  final maxY = (maxIncome * 1.2).ceilToDouble(); // Thêm 20% để có khoảng trống
-                                  final interval = maxY / 8; // Chia làm 8 khoảng
-                                  
+                                  final maxIncome = state.months.isEmpty
+                                      ? 0.0
+                                      : state.months.reduce(
+                                            (a, b) => a > b ? a : b,
+                                          ) /
+                                          1000000;
+                                  final maxY = maxIncome == 0 
+                                      ? 10.0 
+                                      : (maxIncome * 1.2).ceilToDouble();
+                                  final interval = maxY / 8;
+
                                   return BarChart(
                                     BarChartData(
                                       maxY: maxY,
@@ -233,25 +312,47 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                                           ),
                                         ),
                                         rightTitles: AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false),
+                                          sideTitles:
+                                              SideTitles(showTitles: false),
                                         ),
                                         topTitles: AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false),
+                                          sideTitles:
+                                              SideTitles(showTitles: false),
                                         ),
                                         bottomTitles: AxisTitles(
                                           sideTitles: SideTitles(
                                             showTitles: true,
                                             getTitlesWidget: (value, meta) {
                                               final index = value.toInt();
-                                              if (index < 12) {
+                                              if (isMonthView && index < 12) {
                                                 return Padding(
-                                                  padding: const EdgeInsets.only(top: 8),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 8),
                                                   child: Text(
                                                     "T${index + 1}",
                                                     style: TextStyle(
                                                       fontSize: 11,
                                                       color: Colors.grey[600],
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else if (!isMonthView &&
+                                                  state.years != null &&
+                                                  index < state.years!.length) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 8),
+                                                  child: Text(
+                                                    state.years![index],
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.grey[600],
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                     ),
                                                   ),
                                                 );
@@ -261,7 +362,8 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                                           ),
                                         ),
                                       ),
-                                      barGroups: List.generate(state.months.length, (i) {
+                                      barGroups: List.generate(
+                                          state.months.length, (i) {
                                         final vnd = state.months[i] / 1000000;
                                         return BarChartGroupData(
                                           x: i,
@@ -270,7 +372,8 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                                               toY: vnd.toDouble(),
                                               width: 20,
                                               color: Colors.green,
-                                              borderRadius: const BorderRadius.only(
+                                              borderRadius:
+                                                  const BorderRadius.only(
                                                 topLeft: Radius.circular(6),
                                                 topRight: Radius.circular(6),
                                               ),
@@ -294,24 +397,28 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
                               children: [
                                 Expanded(
                                   child: IncomeSummaryCard(
-                                    title: "Trung bình / tháng",
-                                    value:  "${NumberFormat.decimalPattern().format(state.average)} VND",
-                                    icon: Icons.trending_up,
+                                    title: isMonthView
+                                        ? "Trung bình / tháng"
+                                        : "Trung bình / năm",
+                                    value:
+                                        "${NumberFormat.decimalPattern().format(state.average)} VND",
+                                    icon: Icons.leaderboard,
                                   ),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: IncomeSummaryCard(
                                     title: "Cao nhất",
-                                    value:  "${NumberFormat.decimalPattern().format(state.highest)} VND",
-                                    icon: Icons.attach_money,
+                                    value:
+                                        "${NumberFormat.decimalPattern().format(state.highest)} VND",
+                                    icon: Icons.stacked_line_chart,
                                   ),
                                 ),
                               ],
                             ),
                           ),
 
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 80),
                         ],
                       ),
                     ),
@@ -321,7 +428,12 @@ class _IncomeStatisticScreenState extends State<IncomeStatisticScreen> {
             );
           }
 
-          return const Center(child: Text("Có lỗi xảy ra"));
+          return const Center(
+            child: Text(
+              "Có lỗi xảy ra",
+              style: TextStyle(fontSize: 16),
+            ),
+          );
         },
       ),
     );
