@@ -148,9 +148,9 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
                 buildItem(
                   icon: Icons.logout,
                   title: 'Đăng Xuất',
-                  subtitle: 'đăng xuất khỏi app',
+                  subtitle: 'Đăng xuất khỏi app', 
                   onTap: () {
-                 
+                      
                   },
                 ),
               ],
