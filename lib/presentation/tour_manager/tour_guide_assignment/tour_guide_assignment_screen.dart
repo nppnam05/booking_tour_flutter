@@ -5,13 +5,12 @@ import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
 import 'package:booking_tour_flutter/domain/tour_guide.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assignment/cubit/tour_guide_assignment_state.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/search_bar_new.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/search_bar_new.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TourGuideAssignmentScreen extends StatelessWidget {
-
   final TextEditingController _controllerSearch = TextEditingController();
 
   @override
@@ -317,98 +316,93 @@ class TourGuideAssignmentScreen extends StatelessWidget {
           const SizedBox(height: 12),
 
           // Ngày tháng
-          Container(
-            width: double.infinity,
-            color: Color(0xFF40A4A3),
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.calendar_today,
-                      size: 20,
-                      color: Colors.red,
+          Column(
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 20,
+                    color: Colors.red,
+                  ),
+          
+                  const SizedBox(width: 8),
+          
+                  Text(
+                    "${startDate.day}/${startDate.month}/${startDate.year}",
+                    style: AppFonts.text16.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
-
-                    const SizedBox(width: 8),
-
-                    Text(
-                      "${startDate.day}/${startDate.month}/${startDate.year}",
+                  ),
+          
+                  const SizedBox(width: 15),
+          
+                  const Icon(
+                    Icons.arrow_forward,
+                    size: 30,
+                    color: Colors.black54,
+                  ),
+          
+                  const SizedBox(width: 15),
+          
+                  Text(
+                    "${endDate.day}/${endDate.month}/${endDate.year}",
+                    style: AppFonts.text16.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+          
+              const SizedBox(height: 8),
+          
+              // Địa điểm
+              Row(
+                children: [
+                  const Icon(Icons.location_on, size: 20, color: Colors.red),
+                  const SizedBox(width: 30),
+                  Text(
+                    locationNames,
+                    style: AppFonts.text16.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+          
+              const SizedBox(height: 8),
+          
+              // tour title
+              Row(
+                children: [
+                  const Icon(Icons.tour, size: 20, color: Color(0xFF1B5621)),
+                  const SizedBox(width: 30),
+                  Expanded(
+                    child: Text(
+                      schedule.tour.title,
                       style: AppFonts.text16.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
-                    const SizedBox(width: 15),
-
-                    const Icon(
-                      Icons.arrow_forward,
-                      size: 30,
-                      color: Colors.black54,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+          
+              // Số lượng khách
+              Row(
+                children: [
+                  const Icon(Icons.people, size: 20, color: Colors.orange),
+                  const SizedBox(width: 30),
+                  Text(
+                    "Tối đa: ${schedule.maxSlot}",
+                    style: AppFonts.text16.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
-
-                    const SizedBox(width: 15),
-
-                    Text(
-                      "${endDate.day}/${endDate.month}/${endDate.year}",
-                      style: AppFonts.text16.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 8),
-
-                // Địa điểm
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, size: 20, color: Colors.red),
-                    const SizedBox(width: 30),
-                    Text(
-                      locationNames,
-                      style: AppFonts.text16.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 8),
-
-                // tour title
-                Row(
-                  children: [
-                    const Icon(Icons.tour, size: 20, color: Color(0xFF1B5621)),
-                    const SizedBox(width: 30),
-                    Expanded(
-                      child: Text(
-                        schedule.tour.title,
-                        style: AppFonts.text16.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-
-                // Số lượng khách
-                Row(
-                  children: [
-                    const Icon(Icons.people, size: 20, color: Colors.orange),
-                    const SizedBox(width: 30),
-                    Text(
-                      "Tối đa: ${schedule.maxSlot}",
-                      style: AppFonts.text16.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

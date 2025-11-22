@@ -6,30 +6,28 @@ import 'package:booking_tour_flutter/domain/user_completed_schedule.dart';
 import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_cubit.dart';
 import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_state.dart';
 import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/cubit/xac_nhan_so_nguoi_tham_gia_cubit.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/loading_dialog.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/delete_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class KiemTraNguoiThamGiaScreen extends StatelessWidget {
-  final _cubit = KiemTraNguoiThamGiaCubit();
-
   KiemTraNguoiThamGiaScreen({super.key});
   
   @override
   Widget build(BuildContext context) {
-    _cubit.syncBooking(22);
+    final _cubit = context.read<KiemTraNguoiThamGiaCubit>();
 
-    return BlocProvider(
-      create: (context) => _cubit,
+    return BlocProvider.value(
+      value: _cubit,
       child: Scaffold(
         appBar: AppBar(title: Text("Kiểm tra người tham gia")),
         body: BlocBuilder<KiemTraNguoiThamGiaCubit, KiemTraNguoiThamGiaState>(
           builder: (context, state) {
             if(state.isLoading == true){
-              LoadingDialog();
+              return Center(child: LoadingDialog(),);
             }
-            return buildListPeople(state.userCompletedSchedule);
+            return buildListPeople(_cubit,state.userCompletedSchedule);
           },
         ),
         backgroundColor: AppColors.secondary,
@@ -37,26 +35,27 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
     );
   }
 
-  Widget buildListPeople(List<UserCompletedSchedule> userCompletedSchedules) {
+  Widget buildListPeople(KiemTraNguoiThamGiaCubit cubit, List<UserCompletedSchedule> userCompletedSchedules) {
     return ListView.builder(
       itemCount: userCompletedSchedules.length,
       itemBuilder: (context, index) {
         final userCompletedSchedule = userCompletedSchedules[index];
         if (userCompletedSchedule.booking!.status.id != 1) {
-          return buildCard(context, userCompletedSchedule);
+          return buildCard(cubit,context, userCompletedSchedule);
         }
       },
     );
   }
 
   Widget buildCard(
+    KiemTraNguoiThamGiaCubit cubit,
     BuildContext context,
     UserCompletedSchedule userCompletedSchedule,
   ) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Container(
-        height: 180,
+        height: 200,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(color: Colors.white),
         child: Column(
@@ -183,6 +182,28 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
+                          "Số người đang tham gia: ",
+                          style: AppFonts.text14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "${userCompletedSchedule.countPeople}",
+                          style: AppFonts.text14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          " người",
+                          style: AppFonts.text14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
                           "SĐT: ",
                           style: AppFonts.text14.copyWith(
                             fontWeight: FontWeight.bold,
@@ -212,7 +233,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                         AppNavigator.currentContext,
                         RouteName.xacNhanSoNguoiThamGia,
                       );
-                      _cubit.syncBooking(userCompletedSchedule.booking!.schedule.id);
+                      cubit.syncBooking(userCompletedSchedule.booking!.schedule.id);
                     },
                     text: "Xác nhận chưa tham gia",
                     backgroundColor: AppColors.delete,
@@ -226,7 +247,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                         AppNavigator.currentContext,
                         RouteName.xacNhanSoNguoiThamGia,
                       );
-                      _cubit.syncBooking(userCompletedSchedule.booking!.schedule.id);
+                      cubit.syncBooking(userCompletedSchedule.booking!.schedule.id);
                     },
                     text: "Xác nhận tham gia",
                     backgroundColor: AppColors.button,

@@ -23,6 +23,9 @@ ScheduleTourmanagerResponse _$ScheduleTourmanagerResponseFromJson(
       json['tour'] == null
           ? null
           : TripResponse.fromJson(json['tour'] as Map<String, dynamic>),
+  processingBooking: (json['processingBooking'] as num?)?.toInt(),
+  depositBooking: (json['depositBooking'] as num?)?.toInt(),
+  paidBooking: (json['paidBooking'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$ScheduleTourmanagerResponseToJson(
@@ -39,6 +42,9 @@ Map<String, dynamic> _$ScheduleTourmanagerResponseToJson(
   'code': instance.code,
   'desposit': instance.desposit,
   'tour': instance.tour,
+  'processingBooking': instance.processingBooking,
+  'depositBooking': instance.depositBooking,
+  'paidBooking': instance.paidBooking,
 };
 
 TripResponse _$TripResponseFromJson(Map<String, dynamic> json) => TripResponse(

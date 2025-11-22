@@ -1,7 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/delete_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class ListDiaDanhItem extends StatelessWidget {
@@ -22,7 +22,11 @@ class ListDiaDanhItem extends StatelessWidget {
       child: InkWell(
         // bấm vào item chuyển qua địa điểm hạot động
         onTap: () {
-          Navigator.pushNamed(context, RouteName.danhSachHoatDong, arguments: diaDanh);
+          Navigator.pushNamed(
+            context,
+            RouteName.danhSachHoatDong,
+            arguments: diaDanh,
+          );
         },
 
         child: Card(
@@ -76,10 +80,10 @@ class ListDiaDanhItem extends StatelessWidget {
   }
 
   Widget _buildIconText(IconData icon, Color color, String text) {
-  var tmp = text.split(" ");
-  var limitedWords = tmp.length > 6 ? tmp.sublist(0, 6) : tmp;
-  var str = limitedWords.join(" ");
-  if (tmp.length > 6) str += " ...";
+    var tmp = text.split(" ");
+    var limitedWords = tmp.length > 6 ? tmp.sublist(0, 6) : tmp;
+    var str = limitedWords.join(" ");
+    if (tmp.length > 6) str += " ...";
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,9 +3,9 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dar
 import 'package:booking_tour_flutter/domain/user_completed_schedule.dart';
 import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/cubit/xac_nhan_so_nguoi_tham_gia_cubit.dart';
 import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/cubit/xac_nhan_so_nguoi_tham_gia_state.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/delete_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

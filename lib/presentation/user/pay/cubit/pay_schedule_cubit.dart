@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/pay_booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
@@ -12,7 +13,7 @@ class PayScheduleCubit extends Cubit<PayScheduleState> {
   PayScheduleCubit()
     : super(
         PayScheduleState(
-          paySchedule: PayBooking.empty(),
+          paySchedule: Booking.empty(),
           schedule: ScheduleTourmanager.empty(),
           linkQR:
               "https://img.vietqr.io/image/VCB-1039744434-compact2.png?amount=0&addInfo=thanh%20toan%20chuyen%20di&accountName=Thanh%20Toan%20Chuyen%20Di",

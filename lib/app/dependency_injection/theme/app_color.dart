@@ -8,13 +8,13 @@ class AppColors {
   static const textPrimary = Color(0xFF000000);
   static const textSecondary = Color(0xFFFFFFFF);
   static const textHightLight = Color(0xFFA70000);
-
+  static const orange = Color(0xFFFFA500);
   static const white = Color(0xFFFFFFFF);
   static const black = Color(0xFF000000);
 
   static const backgroundDisable = Color(0xFFB1B1B1);
   static const gray = Color(0xFF8A8A8A);
-  static final Color lightGrey = Colors.grey.shade500;
+  static final Color lightGrey = const Color.fromARGB(255, 235, 231, 231);
 
   //Theme color
   static const scaffoldBackgroundColor = Color(0xFFF1F1F1);
@@ -26,6 +26,7 @@ class AppColors {
   static const borderButton = Color(0xFF026CAD);
 
   static final Color lightBlue = Colors.lightBlue[50]!;
+  static final Color lightRed = Color(0xFFfdf9f9);
 
   static const Color error = Color(0xFFDE6767);
   static const Color info = Color(0xFF6D9ADA);

@@ -21,9 +21,12 @@ class BookingResponse {
   int? totalPrice;
   int? countChangeLeft;
   DateTime? createdAt;
+  bool? payType;
   BookingStatusResponse? status;
   ScheduleTourmanagerResponse? schedule;
   UserResponse? user;
+  DateTime? expiredAt;
+  String? qr;
 
   BookingResponse({
     this.numPeople,
@@ -58,9 +61,12 @@ extension BookingResponseMapper on BookingResponse {
       totalPrice: totalPrice ?? 0,
       countChangeLeft: countChangeLeft ?? 0,
       createdAt: createdAt ?? DateTime.now(),
+      payType: payType ?? false,
       status: bookingStatus,
       schedule: convertedSchedule,
       user: convertedUser,
+      expiredAt: expiredAt ?? DateTime.now(),
+      qr: qr ?? "",
     );
   }
 }

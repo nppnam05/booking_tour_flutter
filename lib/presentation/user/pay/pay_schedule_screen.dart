@@ -1,17 +1,25 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/formatter_helper.dart';
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/pay_booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/presentation/tour_manager/dia_danh/danh_sach_dia_danh/cubit/dia_danh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_state.dart';
+import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
+import 'package:booking_tour_flutter/presentation/widgets/qr_code_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
 
 class PayScheduleScreen extends StatelessWidget {
   PayScheduleScreen({super.key});
+  final ScreenshotController _screenshotController = ScreenshotController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,47 +27,78 @@ class PayScheduleScreen extends StatelessWidget {
       value: context.read<PayScheduleCubit>(),
       child: Scaffold(
         appBar: AppBar(title: Text("Thanh toán chuyến đi")),
-        body: SingleChildScrollView(child: Center(child: columnOfWidget())),
+        body: SingleChildScrollView(
+          child: Center(child: columnOfWidget(context)),
+        ),
       ),
     );
   }
 
-  Widget columnOfWidget() {
+  Widget columnOfWidget(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 20),
-        BlocBuilder<PayScheduleCubit, PayScheduleState>(
-          builder: (context, state) {
-            return scheduleInfoCard(state.schedule);
-          },
+        Screenshot(
+          controller: _screenshotController,
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              BlocBuilder<PayScheduleCubit, PayScheduleState>(
+                builder: (context, state) {
+                  return scheduleInfoCard(state.schedule);
+                },
+              ),
+              SizedBox(height: 15),
+              BlocBuilder<PayScheduleCubit, PayScheduleState>(
+                builder: (context, state) {
+                  return inforUserCard(state.paySchedule);
+                },
+              ),
+              BlocBuilder<PayScheduleCubit, PayScheduleState>(
+                builder: (context, state) {
+                  return qrCode(
+                    state.paySchedule.qr,
+                    state.paySchedule.expiredAt,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-        SizedBox(height: 15),
-        BlocBuilder<PayScheduleCubit, PayScheduleState>(
-          builder: (context, state) {
-            return inforUserCard(state.paySchedule);
+        BkButton(
+          onPressed: () async {
+            final directory =
+                (await getApplicationDocumentsDirectory())
+                    .path; //from path_provide package
+            String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+
+            await _screenshotController.captureAndSave(
+              directory,
+              fileName: fileName,
+            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Lưu ảnh thành công")));
           },
-        ),
-        SizedBox(height: 15),
-        BlocBuilder<PayScheduleCubit, PayScheduleState>(
-          builder: (context, state) {
-            return qrCode(state.linkQR);
-          },
+          title: "Lưu mã qr",
         ),
       ],
     );
   }
 
-  Widget qrCode(String linkQR) {
+  Widget qrCode(String qr, DateTime expiredAt) {
     return Column(
       children: [
-        SizedBox(height: 12),
-        Image.network(
-          linkQR,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return const Text('Không thể tải ảnh');
-          },
-        ),
+        // Image.network(
+        //   linkQR,
+        //   fit: BoxFit.cover,
+        //   errorBuilder: (context, error, stackTrace) {
+        //     return const Text('Không thể tải ảnh');
+        //   },
+        // ),
+        // SizedBox(width: 300, height: 300, child: QrImageView(data: qr)),
+        QrCodeWidget(qr: qr, expiredAt: expiredAt, key: UniqueKey()),
         SizedBox(height: 12),
         Text("Quét mã tại đây để thanh toán", style: AppFonts.text18),
         SizedBox(height: 12),
@@ -67,7 +106,7 @@ class PayScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget inforUserCard(PayBooking pay) {
+  Widget inforUserCard(Booking pay) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -96,7 +135,10 @@ class PayScheduleScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Tổng số tiền", style: AppFonts.text18),
-                    Text("${FormatterHelper.formatCurrency(pay.totalPrice)}", style: AppFonts.text18),
+                    Text(
+                      "${FormatterHelper.formatCurrency(pay.totalPrice)}",
+                      style: AppFonts.text18,
+                    ),
                   ],
                 ),
                 SizedBox(height: 12),
@@ -133,13 +175,13 @@ class PayScheduleScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Nếu sau 2 tiếng bạn chưa thanh toán thì chuyến đi của bạn sẽ bị hủy",
-                    style: AppFonts.text18,
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Text(
+                //     "Nếu sau 2 tiếng bạn chưa thanh toán thì chuyến đi của bạn sẽ bị hủy",
+                //     style: AppFonts.text18,
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -154,7 +196,6 @@ class PayScheduleScreen extends StatelessWidget {
 
     var locationName = schedule.tour.provinces
         .map((loc) => loc.name)
-        .toSet() // Loại bỏ trùng lặp
         .join(', ');
 
     return Container(

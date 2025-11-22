@@ -5,7 +5,7 @@ import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/danh_sach_hoat_dong_state.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,8 +81,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
         color: AppColors.white,
         child: Column(
           children: [
-            if (state.danhSachHoatDong.isNotEmpty)
-              _buildHeaderInfo(state.danhSachHoatDong.first),
+            _buildHeaderInfo(place),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: SearchBarWidget(
@@ -216,16 +215,16 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
     );
   }
 
-  Widget _buildHeaderInfo(LocationActivity locationActivity) {
+  Widget _buildHeaderInfo(Place place) {
     return Container(
       color: AppColors.button.withOpacity(0.2),
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 8),
         child: Column(
           children: [
-            _buildInfoRow("Địa điểm:", locationActivity.place.name),
+            _buildInfoRow("Địa điểm:", place.name),
             const SizedBox(height: 16),
-            _buildInfoRow("Tỉnh thành:", locationActivity.place.province.name),
+            _buildInfoRow("Tỉnh thành:", place.province.name),
             const SizedBox(height: 16),
           ],
         ),
@@ -233,7 +232,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String? value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -253,7 +252,7 @@ class _DanhSachHoatDongScreenState extends State<DanhSachHoatDongScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
           child: Text(
-            value,
+            value ?? "",
             style: const TextStyle(
               fontSize: AppFonts.fontSize16,
               fontWeight: FontWeight.bold,

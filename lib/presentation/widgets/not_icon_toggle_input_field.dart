@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,6 +8,7 @@ Widget notIconToggleInputField(
   String text,
   Color color, {
   ValueChanged<String>? onChanged,
+  Color? inputBackgroundColor,
   bool isNumber = false,
 }) {
   return Container(
@@ -17,10 +19,7 @@ Widget notIconToggleInputField(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8.0),
         TextField(
           controller: controller,
@@ -29,8 +28,12 @@ Widget notIconToggleInputField(
           decoration: InputDecoration(
             hintText: text,
             isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
+            filled: true,
+            fillColor: inputBackgroundColor ?? AppColors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,

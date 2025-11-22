@@ -1,32 +1,87 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
-import 'package:booking_tour_flutter/domain/schedule.dart';
+import 'package:booking_tour_flutter/domain/schedule_reception.dart';
+import 'package:booking_tour_flutter/domain/user_completed_schedule.dart';
+import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_cubit.dart';
+import 'package:booking_tour_flutter/presentation/reception/lich_trinh_chua_hoan_thanh/cubit/lich_trinh_chua_hoan_thanh_cubit.dart';
+import 'package:booking_tour_flutter/presentation/reception/lich_trinh_chua_hoan_thanh/cubit/lich_trinh_chua_hoan_thanh_state.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Lịch trình chưa hoàn thành")),
-      body: buildListSchedule(),
+    return BlocProvider(
+      create: (context) => LichTrinhChuaHoanThanhCubit()..syncScheduleReception(),
+      child: Scaffold(
+        appBar: AppBar(title: Text("Lịch trình chưa hoàn thành")),
+        body: BlocListener<
+          LichTrinhChuaHoanThanhCubit,
+          LichTrinhChuaHoanThanhState
+        >(
+          listenWhen: (previous, current) {
+            return previous.scheduleReception != current.scheduleReception;
+          },
+          listener: (context, state) {
+            if (state.scheduleReception.isNotEmpty) {
+              context.read<LichTrinhChuaHoanThanhCubit>().syncUserCompletedScheduleBySchedule(
+                state.scheduleReception.map((s) => s.id).toList(),
+              );
+            }
+          },
+          child: BlocBuilder<
+            LichTrinhChuaHoanThanhCubit,
+            LichTrinhChuaHoanThanhState
+          >(
+            builder: (context, state) {
+              return buildListSchedule(state, context, state.scheduleReception);
+            },
+          ),
+        ),
+      ),
     );
   }
 
-  Widget buildListSchedule() {
+  Widget buildListSchedule(
+    LichTrinhChuaHoanThanhState state,
+    BuildContext context,
+    List<ScheduleReception> scheduleReceptions,
+  ) {
     return ListView.builder(
-      itemCount: 2,
+      itemCount: scheduleReceptions.length,
       itemBuilder: (context, index) {
-        return buildCard(context);
+        final scheduleReception = scheduleReceptions[index];
+        return buildCard(state, context, scheduleReception);
       },
     );
   }
 
-  Widget buildCard(BuildContext context) {
+  Widget buildCard(
+    LichTrinhChuaHoanThanhState state,
+    BuildContext context,
+    ScheduleReception scheduleReception,
+  ) {
+    
+    // lay booking ra theo id lich trinh
+    final userCompletedForThisSchedule = state.userCompletedSchedule[scheduleReception.id] ?? [];
+
+    // lay sl nguoi da coc, thanh toan
+    int countByStatus(List<UserCompletedSchedule> list, int statusId) {
+      return list.where((item) => item.booking?.status.id == statusId).length;
+    }
+
+    int datCoc = countByStatus(userCompletedForThisSchedule, 2);
+    int thanhToan = countByStatus(userCompletedForThisSchedule, 3);
+
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, RouteName.kiemTraNguoiThamGia);
+        context.read<KiemTraNguoiThamGiaCubit>().syncBooking(scheduleReception.id);
+        Navigator.pushNamed(AppNavigator.currentContext, RouteName.kiemTraNguoiThamGia);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -45,8 +100,8 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                   width: 120,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(
-                      "assets/logo_fb.png",
+                    child: Image.network(
+                      scheduleReception.tour.tourImages.first,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(color: Colors.black);
@@ -71,7 +126,7 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "1234",
+                              scheduleReception.code,
                               style: AppFonts.text14.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -83,7 +138,7 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                           children: [
                             Icon(Icons.park, size: 20, color: AppColors.button),
                             Text(
-                              " Du lịch hạ long",
+                              scheduleReception.tour.title,
                               style: AppFonts.text14.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -109,7 +164,7 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "10",
+                                      "${thanhToan}",
                                       style: AppFonts.text14.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -135,7 +190,7 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "10",
+                                      "${datCoc}",
                                       style: AppFonts.text14.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
