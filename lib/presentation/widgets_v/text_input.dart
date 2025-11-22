@@ -7,6 +7,7 @@ class TextInput extends StatelessWidget {
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
+  final bool enabled;
 
   const TextInput({
     super.key,
@@ -15,6 +16,7 @@ class TextInput extends StatelessWidget {
     this.controller,
     this.onChanged,
     this.validator,
+    this.enabled = true,
   });
 
   @override
@@ -37,6 +39,7 @@ class TextInput extends StatelessWidget {
           controller: controller,
           onChanged: onChanged,
           validator: validator,
+          enabled: enabled,
           decoration: InputDecoration(
             hintText: hintText,
             contentPadding: const EdgeInsets.symmetric(

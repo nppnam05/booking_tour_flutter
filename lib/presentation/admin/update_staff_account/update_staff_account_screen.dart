@@ -1,11 +1,12 @@
 import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/domain/role.dart';
 import 'package:booking_tour_flutter/domain/staff.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
-import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -176,22 +177,15 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
     Navigator.of(context).pop();
   }
 
-  Widget _buildDateField(
-    String label,
-    TextEditingController controller,
-    DateTime fallback,
-  ) {
+  Widget _buildDateField(TextEditingController controller, DateTime fallback) {
     return TextFormField(
       controller: controller,
       readOnly: true,
       onTap: () => _pickDate(controller, fallback),
-      decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: const Icon(Icons.calendar_today),
-      ),
+      decoration: InputDecoration(suffixIcon: const Icon(Icons.calendar_today)),
       validator:
           (value) =>
-              value == null || value.isEmpty ? 'Vui lòng chọn $label' : null,
+              value == null || value.isEmpty ? 'Vui lòng chọn ngày' : null,
     );
   }
 
@@ -244,61 +238,76 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                           ],
                         ),
                       ),
-                      TextFormField(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.security),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Thông tin tài khoản",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppFonts.fontSize18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      TextInput(
                         controller: _idController,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          labelText: 'ID tài khoản',
-                        ),
+                        labelText: "Tài khoản",
+                        hintText: "Tài khoản",
+                        enabled: false,
                       ),
                       const SizedBox(height: 12),
-                      BlocBuilder<AccountManagementCubit, AccountManagementState>(
-                        builder: (context, state) {
-                          final filteredRoles = state.roles
-                              .where((role) => role.title.toLowerCase() != 'user')
-                              .toList();
-                          final roleTitles = filteredRoles.map((role) => role.title).toList();
-                          
-                          return DropdownButtonFormField<String>(
-                            value: _roleValue,
-                            items: roleTitles
-                                .map(
-                                  (role) => DropdownMenuItem(
-                                    value: role,
-                                    child: Text(role),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged:
-                                (value) => setState(() => _roleValue = value),
-                            decoration: const InputDecoration(labelText: 'Chức vụ'),
-                          );
-                        },
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Chức vụ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppFonts.fontSize16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            readOnly: true,
+                            initialValue: _roleValue,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 12),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text('Đang hoạt động'),
-                        value: _isActive,
-                        onChanged: (value) => setState(() => _isActive = value),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.person),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Thông tin cá nhân",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppFonts.fontSize18,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 12),
-                      TextFormField(
+                      TextInput(
                         controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Họ và tên',
-                        ),
+                        labelText: 'Họ và tên',
                         validator:
                             (value) =>
                                 value == null || value.trim().isEmpty
                                     ? 'Vui lòng nhập họ và tên'
                                     : null,
+                        hintText: 'Họ và tên',
                       ),
                       const SizedBox(height: 12),
-                      TextFormField(
+                      TextInput(
                         controller: _emailController,
-                        decoration: const InputDecoration(labelText: 'Email'),
-                        keyboardType: TextInputType.emailAddress,
+                        labelText: 'Email',
+                        hintText: 'Email',
                         validator:
                             (value) =>
                                 value == null || value.trim().isEmpty
@@ -306,12 +315,10 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                                     : null,
                       ),
                       const SizedBox(height: 12),
-                      TextFormField(
+                      TextInput(
                         controller: _phoneController,
-                        decoration: const InputDecoration(
-                          labelText: 'Số điện thoại',
-                        ),
-                        keyboardType: TextInputType.phone,
+                        labelText: 'Số điện thoại',
+                        hintText: 'Số điện thoại',
                         validator:
                             (value) =>
                                 value == null || value.trim().isEmpty
@@ -319,9 +326,10 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                                     : null,
                       ),
                       const SizedBox(height: 12),
-                      TextFormField(
+                      TextInput(
                         controller: _addressController,
-                        decoration: const InputDecoration(labelText: 'Địa chỉ'),
+                        labelText: 'Địa chỉ',
+                        hintText: 'Địa chỉ',
                         validator:
                             (value) =>
                                 value == null || value.trim().isEmpty
@@ -329,12 +337,10 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                                     : null,
                       ),
                       const SizedBox(height: 12),
-                      TextFormField(
+                      TextInput(
                         controller: _cccdController,
-                        decoration: const InputDecoration(
-                          labelText: 'CCCD/CMND',
-                        ),
-                        keyboardType: TextInputType.number,
+                        labelText: 'Căn cước công dân (CCCD)',
+                        hintText: 'Căn cước công dân (CCCD)',
                         validator:
                             (value) =>
                                 value == null || value.trim().isEmpty
@@ -342,28 +348,73 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                                     : null,
                       ),
                       const SizedBox(height: 12),
-                      _buildDateField(
-                        'Ngày cấp CCCD',
-                        _idIssueDateController,
-                        _staff!.cccdIssueDate,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ngày cấp",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppFonts.fontSize16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDateField(
+                            _idIssueDateController,
+                            _staff!.cccdIssueDate,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 12),
-                      _buildDateField(
-                        'Ngày sinh',
-                        _dobController,
-                        _staff!.dateOfBirth,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ngày sinh",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppFonts.fontSize16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDateField(_dobController, _staff!.dateOfBirth),
+                        ],
                       ),
                       const SizedBox(height: 12),
-                      _buildDateField(
-                        'Ngày vào làm',
-                        _joinDateController,
-                        _staff!.startWorkingDate,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ngày bắt đầu làm việc",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppFonts.fontSize16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDateField(
+                            _joinDateController,
+                            _staff!.startWorkingDate,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 12),
-                      _buildDateField(
-                        'Ngày nghỉ việc',
-                        _leaveDateController,
-                        _staff!.endWorkingDate,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ngày kết thúc làm việc",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppFonts.fontSize16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDateField(
+                            _leaveDateController,
+                            _staff!.endWorkingDate,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 24),
                       Row(
