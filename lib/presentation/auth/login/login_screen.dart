@@ -50,6 +50,13 @@ class LoginScreen extends StatelessWidget {
           context.read<AuthCubit>().setUser(state.user);
 
           switch (state.user.roleId) {
+            case 1:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.accountManagement,
+                (route) => false,
+              );
+              return;
             case 2:
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -120,7 +127,6 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 if (_controllerEmail.text.trim().isNotEmpty &&
                     _controllerPassword.text.trim().isNotEmpty) {
-                      
                   _cubit.login(
                     _controllerEmail.text.trim(),
                     _controllerPassword.text.trim(),
@@ -205,10 +211,8 @@ class LoginScreen extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            // login bằng google 
+            // login bằng google
             _cubit.loginWithGoogle();
-
-            
           },
           child: Padding(
             padding: EdgeInsets.all(4.0),
@@ -220,9 +224,7 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
         InkWell(
-          onTap: () {
-            
-          },
+          onTap: () {},
           child: Padding(
             padding: EdgeInsets.all(4.0),
             child: Image.asset(

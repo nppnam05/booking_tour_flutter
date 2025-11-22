@@ -1,71 +1,16 @@
+import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:flutter/material.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-
-class Staff {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String role;
-  final String email;
-  final String phone;
-  final String dob;
-  final String address;
-  final String idNumber;
-  final String idIssueDate;
-  final String joinDate;
-  final String jobStartDate;
-  final String rank;
-  final bool active;
-
-  Staff({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.role,
-    required this.email,
-    required this.phone,
-    required this.dob,
-    required this.address,
-    required this.idNumber,
-    required this.idIssueDate,
-    required this.joinDate,
-    required this.jobStartDate,
-    required this.rank,
-    required this.active,
-  });
-
-  String get fullName => '$firstName $lastName';
-  String get initials {
-    String a = firstName.isNotEmpty ? firstName[0] : '';
-    String b = lastName.isNotEmpty ? lastName[0] : '';
-    return (a + b).toUpperCase();
-  }
-}
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:booking_tour_flutter/domain/staff.dart';
 
 class DetailStaffScreen extends StatelessWidget {
-  final Staff staff;
+  final Staff? staff;
 
-  DetailStaffScreen({super.key, Staff? staff})
-    : staff =
-          staff ??
-          Staff(
-            id: 'NV2024001',
-            firstName: 'Nguyễn Thị',
-            lastName: 'Anh',
-            role: 'Quản lý chuyến đi',
-            email: 'nguyenanh@tourcompany.vn',
-            phone: '0987654321',
-            dob: '15/03/1992',
-            address: '123 Nguyễn Huệ, Q1, TP.HCM',
-            idNumber: '079123456789',
-            idIssueDate: '20/02/2024',
-            joinDate: '01/01/2023',
-            jobStartDate: '01/01/2023',
-            rank: 'Quản lý',
-            active: true,
-          );
+  const DetailStaffScreen({super.key, this.staff});
 
   Widget _sectionCard({required String title, required List<Widget> children}) {
     return Container(
@@ -121,7 +66,23 @@ class DetailStaffScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusText = staff.active ? 'Đang hoạt động' : 'Tạm khóa';
+    final selectedStaff =
+        staff ?? context.watch<AccountManagementCubit>().state.selectedStaff;
+
+    if (selectedStaff == null) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundAppBarTheme,
+          title: const Text('Chi tiết nhân viên'),
+          leading: BackButton(color: Colors.white),
+          elevation: 0,
+        ),
+        body: const Center(child: Text('Không tìm thấy dữ liệu nhân viên')),
+      );
+    }
+
+    final staffData = selectedStaff;
+    final statusText = staffData.isActive ? 'Đang hoạt động' : 'Tạm khóa';
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       appBar: AppBar(
@@ -141,7 +102,7 @@ class DetailStaffScreen extends StatelessWidget {
                     radius: 34,
                     backgroundColor: AppColors.backgroundAppBarTheme,
                     child: Text(
-                      staff.initials,
+                      staffData.user.avatarPath,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -151,7 +112,7 @@ class DetailStaffScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    staff.fullName,
+                    staffData.user.name,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -159,7 +120,7 @@ class DetailStaffScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    staff.role,
+                    staffData.role.title,
                     style: const TextStyle(color: Colors.black54),
                   ),
                   const SizedBox(height: 6),
@@ -173,7 +134,7 @@ class DetailStaffScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Text(
-                      'ID: ${staff.id}',
+                      'ID: ${staffData.user.id}',
                       style: const TextStyle(color: Colors.black45),
                     ),
                   ),
@@ -186,12 +147,20 @@ class DetailStaffScreen extends StatelessWidget {
             _sectionCard(
               title: 'Thông tin cá nhân',
               children: [
-                _infoRow(Icons.email, 'Email', staff.email),
-                _infoRow(Icons.phone, 'Số điện thoại', staff.phone),
-                _infoRow(Icons.cake, 'Ngày sinh', staff.dob),
-                _infoRow(Icons.location_on, 'Địa chỉ', staff.address),
-                _infoRow(Icons.badge, 'CCCD/CMND', staff.idNumber),
-                _infoRow(Icons.date_range, 'Ngày cấp CCCD', staff.idIssueDate),
+                _infoRow(Icons.email, 'Email', staffData.user.email),
+                _infoRow(Icons.phone, 'Số điện thoại', staffData.user.phone),
+                _infoRow(
+                  Icons.cake,
+                  'Ngày sinh',
+                  formatDate(staffData.dateOfBirth),
+                ),
+                _infoRow(Icons.location_on, 'Địa chỉ', staffData.address),
+                _infoRow(Icons.badge, 'CCCD/CMND', staffData.cccd),
+                _infoRow(
+                  Icons.date_range,
+                  'Ngày cấp CCCD',
+                  formatDate(staffData.cccdIssueDate),
+                ),
               ],
             ),
 
@@ -199,39 +168,51 @@ class DetailStaffScreen extends StatelessWidget {
             _sectionCard(
               title: 'Thông tin công việc',
               children: [
-                _infoRow(Icons.calendar_today, 'Ngày vào làm', staff.joinDate),
+                _infoRow(
+                  Icons.calendar_today,
+                  'Ngày vào làm',
+                  formatDate(staffData.startWorkingDate),
+                ),
                 _infoRow(
                   Icons.calendar_today,
                   'Ngày nghỉ việc',
-                  staff.jobStartDate,
+                  formatDate(staffData.endWorkingDate),
                 ),
-                _infoRow(Icons.workspace_premium, 'Cấp bậc', staff.rank),
+                _infoRow(
+                  Icons.workspace_premium,
+                  'Cấp bậc',
+                  staffData.role.title,
+                ),
                 _infoRow(Icons.check_circle_outline, 'Trạng thái', statusText),
               ],
             ),
 
-            // Đánh giá (nếu là hướng dẫn viên mới có)
-            _sectionCard(
-              title: 'Đánh giá',
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Xem đánh giá',
-                      style: TextStyle(color: AppColors.backgroundAppBarTheme),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.black26,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            // Đánh giá (chỉ hiển thị nếu là hướng dẫn viên)
+            if (staffData.role.title.toLowerCase() == 'tour guide')
+              _sectionCard(
+                title: 'Đánh giá',
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Xem đánh giá',
+                        style: TextStyle(
+                          color: AppColors.backgroundAppBarTheme,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Colors.black26,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
 
-            const SizedBox(height: 12),
+            if (staffData.role.title.toLowerCase() == 'hướng dẫn viên')
+              const SizedBox(height: 12),
 
             //  các nút chức năng
             Padding(
@@ -286,9 +267,12 @@ class DetailStaffScreen extends StatelessWidget {
                       title: 'Cập nhật',
                       backgroundColor: AppColors.borderButton,
                       onPressed: () {
-                        // TODO: đến màn hình cập nhật
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Cập nhật')),
+                        context.read<AccountManagementCubit>().setSelectedStaff(
+                          staffData,
+                        );
+                        Navigator.pushNamed(
+                          context,
+                          'update_staff_account_screen',
                         );
                       },
                     ),

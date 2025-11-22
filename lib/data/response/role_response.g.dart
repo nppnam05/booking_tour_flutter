@@ -6,8 +6,10 @@ part of 'role_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RoleResponse _$RoleResponseFromJson(Map<String, dynamic> json) =>
-    RoleResponse(id: json['id'] as String?, title: json['title'] as String?);
+RoleResponse _$RoleResponseFromJson(Map<String, dynamic> json) => RoleResponse(
+  id: (json['id'] as num?)?.toInt(),
+  title: json['title'] as String?,
+);
 
 Map<String, dynamic> _$RoleResponseToJson(RoleResponse instance) =>
     <String, dynamic>{'id': instance.id, 'title': instance.title};

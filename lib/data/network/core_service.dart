@@ -275,4 +275,10 @@ abstract class CoreService {
 
   @PUT("/Notification")
   Future<RestResponse> notifaiIsRead(@Body() ReadReviewRequets request);
+
+  @GET("/Staff/getstaffs-byroleid/{roleId}")
+  Future<RestResponse> getAllStaff(@Path("roleId") int roleId);
+
+  @GET("/Role")
+  Future<RestResponse> getAllRoles();
 }

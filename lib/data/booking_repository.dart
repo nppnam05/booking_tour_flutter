@@ -29,14 +29,15 @@ import 'package:booking_tour_flutter/data/response/pay_booking_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/review_response.dart';
+import 'package:booking_tour_flutter/data/response/role_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
-import 'package:booking_tour_flutter/data/response/schedule_book_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart'
     hide LocationActivityResponse;
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
+import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
@@ -57,12 +58,13 @@ import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/review.dart';
+import 'package:booking_tour_flutter/domain/role.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
-import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/domain/schedule_detail.dart'
     hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
+import 'package:booking_tour_flutter/domain/staff.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment_tourguide.dart';
@@ -72,6 +74,7 @@ import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
+import 'package:booking_tour_flutter/presentation/admin/detail_staff_account/detail_staff_screen.dart';
 import 'package:dartz/dartz.dart';
 import 'package:booking_tour_flutter/data/response/favorite_response.dart';
 import 'package:booking_tour_flutter/domain/favorite.dart';
@@ -283,6 +286,8 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
   Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
   Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request);
+  Future<Either<Failure, List<Staff>>> getAllStaff(int roleId);
+  Future<Either<Failure, List<Role>>> getAllRole();
 }
 
 @Singleton(as: BookingRepository)
@@ -1432,6 +1437,49 @@ class BookingRepositoryImp implements BookingRepository {
       var result = responses.data as bool;
 
       return Right(result);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Staff>>> getAllStaff(int roleId) async {
+    try {
+      var responses = await _coreService.getAllStaff(roleId);
+      final jsonData = responses.data;
+      final List<dynamic> data =
+          (jsonData is Map<String, dynamic>)
+              ? (jsonData['data'] as List<dynamic>)
+              : (jsonData as List<dynamic>);
+
+      var staffResponses = data.map(
+        (json) => StaffResponse.fromJson(json as Map<String, dynamic>),
+      );
+
+      var staffs = staffResponses.map((response) => response.map()).toList();
+
+      return Right(staffs.cast<Staff>());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  Future<Either<Failure, List<Role>>> getAllRole() async {
+    try {
+      var responses = await _coreService.getAllRoles();
+      final jsonData = responses.data;
+      final List<dynamic> data =
+          (jsonData is Map<String, dynamic>)
+              ? (jsonData['data'] as List<dynamic>)
+              : (jsonData as List<dynamic>);
+
+      var roleResponses = data.map(
+        (json) => RoleResponse.fromJson(json as Map<String, dynamic>),
+      );
+
+      var roles = roleResponses.map((response) => response.map()).toList();
+
+      return Right(roles.cast<Role>());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

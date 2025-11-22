@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/cubit/auth_otp_change_password_cubit.dart';
@@ -40,6 +41,7 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => DetailPaidScheduleCubit()),
         BlocProvider(create: (_) => DanhSachLichTrinhBookingCubit()),
         BlocProvider(create: (_) => ThongBaoCubit()),
+        BlocProvider(create: (_) => AccountManagementCubit()),
       ],
 
       child: child,
