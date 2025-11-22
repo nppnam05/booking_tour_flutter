@@ -1,6 +1,8 @@
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_tin_cua_ban/cubit/thong_tin_cua_ban_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,6 +46,7 @@ class ThongTinCuaBanCubit extends Cubit<ThongTinCuaBanState> {
 
   Future<void> saveChangeUpdate() async {
     var user = state.user;
+    
     final result = await bookingRepository.updateUserId(
       id: user.id,
       money: user.money,
@@ -56,6 +59,9 @@ class ThongTinCuaBanCubit extends Cubit<ThongTinCuaBanState> {
       bankNumber: user.bankNumber,
       refundStatus: user.refundStatus
     );
+
+    var cubitAuth = AppNavigator.currentContext.read<AuthCubit>();
+    cubitAuth.setUser(user);
 
     result.fold((failure){
       print("faild");

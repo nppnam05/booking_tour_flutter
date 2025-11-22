@@ -10,8 +10,8 @@ import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/widgets/nullable_image.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/spinner_dialog/select_mul_province/select_mul_province_field.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button_cubit.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button_state.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/pick_image_button_cubit.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/pick_image_button_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_textfield.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';

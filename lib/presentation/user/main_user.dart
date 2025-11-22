@@ -15,10 +15,10 @@ class MainUser extends StatefulWidget {
 
 class _MainUserState extends State<MainUser> {
   late int _currentIndex;
-  static const List<Widget> _screens = [
-    DanhSachChuyenDiScreen(),
-    FavoriteTourScreen(),
-    ProfileUserScreen(),
+  static final List<Widget> _screens = [
+    DanhSachChuyenDiScreen(key: UniqueKey()),
+    FavoriteTourScreen(key: UniqueKey(),),
+    ProfileUserScreen(key: UniqueKey(),),
   ];
 
   @override
@@ -36,7 +36,7 @@ class _MainUserState extends State<MainUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: IndexedStack(index: _currentIndex, children: _screens,),
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

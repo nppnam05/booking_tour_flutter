@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/pick_image_button/pick_image_button.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/search_bar_widget.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/dropdown_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/delete_button_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/pick_image_button/pick_image_button.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/search_bar_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/dropdown_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

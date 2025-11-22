@@ -5,7 +5,7 @@ import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/vi/cubit/vi_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/vi/cubit/vi_state.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/delete_button_widget.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/delete_button_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_icon_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/textfield_not_tilte.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/generic_selected_dialog.dart';
