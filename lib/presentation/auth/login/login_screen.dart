@@ -72,6 +72,13 @@ class LoginScreen extends StatelessWidget {
                 (route) => false,
               );
               return;
+            case 4:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.accountant_home,
+                (route) => false,
+              );
+              return;
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -3,6 +3,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
+import 'package:booking_tour_flutter/domain/booking_status.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
@@ -17,7 +18,7 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var userId = context.read<AuthCubit>().state.id;
     var _cubit = context.read<DanhSachLichTrinhBookingCubit>();
-    
+
     _cubit.syncBooking(userId);
 
     return BlocProvider.value(
@@ -41,8 +42,8 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
     bookings.sort((a, b) {
       var adate = a.createdAt;
       var bdate = b.createdAt;
-      return -adate.compareTo(bdate); 
-    },);
+      return -adate.compareTo(bdate);
+    });
 
     return ListView.builder(
       itemCount: bookings.length,
@@ -58,12 +59,16 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () async {
-          print("hehe");
-          //TODO: hello
-
-          AppNavigator.currentContext.read<DetailPaidScheduleCubit>().setBooking(booking);
-          await Navigator.pushNamed(AppNavigator.currentContext, RouteName.profileDetailPaidSchedule);
-          context.read<DanhSachLichTrinhBookingCubit>().syncBooking(AppNavigator.currentContext.read<AuthCubit>().state.id);
+          AppNavigator.currentContext
+              .read<DetailPaidScheduleCubit>()
+              .setBooking(booking);
+          await Navigator.pushNamed(
+            AppNavigator.currentContext,
+            RouteName.profileDetailPaidSchedule,
+          );
+          context.read<DanhSachLichTrinhBookingCubit>().syncBooking(
+            AppNavigator.currentContext.read<AuthCubit>().state.id,
+          );
         },
         child: Container(
           width: double.infinity,
@@ -76,44 +81,18 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
             padding: EdgeInsets.all(8),
             child: Column(
               children: [
-                if (booking.status.id == 1) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(Icons.eco_rounded, color: Colors.brown),
-                      Text(
-                        "${booking.status.name} ...",
-                        style: AppFonts.text16.copyWith(color: Colors.brown),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(booking.status.icon, color: booking.status.color),
+                    Text(
+                      "${booking.status.name} ...",
+                      style: AppFonts.text16.copyWith(
+                        color: booking.status.color,
                       ),
-                    ],
-                  ),
-                ],
-                if (booking.status.id == 2) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(Icons.error, color: Colors.deepOrange),
-                      Text(
-                        " ${booking.status.name}",
-                        style: AppFonts.text16.copyWith(
-                          color: Colors.deepOrange,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-                if (booking.status.id == 3) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(Icons.check_box, color: Colors.green),
-                      Text(
-                        " ${booking.status.name}",
-                        style: AppFonts.text16.copyWith(color: Colors.green),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
