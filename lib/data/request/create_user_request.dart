@@ -4,16 +4,17 @@ part 'create_user_request.g.dart';
 
 @JsonSerializable()
 class CreateUserRequest {
-  int roleId = 1;
+  int roleId = 3;
   String password;
   int money;
-  String bankNumber = " ";
-  String bank = " ";
+  String bankNumber = "";
+  String bank = "";
   String name;
   String email;
   String phone;
-  String avatarPath = " ";
-  String bankBranch = " ";
+  String avatarPath = "";
+  String bankBranch = "";
+  String token = "";
 
   CreateUserRequest({
     required this.roleId,
@@ -26,11 +27,12 @@ class CreateUserRequest {
     required this.phone,
     required this.avatarPath,
     required this.bankBranch,
+    required this.token
   });
 
   static empty(){
     return CreateUserRequest(
-      roleId: 1,
+      roleId: 3,
       password: "",
       money: 0,
       bankNumber: "",
@@ -40,6 +42,7 @@ class CreateUserRequest {
       phone: "",
       avatarPath: "",
       bankBranch: "",
+      token: ""
     );
   }
 

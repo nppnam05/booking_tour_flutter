@@ -18,6 +18,7 @@ CreateUserRequest _$CreateUserRequestFromJson(Map<String, dynamic> json) =>
       phone: json['phone'] as String,
       avatarPath: json['avatarPath'] as String,
       bankBranch: json['bankBranch'] as String,
+      token: json['token'] as String,
     );
 
 Map<String, dynamic> _$CreateUserRequestToJson(CreateUserRequest instance) =>
@@ -32,4 +33,5 @@ Map<String, dynamic> _$CreateUserRequestToJson(CreateUserRequest instance) =>
       'phone': instance.phone,
       'avatarPath': instance.avatarPath,
       'bankBranch': instance.bankBranch,
+      'token': instance.token,
     };

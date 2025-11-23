@@ -5,6 +5,8 @@ import 'package:booking_tour_flutter/presentation/auth/change_password/cubit/cha
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_cubit.dart';
+import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_cubit.dart';
+import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/cubit/xac_nhan_so_nguoi_tham_gia_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/schedule_assignment/cubit/schedule_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
@@ -40,6 +42,8 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => DetailPaidScheduleCubit()),
         BlocProvider(create: (_) => DanhSachLichTrinhBookingCubit()),
         BlocProvider(create: (_) => ThongBaoCubit()),
+        BlocProvider(create: (_) => XacNhanSoNguoiThamGiaCubit()),
+        BlocProvider(create: (_) => KiemTraNguoiThamGiaCubit()),
       ],
 
       child: child,

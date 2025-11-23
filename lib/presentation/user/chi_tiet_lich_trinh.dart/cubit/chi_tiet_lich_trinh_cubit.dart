@@ -11,13 +11,12 @@ class ChiTietLichTrinhCubit extends Cubit<ChiTietLichTrinhState> {
   ChiTietLichTrinhCubit() : super(ChiTietLichTrinhState());
 
   Future<void> loadRviews(int tourId, int userId) async {
-    GetReviewsRequest request = GetReviewsRequest(
-      tourId: tourId,
-      userId: userId,
-    );
     emit(state.copyWith(isLoading: true));
 
-    final result = await bookingRepository.getReview(request);
+    final result = await bookingRepository.getReview(
+      userId: userId,
+      tourId: tourId,
+    );
 
     result.fold(
       (failure) {
@@ -30,7 +29,9 @@ class ChiTietLichTrinhCubit extends Cubit<ChiTietLichTrinhState> {
   }
 
   Future<void> loadFavoriteStatus(int userId, int tourId) async {
-    final result = await bookingRepository.getTourFavoriteByUserId(userId: userId);
+    final result = await bookingRepository.getTourFavoriteByUserId(
+      userId: userId,
+    );
 
     result.fold(
       (failure) {
@@ -38,7 +39,9 @@ class ChiTietLichTrinhCubit extends Cubit<ChiTietLichTrinhState> {
       },
       (favorites) {
         // Check if current tour is in the favorite list
-        final isFavorite = favorites.any((favorite) => favorite.tourId == tourId);
+        final isFavorite = favorites.any(
+          (favorite) => favorite.tourId == tourId,
+        );
         emit(state.copyWith(isFavorite: isFavorite));
       },
     );

@@ -38,33 +38,17 @@ class AccountantRefundCubit extends Cubit<AccountantRefundState> {
         DialogHelper.dismissDialog();
       },
       (user) {
-        emit(
-          AccountantRefundLoaded(
-            users: (state as AccountantRefundLoading).users..remove(user),
-          ),
-        );
-        DialogHelper.dismissDialog();
-      },
-    );
-  }
-
-  Future<void> cancelRefund(int userId) async {
-    await DialogHelper.showLoadingDialog();
-
-    var result = await _repository.submitRefund(userId);
-    result.fold(
-      (failure) async {
-        await DialogHelper.showInformDialog(
-          Text("Lỗi trong quá trình xác nhận đã hoàn tiền"),
-        );
-        DialogHelper.dismissDialog();
-      },
-      (user) {
-        emit(
-          AccountantRefundLoaded(
+        AccountantRefundState newState;
+        if (state is AccountantRefundLoaded) {
+          newState = AccountantRefundLoaded(
             users: (state as AccountantRefundLoaded).users..remove(user),
-          ),
-        );
+          );
+        } else {
+          newState = AccountantRefundLoaded(
+            users: (state as AccountantRefundLoading).users..remove(user),
+          );
+        }
+        emit(newState);
         DialogHelper.dismissDialog();
       },
     );
