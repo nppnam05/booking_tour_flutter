@@ -27,6 +27,9 @@ class RealAddTourScreen extends StatelessWidget {
           if (isAdded) {
             Navigator.pop(AppNavigator.currentContext);
           }
+          else {
+            DialogHelper.showInformDialog(Text("Thêm chuyến đi thất bại"));
+          }
         },
         addTourCubit: context.read<AddTourCubit>()..resetState(),
         isAllowChangeAmountDays: true,
