@@ -11,6 +11,7 @@ LoginEmailRequest _$LoginEmailRequestFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String,
       name: json['name'] as String,
       photoUrl: json['photoUrl'] as String,
+      token: json['token'] as String,
     );
 
 Map<String, dynamic> _$LoginEmailRequestToJson(LoginEmailRequest instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$LoginEmailRequestToJson(LoginEmailRequest instance) =>
       'email': instance.email,
       'name': instance.name,
       'photoUrl': instance.photoUrl,
+      'token': instance.token,
     };

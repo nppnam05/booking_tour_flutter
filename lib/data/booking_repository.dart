@@ -86,6 +86,7 @@ abstract class BookingRepository {
     required String email,
     required String name,
     required String photoUrl,
+    required String token
   });
 
   Future<Either<Failure, bool>> removeFavorite({
@@ -147,6 +148,7 @@ abstract class BookingRepository {
   Future<Either<Failure, User>> postLogin({
     required String email,
     required String password,
+    required String token
   });
 
   Future<Either<Failure, List<Activity>>> getActivities({
@@ -659,11 +661,13 @@ class BookingRepositoryImp implements BookingRepository {
   Future<Either<Failure, User>> postLogin({
     required String email,
     required String password,
+    required String token
   }) async {
     try {
       var response = await _coreService.login({
         "email": email,
         "password": password,
+        "token": token
       });
 
       var data = response.data as Map<String, dynamic>;
@@ -1389,12 +1393,14 @@ class BookingRepositoryImp implements BookingRepository {
     required String email,
     required String name,
     required String photoUrl,
+    required String token
   }) async {
     try {
       final login = LoginEmailRequest(
         email: email,
         name: name,
         photoUrl: photoUrl,
+        token: token
       );
 
       final response = await _coreService.loginByEmail(login);

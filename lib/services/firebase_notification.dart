@@ -1,9 +1,4 @@
-import 'package:booking_tour_flutter/app/app_navigator.dart';
-import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -12,12 +7,18 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 class FirebaseNotification {
   FirebaseNotification._();
 
-  static Future<void> initFCM() async {
+   static Future<void> initFCM() async {
     final messaging = FirebaseMessaging.instance;
 
-    await messaging.requestPermission();
+    await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
     // String? token = await messaging.getToken();
-    
+ 
+
     FirebaseMessaging.onMessage.listen((message) {
       showNotification(
         message.notification?.title ?? 'Thông báo',
