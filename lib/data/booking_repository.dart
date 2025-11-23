@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
+import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/change_password_request.dart';
@@ -74,7 +75,6 @@ import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
-import 'package:booking_tour_flutter/presentation/admin/detail_staff_account/detail_staff_screen.dart';
 import 'package:dartz/dartz.dart';
 import 'package:booking_tour_flutter/data/response/favorite_response.dart';
 import 'package:booking_tour_flutter/domain/favorite.dart';
@@ -288,6 +288,7 @@ abstract class BookingRepository {
   Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request);
   Future<Either<Failure, List<Staff>>> getAllStaff(int roleId);
   Future<Either<Failure, List<Role>>> getAllRole();
+  Future<Either<Failure, Staff>> createNewStaff(NewStaffRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1480,6 +1481,18 @@ class BookingRepositoryImp implements BookingRepository {
       var roles = roleResponses.map((response) => response.map()).toList();
 
       return Right(roles.cast<Role>());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Staff>> createNewStaff(NewStaffRequest request) async {
+    try {
+      var responses = await _coreService.createNewStaff(request);
+      final data = responses.data as Map<String, dynamic>;
+      var staffResponse = StaffResponse.fromJson(data);
+      return Right(staffResponse.map());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

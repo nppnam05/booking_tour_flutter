@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
@@ -281,4 +282,7 @@ abstract class CoreService {
 
   @GET("/Role")
   Future<RestResponse> getAllRoles();
+
+  @POST("/Staff")
+  Future<RestResponse> createNewStaff(@Body() NewStaffRequest request);
 }
