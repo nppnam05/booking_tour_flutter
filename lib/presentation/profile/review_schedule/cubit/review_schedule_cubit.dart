@@ -27,7 +27,7 @@ class ReviewScheduleCubit extends Cubit<ReviewScheduleState> {
   }
 
   void setComment(String review) {
-    emit(state.copyWith(review: review));
+    state.review = review;
   }
 
   void resetState() {

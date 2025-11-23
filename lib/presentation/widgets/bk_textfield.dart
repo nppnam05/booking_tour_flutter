@@ -27,7 +27,7 @@ class BkTextfield extends StatelessWidget {
     this.maxLength = 255,
     this.minLines = 1,
     this.maxLines = 1,
-    this.isEnable = false,
+    this.isEnable = true,
     this.isTrimOnChange = true,
   });
 
@@ -78,14 +78,10 @@ class BkTextfield extends StatelessWidget {
                 ),
               )
               .copyWith(hintText: hint, fillColor: fillColor),
-          // onChanged:
-          //     (value) => onChange?.call(isTrimOnChange ? value.trim() : value),
+          onChanged:
+              (value) => onChange?.call(isTrimOnChange ? value.trim() : value),
           onTapOutside: (_) {
             debugPrint("on tap outside");
-
-            onChange?.call(
-              isTrimOnChange ? controller.text.trim() : controller.text,
-            );
             controller.text = controller.text.trim();
             FocusManager.instance.primaryFocus?.unfocus();
           },
