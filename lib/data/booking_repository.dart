@@ -86,7 +86,6 @@ abstract class BookingRepository {
     required String email,
     required String name,
     required String photoUrl,
-    required String password,
   });
 
   Future<Either<Failure, bool>> removeFavorite({
@@ -1424,13 +1423,11 @@ class BookingRepositoryImp implements BookingRepository {
     required String email,
     required String name,
     required String photoUrl,
-    required String password,
   }) async {
     try {
       final login = LoginEmailRequest(
         email: email,
         name: name,
-        password: password,
         photoUrl: photoUrl,
       );
 

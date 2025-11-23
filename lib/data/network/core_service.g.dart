@@ -30,7 +30,7 @@ class _CoreService implements CoreService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/User/loginbyemail',
+            '/User/login-or-create-byemail',
             queryParameters: queryParameters,
             data: _data,
           )

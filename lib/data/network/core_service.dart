@@ -36,7 +36,7 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
-  @POST("/User/loginbyemail")
+  @POST("/User/login-or-create-byemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
 
   @GET("/Bank")
