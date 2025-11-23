@@ -19,7 +19,7 @@ class QrCodeWidget extends StatefulWidget {
 }
 
 class _QrCodeWidgetState extends State<QrCodeWidget> {
-  late final bool _isShowQr;
+  late bool _isShowQr;
   Timer? _timer;
 
   @override
@@ -38,6 +38,12 @@ class _QrCodeWidgetState extends State<QrCodeWidget> {
         });
       });
     }
+  }
+  
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
   }
 
   @override

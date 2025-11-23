@@ -39,6 +39,8 @@ class UpdateTourScreen extends StatelessWidget {
           DialogHelper.dismissDialog();
           if (isUpdated) {
             Navigator.pop(AppNavigator.currentContext);
+          } else {
+            DialogHelper.showInformDialog(Text("Sửa chuyến đi thất bại"));
           }
         },
         addTourCubit: context.read<AddTourCubit>(),

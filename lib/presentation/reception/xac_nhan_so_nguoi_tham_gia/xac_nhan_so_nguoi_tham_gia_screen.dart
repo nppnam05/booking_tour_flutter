@@ -163,7 +163,7 @@ class XacNhanSoNguoiThamGiaScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${(userCompletedSchedule.booking!.schedule.finalPrice * userCompletedSchedule.booking!.numPeople) - (userCompletedSchedule.booking!.totalPrice)}",
+                        "${(userCompletedSchedule.booking!.schedule.finalPrice * userCompletedSchedule.booking!.numPeople) - (userCompletedSchedule.actualcash!.money)}",
                         style: AppFonts.text14.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -197,6 +197,28 @@ class XacNhanSoNguoiThamGiaScreen extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                  Row(
+                      children: [
+                        Text(
+                          "Số người đang tham gia: ",
+                          style: AppFonts.text14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "${userCompletedSchedule.countPeople}",
+                          style: AppFonts.text14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          " người",
+                          style: AppFonts.text14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                   ),
                   Row(
                     children: [

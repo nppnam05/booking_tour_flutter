@@ -13,10 +13,10 @@ import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
+import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
-import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
@@ -99,6 +99,7 @@ abstract class BookingRepository {
     required String email,
     required String name,
     required String photoUrl,
+    required String token
   });
 
   Future<Either<Failure, bool>> removeFavorite({
@@ -160,6 +161,7 @@ abstract class BookingRepository {
   Future<Either<Failure, User>> postLogin({
     required String email,
     required String password,
+    required String token
   });
 
   Future<Either<Failure, List<Activity>>> getActivities({
@@ -291,13 +293,20 @@ abstract class BookingRepository {
     required String oldPassword,
     required String newPassword,
   });
-  Future<Either<Failure, List<Review>>> getReview(GetReviewsRequest request);
+  Future<Either<Failure, List<Review>>> getReview({
+    int? userId,
+    required int tourId,
+  });
+  Future<Either<Failure, Review?>> getSpecifiedReview({
+    required int userId,
+    required int scheduleId,
+  });
+
   Future<Either<Failure, List<Helpful>>> getHelpFul(GetHelpFullRequest request);
   Future<Either<Failure, int>> postFavorite(GetReviewsRequest request);
   Future<Either<Failure, List<ScheduleTourmanager>>> getScheduleForAccountant();
 
   Future<Either<Failure, List<User>>> getRefundUsers();
-  Future<Either<Failure, User>> cancelRefund(int userId);
   Future<Either<Failure, User>> submitRefund(int userId);
   Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request);
 }
@@ -672,11 +681,13 @@ class BookingRepositoryImp implements BookingRepository {
   Future<Either<Failure, User>> postLogin({
     required String email,
     required String password,
+    required String token
   }) async {
     try {
       var response = await _coreService.login({
         "email": email,
         "password": password,
+        "token": token
       });
 
       var data = response.data as Map<String, dynamic>;
@@ -1112,11 +1123,15 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<Review>>> getReview(
-    GetReviewsRequest request,
-  ) async {
+  Future<Either<Failure, List<Review>>> getReview({
+    required int tourId,
+    int? userId,
+  }) async {
     try {
-      final responses = await _coreService.getReview(request);
+      final responses = await _coreService.getReview(
+        userId: userId,
+        tourId: tourId,
+      );
       final data = responses.data as List<dynamic>;
       final items =
           data
@@ -1127,6 +1142,29 @@ class BookingRepositoryImp implements BookingRepository {
               .toList();
 
       return Right(items);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Review?>> getSpecifiedReview({
+    required int userId,
+    required int scheduleId,
+  }) async {
+    try {
+      final responses = await _coreService.getSpecifiedReview(
+        userId: userId,
+        scheduleId: scheduleId,
+      );
+      final data = responses.data as dynamic;
+      if (data == null) {
+        return Right(null);
+      }
+      final review =
+          ReviewResponse.fromJson(data as Map<String, dynamic>).map();
+
+      return Right(review);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
@@ -1402,12 +1440,14 @@ class BookingRepositoryImp implements BookingRepository {
     required String email,
     required String name,
     required String photoUrl,
+    required String token
   }) async {
     try {
       final login = LoginEmailRequest(
         email: email,
         name: name,
         photoUrl: photoUrl,
+        token: token
       );
 
       final response = await _coreService.loginByEmail(login);
@@ -1453,22 +1493,6 @@ class BookingRepositoryImp implements BookingRepository {
               .toList();
 
       var user = userResponses.map((i) => i.map()).toList();
-
-      return Right(user);
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> cancelRefund(int userId) async {
-    try {
-      var responses = await _coreService.cancelRefund(userId);
-      var data = responses.data as Map<String, dynamic>;
-
-      var userResponse = UserResponse.fromJson(data);
-
-      var user = userResponse.map();
 
       return Right(user);
     } catch (e) {

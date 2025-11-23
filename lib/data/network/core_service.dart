@@ -6,9 +6,9 @@ import 'package:booking_tour_flutter/data/request/login_email_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/create_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/tour/update_tour_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
+import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
-import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
@@ -259,8 +259,17 @@ abstract class CoreService {
   @GET("/Notification/{userId}")
   Future<RestResponse> getNotification(@Path("userId") int userId);
 
-  @POST("/Review/getReviews")
-  Future<RestResponse> getReview(@Body() GetReviewsRequest request);
+  @GET("/Review/getReviews")
+  Future<RestResponse> getReview({
+    @Query("userId") int? userId,
+    @Query("tourId") required int tourId,
+  });
+
+  @GET("/Review/getSpecifiedReview")
+  Future<RestResponse> getSpecifiedReview({
+    @Query("userId") required int userId,
+    @Query("scheduleId") required int scheduleId,
+  });
 
   @GET("/Favorite/{userId}")
   Future<RestResponse> getTourFavoriteByUserId(@Path("userId") int userId);
@@ -287,9 +296,6 @@ abstract class CoreService {
 
   @GET("/User/RefundUser")
   Future<RestResponse> getRefundUsers();
-
-  @POST("/User/CancelRefund/{id}")
-  Future<RestResponse> cancelRefund(@Path("id") int id);
 
   @POST("/User/SubmitRefund/{id}")
   Future<RestResponse> submitRefund(@Path("id") int id);
