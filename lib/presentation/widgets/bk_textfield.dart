@@ -12,6 +12,8 @@ class BkTextfield extends StatelessWidget {
   final int? maxLength;
   final int? minLines;
   final int? maxLines;
+  final bool isEnable;
+  final bool isTrimOnChange;
 
   const BkTextfield({
     super.key,
@@ -25,6 +27,8 @@ class BkTextfield extends StatelessWidget {
     this.maxLength = 255,
     this.minLines = 1,
     this.maxLines = 1,
+    this.isEnable = false,
+    this.isTrimOnChange = true,
   });
 
   @override
@@ -55,6 +59,7 @@ class BkTextfield extends StatelessWidget {
           minLines: minLines,
           maxLines: maxLines,
           controller: controller,
+          enabled: isEnable,
           decoration: const InputDecoration()
               .applyDefaults(
                 Theme.of(context).inputDecorationTheme.copyWith(
@@ -73,12 +78,19 @@ class BkTextfield extends StatelessWidget {
                 ),
               )
               .copyWith(hintText: hint, fillColor: fillColor),
-          onChanged: (value) => onChange?.call(value.trim()),
+          // onChanged:
+          //     (value) => onChange?.call(isTrimOnChange ? value.trim() : value),
           onTapOutside: (_) {
+            debugPrint("on tap outside");
+
+            onChange?.call(
+              isTrimOnChange ? controller.text.trim() : controller.text,
+            );
             controller.text = controller.text.trim();
             FocusManager.instance.primaryFocus?.unfocus();
           },
           onEditingComplete: () {
+            debugPrint("editing complete");
             controller.text = controller.text.trim();
           },
           buildCounter: (
