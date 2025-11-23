@@ -152,7 +152,7 @@ class DialogHelper {
                 onPressed: () {
                   Navigator.pop(context, false);
                 },
-                backgroundColor: AppColors.error,
+                backgroundColor: AppColors.delete,
                 title: "Hủy",
               ),
               SizedBox(width: 10),

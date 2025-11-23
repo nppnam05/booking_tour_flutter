@@ -6,7 +6,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_do
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/cubit/sua_hoat_dong_state.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/widget/multi_selector.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/danh_sach_hoat_dong/widget/selection_dialog.dart';
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/text_input.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/text_input.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,7 +114,7 @@ class _SuaDiaDiemHoatDongScreenState extends State<SuaDiaDiemHoatDongScreen> {
                               controller: _tenDiaDiemController,
                               hintText: 'Nhập tên địa điểm',
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
+                                if (value == null || value.trim().isEmpty) {
                                   return 'Vui lòng nhập tên địa điểm';
                                 }
                                 return null;

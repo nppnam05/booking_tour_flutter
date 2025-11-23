@@ -7,7 +7,7 @@ import 'package:booking_tour_flutter/presentation/trip/cubit/trip_bloc.dart';
 import 'package:booking_tour_flutter/presentation/trip/cubit/trip_state.dart';
 import 'package:booking_tour_flutter/presentation/trip/trip_card.dart';
 
-import 'package:booking_tour_flutter/presentation/widget_use_for_many_screen/drawer_bar/drawer_bar.dart';
+import 'package:booking_tour_flutter/presentation/widgets_v/drawer_bar/drawer_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';

@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/app/validate_helper.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
+import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_state.dart';
@@ -30,6 +31,12 @@ class BookScheduleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _cubit = context.read<BookScheduleCubit>();
     authCubit = context.read<AuthCubit>();
+    controllerEmail.text = authCubit.state.email;
+    controllerSoDienThoai.text = authCubit.state.phone;
+
+    // sét giá trị lúc ban đầu
+
+    
 
     return BlocProvider.value(
       value: _cubit,
@@ -74,6 +81,9 @@ class BookScheduleScreen extends StatelessWidget {
                       return "bạn nên điền số vào đây";
                     }
                     return null;
+                  },
+                  onChange: (value) {
+                    _cubit.rebuild();
                   },
                 ),
                 SizedBox(height: 12),
@@ -203,11 +213,11 @@ class BookScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget scheduleInfoCard(ScheduleBook schedule) {
+  Widget scheduleInfoCard(ScheduleTourmanager schedule) {
     var startDate = schedule.startDate;
     var endDate = schedule.endDate;
 
-    var locationName = schedule.tour.locations
+    var locationName = schedule.tour.provinces
         .map((loc) => loc.name)
         .toSet() // Loại bỏ trùng lặp
         .join(', ');
@@ -243,9 +253,9 @@ class BookScheduleScreen extends StatelessWidget {
                 "số lượng tham gia: ",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
-              const SizedBox(width: 30),
+              const SizedBox(width: 50),
               Text(
-                "${schedule.maxSlot}",
+                "${schedule.maxSlot} Người",
                 style: AppFonts.text16.copyWith(fontWeight: FontWeight.w600),
               ),
             ],

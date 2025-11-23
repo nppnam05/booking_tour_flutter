@@ -32,7 +32,7 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
     super.didChangeDependencies();
     if (!_hasLoaded) {
       final userId = context.read<AuthCubit>().userId;
-      
+
       _cubit.loadUser(userId);
       _hasLoaded = true;
     }
@@ -111,38 +111,53 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
                   icon: Icons.person,
                   title: 'Tài Khoản Của Tôi',
                   subtitle: 'Thay đổi thông tin tài khoản của bạn',
-                  onTap: () {
-                    Navigator.pushNamed(context, RouteName.thongTinCuaBan);
+                  onTap: () async {
+                    await Navigator.pushNamed(
+                      context,
+                      RouteName.thongTinCuaBan,
+                    );
+
+                    final userId = context.read<AuthCubit>().userId;
+                    _cubit.loadUser(userId);
                   },
                 ),
                 buildItem(
                   icon: Icons.account_balance_wallet,
                   title: 'Ví',
                   subtitle: 'nơi chứa tiền dư của bạn',
-                  onTap: () {
-                    Navigator.pushNamed(context, RouteName.vi);
+                  onTap: () async {
+                    await Navigator.pushNamed(context, RouteName.vi);
+
+                     final userId = context.read<AuthCubit>().userId;
+                    _cubit.loadUser(userId);
                   },
                 ),
                 buildItem(
                   icon: Icons.check_circle,
                   title: 'Hoàn Thành',
                   subtitle: 'các lịch trình đã hoàn thành',
-                  onTap: () {
-                    Navigator.pushNamed(
+                  onTap: () async {
+                    await Navigator.pushNamed(
                       context,
                       RouteName.lichTrinhDaHoanThanh,
                     );
+
+                    final userId = context.read<AuthCubit>().userId;
+                    _cubit.loadUser(userId);
                   },
                 ),
                 buildItem(
                   icon: Icons.receipt_long,
                   title: 'Lịch Sử Thanh Toán',
                   subtitle: 'xem lại lịch trình đã thanh toán',
-                  onTap: () {
-                    Navigator.pushNamed(
+                  onTap: () async {
+                    await Navigator.pushNamed(
                       context,
                       RouteName.danhSachLichTrinhBooking,
                     );
+                    
+                    final userId = context.read<AuthCubit>().userId;
+                    _cubit.loadUser(userId);
                   },
                 ),
                 buildItem(
@@ -150,7 +165,15 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
                   title: 'Đăng Xuất',
                   subtitle: 'Đăng xuất khỏi app', 
                   onTap: () {
-                      
+                    // đăng xuất
+                    var cubitAuth = context.read<AuthCubit>();
+                    cubitAuth.logout();
+
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      RouteName.login,
+                      (route) => false,
+                    );
                   },
                 ),
               ],

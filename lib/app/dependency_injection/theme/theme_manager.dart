@@ -76,5 +76,16 @@ class AppThemes {
         textStyle: AppFonts.text16,
       ),
     ),
+
+    tabBarTheme: TabBarThemeData(
+      indicatorColor: AppColors.backgroundAppBarTheme,
+      indicatorSize: TabBarIndicatorSize.tab,
+      labelColor: AppColors.black,
+      unselectedLabelColor: AppColors.black,
+      labelStyle: AppFonts.text16.copyWith(fontWeight: FontWeight.bold),
+      unselectedLabelStyle: AppFonts.text16.copyWith(
+        fontWeight: FontWeight.bold,
+      ),
+    ),
   );
 }
