@@ -69,6 +69,7 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
     
     // lay booking ra theo id lich trinh
     final userCompletedForThisSchedule = state.userCompletedSchedule[scheduleReception.id] ?? [];
+    print("hehehe ${userCompletedForThisSchedule.length}");
 
     // lay sl nguoi da coc, thanh toan
     int countByStatus(List<UserCompletedSchedule> list, int statusId) {

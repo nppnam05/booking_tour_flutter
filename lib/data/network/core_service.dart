@@ -42,8 +42,8 @@ abstract class CoreService {
   @PUT("/UserCompletedSchedule")
   Future<RestResponse> updateUserCompletedScheduleCountPeople(@Body() Map<String, dynamic> body);
 
-  @GET("/UserCompletedSchedule/schedule/{scheduleid}")
-  Future<RestResponse> getUserCompletedScheduleByScheduleId(@Path("scheduleid") int scheduleId);
+  @GET("/UserCompletedSchedule/schedule/{scheduleId}")
+  Future<RestResponse> getUserCompletedScheduleByScheduleId(@Path("scheduleId") int scheduleId);
 
   @POST("/User/login-or-create-byemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);

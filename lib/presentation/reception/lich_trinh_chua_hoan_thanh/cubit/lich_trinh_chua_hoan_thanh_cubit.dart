@@ -28,7 +28,10 @@ class LichTrinhChuaHoanThanhCubit extends Cubit<LichTrinhChuaHoanThanhState> {
       var apiResult = await bookingRepository
         .getUserCompletedScheduleByScheduleId(scheduleId: scheduleId);
 
-      apiResult.fold((e) {}, (userComp) {
+      apiResult.fold((e) {
+        print("hallo ${e}");
+      }, (userComp) {
+        
         result[scheduleId] = userComp;
       });
     }

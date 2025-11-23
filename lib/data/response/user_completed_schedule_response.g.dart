@@ -14,11 +14,11 @@ UserCompletedScheduleFixResponse _$UserCompletedScheduleFixResponseFromJson(
       json['booking'] == null
           ? null
           : BookingResponse.fromJson(json['booking'] as Map<String, dynamic>),
-  actualcash:
-      json['actualcash'] == null
+  actualcashs:
+      json['actualcashs'] == null
           ? null
           : ActualcashResponse.fromJson(
-            json['actualcash'] as Map<String, dynamic>,
+            json['actualcashs'] as Map<String, dynamic>,
           ),
 );
 
@@ -27,5 +27,5 @@ Map<String, dynamic> _$UserCompletedScheduleFixResponseToJson(
 ) => <String, dynamic>{
   'countPeople': instance.countPeople,
   'booking': instance.booking,
-  'actualcash': instance.actualcash,
+  'actualcashs': instance.actualcashs,
 };

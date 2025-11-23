@@ -163,7 +163,7 @@ class XacNhanSoNguoiThamGiaScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${(userCompletedSchedule.booking!.schedule.finalPrice * userCompletedSchedule.booking!.numPeople) - (userCompletedSchedule.actualcash!.money)}",
+                        "${(userCompletedSchedule.booking!.schedule.finalPrice * userCompletedSchedule.booking!.numPeople) - (userCompletedSchedule.actualcashs!.money)}",
                         style: AppFonts.text14.copyWith(
                           fontWeight: FontWeight.bold,
                         ),

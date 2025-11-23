@@ -4,18 +4,18 @@ import 'package:booking_tour_flutter/domain/booking.dart';
 class UserCompletedSchedule {
   int? countPeople;
   Booking? booking;
-  Actualcash? actualcash;
+  Actualcash? actualcashs;
 
-  UserCompletedSchedule({required this.countPeople,required this.booking, required this.actualcash}){
+  UserCompletedSchedule({required this.countPeople,required this.booking, required this.actualcashs}){
     this.countPeople = countPeople;
     this.booking = booking;
-    this.actualcash = actualcash;
+    this.actualcashs = actualcashs;
   }
   static UserCompletedSchedule empty() {
     return UserCompletedSchedule(
       countPeople: 0,
       booking: Booking.empty(),
-      actualcash: Actualcash.empty()
+      actualcashs: Actualcash.empty()
     );
   }
 }
