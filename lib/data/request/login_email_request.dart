@@ -7,11 +7,13 @@ class LoginEmailRequest {
   final String email;
   final String name;
   final String photoUrl;
+  final String token;
 
   LoginEmailRequest({
     required this.email,
     required this.name,
     required this.photoUrl,
+    required this.token
   });
 
   Map<String, dynamic> toJson() => _$LoginEmailRequestToJson(this);  

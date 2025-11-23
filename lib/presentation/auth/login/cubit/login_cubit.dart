@@ -3,6 +3,7 @@ import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -10,6 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class LoginCubit extends Cubit<LoginState> {
   static final userRepository = getIt<BookingRepository>();
   final GoogleSignIn googleSignIn;
+  final messaging = FirebaseMessaging.instance;
 
   LoginCubit({GoogleSignIn? googleSignIn}) 
       : googleSignIn = googleSignIn ?? GoogleSignIn(),
@@ -18,7 +20,9 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> login(String email, String password) async {
     await DialogHelper.showLoadingDialog();
 
-    var result = await userRepository.postLogin(email: email, password: password);
+    String? token = await messaging.getToken() ?? "";
+
+    var result = await userRepository.postLogin(email: email, password: password, token: token);
 
     result.fold((failure) {
       emit(state.copyWithError());
@@ -49,12 +53,14 @@ class LoginCubit extends Cubit<LoginState> {
       final String email = googleUser.email;
       final String name = googleUser.displayName ?? '';
       final String photoUrl = googleUser.photoUrl ?? '';
+      String? token = await messaging.getToken() ?? "";
 
       
       var result = await userRepository.loginByEmail(
         email: email,
         name: name,
         photoUrl: photoUrl,
+        token: token
       );
 
       result.fold((failure) {
@@ -94,12 +100,14 @@ class LoginCubit extends Cubit<LoginState> {
       final String email = userData['email'] ?? '';
       final String name = userData['name'] ?? '';
       final String photoUrl = userData['picture']?['data']?['url'] ?? '';
+      String? token = await messaging.getToken() ?? "";
       
       
       var response = await userRepository.loginByEmail(
         email: email,
         name: name,
         photoUrl: photoUrl,
+        token: token
       );
 
       response.fold((failure) {

@@ -71,6 +71,7 @@ class RegisterScreen extends StatelessWidget {
             phone: controllerSoDienThoai.text.trim(),
             avatarPath: "",
             bankBranch: "",
+            token: ""
           );
 
           final cubitOtp = context.read<AuthOtpCubit>();
