@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
@@ -34,10 +35,12 @@ import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide
 import 'package:booking_tour_flutter/data/response/schedule_book_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart'
     hide LocationActivityResponse;
+import 'package:booking_tour_flutter/data/response/schedule_reception_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
+import 'package:booking_tour_flutter/data/response/user_completed_schedule_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
@@ -61,6 +64,7 @@ import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
 import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/domain/schedule_detail.dart'
     hide Activity, LocationActivity;
+import 'package:booking_tour_flutter/domain/schedule_reception.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/tour_assignment.dart';
@@ -72,6 +76,7 @@ import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/fix_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_location_activities.dart';
+import 'package:booking_tour_flutter/domain/user_completed_schedule.dart';
 import 'package:dartz/dartz.dart';
 import 'package:booking_tour_flutter/data/response/favorite_response.dart';
 import 'package:booking_tour_flutter/domain/favorite.dart';
@@ -80,8 +85,16 @@ import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+import 'package:retrofit/retrofit.dart';
 
 abstract class BookingRepository {
+
+  Future<Either<Failure, List<ScheduleReception>>> getScheduleReception();
+  
+  Future<Either<Failure, UserCompletedSchedule>> updateUserCompletedScheduleCountPeople({required int bookingId, required int countPeople});
+
+  Future<Either<Failure, List<UserCompletedSchedule>>> getUserCompletedScheduleByScheduleId({required int scheduleId});
+  
   Future<Either<Failure, User>> loginByEmail({
     required String email,
     required String name,
@@ -1527,6 +1540,55 @@ class BookingRepositoryImp implements BookingRepository {
 
       return Right(result);
     } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+
+  //UserCompletedSchedule
+  @override
+  Future<Either<Failure, List<UserCompletedSchedule>>> getUserCompletedScheduleByScheduleId({required int scheduleId}) async {
+    try{
+      var response = await _coreService.getUserCompletedScheduleByScheduleId(scheduleId);
+      var data = response.data as List<dynamic>;
+      var userCompletedScheduleResponse = data.map(
+        (json) => UserCompletedScheduleFixResponse.fromJson(json as Map<String, dynamic>),
+      );
+
+      var userCompletedSchedule = userCompletedScheduleResponse.map((e) => e.map(),).toList();
+      return Right(userCompletedSchedule);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, UserCompletedSchedule>> updateUserCompletedScheduleCountPeople({required int bookingId, required int countPeople}) async {
+    try{
+      final body = {
+        "bookingId": bookingId,
+        "countPeople": countPeople
+      };
+      final response = await _coreService.updateUserCompletedScheduleCountPeople(body);
+      final data = response.data as Map<String, dynamic>;
+      final userComp = UserCompletedScheduleFixResponse.fromJson(data);
+      return Right(userComp.map());
+    }catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<ScheduleReception>>> getScheduleReception() async {
+    try{
+      final response = await _coreService.getScheduleReception();
+      final data = response.data as List<dynamic>;
+      final scheduleReceptionResponse = data.map((json) => ScheduleReceptionResponse.fromJson(json as Map<String, dynamic>));
+
+      final scheduleReception = scheduleReceptionResponse.map((e) => e.map()).toList();
+      return Right(scheduleReception);
+    }catch (e){
       return Left(ErrorHandler.handle(e).failure);
     }
   }
