@@ -2,13 +2,15 @@
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/schedule_user_completed.dart';
 import 'package:booking_tour_flutter/domain/trip.dart';
+import 'package:equatable/equatable.dart';
 
-class ReviewScheduleState {
+// ignore: must_be_immutable
+class ReviewScheduleState extends Equatable {
   final int stars;
-  final String review;
+  String review;
   final int userId;
   final ScheduleTourmanager? schedule;
-  final bool sentReview;
+  final bool isSentReview;
   final bool isLoading;
   final String? errorMessage;
   final bool isBack;
@@ -18,7 +20,7 @@ class ReviewScheduleState {
     required this.review,
     this.userId = 0,
     this.schedule,
-    this.sentReview = false,
+    this.isSentReview = false,
     this.errorMessage,
     this.isLoading = false,
     this.isBack = false,
@@ -39,10 +41,22 @@ class ReviewScheduleState {
       review: review ?? this.review,
       userId: userId ?? this.userId,
       schedule: schedule ?? this.schedule,
-      sentReview: isSent ?? this.sentReview,
+      isSentReview: isSent ?? this.isSentReview,
       errorMessage: errorMessage ?? this.errorMessage,
       isLoading: isLoading ?? this.isLoading,
       isBack: isBack ?? this.isBack,
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [
+    this.stars,
+    this.userId,
+    this.schedule,
+    this.isSentReview,
+    this.errorMessage,
+    this.isLoading,
+    this.isBack,
+  ];
 }

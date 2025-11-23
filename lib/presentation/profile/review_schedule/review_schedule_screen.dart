@@ -153,7 +153,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                         onRatingChanged: (stars) {
                           cubit.setStars(stars);
                         },
-                        isEnable: !state.sentReview,
+                        isEnable: !state.isSentReview,
                       ),
                     ],
                   ),
@@ -164,7 +164,7 @@ class ReviewScheduleScreen extends StatelessWidget {
                     hint: "Viết đánh giá của bạn tại đây",
                     minLines: 12,
                     maxLines: 20,
-                    isEnable: !state.sentReview,
+                    isEnable: !state.isSentReview,
                     onChange: (comment) => cubit.setComment(comment),
                     isTrimOnChange: false,
                   ),
@@ -177,7 +177,7 @@ class ReviewScheduleScreen extends StatelessWidget {
         SliverToBoxAdapter(child: SizedBox(height: 50)),
         SliverToBoxAdapter(
           child: Visibility(
-            visible: !state.sentReview,
+            visible: !state.isSentReview,
             child: Center(
               child: BkButton(
                 onPressed: () {
