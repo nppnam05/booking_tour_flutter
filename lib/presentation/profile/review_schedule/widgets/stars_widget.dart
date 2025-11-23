@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 class StarRating extends StatelessWidget {
   final int starCount;
   final int rating;
+  final bool isEnable;
   final ValueChanged<int> onRatingChanged;
 
-  StarRating({
+  const StarRating({
+    super.key,
     this.starCount = 5,
     this.rating = 5,
+    this.isEnable = true,
     required this.onRatingChanged,
   });
 
@@ -20,7 +23,7 @@ class StarRating extends StatelessWidget {
       icon = Icon(Icons.star, color: AppColors.warning, size: 32);
     }
     return GestureDetector(
-      onTap: () => onRatingChanged(index + 1),
+      onTap: isEnable ? () => onRatingChanged(index + 1) : null,
       child: icon,
     );
   }

@@ -192,17 +192,9 @@ class AddTourCubit extends Cubit<AddTourState> {
 
     return result.fold(
       (failure) {
-        ScaffoldMessenger.of(
-          AppNavigator.currentContext,
-        ).showSnackBar(SnackBar(content: Text("failure")));
-
         return false;
       },
       (tour) {
-        ScaffoldMessenger.of(
-          AppNavigator.currentContext,
-        ).showSnackBar(SnackBar(content: Text("success")));
-
         return true;
       },
     );
@@ -224,17 +216,9 @@ class AddTourCubit extends Cubit<AddTourState> {
 
     return result.fold(
       (failure) {
-        ScaffoldMessenger.of(
-          AppNavigator.currentContext,
-        ).showSnackBar(SnackBar(content: Text("failure")));
-
         return false;
       },
       (tour) {
-        ScaffoldMessenger.of(
-          AppNavigator.currentContext,
-        ).showSnackBar(SnackBar(content: Text("success")));
-
         return true;
       },
     );
@@ -401,6 +385,7 @@ class AddTourCubit extends Cubit<AddTourState> {
       iterate: _iterateDaysActivity,
       field: AddTourErrorFields.dayActivityLocationActivity,
       message: "Vui lòng nhập địa điểm hoạt động",
+      largeField: AddTourErrorFields.dayOfTour,
       check: (state, params) {
         int dayTour = params[0] as int;
         int dayActivity = params[1] as int;
@@ -420,6 +405,7 @@ class AddTourCubit extends Cubit<AddTourState> {
       iterate: _iterateDaysActivity,
       field: AddTourErrorFields.dayActivityTime,
       message: "Vui lòng nhập thời gian",
+      largeField: AddTourErrorFields.dayOfTour,
       check: (state, params) {
         int dayTour = params[0] as int;
         int dayActivity = params[1] as int;
@@ -434,6 +420,7 @@ class AddTourCubit extends Cubit<AddTourState> {
     _addValidator(
       iterate: _iterateDaysActivity,
       field: AddTourErrorFields.dayActivityPlace,
+      largeField: AddTourErrorFields.dayOfTour,
       message: "Vui lòng nhập địa danh",
       check: (state, params) {
         int dayTour = params[0] as int;
@@ -450,6 +437,7 @@ class AddTourCubit extends Cubit<AddTourState> {
     _addValidator(
       iterate: _iterateDaysActivity,
       field: AddTourErrorFields.dayActivityActivity,
+      largeField: AddTourErrorFields.dayOfTour,
       message: "Vui lòng nhập hoạt động cho ngày",
       check: (state, params) {
         int dayTour = params[0] as int;
