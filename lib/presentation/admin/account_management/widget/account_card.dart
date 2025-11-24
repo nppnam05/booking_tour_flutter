@@ -1,5 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-import 'package:booking_tour_flutter/presentation/admin/account%20management/widget/permission_dialog.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:flutter/material.dart';
@@ -8,24 +8,59 @@ class AccountCardWidget extends StatelessWidget {
   final String name;
   final String role;
   final String phone;
+  final String avatarPath;
+  final List<String> roles;
   final VoidCallback onDelete;
   final VoidCallback onPermission;
+  final VoidCallback? onTap;
 
   const AccountCardWidget({
     super.key,
     required this.name,
     required this.role,
     required this.phone,
+    required this.avatarPath,
+    required this.roles,
     required this.onDelete,
     required this.onPermission,
+    this.onTap,
   });
+
+  Widget _buildAvatar() {
+    const double avatarSize = 50;
+
+    return Image.network(
+      avatarPath,
+      width: avatarSize,
+      height: avatarSize,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          width: avatarSize,
+          height: avatarSize,
+          decoration: const BoxDecoration(
+            color: Color(0xFF1ABC9C),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              name.isNotEmpty ? name[0].toUpperCase() : '?',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, "detail_staff_screen");
-      },
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         padding: const EdgeInsets.all(12),
@@ -34,7 +69,7 @@ class AccountCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: AppColors.white,
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -43,18 +78,7 @@ class AccountCardWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 25,
-              backgroundColor: const Color(0xFF1ABC9C),
-              child: Text(
-                name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            ClipOval(child: _buildAvatar()),
 
             const SizedBox(width: 12),
 
@@ -65,17 +89,17 @@ class AccountCardWidget extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: AppFonts.fontSize16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     role,
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 13, color: AppColors.gray),
                   ),
                   Text(
                     phone,
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 13, color: AppColors.gray),
                   ),
                 ],
               ),
@@ -84,21 +108,7 @@ class AccountCardWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                BkButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder:
-                          (_) => PermissionDialog(
-                            currentRole: "Quản lý chuyến",
-                            onConfirm: (role) {
-                              // TODO: xử lý cập nhật
-                            },
-                          ),
-                    );
-                  },
-                  title: "Phân quyền",
-                ),
+                BkButton(onPressed: onPermission, title: "Phân quyền"),
                 const SizedBox(height: 6),
                 BkButton(
                   onPressed: () {

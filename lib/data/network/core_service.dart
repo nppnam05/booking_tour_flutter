@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
+import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
@@ -302,4 +304,19 @@ abstract class CoreService {
 
   @PUT("/Notification")
   Future<RestResponse> notifaiIsRead(@Body() ReadReviewRequets request);
+
+  @GET("/Staff/getstaffs-byroleid/{roleId}")
+  Future<RestResponse> getAllStaff(@Path("roleId") int roleId);
+
+  @GET("/Role")
+  Future<RestResponse> getAllRoles();
+
+  @POST("/Staff")
+  Future<RestResponse> createNewStaff(@Body() NewStaffRequest request);
+
+  @PUT("/Staff")
+  Future<RestResponse> updateStaff(@Body() UpdateStaffRequest request);
+
+  @DELETE("/Staff/{id}")
+  Future<RestResponse> deleteStaff(@Path("id") int id);
 }

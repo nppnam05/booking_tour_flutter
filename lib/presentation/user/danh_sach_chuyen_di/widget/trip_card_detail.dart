@@ -58,12 +58,12 @@ class _TripCardDetailState extends State<TripCardDetail> {
               ),
               child: Image.network(
                 widget.trip.tourImages.firstOrNull ?? "",
-                height: 150,
+                height: 180,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    height: 150,
+                    height: 180,
                     color: AppColors.backgroundDisable,
                     child: const Icon(Icons.image_not_supported),
                   );

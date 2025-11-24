@@ -153,7 +153,7 @@ class _DanhSachChuyenDiScreenState extends State<DanhSachChuyenDiScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16),
                         child: SizedBox(
-                          height: 200,
+                          height: 180,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(right: 16),

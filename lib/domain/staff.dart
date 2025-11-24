@@ -10,10 +10,9 @@ class Staff {
   final DateTime dateOfBirth;
   final DateTime startWorkingDate;
   final DateTime cccdIssueDate;
-  final String cccdFrontPath;
-  final String cccBackPath;
+  final String cccD_front_path;
+  final String cccD_back_path;
   final DateTime endWorkingDate;
-
 
   final User user;
   final Role role;
@@ -27,11 +26,11 @@ class Staff {
     required this.dateOfBirth,
     required this.startWorkingDate,
     required this.cccdIssueDate,
-    required this.cccdFrontPath ,
-    required this.cccBackPath,
+    required this.cccD_front_path,
+    required this.cccD_back_path,
     required this.endWorkingDate,
     required this.user,
-    required this.role
+    required this.role,
   });
 
   static Staff empty() {
@@ -44,11 +43,11 @@ class Staff {
       dateOfBirth: DateTime.now(),
       startWorkingDate: DateTime.now(),
       cccdIssueDate: DateTime.now(),
-      cccdFrontPath: '',
-      cccBackPath: '',
+      cccD_front_path: '',
+      cccD_back_path: '',
       endWorkingDate: DateTime.now(),
       user: User.empty(),
-      role: Role.empty()
+      role: Role.empty(),
     );
   }
 }
