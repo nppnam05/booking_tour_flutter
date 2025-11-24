@@ -4,6 +4,7 @@ import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
 import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
+import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/change_password_request.dart';
@@ -299,6 +300,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Role>>> getAllRole();
   Future<Either<Failure, Staff>> createNewStaff(NewStaffRequest request);
   Future<Either<Failure, void>> deleteStaff(int id);
+  Future<Either<Failure, Staff>> updateStaff(UpdateStaffRequest request);
 }
 
 @Singleton(as: BookingRepository)
@@ -1591,6 +1593,18 @@ class BookingRepositoryImp implements BookingRepository {
     try {
       await _coreService.deleteStaff(id);
       return const Right(null);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Staff>> updateStaff(UpdateStaffRequest request) async {
+    try {
+      var responses = await _coreService.updateStaff(request);
+      final data = responses.data as Map<String, dynamic>;
+      var staffResponse = StaffResponse.fromJson(data);
+      return Right(staffResponse.map());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

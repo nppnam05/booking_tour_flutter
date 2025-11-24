@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
+import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
@@ -303,6 +304,9 @@ abstract class CoreService {
 
   @POST("/Staff")
   Future<RestResponse> createNewStaff(@Body() NewStaffRequest request);
+
+  @PUT("/Staff")
+  Future<RestResponse> updateStaff(@Body() UpdateStaffRequest request);
 
   @DELETE("/Staff/{id}")
   Future<RestResponse> deleteStaff(@Path("id") int id);
