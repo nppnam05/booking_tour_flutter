@@ -56,7 +56,7 @@ class CreateStaffAccountPart2Cubit extends Cubit<CreateStaffAccountPart2State> {
   Future<bool> createStaff(CreateStaffAccountPart1State part1Data) async {
     emit(state.copyWith(submitting: true, errorMessage: null));
 
-    final roleId = part1Data.roleId ?? 0;
+    final roleId = part1Data.roleId ?? 2;
     final dateOfBirth = _parseDate(part1Data.dob) ?? DateTime.now();
     final startWorkingDate = _parseDate(part1Data.startDate) ?? DateTime.now();
     final cccdIssueDate = _parseDate(part1Data.issuedDate) ?? DateTime.now();
