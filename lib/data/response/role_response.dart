@@ -5,13 +5,10 @@ part 'role_response.g.dart';
 
 @JsonSerializable()
 class RoleResponse {
-  String? id;
+  int? id;
   String? title;
 
-  RoleResponse({
-    this.id,
-    this.title
-  });
+  RoleResponse({this.id, this.title});
 
   factory RoleResponse.fromJson(Map<String, dynamic> json) =>
       _$RoleResponseFromJson(json);
@@ -19,9 +16,6 @@ class RoleResponse {
 
 extension RoleResponseMapper on RoleResponse {
   Role map() {
-    return Role(
-      id: id ?? '',
-      title: title ?? ''
-    );
+    return Role(id: id ?? 0, title: title ?? '');
   }
 }

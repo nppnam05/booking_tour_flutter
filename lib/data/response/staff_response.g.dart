@@ -16,8 +16,8 @@ StaffResponse _$StaffResponseFromJson(Map<String, dynamic> json) =>
       dateOfBirth: json['dateOfBirth'] as String?,
       startWorkingDate: json['startWorkingDate'] as String?,
       cccdIssueDate: json['cccdIssueDate'] as String?,
-      cccdFrontPath: json['cccdFrontPath'] as String?,
-      cccBackPath: json['cccBackPath'] as String?,
+      cccD_front_path: json['cccD_front_path'] as String?,
+      cccD_back_path: json['cccD_back_path'] as String?,
       endWorkingDate: json['endWorkingDate'] as String?,
       user:
           json['user'] == null
@@ -39,8 +39,8 @@ Map<String, dynamic> _$StaffResponseToJson(StaffResponse instance) =>
       'dateOfBirth': instance.dateOfBirth,
       'startWorkingDate': instance.startWorkingDate,
       'cccdIssueDate': instance.cccdIssueDate,
-      'cccdFrontPath': instance.cccdFrontPath,
-      'cccBackPath': instance.cccBackPath,
+      'cccD_front_path': instance.cccD_front_path,
+      'cccD_back_path': instance.cccD_back_path,
       'endWorkingDate': instance.endWorkingDate,
       'user': instance.user,
       'role': instance.role,

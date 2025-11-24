@@ -7,7 +7,7 @@ class Review {
   final int id;
   final int rating;
   final String content;
-  final DateTime createdAt;
+  final String createdAt;
   final User user;
   final List<GuideReviews> guideReviews;
   final Booking booking;

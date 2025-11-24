@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
 import 'package:booking_tour_flutter/data/network/dio/failure.dart';
+import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
+import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/change_password_request.dart';
@@ -26,13 +28,12 @@ import 'package:booking_tour_flutter/data/response/helpfull_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/notification_response.dart';
 import 'package:booking_tour_flutter/data/response/participant_response.dart';
-import 'package:booking_tour_flutter/data/response/pay_booking_response.dart';
 import 'package:booking_tour_flutter/data/response/place_response.dart';
 import 'package:booking_tour_flutter/data/response/province_response.dart';
 import 'package:booking_tour_flutter/data/response/review_response.dart';
+import 'package:booking_tour_flutter/data/response/role_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide_response.dart';
-import 'package:booking_tour_flutter/data/response/schedule_book_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart'
     hide LocationActivityResponse;
 import 'package:booking_tour_flutter/data/response/schedule_reception_response.dart';
@@ -40,6 +41,7 @@ import 'package:booking_tour_flutter/data/response/schedule_staff_response.dart'
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
+import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/user_completed_schedule_response.dart';
@@ -56,14 +58,13 @@ import 'package:booking_tour_flutter/domain/assignment.dart';
 import 'package:booking_tour_flutter/domain/helpful.dart';
 import 'package:booking_tour_flutter/domain/location_activity.dart';
 import 'package:booking_tour_flutter/domain/participants.dart';
-import 'package:booking_tour_flutter/domain/pay_booking.dart';
 import 'package:booking_tour_flutter/domain/place.dart';
 import 'package:booking_tour_flutter/domain/province.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/requests/update_schedule_request.dart';
 import 'package:booking_tour_flutter/domain/review.dart';
+import 'package:booking_tour_flutter/domain/role.dart';
 import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
-import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/domain/schedule_detail.dart'
     hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_reception.dart';
@@ -322,6 +323,11 @@ abstract class BookingRepository {
   Future<Either<Failure, List<User>>> getRefundUsers();
   Future<Either<Failure, User>> submitRefund(int userId);
   Future<Either<Failure, bool>> notifaiIsRead(ReadReviewRequets request);
+  Future<Either<Failure, List<Staff>>> getAllStaff(int roleId);
+  Future<Either<Failure, List<Role>>> getAllRole();
+  Future<Either<Failure, Staff>> createNewStaff(NewStaffRequest request);
+  Future<Either<Failure, void>> deleteStaff(int id);
+  Future<Either<Failure, Staff>> updateStaff(UpdateStaffRequest request);
 
   Future<Either<Failure, IncomeMonth>> getIncomeByMonth();
   Future<Either<Failure, List<IncomeYear>>> getIncomeByYear();
@@ -334,6 +340,10 @@ abstract class BookingRepository {
     DateTime? startDate,
     DateTime? endDate,
     int? stars,
+  });
+
+  Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
+    required int scheduleId,
   });
 }
 
@@ -927,7 +937,6 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
-
   @override
   Future<Either<Failure, TourAssignment>> getTourAssignmentByTourId({
     required int tourId,
@@ -1163,32 +1172,35 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-@override
-Future<Either<Failure, Staff>> getStaffById({required int id}) async { 
-  try {
-    var response = await _coreService.getStaffById(id);
-    
-    var rawData = response.data;
-    
-    Map<String, dynamic> data;
-    
-    if (rawData is Map<String, dynamic>) {
-      if (rawData.containsKey('data') && rawData['data'] is Map<String, dynamic>) {
-        data = rawData['data'] as Map<String, dynamic>;
+
+  @override
+  Future<Either<Failure, Staff>> getStaffById({required int id}) async {
+    try {
+      var response = await _coreService.getStaffById(id);
+
+      var rawData = response.data;
+
+      Map<String, dynamic> data;
+
+      if (rawData is Map<String, dynamic>) {
+        if (rawData.containsKey('data') &&
+            rawData['data'] is Map<String, dynamic>) {
+          data = rawData['data'] as Map<String, dynamic>;
+        } else {
+          data = rawData;
+        }
       } else {
-        data = rawData;
+        throw Exception('Invalid response format');
       }
-    } else {
-      throw Exception('Invalid response format');
+
+      var staffResponse = StaffResponse.fromJson(data);
+      var staff = staffResponse.map();
+      return Right(staff);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
     }
-    
-    var staffResponse = StaffResponse.fromJson(data);
-    var staff = staffResponse.map(); 
-    return Right(staff );
-  } catch (e) {
-    return Left(ErrorHandler.handle(e).failure);
   }
-}
+
   @override
   Future<Either<Failure, List<Review>>> getReview({
     required int tourId,
@@ -1776,4 +1788,115 @@ Future<Either<Failure, Staff>> getStaffById({required int id}) async {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
+  @override
+  Future<Either<Failure, List<Staff>>> getAllStaff(int roleId) async {
+    try {
+      var responses = await _coreService.getAllStaff(roleId);
+      final jsonData = responses.data;
+      final List<dynamic> data =
+          (jsonData is Map<String, dynamic>)
+              ? (jsonData['data'] as List<dynamic>)
+              : (jsonData as List<dynamic>);
+
+      var staffResponses = data.map(
+        (json) => StaffResponse.fromJson(json as Map<String, dynamic>),
+      );
+
+      var staffs = staffResponses.map((response) => response.map()).toList();
+
+      return Right(staffs.cast<Staff>());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Role>>> getAllRole() async {
+    try {
+      var responses = await _coreService.getAllRoles();
+      final jsonData = responses.data;
+      final List<dynamic> data =
+          (jsonData is Map<String, dynamic>)
+              ? (jsonData['data'] as List<dynamic>)
+              : (jsonData as List<dynamic>);
+
+      var roleResponses = data.map(
+        (json) => RoleResponse.fromJson(json as Map<String, dynamic>),
+      );
+
+      var roles = roleResponses.map((response) => response.map()).toList();
+
+      return Right(roles.cast<Role>());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Staff>> createNewStaff(NewStaffRequest request) async {
+    try {
+      var responses = await _coreService.createNewStaff(request);
+      final data = responses.data as Map<String, dynamic>;
+      var staffResponse = StaffResponse.fromJson(data);
+      return Right(staffResponse.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteStaff(int id) async {
+    try {
+      await _coreService.deleteStaff(id);
+      return const Right(null);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Staff>> updateStaff(UpdateStaffRequest request) async {
+    try {
+      var responses = await _coreService.updateStaff(request);
+      final data = responses.data as Map<String, dynamic>;
+      var staffResponse = StaffResponse.fromJson(data);
+      return Right(staffResponse.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  @override
+Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
+  required int scheduleId,
+}) async {
+  try {
+    var response = await _coreService.getReviewsByScheduleId(scheduleId);
+    
+    var rawData = response.data;
+    
+    List<dynamic> dataList;
+    
+    if (rawData is Map<String, dynamic>) {
+      if (rawData.containsKey('data') && rawData['data'] is List) {
+        dataList = rawData['data'] as List<dynamic>;
+      } else {
+        throw Exception('Invalid response format');
+      }
+    } else if (rawData is List) {
+      dataList = rawData;
+    } else {
+      throw Exception('Invalid response format');
+    }
+    
+    var reviews = dataList
+        .map((json) => ReviewResponse.fromJson(json as Map<String, dynamic>))
+        .map((response) => response.map())
+        .toList();
+    
+    return Right(reviews);
+  } catch (e) {
+    return Left(ErrorHandler.handle(e).failure);
+  }
+}
 }
