@@ -36,6 +36,9 @@ abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
 
+  @GET("/Booking/bySchedule/{scheduleId}")
+  Future<RestResponse> getBookingByScheduleId(@Path("scheduleId") int scheduleId);
+
   @POST("/User/login-or-create-byemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
 
