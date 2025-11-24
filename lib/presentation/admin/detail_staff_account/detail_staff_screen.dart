@@ -32,10 +32,10 @@ class DetailStaffScreen extends StatelessWidget {
               CircleAvatar(
                 radius: 14,
                 backgroundColor: AppColors.backgroundAppBarTheme,
-                child: Icon(Icons.person, size: 16, color: Colors.white),
+                child: Icon(Icons.person, size: 16, color: AppColors.white),
               ),
               const SizedBox(width: 8),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
@@ -86,7 +86,7 @@ class DetailStaffScreen extends StatelessWidget {
     final staffData = selectedStaff;
     final statusText = staffData.isActive ? 'Đang hoạt động' : 'Tạm khóa';
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundAppBarTheme,
         title: const Text('Chi tiết nhân viên'),
@@ -114,7 +114,7 @@ class DetailStaffScreen extends StatelessWidget {
                     staffData.user.name,
                     style: const TextStyle(
                       fontSize: AppFonts.fontSize18,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -134,7 +134,7 @@ class DetailStaffScreen extends StatelessWidget {
                     ),
                     child: Text(
                       'ID: ${staffData.user.id}',
-                      style: const TextStyle(color: Colors.black45),
+                      style: const TextStyle(color: AppColors.gray),
                     ),
                   ),
                 ],
@@ -204,7 +204,7 @@ class DetailStaffScreen extends StatelessWidget {
                       Icon(
                         Icons.arrow_forward_ios,
                         size: 16,
-                        color: Colors.black26,
+                        color: AppColors.backgroundDisable,
                       ),
                     ],
                   ),
