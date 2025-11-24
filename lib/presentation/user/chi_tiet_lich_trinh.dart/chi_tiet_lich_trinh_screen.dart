@@ -39,9 +39,24 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
     final tour = schedule.tour;
     final userId = context.read<AuthCubit>().userId;
     final tourImages = tour.tourImages;
-    final imageCount = tourImages.length;
+    final validTourImages =
+        tourImages
+            .whereType<String>()
+            .where((img) => img.trim().isNotEmpty)
+            .toList();
+    final imageCount = validTourImages.length;
     final int selectedImageIndex =
         imageCount > 0 ? _selectedImageIndex.clamp(0, imageCount - 1) : 0;
+    final provinces = tour.provinces;
+    final provinceNames =
+        provinces
+            .map((e) => (e.name).trim())
+            .where((name) => name.isNotEmpty)
+            .toList();
+    final provinceDisplay =
+        provinceNames.isNotEmpty
+            ? provinceNames.join(", ")
+            : "Chưa có thông tin";
     return BlocProvider(
       create: (context) {
         final cubit = ChiTietLichTrinhCubit();
@@ -64,11 +79,12 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                     width: double.infinity,
                     color: AppColors.gray,
                     child:
-                        imageCount > 0
-                            ? Image.network(
-                              tourImages[selectedImageIndex],
-                              fit: BoxFit.cover,
-                            )
+                        imageCount > 0 &&
+                                validTourImages[selectedImageIndex].isNotEmpty
+                            ? _buildSafeNetworkImage(
+                                validTourImages[selectedImageIndex],
+                                fit: BoxFit.cover,
+                              )
                             : const Icon(Icons.image_not_supported, size: 48),
                   ),
                   if (imageCount > 1 && selectedImageIndex > 0)
@@ -146,7 +162,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   scrollDirection: Axis.horizontal,
-                  itemCount: tourImages.length,
+                  itemCount: imageCount,
                   separatorBuilder: (_, __) => const SizedBox(width: 8),
                   itemBuilder: (_, index) {
                     final isSelected = index == selectedImageIndex;
@@ -169,8 +185,8 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            tourImages[index],
+                          child: _buildSafeNetworkImage(
+                            validTourImages[index],
                             width: 120,
                             height: 90,
                             fit: BoxFit.cover,
@@ -258,7 +274,7 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            tour.provinces.map((e) => e.name).join(", "),
+                            provinceDisplay,
                             style: TextStyle(fontSize: AppFonts.fontSize14),
                           ),
                         ],
@@ -707,6 +723,36 @@ class _ChiTietLichTrinhScreenState extends State<ChiTietLichTrinhScreen> {
         padding: const EdgeInsets.all(8),
         child: Icon(icon, color: AppColors.black, size: 28),
       ),
+    );
+  }
+
+  Widget _buildSafeNetworkImage(
+    String url, {
+    double? width,
+    double? height,
+    BoxFit? fit,
+  }) {
+    if (url.isEmpty) {
+      return const Icon(Icons.image_not_supported, size: 48);
+    }
+
+    return Image.network(
+      url,
+      width: width,
+      height: height,
+      fit: fit,
+      errorBuilder: (_, __, ___) =>
+          const Icon(Icons.broken_image_outlined, size: 32, color: Colors.grey),
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return const Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        );
+      },
     );
   }
 }

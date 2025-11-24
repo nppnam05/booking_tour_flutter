@@ -13,8 +13,8 @@ class ScheduleTourmanagerResponse {
   String? startDate;
   String? endDate;
   String? openDate;
-  int? maxSlot;
   int? bookedSlot;
+  int? maxSlot;
   int? finalPrice;
   String? gatheringTime;
   String? code;
@@ -30,8 +30,8 @@ class ScheduleTourmanagerResponse {
     this.startDate,
     this.endDate,
     this.openDate,
-    this.maxSlot,
     this.bookedSlot,
+    this.maxSlot,
     this.finalPrice,
     this.gatheringTime,
     this.code,
@@ -124,8 +124,8 @@ extension ScheduleTourmanagerResponseMapper on ScheduleTourmanagerResponse {
       startDate: start,
       endDate: end,
       openDate: open,
-      maxSlot: maxSlot ?? 0,
       bookedSlot: bookedSlot ?? 0,
+      maxSlot: maxSlot ?? 0,
       finalPrice: finalPrice ?? 0,
       gatheringTime: gatheringTime ?? '',
       code: code ?? '',

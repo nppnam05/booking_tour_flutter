@@ -180,34 +180,6 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 ),
                           );
                         },
-                        onDelete: () async {
-                          final success = await context
-                              .read<AccountManagementCubit>()
-                              .deleteStaff(s.userId);
-
-                          if (!mounted) return;
-
-                          if (success) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Xóa tài khoản thành công'),
-                              ),
-                            );
-                          } else {
-                            final error =
-                                context
-                                    .read<AccountManagementCubit>()
-                                    .state
-                                    .error;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  error ?? 'Xóa tài khoản thất bại',
-                                ),
-                              ),
-                            );
-                          }
-                        },
                         onTap: () {
                           context
                               .read<AccountManagementCubit>()

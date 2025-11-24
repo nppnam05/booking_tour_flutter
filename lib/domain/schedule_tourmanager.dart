@@ -7,8 +7,8 @@ class ScheduleTourmanager {
   final DateTime startDate;
   final DateTime endDate;
   final DateTime openDate;
-  final int maxSlot;
   final int bookedSlot;
+  final int maxSlot;
   final int finalPrice;
   final String gatheringTime;
   final String code;
@@ -24,8 +24,8 @@ class ScheduleTourmanager {
     required this.startDate,
     required this.endDate,
     required this.openDate,
-    required this.maxSlot,
     required this.bookedSlot,
+    required this.maxSlot,
     required this.finalPrice,
     required this.gatheringTime,
     required this.code,
@@ -43,8 +43,8 @@ class ScheduleTourmanager {
       startDate: DateTime.now(),
       endDate: DateTime.now(),
       openDate: DateTime.now(),
-      maxSlot: 0,
       bookedSlot: 0,
+      maxSlot: 0,
       finalPrice: 0,
       gatheringTime: "00:00",
       code: "",
