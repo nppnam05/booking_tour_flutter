@@ -57,7 +57,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                 topRight: Radius.circular(12),
               ),
               child: Image.network(
-                widget.trip.tourImages.first,
+                widget.trip.tourImages.first  , 
                 height: 180,
                 width: double.infinity,
                 fit: BoxFit.cover,
