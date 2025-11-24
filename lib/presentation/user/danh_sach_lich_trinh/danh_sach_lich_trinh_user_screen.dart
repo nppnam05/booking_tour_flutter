@@ -124,7 +124,7 @@ class DanhSachLichTrinhUserScreen extends StatelessWidget {
                 SizedBox(height: 8),
                 _buildInfoRow(
                   "Số người :",
-                  '${scheduleTourmanager.processingBooking + scheduleTourmanager.depositBooking + scheduleTourmanager.paidBooking} / ${scheduleTourmanager.maxSlot.toString()} ',
+                  '${scheduleTourmanager.bookedSlot} / ${scheduleTourmanager.maxSlot.toString()} ',
                 ),
                 SizedBox(height: 12),
                 _buildInfoRow(
@@ -134,7 +134,15 @@ class DanhSachLichTrinhUserScreen extends StatelessWidget {
                 SizedBox(height: 8),
                 _buildInfoRow(
                   "Địa điểm :",
-                  scheduleTourmanager.tour.provinces.first.name,
+                  (scheduleTourmanager.tour.provinces.isNotEmpty &&
+                          (scheduleTourmanager
+                              .tour
+                              .provinces
+                              .first
+                              .name
+                              .isNotEmpty))
+                      ? scheduleTourmanager.tour.provinces.first.name
+                      : "Không có tỉnh thành",
                 ),
                 SizedBox(height: 8),
                 _buildInfoRow(

@@ -97,6 +97,8 @@ import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 
 abstract class BookingRepository {
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(int scheduleId);
+  
   Future<Either<Failure, List<ScheduleReception>>> getScheduleReception();
 
   Future<Either<Failure, UserCompletedSchedule>>
@@ -1899,4 +1901,22 @@ Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
     return Left(ErrorHandler.handle(e).failure);
   }
 }
+  
+  @override
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(int scheduleId) async {
+    try{
+      var responses = await _coreService.getBookingByScheduleId(scheduleId);
+
+      var jsons = responses.data as List<dynamic>;
+
+      var bookingResponse = jsons.map((json) => BookingResponse.fromJson(json as Map<String, dynamic> )).toList();
+
+      var booking = bookingResponse.map((b) => b.map()).toList();
+
+      return Right(booking);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

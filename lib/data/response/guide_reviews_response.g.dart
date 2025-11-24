@@ -9,10 +9,13 @@ part of 'guide_reviews_response.dart';
 GuideReviewsResponse _$GuideReviewsResponseFromJson(
   Map<String, dynamic> json,
 ) => GuideReviewsResponse(
-  nameStaff: json['nameStaff'] as String,
-  schedule: ScheduleAssignmentTourguideResponse.fromJson(
-    json['schedule'] as Map<String, dynamic>,
-  ),
+  nameStaff: json['nameStaff'] as String?,
+  schedule:
+      json['schedule'] == null
+          ? null
+          : ScheduleAssignmentTourguideResponse.fromJson(
+            json['schedule'] as Map<String, dynamic>,
+          ),
 );
 
 Map<String, dynamic> _$GuideReviewsResponseToJson(
