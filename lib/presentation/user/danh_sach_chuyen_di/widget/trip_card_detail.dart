@@ -17,6 +17,40 @@ class TripCardDetail extends StatefulWidget {
 class _TripCardDetailState extends State<TripCardDetail> {
   bool _isExpanded = false;
 
+  bool get _hasValidImage =>
+      widget.trip.tourImages.isNotEmpty &&
+      widget.trip.tourImages.first.isNotEmpty;
+
+  String get _primaryProvince =>
+      widget.trip.provinces.isNotEmpty &&
+              widget.trip.provinces.first.name.isNotEmpty
+          ? widget.trip.provinces.first.name
+          : 'Không có tỉnh thành';
+
+  Widget _buildFallbackImage() {
+    return Image.asset(
+      'assets/images/destination_place.png',
+      height: 180,
+      width: double.infinity,
+      fit: BoxFit.cover,
+    );
+  }
+
+  Widget _buildCoverImage() {
+    if (_hasValidImage) {
+      return Image.network(
+        widget.trip.tourImages.first,
+        height: 180,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildFallbackImage();
+        },
+      );
+    }
+    return _buildFallbackImage();
+  }
+
   List<String> _extractLocationNames(Trip trip) {
     final names =
         trip.dayOfTours
@@ -56,19 +90,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
-              child: Image.network(
-                widget.trip.tourImages.first,
-                height: 180,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 180,
-                    color: AppColors.backgroundDisable,
-                    child: const Icon(Icons.image_not_supported),
-                  );
-                },
-              ),
+              child: _buildCoverImage(),
             ),
 
             Padding(
@@ -123,10 +145,10 @@ class _TripCardDetailState extends State<TripCardDetail> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            widget.trip.provinces.first.name,
+                            _primaryProvince,
                             style: const TextStyle(
                               fontSize: AppFonts.fontSize14,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
