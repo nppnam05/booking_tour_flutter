@@ -57,7 +57,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                 topRight: Radius.circular(12),
               ),
               child: Image.network(
-                widget.trip.tourImages.first,
+                widget.trip.tourImages.firstOrNull ?? "",
                 height: 180,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -123,7 +123,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            widget.trip.provinces.first.name,
+                            widget.trip.provinces.firstOrNull?.name ?? "",
                             style: const TextStyle(
                               fontSize: AppFonts.fontSize14,
                               fontWeight: FontWeight.w600,
