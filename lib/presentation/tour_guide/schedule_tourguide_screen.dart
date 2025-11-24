@@ -15,8 +15,7 @@ class ScheduleTourguideScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Lấy AuthCubit từ context
     final authCubit = context.read<AuthCubit>();
-    
-    print('🎯 ScheduleTourguideScreen: AuthCubit user id=${authCubit.state.id}');
+  
 
     return BlocProvider(
       create: (_) => ScheduleTourguideCubit(

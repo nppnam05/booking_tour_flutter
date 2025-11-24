@@ -8,7 +8,7 @@ class ScheduleTourguideCubit extends Cubit<ScheduleTourguideState> {
   final BookingRepository bookingRepository;
   final AuthCubit authCubit;
 
-  // Nhận AuthCubit từ constructor thay vì dùng getIt
+  // lấy AuthCubit từ constructor
   ScheduleTourguideCubit({
     required this.authCubit,
     required this.bookingRepository,
@@ -21,25 +21,24 @@ class ScheduleTourguideCubit extends Cubit<ScheduleTourguideState> {
     final user = authCubit.state;
     final staffId = user.id;
     
-    print('📋 User: staffId=$staffId, email=${user.email}, roleId=${user.roleId}');
 
     if (staffId == null || staffId == 0) {
-      print('❌ User not logged in - staffId=$staffId');
+  
       emit(ScheduleTourguideError("Không tìm thấy thông tin đăng nhập"));
       return;
     }
 
-    print('🔍 Fetching schedules for staffId: $staffId');
+
 
     final result = await bookingRepository.getSchedulesByStaff(staffId: staffId);
 
     result.fold(
       (failure) {
-        print('❌ Failed: ${failure.message}');
+  
         emit(ScheduleTourguideError(failure.message));
       },
       (schedules) {
-        print('✅ Loaded ${schedules.length} schedules');
+   
         emit(ScheduleTourguideLoaded(schedules));
       },
     );

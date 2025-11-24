@@ -303,11 +303,13 @@ class TourGuideAssignmentScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Mã Lịch Trình: ${schedule.code}",
-                style: AppFonts.text32.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Expanded(
+                child: Text(
+                  "Mã Lịch Trình: ${schedule.code}",
+                  style: AppFonts.text32.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],
