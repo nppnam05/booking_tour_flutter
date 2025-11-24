@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/app/formatter_helper.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/booking_status.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/change_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
@@ -11,11 +12,11 @@ import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/w
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/widgets/text_confirm_cancel_schedule.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
+import 'package:booking_tour_flutter/presentation/widgets/qr_code_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailPaidScheduleScreen extends StatelessWidget {
-
   DetailPaidScheduleScreen({super.key});
 
   @override
@@ -27,7 +28,6 @@ class DetailPaidScheduleScreen extends StatelessWidget {
       body: BlocConsumer<DetailPaidScheduleCubit, DetailPaidScheduleState>(
         bloc: _cubit,
         listener: (context, state) async {
-
           if (state.errorMessage != null) {
             await DialogHelper.showInformDialog(Text(state.errorMessage!));
           }
@@ -126,11 +126,11 @@ class DetailPaidScheduleScreen extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyLarge!,
                         ),
                         content: Text(
-                          state.booking.status.name,
+                          state.booking.status.nameVn,
                           style: Theme.of(
                             context,
                           ).textTheme.bodyLarge!.copyWith(
-                            color: AppColors.warning,
+                            color: state.booking.status.color,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -169,7 +169,8 @@ class DetailPaidScheduleScreen extends StatelessWidget {
                   child: InfoTwoRow(
                     title: "Tổng số tiền",
                     content: FormatterHelper.formatCurrency(
-                      state.booking.schedule.finalPrice * state.booking.numPeople,
+                      state.booking.schedule.finalPrice *
+                          state.booking.numPeople,
                     ),
                   ),
                 ),
@@ -201,13 +202,30 @@ class DetailPaidScheduleScreen extends StatelessWidget {
                   child: InfoTwoRow(
                     title: "Số tiền còn lại",
                     content: FormatterHelper.formatCurrency(
-                      state.booking.schedule.finalPrice * state.booking.numPeople -
+                      state.booking.schedule.finalPrice *
+                              state.booking.numPeople -
                           state.booking.totalPrice,
                     ),
                   ),
                 ),
               ),
 
+              SliverToBoxAdapter(
+                child: Visibility(
+                  visible:
+                      state.booking.status.id == BookingStatus.processingId,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 20),
+                      QrCodeWidget(
+                        qr: state.booking.qr,
+                        expiredAt: state.booking.expiredAt,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SliverToBoxAdapter(child: SizedBox(height: 20)),
 
               SliverToBoxAdapter(

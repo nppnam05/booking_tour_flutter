@@ -31,6 +31,8 @@ class BookScheduleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _cubit = context.read<BookScheduleCubit>();
     authCubit = context.read<AuthCubit>();
+    controllerEmail.text = authCubit.state.email;
+    controllerSoDienThoai.text = authCubit.state.phone;
 
     // sét giá trị lúc ban đầu
 
@@ -79,6 +81,9 @@ class BookScheduleScreen extends StatelessWidget {
                       return "bạn nên điền số vào đây";
                     }
                     return null;
+                  },
+                  onChange: (value) {
+                    _cubit.rebuild();
                   },
                 ),
                 SizedBox(height: 12),

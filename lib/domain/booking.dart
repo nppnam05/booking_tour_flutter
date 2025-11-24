@@ -5,6 +5,7 @@ import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 
 class Booking {
+
   int id;
   int numPeople;
   String code;
@@ -13,9 +14,12 @@ class Booking {
   int totalPrice;
   int countChangeLeft;
   DateTime createdAt;
+  bool payType;
   BookingStatus status;
   ScheduleTourmanager schedule;
   User user;
+  DateTime expiredAt;
+  String qr;
 
   Booking({
     required this.id,
@@ -26,9 +30,12 @@ class Booking {
     required this.totalPrice,
     required this.countChangeLeft,
     required this.createdAt,
+    required this.payType,
     required this.status,
     required this.schedule,
     required this.user,
+    required this.expiredAt,
+    required this.qr,
   });
 
   factory Booking.empty() {
@@ -41,9 +48,12 @@ class Booking {
       totalPrice: 0,
       countChangeLeft: 0,
       createdAt: DateTime.now(),
+      payType: false,
       status: BookingStatus.empty(),
       schedule: ScheduleTourmanager.empty(),
       user: User.empty(),
+      expiredAt: DateTime.now(),
+      qr: "",
     );
   }
 }

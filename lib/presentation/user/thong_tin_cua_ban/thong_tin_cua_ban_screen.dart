@@ -241,8 +241,7 @@ class ThongTinCuaBanScreen extends StatelessWidget {
 
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(SnackBar(content: Text("Cập nhật thành công")));
-            Navigator.pop(context);
+            ).showSnackBar(SnackBar(content: Center(child: Text("Cập nhật thành công"))));
           },
           text: "Xác nhận",
           textColor: Colors.white,

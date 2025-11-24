@@ -1,6 +1,7 @@
 import 'package:booking_tour_flutter/data/response/user_response.dart';
+import 'package:equatable/equatable.dart';
 
-class User {
+class User extends Equatable {
   final int id;
   final int roleId;
   final int money;
@@ -12,7 +13,7 @@ class User {
   final String avatarPath;
   final String bankBranch;
   final bool refundStatus;
-  
+
   User({
     required this.id,
     required this.roleId,
@@ -24,7 +25,7 @@ class User {
     required this.phone,
     required this.avatarPath,
     required this.bankBranch,
-    required this.refundStatus
+    required this.refundStatus,
   });
 
   static User empty() {
@@ -37,11 +38,15 @@ class User {
       name: '',
       email: '',
       phone: '',
-      avatarPath: 'https://photo.znews.vn/w1920/Uploaded/mdf_eioxrd/2021_07_06/1q.jpg',
+      avatarPath:
+          'https://photo.znews.vn/w1920/Uploaded/mdf_eioxrd/2021_07_06/1q.jpg',
       bankBranch: '',
-      refundStatus: false
+      refundStatus: false,
     );
   }
+
+  @override
+  List<Object?> get props => [id];
 }
 
 extension UserExtension on User {
@@ -56,7 +61,7 @@ extension UserExtension on User {
       email: email,
       phone: phone,
       avatarPath: avatarPath,
-      bankBranch: bankBranch
+      bankBranch: bankBranch,
     );
   }
 }

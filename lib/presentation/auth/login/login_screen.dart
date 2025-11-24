@@ -6,6 +6,7 @@ import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/login/cubit/login_state.dart';
 import 'package:booking_tour_flutter/presentation/auth/name_of_screen.dart';
+import 'package:booking_tour_flutter/presentation/auth/widgets/DimmableImageButton.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/not_toggle_input_field.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
@@ -78,6 +79,13 @@ class LoginScreen extends StatelessWidget {
                 (route) => false,
               );
               return;
+            case 4:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.accountant_home,
+                (route) => false,
+              );
+              return;
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -145,10 +153,10 @@ class LoginScreen extends StatelessWidget {
               text: "Đăng nhập",
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             iconLogin(),
-            const SizedBox(height: 12),
+
             textDangKiQuenMatKhau(context),
           ],
         ),
@@ -209,29 +217,23 @@ class LoginScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        InkWell(
-          onTap: () {
-            // login bằng google
-            _cubit.loginWithGoogle();
-          },
-          child: Padding(
-            padding: EdgeInsets.all(4.0),
-            child: Image.asset(
-              'assets/images/logo_gg.png',
-              width: 40,
-              height: 40,
-            ),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: DimmableImageButton(
+            onTap: () {
+              _cubit.loginWithGoogle();
+            },
+
+            imagePath: 'assets/images/logo_gg.png',
           ),
         ),
-        InkWell(
-          onTap: () {},
-          child: Padding(
-            padding: EdgeInsets.all(4.0),
-            child: Image.asset(
-              'assets/images/logo_fb.png',
-              width: 40,
-              height: 40,
-            ),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: DimmableImageButton(
+            onTap: () {
+              _cubit.loginWithFacebook();
+            },
+            imagePath: 'assets/images/logo_fb.png',
           ),
         ),
       ],
