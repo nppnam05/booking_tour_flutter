@@ -51,6 +51,13 @@ class LoginScreen extends StatelessWidget {
           context.read<AuthCubit>().setUser(state.user);
 
           switch (state.user.roleId) {
+            case 1:
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.accountManagement,
+                (route) => false,
+              );
+              return;
             case 2:
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -149,7 +156,7 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             iconLogin(),
-          
+
             textDangKiQuenMatKhau(context),
           ],
         ),
@@ -216,7 +223,7 @@ class LoginScreen extends StatelessWidget {
             onTap: () {
               _cubit.loginWithGoogle();
             },
-          
+
             imagePath: 'assets/images/logo_gg.png',
           ),
         ),

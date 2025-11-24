@@ -4,11 +4,13 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 
 class PermissionDialog extends StatefulWidget {
   final String currentRole;
+  final List<String> roles;
   final Function(String) onConfirm;
 
   const PermissionDialog({
     super.key,
     required this.currentRole,
+    required this.roles,
     required this.onConfirm,
   });
 
@@ -18,13 +20,6 @@ class PermissionDialog extends StatefulWidget {
 
 class _PermissionDialogState extends State<PermissionDialog> {
   String? selectedRole;
-
-  final List<String> roles = [
-    "Quản lý chuyến",
-    "Kế toán",
-    "Hướng dẫn viên",
-    "Người tiếp nhận",
-  ];
 
   @override
   void initState() {
@@ -44,7 +39,7 @@ class _PermissionDialogState extends State<PermissionDialog> {
           children: [
             Text("Phân quyền"),
             const SizedBox(height: 16),
-            ...roles.map(
+            ...widget.roles.map(
               (role) => RadioListTile<String>(
                 value: role,
                 groupValue: selectedRole,
