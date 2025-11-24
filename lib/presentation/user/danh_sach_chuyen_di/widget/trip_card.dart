@@ -71,7 +71,7 @@ class TripCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${trip.day} Ngày}',
+                  '${trip.day} Ngày',
                   style: const TextStyle(
                     fontSize: AppFonts.fontSize12,
                     fontWeight: FontWeight.bold,
