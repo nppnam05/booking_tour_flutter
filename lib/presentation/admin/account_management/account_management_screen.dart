@@ -44,6 +44,13 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                   child: SearchBarWidget(
                     controller: controller,
                     hintText: "Tìm kiếm nhân viên",
+                    onChanged: (value) {
+                      context.read<AccountManagementCubit>().search(value);
+                    },
+                    onClear: () {
+                      controller.clear();
+                      context.read<AccountManagementCubit>().search("");
+                    },
                   ),
                 ),
                 const SizedBox(width: 8),

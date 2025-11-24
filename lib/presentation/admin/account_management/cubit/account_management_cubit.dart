@@ -31,10 +31,13 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
       (result) => roles = result,
     );
 
+    final filteredStaffs = _applySearchFilter(staffs, state.searchQuery);
+
     emit(
       state.copyWith(
         loading: false,
-        staffs: staffs,
+        staffs: filteredStaffs,
+        allStaffs: staffs,
         roles: roles,
         error: error,
       ),
@@ -54,7 +57,16 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
       (result) => staffs = result,
     );
 
-    emit(state.copyWith(loading: false, staffs: staffs, error: error));
+    final filteredStaffs = _applySearchFilter(staffs, state.searchQuery);
+
+    emit(
+      state.copyWith(
+        loading: false,
+        staffs: filteredStaffs,
+        allStaffs: staffs,
+        error: error,
+      ),
+    );
   }
 
   void setSelectedStaff(Staff staff) {
@@ -90,5 +102,23 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
     }
 
     return success;
+  }
+
+  // Tìm kiếm
+  void search(String query) {
+    final searchQuery = query.trim().toLowerCase();
+    final filteredStaffs = _applySearchFilter(state.allStaffs, searchQuery);
+    emit(state.copyWith(searchQuery: searchQuery, staffs: filteredStaffs));
+  }
+
+  List<Staff> _applySearchFilter(List<Staff> staffs, String query) {
+    if (query.isEmpty) {
+      return staffs;
+    }
+
+    return staffs.where((staff) {
+      final name = staff.user.name.toLowerCase();
+      return name.contains(query);
+    }).toList();
   }
 }
