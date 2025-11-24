@@ -124,7 +124,7 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
     }).toList();
   }
 
-  // Update role của staff
+  // hàm này update role của staff
   Future<bool> updateStaffRole(Staff staff, int newRoleId) async {
     emit(state.copyWith(loading: true, error: null));
 
@@ -183,6 +183,7 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
     return success;
   }
 
+  // này update trạng thái active của staff
   Future<bool> updateStaffStatus(Staff staff, bool isActive) async {
     emit(state.copyWith(loading: true, error: null));
 
@@ -204,6 +205,65 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
       userId: staff.userId,
       code: staff.code,
       isActive: isActive,
+      cccd: staff.cccd,
+      address: staff.address,
+      dateOfBirth: staff.dateOfBirth,
+      startWorkingDate: staff.startWorkingDate,
+      cccdIssueDate: staff.cccdIssueDate,
+      cccD_front_image: staff.cccD_front_path,
+      cccD_back_image: staff.cccD_back_path,
+      isRetainCCCDFront: true,
+      isRetainCCCDBack: true,
+      endWorkingDate: staff.endWorkingDate,
+      user: userRequest,
+    );
+
+    final res = await _repo.updateStaff(request);
+
+    bool success = false;
+    String? error;
+
+    res.fold(
+      (failure) {
+        error = failure.message;
+        success = false;
+      },
+      (_) {
+        success = true;
+      },
+    );
+
+    emit(state.copyWith(loading: false, error: error));
+
+    if (success) {
+      await loadAll();
+    }
+
+    return success;
+  }
+
+  // hàm này update thông tin của staff
+  Future<bool> updateStaffInfo(Staff staff) async {
+    emit(state.copyWith(loading: true, error: null));
+
+    final userRequest = UserInStaffUpdateRequest(
+      id: staff.user.id,
+      roleId: staff.role.id,
+      money: staff.user.money,
+      bankNumber: staff.user.bankNumber,
+      bank: staff.user.bank,
+      name: staff.user.name,
+      email: staff.user.email,
+      phone: staff.user.phone,
+      avatarPath: staff.user.avatarPath,
+      bankBranch: staff.user.bankBranch,
+      refundStatus: staff.user.refundStatus,
+    );
+
+    final request = UpdateStaffRequest(
+      userId: staff.userId,
+      code: staff.code,
+      isActive: staff.isActive,
       cccd: staff.cccd,
       address: staff.address,
       dateOfBirth: staff.dateOfBirth,
