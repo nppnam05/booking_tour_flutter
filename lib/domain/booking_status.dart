@@ -14,6 +14,16 @@ class BookingStatus {
   factory BookingStatus.empty() {
     return BookingStatus(id: 0, name: "");
   }
+
+  factory BookingStatus.copyWith({required int id}){
+    return BookingStatus(id: id, name: "");
+  }
+
+  static List<BookingStatus> get allStatuses => [
+    BookingStatus(id: processingId, name: "Đang xử lý"),
+    BookingStatus(id: depositId, name: "Đã đặt cọc"),
+    BookingStatus(id: payId, name: "Đã thanh toán"),
+  ];
 }
 
 extension BookingStatusDisplay on BookingStatus {
