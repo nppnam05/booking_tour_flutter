@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_state.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/widget/account_card.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/widget/permission_dialog.dart';
 import 'package:booking_tour_flutter/presentation/widgets_v/search_bar_widget.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
@@ -105,16 +106,8 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 AccountManagementState
               >(
                 builder: (context, state) {
-                  if (state.loading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (state.error != null) {
-                    return Center(child: Text(state.error!));
-                  }
                   final staffs = state.staffs;
-                  if (staffs.isEmpty) {
-                    return const Center(child: Text('Không có nhân viên'));
-                  }
+
                   final filteredRoles =
                       state.roles
                           .where((role) => role.title.toLowerCase() != 'user')
@@ -132,7 +125,61 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                         phone: s.user.phone,
                         avatarPath: s.user.avatarPath,
                         roles: roleTitles,
-                        onPermission: () {},
+                        onPermission: () {
+                          final currentState =
+                              context.read<AccountManagementCubit>().state;
+                          final availableRoles =
+                              currentState.roles
+                                  .where(
+                                    (role) =>
+                                        role.title.toLowerCase() != 'user',
+                                  )
+                                  .toList();
+
+                          showDialog(
+                            context: context,
+                            builder:
+                                (_) => PermissionDialog(
+                                  currentRole: s.role.title,
+                                  roles: roleTitles,
+                                  onConfirm: (selectedRole) async {
+                                    final selectedRoleObj = availableRoles
+                                        .firstWhere(
+                                          (role) => role.title == selectedRole,
+                                          orElse: () => availableRoles.first,
+                                        );
+
+                                    final success = await context
+                                        .read<AccountManagementCubit>()
+                                        .updateStaffRole(s, selectedRoleObj.id);
+
+                                    if (!mounted) return;
+
+                                    if (success) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Cập nhật quyền thành công',
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Cập nhật quyền thất bại',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                          );
+                        },
                         onDelete: () async {
                           final success = await context
                               .read<AccountManagementCubit>()

@@ -18,6 +18,7 @@ UserInStaffUpdateRequest _$UserInStaffUpdateRequestFromJson(
   email: json['email'] as String,
   phone: json['phone'] as String,
   bankBranch: json['bankBranch'] as String,
+  avatarPath: json['avatarPath'] as String,
   refundStatus: json['refundStatus'] as bool,
 );
 
@@ -33,5 +34,6 @@ Map<String, dynamic> _$UserInStaffUpdateRequestToJson(
   'email': instance.email,
   'phone': instance.phone,
   'bankBranch': instance.bankBranch,
+  'avatarPath': instance.avatarPath,
   'refundStatus': instance.refundStatus,
 };

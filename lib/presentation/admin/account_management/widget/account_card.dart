@@ -1,5 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-import 'package:booking_tour_flutter/presentation/admin/account_management/widget/permission_dialog.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +69,7 @@ class AccountCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: AppColors.white,
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -89,17 +89,17 @@ class AccountCardWidget extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: AppFonts.fontSize16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     role,
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 13, color: AppColors.gray),
                   ),
                   Text(
                     phone,
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 13, color: AppColors.gray),
                   ),
                 ],
               ),
@@ -108,22 +108,7 @@ class AccountCardWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                BkButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder:
-                          (_) => PermissionDialog(
-                            currentRole: role,
-                            roles: roles,
-                            onConfirm: (selectedRole) {
-                              // TODO: xử lý cập nhật
-                            },
-                          ),
-                    );
-                  },
-                  title: "Phân quyền",
-                ),
+                BkButton(onPressed: onPermission, title: "Phân quyền"),
                 const SizedBox(height: 6),
                 BkButton(
                   onPressed: () {

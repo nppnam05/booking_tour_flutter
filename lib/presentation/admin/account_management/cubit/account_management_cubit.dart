@@ -1,5 +1,7 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
+import 'package:booking_tour_flutter/data/request/admin/user_in_staff_update_request.dart';
 import 'package:booking_tour_flutter/domain/role.dart';
 import 'package:booking_tour_flutter/domain/staff.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -120,5 +122,65 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
       final name = staff.user.name.toLowerCase();
       return name.contains(query);
     }).toList();
+  }
+
+  // Update role của staff
+  Future<bool> updateStaffRole(Staff staff, int newRoleId) async {
+    emit(state.copyWith(loading: true, error: null));
+
+    final userRequest = UserInStaffUpdateRequest(
+      id: staff.user.id,
+      roleId: newRoleId,
+      money: 0,
+      bankNumber: "",
+      bank: "",
+      name: staff.user.name,
+      email: staff.user.email,
+      phone: staff.user.phone,
+      avatarPath: "",
+      bankBranch: "",
+      refundStatus: true,
+    );
+
+    final request = UpdateStaffRequest(
+      userId: staff.userId,
+      code: staff.code,
+      isActive: true,
+      cccd: staff.cccd,
+      address: staff.address,
+      dateOfBirth: staff.dateOfBirth,
+      startWorkingDate: staff.startWorkingDate,
+      cccdIssueDate: staff.cccdIssueDate,
+      cccD_front_image: staff.cccD_front_path,
+      cccD_back_image: staff.cccD_back_path,
+      isRetainCCCDFront: true,
+      isRetainCCCDBack: true,
+      endWorkingDate: staff.endWorkingDate,
+      user: userRequest,
+    );
+
+    final res = await _repo.updateStaff(request);
+
+    bool success = false;
+    String? error;
+
+    res.fold(
+      (failure) {
+        error = failure.message;
+        success = false;
+      },
+      (_) {
+        success = true;
+      },
+    );
+
+    emit(state.copyWith(loading: false, error: error));
+
+    if (success) {
+      // Reload lại danh sách
+      await loadAll();
+    }
+
+    return success;
   }
 }

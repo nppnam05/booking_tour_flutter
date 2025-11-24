@@ -191,48 +191,66 @@ class _CreateStaffAccountPart2ScreenState
                         width: double.infinity,
                         child: BkButton(
                           title: 'Xác nhận',
-                          onPressed: () async {
-                            final part1Cubit =
-                                context.read<CreateStaffAccountPart1Cubit>();
-                            final part2Cubit =
-                                context.read<CreateStaffAccountPart2Cubit>();
+                          backgroundColor:
+                              state.submitting
+                                  ? AppColors.backgroundDisable
+                                  : AppColors.backgroundAppBarTheme,
+                          onPressed:
+                              state.submitting
+                                  ? () {}
+                                  : () async {
+                                    final part1Cubit =
+                                        context
+                                            .read<
+                                              CreateStaffAccountPart1Cubit
+                                            >();
+                                    final part2Cubit =
+                                        context
+                                            .read<
+                                              CreateStaffAccountPart2Cubit
+                                            >();
 
-                            final navigator = Navigator.of(context);
-                            final messenger = ScaffoldMessenger.of(context);
+                                    if (part2Cubit.state.submitting) return;
 
-                            final success = await part2Cubit.createStaff(
-                              part1Cubit.state,
-                            );
+                                    final navigator = Navigator.of(context);
+                                    final messenger = ScaffoldMessenger.of(
+                                      context,
+                                    );
 
-                            if (!mounted) return;
+                                    final success = await part2Cubit
+                                        .createStaff(part1Cubit.state);
 
-                            if (success) {
-                              part1Cubit.reset();
-                              part2Cubit.reset();
+                                    if (!mounted) return;
 
-                              messenger.showSnackBar(
-                                const SnackBar(
-                                  content: Text('Tạo tài khoản thành công'),
-                                ),
-                              );
-                              navigator.popUntil(
-                                (route) =>
-                                    route.settings.name ==
-                                    RouteName.accountManagement,
-                              );
-                              AppNavigator.currentContext
-                                  .read<AccountManagementCubit>()
-                                  .loadAll();
-                            } else {
-                              messenger.showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Tạo tài khoản thất bại, vui lòng thử lại',
-                                  ),
-                                ),
-                              );
-                            }
-                          },
+                                    if (success) {
+                                      part1Cubit.reset();
+                                      part2Cubit.reset();
+
+                                      messenger.showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Tạo tài khoản thành công',
+                                          ),
+                                        ),
+                                      );
+                                      navigator.popUntil(
+                                        (route) =>
+                                            route.settings.name ==
+                                            RouteName.accountManagement,
+                                      );
+                                      AppNavigator.currentContext
+                                          .read<AccountManagementCubit>()
+                                          .loadAll();
+                                    } else {
+                                      messenger.showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Tạo tài khoản thất bại, vui lòng thử lại',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
                         ),
                       ),
                     ],

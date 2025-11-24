@@ -13,6 +13,7 @@ class UserInStaffUpdateRequest {
   String email;
   String phone;
   String bankBranch;
+  String avatarPath;
   bool refundStatus;
 
   UserInStaffUpdateRequest({
@@ -25,6 +26,7 @@ class UserInStaffUpdateRequest {
     required this.email,
     required this.phone,
     required this.bankBranch,
+    required this.avatarPath,
     required this.refundStatus,
   });
   factory UserInStaffUpdateRequest.fromJson(Map<String, dynamic> json) =>
