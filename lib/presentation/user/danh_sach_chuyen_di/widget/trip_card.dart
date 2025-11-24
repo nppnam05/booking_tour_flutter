@@ -8,6 +8,29 @@ class TripCard extends StatelessWidget {
   final Trip trip;
   const TripCard({super.key, required this.trip});
 
+  bool get _hasValidImage =>
+      trip.tourImages.isNotEmpty && trip.tourImages.first.isNotEmpty;
+
+  Widget _buildFallbackImage() {
+    return Image.asset(
+      'assets/images/destination_place.png',
+      fit: BoxFit.cover,
+    );
+  }
+
+  Widget _buildCoverImage() {
+    if (_hasValidImage) {
+      return Image.network(
+        trip.tourImages.first,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildFallbackImage();
+        },
+      );
+    }
+    return _buildFallbackImage();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,25 +53,7 @@ class TripCard extends StatelessWidget {
           SizedBox(
             height: 100,
             width: double.infinity,
-            child:
-                trip.tourImages.isNotEmpty
-                    ? Image.network(
-                      trip.tourImages.first,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: AppColors.backgroundDisable,
-                          child: Icon(Icons.image, color: AppColors.white),
-                        );
-                      },
-                    )
-                    : Container(
-                      color: AppColors.backgroundDisable,
-                      child: Icon(
-                        Icons.image,
-                        color: AppColors.backgroundDisable,
-                      ),
-                    ),
+            child: _buildCoverImage(),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -66,7 +71,7 @@ class TripCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${trip.day}N  ${trip.provinces.map((p) => p.name).join(", ")}',
+                  '${trip.day} Ngày}',
                   style: const TextStyle(
                     fontSize: AppFonts.fontSize12,
                     fontWeight: FontWeight.bold,

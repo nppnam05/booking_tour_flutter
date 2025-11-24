@@ -1,7 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
-import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:flutter/material.dart';
 
 class AccountCardWidget extends StatelessWidget {
@@ -10,7 +9,6 @@ class AccountCardWidget extends StatelessWidget {
   final String phone;
   final String avatarPath;
   final List<String> roles;
-  final VoidCallback onDelete;
   final VoidCallback onPermission;
   final VoidCallback? onTap;
 
@@ -21,7 +19,6 @@ class AccountCardWidget extends StatelessWidget {
     required this.phone,
     required this.avatarPath,
     required this.roles,
-    required this.onDelete,
     required this.onPermission,
     this.onTap,
   });
@@ -105,30 +102,7 @@ class AccountCardWidget extends StatelessWidget {
               ),
             ),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                BkButton(onPressed: onPermission, title: "Phân quyền"),
-                const SizedBox(height: 6),
-                BkButton(
-                  onPressed: () {
-                    DialogNoti.confirm(
-                      context: context,
-                      title: "Xác nhận xóa",
-                      message: "Bạn có chắc chắn muốn xóa tài khoản này?",
-                      confirmText: "Xóa",
-                      cancelText: "Hủy",
-                    ).then((value) {
-                      if (value) {
-                        onDelete();
-                      }
-                    });
-                  },
-                  title: "Xóa",
-                  backgroundColor: AppColors.delete,
-                ),
-              ],
-            ),
+            BkButton(onPressed: onPermission, title: "Phân quyền"),
           ],
         ),
       ),
