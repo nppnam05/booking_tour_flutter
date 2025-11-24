@@ -14,6 +14,7 @@ class UserRequest {
   String phone;
   String avatarPath;
   String bankBranch;
+  String token;
 
   UserRequest({
     required this.roleId,
@@ -26,6 +27,7 @@ class UserRequest {
     required this.phone,
     required this.avatarPath,
     required this.bankBranch,
+    required this.token,
   });
   factory UserRequest.fromJson(Map<String, dynamic> json) =>
       _$UserRequestFromJson(json);

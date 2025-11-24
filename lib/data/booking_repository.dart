@@ -1465,6 +1465,7 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
+  @override
   Future<Either<Failure, List<Role>>> getAllRole() async {
     try {
       var responses = await _coreService.getAllRoles();

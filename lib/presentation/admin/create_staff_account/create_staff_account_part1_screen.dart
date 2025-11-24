@@ -1,9 +1,17 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'dart:io';
+
+import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets_v/text_input.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
+import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part1_cubit.dart';
+import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part1_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateStaffAccountPart1Screen extends StatefulWidget {
@@ -32,14 +40,7 @@ class _CreateStaffAccountPart1ScreenState
   bool obscurePassword = true;
   bool obscureConfirm = true;
 
-  String selectedRole = "--Quyền truy cập--";
-  final roles = [
-    "--Quyền truy cập--",
-    "Quản lý chuyến",
-    "Kế toán",
-    "Hướng dẫn viên",
-    "Người tiếp nhận",
-  ];
+  String? selectedRole;
 
   Future<void> _pickDate(TextEditingController ctrl) async {
     final now = DateTime.now();
@@ -52,6 +53,69 @@ class _CreateStaffAccountPart1ScreenState
     if (picked != null) {
       ctrl.text = DateFormat('dd/MM/yyyy').format(picked);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Load roles nếu chưa có
+    final accountCubit = context.read<AccountManagementCubit>();
+    if (accountCubit.state.roles.isEmpty) {
+      accountCubit.loadAll();
+    }
+  }
+
+  void _showAvatarOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder:
+          (_) => SafeArea(
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: const Text('Chụp ảnh'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    context.read<CreateStaffAccountPart1Cubit>().pickAvatar(
+                      ImageSource.camera,
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Chọn từ thư viện'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    context.read<CreateStaffAccountPart1Cubit>().pickAvatar(
+                      ImageSource.gallery,
+                    );
+                  },
+                ),
+                if (context
+                        .read<CreateStaffAccountPart1Cubit>()
+                        .state
+                        .avatarPath !=
+                    null)
+                  ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const Text('Xóa ảnh'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      context
+                          .read<CreateStaffAccountPart1Cubit>()
+                          .removeAvatar();
+                    },
+                  ),
+                ListTile(
+                  leading: const Icon(Icons.close),
+                  title: const Text('Huỷ'),
+                  onTap: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+    );
   }
 
   @override
@@ -106,7 +170,7 @@ class _CreateStaffAccountPart1ScreenState
       appBar: AppBar(
         backgroundColor: AppColors.backgroundAppBarTheme,
         title: const Text('Tạo tài khoản'),
-        leading: BackButton(color: Colors.white),
+        leading: BackButton(color: AppColors.white),
       ),
       body: SafeArea(
         child: GestureDetector(
@@ -116,26 +180,61 @@ class _CreateStaffAccountPart1ScreenState
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
               children: [
-                // Avatar
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 36,
-                        backgroundColor: AppColors.backgroundAppBarTheme,
-                        child: const Text(
-                          'NTA',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                BlocBuilder<
+                  CreateStaffAccountPart1Cubit,
+                  CreateStaffAccountPart1State
+                >(
+                  builder: (context, state) {
+                    return Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () => _showAvatarOptions(context),
+                            child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  radius: 36,
+                                  backgroundColor:
+                                      AppColors.backgroundAppBarTheme,
+                                  backgroundImage:
+                                      state.avatarPath != null
+                                          ? FileImage(File(state.avatarPath!))
+                                          : null,
+                                  child:
+                                      state.avatarPath == null
+                                          ? const Icon(
+                                            Icons.person,
+                                            color: AppColors.white,
+                                            size: 36,
+                                          )
+                                          : null,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.info,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt,
+                                      color: AppColors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 12),
+                        ],
                       ),
-                      const SizedBox(height: 12),
-                    ],
-                  ),
+                    );
+                  },
                 ),
 
                 // Card  thông tin tài khoản
@@ -192,35 +291,61 @@ class _CreateStaffAccountPart1ScreenState
                       const SizedBox(height: 8),
 
                       // Quyền truy cập
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Quyền truy cập",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppFonts.fontSize14,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField<String>(
-                            value: selectedRole,
-                            items:
-                                roles
-                                    .map(
-                                      (r) => DropdownMenuItem(
-                                        value: r,
-                                        child: Text(r),
-                                      ),
-                                    )
-                                    .toList(),
-                            onChanged:
-                                (v) => setState(() {
-                                  selectedRole = v ?? roles.first;
-                                }),
-                            decoration: _inputDecoration('--Quyền truy cập--'),
-                          ),
-                        ],
+                      BlocBuilder<
+                        AccountManagementCubit,
+                        AccountManagementState
+                      >(
+                        builder: (context, accountState) {
+                          final roles =
+                              accountState.roles
+                                  .where((r) => r.title.toLowerCase() != 'user')
+                                  .toList();
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Quyền truy cập",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: AppFonts.fontSize14,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              DropdownButtonFormField<String?>(
+                                value: selectedRole,
+                                items: [
+                                  const DropdownMenuItem<String?>(
+                                    value: null,
+                                    child: Text('--Quyền truy cập--'),
+                                  ),
+                                  ...roles.map<DropdownMenuItem<String?>>(
+                                    (role) => DropdownMenuItem<String?>(
+                                      value: role.title,
+                                      child: Text(role.title),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (v) {
+                                  setState(() {
+                                    selectedRole = v;
+                                    if (v != null) {
+                                      final selectedRoleObj = roles.firstWhere(
+                                        (role) => role.title == v,
+                                        orElse: () => roles.first,
+                                      );
+                                      context
+                                          .read<CreateStaffAccountPart1Cubit>()
+                                          .setRole(selectedRoleObj.id, v);
+                                    }
+                                  });
+                                },
+                                decoration: _inputDecoration(
+                                  '--Quyền truy cập--',
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
 
                       // thông tin cá nhân
@@ -367,6 +492,40 @@ class _CreateStaffAccountPart1ScreenState
                         width: double.infinity,
                         child: BkButton(
                           onPressed: () {
+                            final part1Cubit =
+                                context.read<CreateStaffAccountPart1Cubit>();
+                            final accountState =
+                                context.read<AccountManagementCubit>().state;
+                            final selectedRoleObj = accountState.roles
+                                .firstWhere(
+                                  (role) => role.title == selectedRole,
+                                  orElse: () => accountState.roles.first,
+                                );
+
+                            part1Cubit.saveData(
+                              account: accountCtrl.text.trim(),
+                              password: passwordCtrl.text.trim(),
+                              name: nameCtrl.text.trim(),
+                              cccd: cccdCtrl.text.trim(),
+                              issuedDate:
+                                  issuedDateCtrl.text.trim().isEmpty
+                                      ? null
+                                      : issuedDateCtrl.text.trim(),
+                              email: emailCtrl.text.trim(),
+                              phone: phoneCtrl.text.trim(),
+                              address: addressCtrl.text.trim(),
+                              dob:
+                                  dobCtrl.text.trim().isEmpty
+                                      ? null
+                                      : dobCtrl.text.trim(),
+                              startDate:
+                                  startDateCtrl.text.trim().isEmpty
+                                      ? null
+                                      : startDateCtrl.text.trim(),
+                              selectedRole: selectedRole ?? "",
+                              roleId: selectedRoleObj.id,
+                            );
+
                             Navigator.pushNamed(
                               context,
                               "create_staff_account_part2_screen",

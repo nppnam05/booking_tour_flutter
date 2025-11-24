@@ -17,6 +17,7 @@ UserRequest _$UserRequestFromJson(Map<String, dynamic> json) => UserRequest(
   phone: json['phone'] as String,
   avatarPath: json['avatarPath'] as String,
   bankBranch: json['bankBranch'] as String,
+  token: json['token'] as String,
 );
 
 Map<String, dynamic> _$UserRequestToJson(UserRequest instance) =>
@@ -31,4 +32,5 @@ Map<String, dynamic> _$UserRequestToJson(UserRequest instance) =>
       'phone': instance.phone,
       'avatarPath': instance.avatarPath,
       'bankBranch': instance.bankBranch,
+      'token': instance.token,
     };
