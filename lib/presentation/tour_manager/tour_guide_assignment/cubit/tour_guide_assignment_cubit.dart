@@ -77,13 +77,17 @@ class TourGuideAssignmentCubit extends Cubit<TourGuideAssignmentState> {
           return guide;
         }).toList();
 
-    emit(state.copyWith(tourGuides: updatedList, tourGuidesSearch: updatedTourGuidesSearch));
+    emit(
+      state.copyWith(
+        tourGuides: updatedList,
+        tourGuidesSearch: updatedTourGuidesSearch,
+      ),
+    );
   }
 
   // click vào button
   Future<bool> touchButton() async {
-    var tourGuideResponse =
-        state.tourGuides.map((t) => t.toResponse()).toList();
+    var tourGuideResponse = state.tourGuides.map((t) => t.toRequest()).toList();
 
     var response = await tourGuideAssignmentTourguide.checkAssignment(
       scheduleId: state.schedule.id,

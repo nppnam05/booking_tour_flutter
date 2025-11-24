@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/booking_status.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
@@ -13,22 +14,26 @@ class BookingListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return bookings.length != 0
-        ? ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: bookings.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child:
-                  status.id == BookingStatus.processingId
-                      ? bookingCardNotYetPaid(bookings[index])
-                      : bookingCard(bookings[index]),
-            );
-          },
-        )
-        : Center(child: Text("Danh sách trống", style: AppFonts.text18));
+    if (bookings.isEmpty) {
+      return SizedBox(
+        height: 300,
+        child: Center(child: Text("Danh sách trống", style: AppFonts.text18)),
+      );
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: bookings.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+          child:
+              status.id == BookingStatus.processingId
+                  ? bookingCardNotYetPaid(bookings[index])
+                  : bookingCard(bookings[index]),
+        );
+      },
+    );
   }
 
   Widget bookingCardNotYetPaid(Booking booking) {
@@ -158,26 +163,32 @@ class BookingListScreen extends StatelessWidget {
           SizedBox(height: 30),
           Row(
             children: [
-              Expanded(
-                flex: 4,
-                child: customButton(
-                  onPressed: () {
-                    // TODO:
-                  },
-                  text: "Đặt cọc",
-                  colorButton: Color(0xFFF5CD3E),
-                ),
-              ),
+              check == true
+                  ? Expanded(
+                    flex: 4,
+                    child: customButton(
+                      onPressed: () {
+                        DialogHelper.showConfirmDialog(
+                          body: itemDialog(booking),
+                        );
+                      },
+                      text: "Đặt cọc",
+                      colorButton: Color(0xFFF5CD3E),
+                    ),
+                  )
+                  : Expanded(flex: 4, child: Container()),
               SizedBox(width: 10),
-              Expanded(
-                flex: 6,
-                child: customButton(
-                  onPressed: () {
-                    // TODO:
-                  },
-                  text: "Thanh toán hết",
-                ),
-              ),
+              check == true
+                  ? Expanded(
+                    flex: 6,
+                    child: customButton(
+                      onPressed: () {
+                        // TODO:
+                      },
+                      text: "Thanh toán hết",
+                    ),
+                  )
+                  : Expanded(flex: 4, child: Container()),
               SizedBox(width: 10),
               Expanded(
                 flex: 3,
@@ -193,6 +204,115 @@ class BookingListScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget itemDialog(Booking booking) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text("Bạn ", style: AppFonts.text18),
+            booking.totalPrice / booking.numPeople !=
+                    booking.schedule.finalPrice
+                ? Text(
+                  "xác nhận đã đặt cọc",
+                  style: AppFonts.text18.copyWith(color: Color(0xFFF5CD3E)),
+                )
+                : Text(
+                  "Xác nhận thanh toán hết",
+                  style: AppFonts.text18.copyWith(color: Color(0xFF3DE22E)),
+                ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/profile.png",
+                        width: 30,
+                        height: 30,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 20),
+                      Text("${booking.user.name}", style: AppFonts.text18),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/email.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Text("${booking.email}", style: AppFonts.text18),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/phone.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.phone}", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/group_of_people.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.numPeople} Người", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFF5F5),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Tổng tiền:", style: AppFonts.text18),
+                        Text(
+                          "${booking.totalPrice}",
+                          style: AppFonts.text18,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
