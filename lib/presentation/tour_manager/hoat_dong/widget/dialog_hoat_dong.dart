@@ -100,7 +100,7 @@ class _DialogHoatDongState extends State<DialogHoatDong> {
             if (widget.showInput) ...[
               const SizedBox(height: 12),
               TextField(
-                controller: _controller,
+                controller: _controller,  
                 maxLength: 255,
                 decoration: InputDecoration(
                   hintText: widget.hintText ?? 'Hoạt động',

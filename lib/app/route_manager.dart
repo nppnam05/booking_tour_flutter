@@ -6,6 +6,8 @@ import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cre
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part2_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/detail_staff_account/detail_staff_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/update_staff_account/update_staff_account_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/income_statistics/income_statistics_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/tourguide_rating/tourguide_rating_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -123,6 +125,10 @@ class RouteName {
   static final xacNhanSoNguoiThamGia = "xacNhanSoNguoiThamGia";
 
   static final updateStaffAccountScreen = "update_staff_account_screen";
+  
+  static final  income_statistics = "income_statistic";
+
+  static final tourguideRating = "tourguide_rating";
 }
 
 class RouteManager {
@@ -181,6 +187,8 @@ class RouteManager {
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user: (context) => UpdatePasswordScreen(),
     RouteName.main_user: (context) => MainUser(),
+    RouteName.income_statistics: (context) => IncomeStatisticScreen(),
+
 
     RouteName.accountant_home: (context) => AccountantHomeScreen(),
     RouteName.accountManagement: (context) => AccountManagementScreen(),
@@ -197,5 +205,8 @@ class RouteManager {
     RouteName.kiemTraNguoiThamGia: (context) => KiemTraNguoiThamGiaScreen(),
     RouteName.xacNhanSoNguoiThamGia: (context) => XacNhanSoNguoiThamGiaScreen(),
     RouteName.updateStaffAccountScreen: (context) => UpdateStaffAccountScreen(),
+
+        RouteName.tourguideRating: (context) => const TourguideRatingScreen(),
+
   };
 }

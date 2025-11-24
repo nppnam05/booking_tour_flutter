@@ -5,20 +5,34 @@ import 'package:json_annotation/json_annotation.dart';
 part 'participant_response.g.dart';
 
 @JsonSerializable()
+class ActualcashData {
+  final int? id;
+  final int? money;
+  final int? bookingId;
+  final String? createdAt;
+
+  ActualcashData({
+    this.id,
+    this.money,
+    this.bookingId,
+    this.createdAt,
+  });
+
+  factory ActualcashData.fromJson(Map<String, dynamic> json) =>
+      _$ActualcashDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ActualcashDataToJson(this);
+}
+
+@JsonSerializable()
 class UserCompletedScheduleResponse {
-  String? startDate;
-  String? endDate;
-  String? code;
-  String? name;
-  String? avatarPath;
-  List<BookingResponse>? booking;
+  final int? countPeople;
+  final ActualcashData? actualcashs;
+  final BookingResponse? booking;
 
   UserCompletedScheduleResponse({
-    this.startDate,
-    this.endDate,
-    this.code,
-    this.name,
-    this.avatarPath,
+    this.countPeople,
+    this.actualcashs,
     this.booking,
   });
 
@@ -28,47 +42,28 @@ class UserCompletedScheduleResponse {
   Map<String, dynamic> toJson() => _$UserCompletedScheduleResponseToJson(this);
 }
 
-// @JsonSerializable()
-// class BookingResponse {
-//   int? userId;
-//   int? numPeople;
-//   String? phone;
-
-//   BookingResponse({
-//     this.userId,
-//     this.numPeople,
-//     this.phone,
-//   });
-
-//   factory BookingResponse.fromJson(Map<String, dynamic> json) =>
-//       _$BookingResponseFromJson(json);
-
-//   Map<String, dynamic> toJson() => _$BookingResponseToJson(this);
-// }
-
 extension UserCompletedScheduleMapper on UserCompletedScheduleResponse {
-  List<Participant> mapToParticipants() {
-    if (booking == null || booking!.isEmpty) {
-      return [];
+  Participant? mapToParticipant() {
+    if (booking == null || booking!.user == null) {
+      return null;
     }
 
-    String avatar = avatarPath ?? "";
+    final user = booking!.user!;
+    String avatar = user.avatarPath ?? "";
 
+    // Fix avatar URL
     if (avatar.isNotEmpty && !avatar.startsWith('http')) {
       avatar = "http://tt1220-001-site1.ntempurl.com$avatar";
     }
     if (avatar.isEmpty) {
-      avatar =
-          "https://ui-avatars.com/api/?name=${Uri.encodeComponent(name ?? 'User')}&background=random";
+      avatar = "https://ui-avatars.com/api/?name=${Uri.encodeComponent(user.name ?? 'User')}&background=random";
     }
 
-    return booking!.map((b) {
-      return Participant(
-        name: name ?? "Unknown",
-        quantity: b.numPeople ?? 0,
-        phoneNumber: b.phone ?? "N/A",
-        avatarPath: avatar,
-      );
-    }).toList();
+    return Participant(
+      name: user.name ?? "Unknown",
+      quantity: booking!.numPeople ?? 0,
+      phoneNumber: booking!.phone ?? "N/A",
+      avatarPath: avatar,
+    );
   }
 }
