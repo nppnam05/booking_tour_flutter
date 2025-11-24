@@ -15,8 +15,9 @@ class MainAdmin extends StatefulWidget {
 class _MainAdminState extends State<MainAdmin> {
   late int _currentIndex;
   static final List<Widget> _screens = [
+      IncomeStatisticScreen(key: UniqueKey()),
     AccountManagementScreen(key: UniqueKey()),
-    IncomeStatisticScreen(key: UniqueKey()),
+  
   ];
 
   @override
