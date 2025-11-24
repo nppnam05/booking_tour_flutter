@@ -1,25 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'create_staff_account_part1_state.dart';
 
-class CreateStaffAccountPart1Cubit
-    extends Cubit<CreateStaffAccountPart1State> {
-  final ImagePicker _picker = ImagePicker();
-
+class CreateStaffAccountPart1Cubit extends Cubit<CreateStaffAccountPart1State> {
   CreateStaffAccountPart1Cubit() : super(const CreateStaffAccountPart1State());
-
-  Future<void> pickAvatar(ImageSource source) async {
-    try {
-      final picked = await _picker.pickImage(source: source, imageQuality: 85);
-      if (picked != null) {
-        emit(state.copyWith(avatarPath: picked.path));
-      }
-    } catch (_) {}
-  }
-
-  void removeAvatar() {
-    emit(state.copyWith(avatarPath: null));
-  }
 
   void setRole(int roleId, String roleTitle) {
     emit(state.copyWith(roleId: roleId, selectedRole: roleTitle));
@@ -56,5 +39,8 @@ class CreateStaffAccountPart1Cubit
       ),
     );
   }
-}
 
+  void reset() {
+    emit(const CreateStaffAccountPart1State());
+  }
+}

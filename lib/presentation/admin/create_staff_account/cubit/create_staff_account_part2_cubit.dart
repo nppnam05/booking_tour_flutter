@@ -42,6 +42,10 @@ class CreateStaffAccountPart2Cubit extends Cubit<CreateStaffAccountPart2State> {
     }
   }
 
+  void reset() {
+    emit(const CreateStaffAccountPart2State());
+  }
+
   // Helper to parse date from dd/MM/yyyy format
   DateTime? _parseDate(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return null;
@@ -74,14 +78,6 @@ class CreateStaffAccountPart2Cubit extends Cubit<CreateStaffAccountPart2State> {
       backImage = await AppEncodeHelper.toBase64String(File(state.backPath!));
     }
 
-    // Convert avatar sang base64 nếu có
-    String avatarBase64 = "";
-    if (part1Data.avatarPath != null && part1Data.avatarPath!.isNotEmpty) {
-      avatarBase64 = await AppEncodeHelper.toBase64String(
-        File(part1Data.avatarPath!),
-      );
-    }
-
     final userRequest = UserRequest(
       roleId: roleId,
       password: part1Data.password ?? "",
@@ -91,7 +87,7 @@ class CreateStaffAccountPart2Cubit extends Cubit<CreateStaffAccountPart2State> {
       name: part1Data.name ?? "",
       email: part1Data.email ?? "",
       phone: part1Data.phone ?? "",
-      avatarPath: avatarBase64,
+      avatarPath: "",
       bankBranch: "",
       token: "",
     );

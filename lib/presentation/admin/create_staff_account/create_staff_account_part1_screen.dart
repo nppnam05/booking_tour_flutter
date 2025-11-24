@@ -1,6 +1,5 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
-import 'dart:io';
 
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets_v/text_input.dart';
@@ -8,10 +7,8 @@ import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets/toggle_Input_field.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part1_cubit.dart';
-import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part1_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateStaffAccountPart1Screen extends StatefulWidget {
@@ -63,59 +60,6 @@ class _CreateStaffAccountPart1ScreenState
     if (accountCubit.state.roles.isEmpty) {
       accountCubit.loadAll();
     }
-  }
-
-  void _showAvatarOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder:
-          (_) => SafeArea(
-            child: Wrap(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.photo_camera),
-                  title: const Text('Chụp ảnh'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    context.read<CreateStaffAccountPart1Cubit>().pickAvatar(
-                      ImageSource.camera,
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: const Text('Chọn từ thư viện'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    context.read<CreateStaffAccountPart1Cubit>().pickAvatar(
-                      ImageSource.gallery,
-                    );
-                  },
-                ),
-                if (context
-                        .read<CreateStaffAccountPart1Cubit>()
-                        .state
-                        .avatarPath !=
-                    null)
-                  ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: const Text('Xóa ảnh'),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      context
-                          .read<CreateStaffAccountPart1Cubit>()
-                          .removeAvatar();
-                    },
-                  ),
-                ListTile(
-                  leading: const Icon(Icons.close),
-                  title: const Text('Huỷ'),
-                  onTap: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-          ),
-    );
   }
 
   @override
@@ -180,61 +124,23 @@ class _CreateStaffAccountPart1ScreenState
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
               children: [
-                BlocBuilder<
-                  CreateStaffAccountPart1Cubit,
-                  CreateStaffAccountPart1State
-                >(
-                  builder: (context, state) {
-                    return Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () => _showAvatarOptions(context),
-                            child: Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 36,
-                                  backgroundColor:
-                                      AppColors.backgroundAppBarTheme,
-                                  backgroundImage:
-                                      state.avatarPath != null
-                                          ? FileImage(File(state.avatarPath!))
-                                          : null,
-                                  child:
-                                      state.avatarPath == null
-                                          ? const Icon(
-                                            Icons.person,
-                                            color: AppColors.white,
-                                            size: 36,
-                                          )
-                                          : null,
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.info,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.camera_alt,
-                                      color: AppColors.white,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 36,
+                        backgroundColor: AppColors.backgroundAppBarTheme,
+                        child: const Icon(
+                          Icons.person,
+                          color: AppColors.white,
+                          size: 36,
+                        ),
                       ),
-                    );
-                  },
+                      const SizedBox(height: 12),
+                    ],
+                  ),
                 ),
 
                 // Card  thông tin tài khoản

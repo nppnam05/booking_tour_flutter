@@ -64,4 +64,31 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
   void clearSelectedStaff() {
     emit(state.copyWith(selectedStaff: null));
   }
+
+  Future<bool> deleteStaff(int id) async {
+    emit(state.copyWith(loading: true, error: null));
+
+    final res = await _repo.deleteStaff(id);
+
+    bool success = false;
+    String? error;
+
+    res.fold(
+      (failure) {
+        error = failure.message;
+        success = false;
+      },
+      (_) {
+        success = true;
+      },
+    );
+
+    emit(state.copyWith(loading: false, error: error));
+
+    if (success) {
+      await loadAll();
+    }
+
+    return success;
+  }
 }

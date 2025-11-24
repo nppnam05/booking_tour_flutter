@@ -300,6 +300,7 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Staff>>> getAllStaff(int roleId);
   Future<Either<Failure, List<Role>>> getAllRole();
   Future<Either<Failure, Staff>> createNewStaff(NewStaffRequest request);
+  Future<Either<Failure, void>> deleteStaff(int id);
 }
 
 @Singleton(as: BookingRepository)
@@ -1582,6 +1583,16 @@ class BookingRepositoryImp implements BookingRepository {
       final data = responses.data as Map<String, dynamic>;
       var staffResponse = StaffResponse.fromJson(data);
       return Right(staffResponse.map());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteStaff(int id) async {
+    try {
+      await _coreService.deleteStaff(id);
+      return const Right(null);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

@@ -126,9 +126,38 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                         avatarPath: s.user.avatarPath,
                         roles: roleTitles,
                         onPermission: () {},
-                        onDelete: () {},
+                        onDelete: () async {
+                          final success = await context
+                              .read<AccountManagementCubit>()
+                              .deleteStaff(s.userId);
+
+                          if (!mounted) return;
+
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Xóa tài khoản thành công'),
+                              ),
+                            );
+                          } else {
+                            final error =
+                                context
+                                    .read<AccountManagementCubit>()
+                                    .state
+                                    .error;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  error ?? 'Xóa tài khoản thất bại',
+                                ),
+                              ),
+                            );
+                          }
+                        },
                         onTap: () {
-                          context.read<AccountManagementCubit>().setSelectedStaff(s);
+                          context
+                              .read<AccountManagementCubit>()
+                              .setSelectedStaff(s);
                           Navigator.pushNamed(context, 'detail_staff_screen');
                         },
                       );

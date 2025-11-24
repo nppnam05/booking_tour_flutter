@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,9 +13,16 @@ import 'cubit/create_staff_account_part1_cubit.dart';
 import 'cubit/create_staff_account_part2_cubit.dart';
 import 'cubit/create_staff_account_part2_state.dart';
 
-class CreateStaffAccountPart2Screen extends StatelessWidget {
+class CreateStaffAccountPart2Screen extends StatefulWidget {
   const CreateStaffAccountPart2Screen({super.key});
 
+  @override
+  State<CreateStaffAccountPart2Screen> createState() =>
+      _CreateStaffAccountPart2ScreenState();
+}
+
+class _CreateStaffAccountPart2ScreenState
+    extends State<CreateStaffAccountPart2Screen> {
   void _showOptions(BuildContext context, {required bool isFront}) {
     showModalBottomSheet(
       context: context,
@@ -185,20 +195,35 @@ class CreateStaffAccountPart2Screen extends StatelessWidget {
                             final part2Cubit =
                                 context.read<CreateStaffAccountPart2Cubit>();
 
+                            final navigator = Navigator.of(context);
+                            final messenger = ScaffoldMessenger.of(context);
+
                             final success = await part2Cubit.createStaff(
                               part1Cubit.state,
                             );
 
+                            if (!mounted) return;
+
                             if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              part1Cubit.reset();
+                              part2Cubit.reset();
+
+                              messenger.showSnackBar(
                                 const SnackBar(
                                   content: Text('Tạo tài khoản thành công'),
                                 ),
                               );
-                              Navigator.of(context).pop(true);
+                              navigator.popUntil(
+                                (route) =>
+                                    route.settings.name ==
+                                    RouteName.accountManagement,
+                              );
+                              AppNavigator.currentContext
+                                  .read<AccountManagementCubit>()
+                                  .loadAll();
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                              messenger.showSnackBar(
+                                const SnackBar(
                                   content: Text(
                                     'Tạo tài khoản thất bại, vui lòng thử lại',
                                   ),

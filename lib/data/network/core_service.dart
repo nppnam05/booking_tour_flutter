@@ -303,4 +303,7 @@ abstract class CoreService {
 
   @POST("/Staff")
   Future<RestResponse> createNewStaff(@Body() NewStaffRequest request);
+
+  @DELETE("/Staff/{id}")
+  Future<RestResponse> deleteStaff(@Path("id") int id);
 }
