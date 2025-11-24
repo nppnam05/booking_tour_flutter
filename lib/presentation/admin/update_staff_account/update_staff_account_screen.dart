@@ -35,6 +35,7 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
   String? _roleValue;
   bool _isActive = true;
   Staff? _staff;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -105,8 +106,9 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
 
   Future<void> _pickDate(
     TextEditingController controller,
-    DateTime fallback,
-  ) async {
+    DateTime fallback, {
+    void Function(DateTime picked)? onDatePicked,
+  }) async {
     final initial = _parseDate(controller.text, fallback);
     final picked = await showDatePicker(
       context: context,
@@ -116,11 +118,12 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
     );
     if (picked != null) {
       controller.text = formatDate(picked);
+      onDatePicked?.call(picked);
     }
   }
 
-  void _save() {
-    if (_staff == null) return;
+  Future<void> _save() async {
+    if (_staff == null || _isSaving) return;
     if (!_formKey.currentState!.validate()) return;
 
     final current = _staff!;
@@ -168,24 +171,49 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
       role: updatedRole,
     );
 
-    context.read<AccountManagementCubit>().setSelectedStaff(updatedStaff);
-    setState(() => _staff = updatedStaff);
+    setState(() {
+      _isSaving = true;
+    });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Cập nhật thành công')));
-    Navigator.of(context).pop();
+    final cubit = context.read<AccountManagementCubit>();
+    final success = await cubit.updateStaffInfo(updatedStaff);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isSaving = false;
+    });
+
+    if (success) {
+      cubit.setSelectedStaff(updatedStaff);
+      setState(() => _staff = updatedStaff);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Cập nhật thành công')));
+      Navigator.of(context).pop();
+    } else {
+      final error = cubit.state.error;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error ?? 'Cập nhật thất bại')));
+    }
   }
 
-  Widget _buildDateField(TextEditingController controller, DateTime fallback) {
+  Widget _buildDateField(
+    TextEditingController controller,
+    DateTime fallback, {
+    bool isRequired = true,
+    void Function(DateTime picked)? onDatePicked,
+  }) {
     return TextFormField(
       controller: controller,
       readOnly: true,
-      onTap: () => _pickDate(controller, fallback),
+      onTap: () => _pickDate(controller, fallback, onDatePicked: onDatePicked),
       decoration: InputDecoration(suffixIcon: const Icon(Icons.calendar_today)),
-      validator:
-          (value) =>
-              value == null || value.isEmpty ? 'Vui lòng chọn ngày' : null,
+      validator: (value) {
+        if (!isRequired) return null;
+        return value == null || value.isEmpty ? 'Vui lòng chọn ngày' : null;
+      },
     );
   }
 
@@ -272,8 +300,14 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
-                            readOnly: true,
+                            enabled: false,
                             initialValue: _roleValue,
+                            decoration: InputDecoration(
+                              disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: AppColors.gray),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -399,30 +433,77 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                         ],
                       ),
                       const SizedBox(height: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Ngày kết thúc làm việc",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppFonts.fontSize16,
+                      SwitchListTile.adaptive(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          _isActive
+                              ? "Trạng thái: Đang làm việc"
+                              : "Trạng thái: Đã nghỉ",
+                        ),
+                        value: _isActive,
+                        onChanged: (value) {
+                          setState(() {
+                            _isActive = value;
+                            if (value) {
+                              _leaveDateController.clear();
+                            }
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      if (!_isActive)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Ngày kết thúc làm việc",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppFonts.fontSize16,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            _buildDateField(
+                              _leaveDateController,
+                              _staff!.endWorkingDate,
+                              onDatePicked: (_) {
+                                if (_isActive) {
+                                  setState(() {
+                                    _isActive = false;
+                                  });
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      else
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton.icon(
+                            onPressed: () async {
+                              await _pickDate(
+                                _leaveDateController,
+                                _staff!.endWorkingDate,
+                                onDatePicked: (_) {
+                                  setState(() {
+                                    _isActive = false;
+                                  });
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.event_busy),
+                            label: const Text(
+                              "Thiết lập ngày kết thúc làm việc",
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          _buildDateField(
-                            _leaveDateController,
-                            _staff!.endWorkingDate,
-                          ),
-                        ],
-                      ),
+                        ),
                       const SizedBox(height: 24),
                       Row(
                         children: [
                           Expanded(
                             child: BkButton(
-                              title: 'HỦY',
-                              backgroundColor: Colors.grey.shade300,
+                              title: 'Hủy',
+                              backgroundColor: AppColors.white,
                               textColor: Colors.black87,
                               onPressed: () => Navigator.of(context).pop(),
                             ),
