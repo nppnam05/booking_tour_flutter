@@ -5,7 +5,6 @@ import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 
 class Booking {
-
   int id;
   int numPeople;
   String code;

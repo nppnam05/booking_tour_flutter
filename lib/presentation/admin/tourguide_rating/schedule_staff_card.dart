@@ -23,13 +23,12 @@ class ScheduleStaffCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // ✅ Tạo Cubit trực tiếp với getIt
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
               create: (context) => ReviewDetailCubit(getIt())
-                ..loadReviews(schedule), // Load ngay khi tạo
+                ..loadReviews(schedule), 
               child: ReviewDetailScreen(schedule: schedule),
             ),
           ),

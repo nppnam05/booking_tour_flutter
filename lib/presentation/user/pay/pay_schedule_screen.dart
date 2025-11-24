@@ -66,23 +66,23 @@ class PayScheduleScreen extends StatelessWidget {
             ],
           ),
         ),
-        BkButton(
-          onPressed: () async {
-            final directory =
-                (await getApplicationDocumentsDirectory())
-                    .path; //from path_provide package
-            String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+        // BkButton(
+        //   onPressed: () async {
+        //     final directory =
+        //         (await getApplicationDocumentsDirectory())
+        //             .path; //from path_provide package
+        //     String fileName = DateTime.now().microsecondsSinceEpoch.toString();
 
-            await _screenshotController.captureAndSave(
-              directory,
-              fileName: fileName,
-            );
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Lưu ảnh thành công")));
-          },
-          title: "Lưu mã qr",
-        ),
+        //     await _screenshotController.captureAndSave(
+        //       directory,
+        //       fileName: fileName,
+        //     );
+        //     ScaffoldMessenger.of(
+        //       context,
+        //     ).showSnackBar(SnackBar(content: Text("Lưu ảnh thành công")));
+        //   },
+        //   title: "Lưu mã qr",
+        // ),
       ],
     );
   }

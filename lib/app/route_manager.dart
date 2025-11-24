@@ -5,6 +5,7 @@ import 'package:booking_tour_flutter/presentation/admin/account_management/accou
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part1_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part2_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/detail_staff_account/detail_staff_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/main_admin.dart';
 import 'package:booking_tour_flutter/presentation/admin/update_staff_account/update_staff_account_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/income_statistics/income_statistics_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/tourguide_rating/tourguide_rating_screen.dart';
@@ -125,10 +126,11 @@ class RouteName {
   static final xacNhanSoNguoiThamGia = "xacNhanSoNguoiThamGia";
 
   static final updateStaffAccountScreen = "update_staff_account_screen";
-  
-  static final  income_statistics = "income_statistic";
 
-  static final tourguideRating = "tourguide_rating";
+  static final income_statistics = "income_statistic";
+
+  static final tourguideRating = "tourguide_rating_screen";
+  static final mainAdminScreen = "main_admin_screen";
 }
 
 class RouteManager {
@@ -189,7 +191,6 @@ class RouteManager {
     RouteName.main_user: (context) => MainUser(),
     RouteName.income_statistics: (context) => IncomeStatisticScreen(),
 
-
     RouteName.accountant_home: (context) => AccountantHomeScreen(),
     RouteName.accountManagement: (context) => AccountManagementScreen(),
     RouteName.detailStaffScreen: (context) => const DetailStaffScreen(),
@@ -206,7 +207,12 @@ class RouteManager {
     RouteName.xacNhanSoNguoiThamGia: (context) => XacNhanSoNguoiThamGiaScreen(),
     RouteName.updateStaffAccountScreen: (context) => UpdateStaffAccountScreen(),
 
-        RouteName.tourguideRating: (context) => const TourguideRatingScreen(),
-
+    RouteName.tourguideRating: (context) => const TourguideRatingScreen(),
+    RouteName.mainAdminScreen: (context) => const MainAdmin(),
+    RouteName.tourguideRating: (context) {
+      
+      final int? staffId = ModalRoute.of(context)?.settings.arguments as int?;
+      return const TourguideRatingScreen();
+    },
   };
 }

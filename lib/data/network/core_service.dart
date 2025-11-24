@@ -51,6 +51,9 @@ abstract class CoreService {
     @Path("scheduleid") int scheduleId,
   );
 
+  @GET("/Booking/bySchedule/{scheduleId}")
+  Future<RestResponse> getBookingByScheduleId(@Path("scheduleId") int scheduleId);
+
   @POST("/User/login-or-create-byemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
 

@@ -18,13 +18,23 @@ class TourguideRatingScreen extends StatefulWidget {
 class _TourguideRatingScreenState extends State<TourguideRatingScreen> {
   final TextEditingController _searchController = TextEditingController();
   late final TourguideRatingCubit _cubit;
+  int? _staffId; 
 
   @override
-  void initState() {
-    super.initState();
-    _cubit = TourguideRatingCubit(getIt<BookingRepository>());
-    _cubit.loadSchedules();
-    _cubit.loadStaffInfo();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+  
+    if (_staffId == null) {
+      _staffId = ModalRoute.of(context)?.settings.arguments as int?;
+      _cubit = TourguideRatingCubit(getIt<BookingRepository>());
+      
+      if (_staffId != null) {
+        _cubit.setStaffId(_staffId!);
+        _cubit.loadSchedules();
+        _cubit.loadStaffInfo();
+      }
+    }
   }
 
   @override
@@ -79,7 +89,7 @@ class _TourguideRatingScreenState extends State<TourguideRatingScreen> {
         backgroundColor: AppColors.backgroundAppBarTheme,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context), // ✅ Quay lại màn hình trước
         ),
       ),
       body: BlocBuilder<TourguideRatingCubit, TourguideRatingState>(
@@ -138,7 +148,6 @@ class _TourguideRatingScreenState extends State<TourguideRatingScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      // Avatar
                       CircleAvatar(
                         radius: 40,
                         backgroundColor: AppColors.backgroundAppBarTheme,
@@ -146,7 +155,7 @@ class _TourguideRatingScreenState extends State<TourguideRatingScreen> {
                                 user!.avatarPath.isNotEmpty
                             ? NetworkImage(user.avatarPath)
                             : null,
-                        child: user?.avatarPath == null 
+                        child: user?.avatarPath == null || user!.avatarPath.isEmpty
                             ? Text(
                                 _getInitials(user?.name ?? ''),
                                 style: const TextStyle(
@@ -193,7 +202,6 @@ class _TourguideRatingScreenState extends State<TourguideRatingScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ...List.generate(5, (index) {
-                            // Calculate average rating
                             final totalReviews = state.schedules.fold<int>(
                               0, 
                               (sum, s) => sum + s.totalReviews
@@ -303,7 +311,6 @@ class _TourguideRatingScreenState extends State<TourguideRatingScreen> {
                             final schedule = state.schedules[index];
                             return ScheduleStaffCard(
                               schedule: schedule,
-                              // ✅ Removed onTap - handled inside card
                             );
                           },
                         ),
