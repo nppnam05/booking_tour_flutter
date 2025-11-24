@@ -168,7 +168,9 @@ class BookingListScreen extends StatelessWidget {
                     flex: 4,
                     child: customButton(
                       onPressed: () {
-                        DialogHelper.showConfirmDialog(body: Text("asdad"));
+                        DialogHelper.showConfirmDialog(
+                          body: itemDialog(booking),
+                        );
                       },
                       text: "Đặt cọc",
                       colorButton: Color(0xFFF5CD3E),
@@ -202,6 +204,115 @@ class BookingListScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget itemDialog(Booking booking) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text("Bạn ", style: AppFonts.text18),
+            booking.totalPrice / booking.numPeople !=
+                    booking.schedule.finalPrice
+                ? Text(
+                  "xác nhận đã đặt cọc",
+                  style: AppFonts.text18.copyWith(color: Color(0xFFF5CD3E)),
+                )
+                : Text(
+                  "Xác nhận thanh toán hết",
+                  style: AppFonts.text18.copyWith(color: Color(0xFF3DE22E)),
+                ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/profile.png",
+                        width: 30,
+                        height: 30,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 20),
+                      Text("${booking.user.name}", style: AppFonts.text18),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/email.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Text("${booking.email}", style: AppFonts.text18),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/phone.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.phone}", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/group_of_people.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.numPeople} Người", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFF5F5),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Tổng tiền:", style: AppFonts.text18),
+                        Text(
+                          "${booking.totalPrice}",
+                          style: AppFonts.text18,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
