@@ -97,7 +97,7 @@ class AccountantRefundItem extends StatelessWidget {
                           if (isSubmit && context.mounted) {
                             await context
                                 .read<AccountantRefundCubit>()
-                                .cancelRefund(user.id);
+                                .submitRefund(user.id);
                           }
                         },
                         title: "Xóa",
@@ -155,7 +155,7 @@ class AccountantRefundItem extends StatelessWidget {
             ],
           ),
         ),
-        AccountantUserItem(),
+        AccountantUserItem(user: user),
       ],
     );
   }
@@ -181,7 +181,7 @@ class AccountantRefundItem extends StatelessWidget {
             ],
           ),
         ),
-        AccountantUserItem(),
+        AccountantUserItem(user: user),
       ],
     );
   }

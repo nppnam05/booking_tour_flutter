@@ -16,6 +16,9 @@ import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/change_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/detail_paid_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/review_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/kiem_tra_nguoi_tham_gia_screen.dart';
+import 'package:booking_tour_flutter/presentation/reception/lich_trinh_chua_hoan_thanh/lich_trinh_chua_hoan_thanh_screen.dart';
+import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/xac_nhan_so_nguoi_tham_gia_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
@@ -114,6 +117,12 @@ class RouteName {
       "create_staff_account_part2_screen";
   static final accountantManageScheduleScreen =
       "accountant_manage_schedule_screen";
+
+  //reception
+  static final lichTrinhChuaHoanThanh = "lichTrinhChuaHoanThanh";
+  static final kiemTraNguoiThamGia = "kiemTraNguoiThamGia";
+  static final xacNhanSoNguoiThamGia = "xacNhanSoNguoiThamGia";
+  
   static final  income_statistics = "income_statistic";
 
   static final tourguideRating = "tourguide_rating";
@@ -187,6 +196,10 @@ class RouteManager {
         (context) => CreateStaffAccountPart2Screen(),
     RouteName.accountantManageScheduleScreen:
         (context) => AccountantManageScheduleScreen(),
+
+    RouteName.lichTrinhChuaHoanThanh: (context) => LichTrinhChuaHoanThanhScreen(),
+    RouteName.kiemTraNguoiThamGia: (context) => KiemTraNguoiThamGiaScreen(),
+    RouteName.xacNhanSoNguoiThamGia: (context) => XacNhanSoNguoiThamGiaScreen(),
 
         RouteName.tourguideRating: (context) => const TourguideRatingScreen(),
 

@@ -43,6 +43,7 @@ class BookingResponse {
 
   factory BookingResponse.fromJson(Map<String, dynamic> json) =>
       _$BookingResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$BookingResponseToJson(this);
 }
 
 extension BookingResponseMapper on BookingResponse {

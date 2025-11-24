@@ -44,7 +44,7 @@ class SelectSingleActivityField extends StatelessWidget {
           },
           content: state.activity?.action,
           isDisable: isDisable,
-          isShowError: isDisable,
+          isShowError: isShowError,
           errorMessage: errorMessage,
         );
       },

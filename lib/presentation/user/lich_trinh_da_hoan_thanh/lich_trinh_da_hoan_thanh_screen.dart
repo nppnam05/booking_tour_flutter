@@ -159,6 +159,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
         DeleteButtonWidget(
           onDelete: () async {
             var cubitReview = context.read<ReviewScheduleCubit>();
+            cubitReview.resetState();
             final userId = context.read<AuthCubit>().state.id;
 
             cubitReview.setUserId(userId);

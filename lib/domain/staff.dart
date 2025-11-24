@@ -11,7 +11,7 @@ class Staff {
   final DateTime startWorkingDate;
   final DateTime cccdIssueDate;
   final String cccdFrontPath;
-  final String cccBackPath;
+  final String cccdBackPath;
   final DateTime endWorkingDate;
 
 

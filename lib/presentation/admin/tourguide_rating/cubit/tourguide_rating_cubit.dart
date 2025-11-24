@@ -1,12 +1,32 @@
 import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/domain/staff.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'tourguide_rating_state.dart';
 
 class TourguideRatingCubit extends Cubit<TourguideRatingState> {
   final BookingRepository _repository;
   final int staffId = 2; // Hard-coded for now
-
   TourguideRatingCubit(this._repository) : super(TourguideRatingInitial());
+
+ Future<void> loadStaffInfo() async {
+  try {
+    final result = await _repository.getStaffById(id: staffId);
+
+    result.fold(
+      (failure) => print("Failed to load staff: ${failure.message}"),
+      (staffData) {
+        final current = state;
+        if (current is TourguideRatingLoaded) {
+          emit(current.copyWith(staff: staffData));
+        }
+      },
+    );
+  } catch (e) {
+    print("Error loading staff: $e");
+  }
+}
+
 
   Future<void> loadSchedules({
     String? filter,
@@ -40,8 +60,11 @@ class TourguideRatingCubit extends Cubit<TourguideRatingState> {
               startDate: startDate,
               endDate: endDate,
               stars: stars,
+              staff: null, // Will be loaded separately
             ),
           );
+          // Load staff info after schedules
+          loadStaffInfo();
         },
       );
     } catch (e) {

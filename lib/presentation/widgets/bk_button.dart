@@ -40,6 +40,7 @@ class BkButton extends StatelessWidget {
         padding: padding,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius ?? 8),
+          side: BorderSide(color: nowBorderColor),
         ),
       ),
       child: Text(
