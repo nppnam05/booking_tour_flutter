@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/format_date_number
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/widget/permission_dialog.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:flutter/material.dart';
@@ -220,17 +221,130 @@ class DetailStaffScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: BkButton(onPressed: () {}, title: 'Phân quyền'),
+                    child: BkButton(
+                      onPressed: () {
+                        final currentState =
+                            context.read<AccountManagementCubit>().state;
+                        final availableRoles =
+                            currentState.roles
+                                .where(
+                                  (role) => role.title.toLowerCase() != 'user',
+                                )
+                                .toList();
+
+                        final roleTitles =
+                            availableRoles.map((role) => role.title).toList();
+
+                        showDialog(
+                          context: context,
+                          builder:
+                              (_) => PermissionDialog(
+                                currentRole: staffData.role.title,
+                                roles: roleTitles,
+                                onConfirm: (selectedRole) async {
+                                  final selectedRoleObj = availableRoles
+                                      .firstWhere(
+                                        (role) => role.title == selectedRole,
+                                        orElse: () => availableRoles.first,
+                                      );
+
+                                  final success = await context
+                                      .read<AccountManagementCubit>()
+                                      .updateStaffRole(
+                                        staffData,
+                                        selectedRoleObj.id,
+                                      );
+
+                                  if (!context.mounted) return;
+
+                                  if (success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Cập nhật quyền thành công',
+                                        ),
+                                      ),
+                                    );
+                                    if (context.mounted) {
+                                      final updatedStaff = staffData.copyWith(
+                                        role: selectedRoleObj,
+                                      );
+                                      context
+                                          .read<AccountManagementCubit>()
+                                          .setSelectedStaff(updatedStaff);
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Cập nhật quyền thất bại',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                        );
+                      },
+                      title: 'Phân quyền',
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: BkButton(
-                      title: 'Tạm khóa',
-                      backgroundColor: AppColors.orange,
+                      title: staffData.isActive ? 'Tạm khóa' : 'Mở khóa',
+                      backgroundColor:
+                          staffData.isActive
+                              ? AppColors.orange
+                              : AppColors.backgroundAppBarTheme,
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Tạm khóa')),
-                        );
+                        DialogNoti.confirm(
+                          context: context,
+                          title:
+                              staffData.isActive
+                                  ? "Xác nhận tạm khóa"
+                                  : "Xác nhận mở khóa",
+                          message:
+                              staffData.isActive
+                                  ? "Bạn có chắc chắn muốn tạm khóa tài khoản này?"
+                                  : "Bạn có chắc chắn muốn mở khóa tài khoản này?",
+                          confirmText:
+                              staffData.isActive ? "Tạm khóa" : "Mở khóa",
+                          cancelText: "Hủy",
+                        ).then((value) async {
+                          if (value) {
+                            final newStatus = !staffData.isActive;
+                            final success = await context
+                                .read<AccountManagementCubit>()
+                                .updateStaffStatus(staffData, newStatus);
+
+                            if (!context.mounted) return;
+
+                            if (success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    newStatus
+                                        ? 'Tài khoản đã được mở khóa'
+                                        : 'Tài khoản đã bị tạm khóa',
+                                  ),
+                                ),
+                              );
+                              final updatedStaff = staffData.copyWith(
+                                isActive: newStatus,
+                              );
+                              context
+                                  .read<AccountManagementCubit>()
+                                  .setSelectedStaff(updatedStaff);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Cập nhật trạng thái thất bại'),
+                                ),
+                              );
+                            }
+                          }
+                        });
                       },
                     ),
                   ),

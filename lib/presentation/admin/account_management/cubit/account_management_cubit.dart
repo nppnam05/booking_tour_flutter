@@ -145,7 +145,7 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
     final request = UpdateStaffRequest(
       userId: staff.userId,
       code: staff.code,
-      isActive: true,
+      isActive: staff.isActive,
       cccd: staff.cccd,
       address: staff.address,
       dateOfBirth: staff.dateOfBirth,
@@ -177,7 +177,64 @@ class AccountManagementCubit extends Cubit<AccountManagementState> {
     emit(state.copyWith(loading: false, error: error));
 
     if (success) {
-      // Reload lại danh sách
+      await loadAll();
+    }
+
+    return success;
+  }
+
+  Future<bool> updateStaffStatus(Staff staff, bool isActive) async {
+    emit(state.copyWith(loading: true, error: null));
+
+    final userRequest = UserInStaffUpdateRequest(
+      id: staff.user.id,
+      roleId: staff.role.id,
+      money: 0,
+      bankNumber: "",
+      bank: "",
+      name: staff.user.name,
+      email: staff.user.email,
+      phone: staff.user.phone,
+      avatarPath: "",
+      bankBranch: "",
+      refundStatus: true,
+    );
+
+    final request = UpdateStaffRequest(
+      userId: staff.userId,
+      code: staff.code,
+      isActive: isActive,
+      cccd: staff.cccd,
+      address: staff.address,
+      dateOfBirth: staff.dateOfBirth,
+      startWorkingDate: staff.startWorkingDate,
+      cccdIssueDate: staff.cccdIssueDate,
+      cccD_front_image: staff.cccD_front_path,
+      cccD_back_image: staff.cccD_back_path,
+      isRetainCCCDFront: true,
+      isRetainCCCDBack: true,
+      endWorkingDate: staff.endWorkingDate,
+      user: userRequest,
+    );
+
+    final res = await _repo.updateStaff(request);
+
+    bool success = false;
+    String? error;
+
+    res.fold(
+      (failure) {
+        error = failure.message;
+        success = false;
+      },
+      (_) {
+        success = true;
+      },
+    );
+
+    emit(state.copyWith(loading: false, error: error));
+
+    if (success) {
       await loadAll();
     }
 

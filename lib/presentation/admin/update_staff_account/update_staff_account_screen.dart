@@ -272,8 +272,14 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
-                            readOnly: true,
+                            enabled: false,
                             initialValue: _roleValue,
+                            decoration: InputDecoration(
+                              disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: AppColors.gray),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -421,7 +427,7 @@ class _UpdateStaffAccountScreenState extends State<UpdateStaffAccountScreen> {
                         children: [
                           Expanded(
                             child: BkButton(
-                              title: 'HỦY',
+                              title: 'Hủy',
                               backgroundColor: Colors.grey.shade300,
                               textColor: Colors.black87,
                               onPressed: () => Navigator.of(context).pop(),
