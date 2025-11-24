@@ -17,10 +17,10 @@ class StaffResponse {
   String? dateOfBirth;
   String? startWorkingDate;
   String? cccdIssueDate;
-  String? cccdFrontPath;
-  String? cccBackPath;
+  String? cccD_front_path;
+  String? cccD_back_path;
   String? endWorkingDate;
-  
+
   UserResponse? user;
   RoleResponse? role;
 
@@ -33,11 +33,11 @@ class StaffResponse {
     this.dateOfBirth,
     this.startWorkingDate,
     this.cccdIssueDate,
-    this.cccdFrontPath,
-    this.cccBackPath,
+    this.cccD_front_path,
+    this.cccD_back_path,
     this.endWorkingDate,
     this.user,
-    this.role
+    this.role,
   });
 
   factory StaffResponse.fromJson(Map<String, dynamic> json) =>
@@ -53,13 +53,14 @@ extension StaffResponseMapper on StaffResponse {
       cccd: cccd ?? "",
       address: address ?? "",
       dateOfBirth: DateTime.tryParse(dateOfBirth ?? "") ?? DateTime.now(),
-      startWorkingDate: DateTime.tryParse(startWorkingDate ?? "") ?? DateTime.now(),
+      startWorkingDate:
+          DateTime.tryParse(startWorkingDate ?? "") ?? DateTime.now(),
       cccdIssueDate: DateTime.tryParse(cccdIssueDate ?? "") ?? DateTime.now(),
-      cccdFrontPath: cccdFrontPath ?? "",
-      cccBackPath: cccBackPath ?? "",
+      cccD_front_path: cccD_front_path ?? "",
+      cccD_back_path: cccD_back_path ?? "",
       endWorkingDate: DateTime.tryParse(endWorkingDate ?? "") ?? DateTime.now(),
       user: user?.map() ?? User.empty(),
-      role: role?.map() ?? Role.empty()
+      role: role?.map() ?? Role.empty(),
     );
   }
 }
