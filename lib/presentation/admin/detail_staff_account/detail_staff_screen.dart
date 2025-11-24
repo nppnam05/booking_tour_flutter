@@ -23,7 +23,11 @@ class DetailStaffScreen extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+          BoxShadow(
+            color: AppColors.gray.withOpacity(0.3),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
@@ -97,48 +101,52 @@ class DetailStaffScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 12),
-            Center(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 34,
-                    backgroundColor: AppColors.backgroundAppBarTheme,
-                    child: const Icon(
-                      Icons.person,
-                      size: 28,
-                      color: AppColors.white,
+            Container(
+              decoration: BoxDecoration(color: AppColors.gray.withOpacity(0.3)),
+              child: Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: AppColors.backgroundAppBarTheme,
+                      child: const Icon(
+                        Icons.person,
+                        size: 28,
+                        color: AppColors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    staffData.user.name,
-                    style: const TextStyle(
-                      fontSize: AppFonts.fontSize18,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 8),
+                    Text(
+                      staffData.user.name,
+                      style: const TextStyle(
+                        fontSize: AppFonts.fontSize18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    staffData.role.title,
-                    style: const TextStyle(color: AppColors.gray),
-                  ),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Text(
-                      'ID: ${staffData.user.id}',
+                    const SizedBox(height: 4),
+                    Text(
+                      staffData.role.title,
                       style: const TextStyle(color: AppColors.gray),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Text(
+                        'ID: ${staffData.user.id}',
+                        style: const TextStyle(color: AppColors.gray),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 14),

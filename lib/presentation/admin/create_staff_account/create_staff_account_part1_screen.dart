@@ -124,14 +124,17 @@ class _CreateStaffAccountPart1ScreenState
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Column(
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.gray.withOpacity(0.3),
+                    ),
                     width: double.infinity,
                     alignment: Alignment.center,
                     child: Column(
                       children: [
+                        const SizedBox(height: 16),
                         CircleAvatar(
                           radius: 36,
                           backgroundColor: AppColors.backgroundAppBarTheme,
@@ -141,7 +144,7 @@ class _CreateStaffAccountPart1ScreenState
                             size: 36,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),
