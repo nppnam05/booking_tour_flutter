@@ -362,76 +362,18 @@ class DetailStaffScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: BkButton(
-                      title: 'Xóa nhân viên',
-                      backgroundColor: AppColors.delete,
-                      onPressed: () {
-                        DialogNoti.confirm(
-                          context: context,
-                          title: "Xác nhận xóa",
-                          message: "Bạn có chắc chắn muốn xóa tài khoản này?",
-                          confirmText: "Xóa",
-                          cancelText: "Hủy",
-                        ).then((value) async {
-                          if (value) {
-                            final cubit =
-                                context.read<AccountManagementCubit>();
-                            final success = await cubit.deleteStaff(
-                              staffData.userId,
-                            );
-
-                            if (!context.mounted) return;
-
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Xóa nhân viên thành công'),
-                                ),
-                              );
-                              Navigator.of(context).popUntil(
-                                (route) =>
-                                    route.settings.name ==
-                                    RouteName.accountManagement,
-                              );
-                            } else {
-                              final error =
-                                  context
-                                      .read<AccountManagementCubit>()
-                                      .state
-                                      .error;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    error ?? 'Xóa nhân viên thất bại',
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: BkButton(
-                      title: 'Cập nhật',
-                      backgroundColor: AppColors.borderButton,
-                      onPressed: () {
-                        context.read<AccountManagementCubit>().setSelectedStaff(
-                          staffData,
-                        );
-                        Navigator.pushNamed(
-                          context,
-                          'update_staff_account_screen',
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              child: BkButton(
+                title: 'Cập nhật',
+                backgroundColor: AppColors.borderButton,
+                onPressed: () {
+                  context.read<AccountManagementCubit>().setSelectedStaff(
+                        staffData,
+                      );
+                  Navigator.pushNamed(
+                    context,
+                    'update_staff_account_screen',
+                  );
+                },
               ),
             ),
 
