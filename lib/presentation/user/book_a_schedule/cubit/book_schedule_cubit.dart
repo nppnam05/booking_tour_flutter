@@ -6,6 +6,7 @@ import 'package:booking_tour_flutter/domain/schedule_book.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/widgets/payment_option.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookScheduleCubit extends Cubit<BookScheduleState> {
@@ -89,10 +90,13 @@ class BookScheduleCubit extends Cubit<BookScheduleState> {
       ),
     );
 
-    result.fold((failure) {}, (result) {
+    result.fold((failure) async {
+      DialogHelper.dismissDialog();
+      await DialogHelper.showInformDialog(Text(failure.message));
+    }, (result) {
       emit(state.copyWith(isBooking: true, idBooking: result));
+      DialogHelper.dismissDialog();
     });
 
-    DialogHelper.dismissDialog();
   }
 }

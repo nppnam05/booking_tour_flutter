@@ -36,8 +36,6 @@ class BookScheduleScreen extends StatelessWidget {
 
     // sét giá trị lúc ban đầu
 
-    
-
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
@@ -76,8 +74,7 @@ class BookScheduleScreen extends StatelessWidget {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'bạn chưa viết gì vào ô này';
-                    }
-                    else if(!ValidateHelper.kiemTraSo(value)){
+                    } else if (!ValidateHelper.kiemTraSo(value)) {
                       return "bạn nên điền số vào đây";
                     }
                     return null;
@@ -232,11 +229,16 @@ class BookScheduleScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "${schedule.tour.title}",
-                style: AppFonts.text28.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Expanded(
+                child: Center(
+                  child: Text(
+                    "${schedule.tour.title}",
+                    style: AppFonts.text28.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ],
