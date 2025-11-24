@@ -50,4 +50,36 @@ class Staff {
       role: Role.empty(),
     );
   }
+
+  Staff copyWith({
+    int? userId,
+    String? code,
+    bool? isActive,
+    String? cccd,
+    String? address,
+    DateTime? dateOfBirth,
+    DateTime? startWorkingDate,
+    DateTime? cccdIssueDate,
+    String? cccD_front_path,
+    String? cccD_back_path,
+    DateTime? endWorkingDate,
+    User? user,
+    Role? role,
+  }) {
+    return Staff(
+      userId: userId ?? this.userId,
+      code: code ?? this.code,
+      isActive: isActive ?? this.isActive,
+      cccd: cccd ?? this.cccd,
+      address: address ?? this.address,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      startWorkingDate: startWorkingDate ?? this.startWorkingDate,
+      cccdIssueDate: cccdIssueDate ?? this.cccdIssueDate,
+      cccD_front_path: cccD_front_path ?? this.cccD_front_path,
+      cccD_back_path: cccD_back_path ?? this.cccD_back_path,
+      endWorkingDate: endWorkingDate ?? this.endWorkingDate,
+      user: user ?? this.user,
+      role: role ?? this.role,
+    );
+  }
 }

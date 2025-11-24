@@ -40,12 +40,16 @@ abstract class CoreService {
 
   @GET("/Schedule/Reception")
   Future<RestResponse> getScheduleReception();
-  
+
   @PUT("/UserCompletedSchedule")
-  Future<RestResponse> updateUserCompletedScheduleCountPeople(@Body() Map<String, dynamic> body);
+  Future<RestResponse> updateUserCompletedScheduleCountPeople(
+    @Body() Map<String, dynamic> body,
+  );
 
   @GET("/UserCompletedSchedule/schedule/{scheduleid}")
-  Future<RestResponse> getUserCompletedScheduleByScheduleId(@Path("scheduleid") int scheduleId);
+  Future<RestResponse> getUserCompletedScheduleByScheduleId(
+    @Path("scheduleid") int scheduleId,
+  );
 
   @POST("/User/login-or-create-byemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
@@ -197,7 +201,7 @@ abstract class CoreService {
     @Path("staffId") required int staffId,
   });
 
-  @GET("/UserCompletedSchedule/{scheduleId}")
+  @GET("/UserCompletedSchedule/schedule/{scheduleId}")
   Future<RestResponse> getUserCompletedSchedule({
     @Path("scheduleId") required int scheduleId,
   });
@@ -293,6 +297,12 @@ abstract class CoreService {
   @POST("/Favorite")
   Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
 
+  @GET("/ActualCash/actualcash-month")
+  Future<RestResponse> getIncomeMonth();
+
+  @GET("/ActualCash/actualcash-year")
+  Future<RestResponse> getIncomeYear();
+
   @GET("/Schedule/Accountant")
   Future<RestResponse> getScheduleForAccountant();
 
@@ -319,4 +329,22 @@ abstract class CoreService {
 
   @DELETE("/Staff/{id}")
   Future<RestResponse> deleteStaff(@Path("id") int id);
+
+  @GET("/Schedule/Staff")
+  Future<RestResponse> getSchedulesByStaff({
+    @Query("staffId") required int staffId,
+    @Query("filter") String? filter,
+    @Query("provinceId") int? provinceId,
+    @Query("placeId") int? placeId,
+    @Query("startDate") DateTime? startDate,
+    @Query("endDate") DateTime? endDate,
+    @Query("stars") int? stars,
+  });
+  @GET("/Staff/{id}")
+  Future<RestResponse> getStaffById(@Path("id") int id);
+
+  @GET('/Review/getReviewOfSchedule')
+  Future<HttpResponse<dynamic>> getReviewsByScheduleId(
+    @Query('scheduleId') int scheduleId,
+  );
 }

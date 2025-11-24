@@ -37,9 +37,11 @@ import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide
 import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart'
     hide LocationActivityResponse;
 import 'package:booking_tour_flutter/data/response/schedule_reception_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_staff_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
+import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/user_completed_schedule_response.dart';
@@ -66,6 +68,7 @@ import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
 import 'package:booking_tour_flutter/domain/schedule_detail.dart'
     hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_reception.dart';
+import 'package:booking_tour_flutter/domain/schedule_staff.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:booking_tour_flutter/domain/staff.dart';
@@ -85,6 +88,10 @@ import 'package:booking_tour_flutter/domain/favorite.dart';
 import 'package:booking_tour_flutter/data/network/core_service.dart';
 import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/domain/fake_post.dart';
+import 'package:booking_tour_flutter/domain/income_month.dart';
+import 'package:booking_tour_flutter/domain/income_year.dart';
+import 'package:booking_tour_flutter/data/response/income_month_response.dart';
+import 'package:booking_tour_flutter/data/response/income_year_response.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
@@ -274,6 +281,7 @@ abstract class BookingRepository {
     int id,
   );
 
+  Future<Either<Failure, Staff?>> getStaffById({required int id});
   Future<Either<Failure, List<Booking>>> getBookingByUserId({
     required int userId,
   });
@@ -320,6 +328,23 @@ abstract class BookingRepository {
   Future<Either<Failure, Staff>> createNewStaff(NewStaffRequest request);
   Future<Either<Failure, void>> deleteStaff(int id);
   Future<Either<Failure, Staff>> updateStaff(UpdateStaffRequest request);
+
+  Future<Either<Failure, IncomeMonth>> getIncomeByMonth();
+  Future<Either<Failure, List<IncomeYear>>> getIncomeByYear();
+
+  Future<Either<Failure, List<ScheduleStaff>>> getSchedulesByStaffWithFilter({
+    required int staffId,
+    String? filter,
+    int? provinceId,
+    int? placeId,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? stars,
+  });
+
+  Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
+    required int scheduleId,
+  });
 }
 
 @Singleton(as: BookingRepository)
@@ -858,20 +883,35 @@ class BookingRepositoryImp implements BookingRepository {
         scheduleId: scheduleId,
       );
 
-      var data = response.data as List<dynamic>;
-      var scheduleResponses = data.map(
-        (json) => UserCompletedScheduleResponse.fromJson(
-          json as Map<String, dynamic>,
-        ),
-      );
+      List<dynamic> dataList;
 
-      List<Participant> allParticipants = [];
-      for (var scheduleResponse in scheduleResponses) {
-        allParticipants.addAll(scheduleResponse.mapToParticipants());
+      if (response.data is Map<String, dynamic>) {
+        final jsonData = response.data as Map<String, dynamic>;
+        dataList = jsonData['data'] as List<dynamic>? ?? [];
+      } else if (response.data is List) {
+        dataList = response.data as List<dynamic>;
+      } else {
+        dataList = [];
       }
 
-      return Right(allParticipants);
-    } catch (e) {
+      if (dataList.isEmpty) {
+        return Right([]);
+      }
+      final participants = <Participant>[];
+      for (var json in dataList) {
+        try {
+          final scheduleResponse = UserCompletedScheduleResponse.fromJson(
+            json as Map<String, dynamic>,
+          );
+          final participant = scheduleResponse.mapToParticipant();
+          if (participant != null) {
+            participants.add(participant);
+          }
+        } catch (e) {}
+      }
+
+      return Right(participants);
+    } catch (e, stackTrace) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
@@ -1128,6 +1168,34 @@ class BookingRepositoryImp implements BookingRepository {
               .cast<Notification>();
 
       return Right(items);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Staff>> getStaffById({required int id}) async {
+    try {
+      var response = await _coreService.getStaffById(id);
+
+      var rawData = response.data;
+
+      Map<String, dynamic> data;
+
+      if (rawData is Map<String, dynamic>) {
+        if (rawData.containsKey('data') &&
+            rawData['data'] is Map<String, dynamic>) {
+          data = rawData['data'] as Map<String, dynamic>;
+        } else {
+          data = rawData;
+        }
+      } else {
+        throw Exception('Invalid response format');
+      }
+
+      var staffResponse = StaffResponse.fromJson(data);
+      var staff = staffResponse.map();
+      return Right(staff);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
@@ -1555,6 +1623,112 @@ class BookingRepositoryImp implements BookingRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, IncomeMonth>> getIncomeByMonth() async {
+    try {
+      final response = await _coreService.getIncomeMonth();
+      final monthData = response.data as Map<String, dynamic>;
+      final incomeMonthData = IncomeMonthData.fromJson(monthData);
+      final incomeMonth = incomeMonthData.map();
+
+      return Right(incomeMonth);
+    } catch (e, stackTrace) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<IncomeYear>>> getIncomeByYear() async {
+    try {
+      final response = await _coreService.getIncomeYear();
+      final responseData = response.data;
+      List<dynamic> dataList;
+
+      if (responseData is List) {
+        dataList = responseData;
+      } else if (responseData is Map<String, dynamic>) {
+        dataList = responseData['data'] as List<dynamic>;
+      } else {
+        throw Exception('Unexpected response format');
+      }
+
+      final incomeYears =
+          dataList.map((item) {
+            final itemMap = item as Map<String, dynamic>;
+            return IncomeYear(
+              year: itemMap['year'] as String,
+              value: itemMap['value'] as int? ?? 0,
+            );
+          }).toList();
+
+      return Right(incomeYears);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleStaff>>> getSchedulesByStaffWithFilter({
+    required int staffId,
+    String? filter,
+    int? provinceId,
+    int? placeId,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? stars,
+  }) async {
+    try {
+      final response = await _coreService.getSchedulesByStaff(
+        staffId: staffId,
+        filter: filter,
+        provinceId: provinceId,
+        placeId: placeId,
+        startDate: startDate,
+        endDate: endDate,
+        stars: stars,
+      );
+
+      final raw = response.data;
+      List<dynamic> dataList = [];
+      if (raw is Map<String, dynamic>) {
+        final candidate = raw['data'];
+        if (candidate is List) {
+          dataList = candidate;
+        } else if (candidate is Map && candidate['data'] is List) {
+          dataList = candidate['data'];
+        } else {
+          dataList = [raw];
+        }
+      } else if (raw is List) {
+        dataList = raw;
+      } else {
+        dataList = [];
+      }
+
+      final scheduleResponses =
+          dataList
+              .map<ScheduleStaffResponse?>((json) {
+                try {
+                  if (json is Map<String, dynamic>) {
+                    return ScheduleStaffResponse.fromJson(json);
+                  } else {
+                    return null;
+                  }
+                } catch (e) {
+                  return null;
+                }
+              })
+              .whereType<ScheduleStaffResponse>()
+              .toList();
+
+      final schedules = scheduleResponses.map((r) => r.map()).toList();
+
+      return Right(schedules);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
   //UserCompletedSchedule
   @override
   Future<Either<Failure, List<UserCompletedSchedule>>>
@@ -1692,4 +1866,37 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+  @override
+Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
+  required int scheduleId,
+}) async {
+  try {
+    var response = await _coreService.getReviewsByScheduleId(scheduleId);
+    
+    var rawData = response.data;
+    
+    List<dynamic> dataList;
+    
+    if (rawData is Map<String, dynamic>) {
+      if (rawData.containsKey('data') && rawData['data'] is List) {
+        dataList = rawData['data'] as List<dynamic>;
+      } else {
+        throw Exception('Invalid response format');
+      }
+    } else if (rawData is List) {
+      dataList = rawData;
+    } else {
+      throw Exception('Invalid response format');
+    }
+    
+    var reviews = dataList
+        .map((json) => ReviewResponse.fromJson(json as Map<String, dynamic>))
+        .map((response) => response.map())
+        .toList();
+    
+    return Right(reviews);
+  } catch (e) {
+    return Left(ErrorHandler.handle(e).failure);
+  }
+}
 }
