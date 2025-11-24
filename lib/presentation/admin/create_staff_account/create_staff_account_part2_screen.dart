@@ -79,6 +79,7 @@ class _CreateStaffAccountPart2ScreenState
         const SizedBox(height: 8),
         GestureDetector(
           onTap: () => _showOptions(context, isFront: isFront),
+          behavior: HitTestBehavior.opaque,
           child: Stack(
             children: [
               Container(
@@ -119,12 +120,13 @@ class _CreateStaffAccountPart2ScreenState
                 Positioned(
                   right: 6,
                   top: 6,
-                  child: InkWell(
-                    onTap:
-                        () => context
-                            .read<CreateStaffAccountPart2Cubit>()
-                            .removeImage(isFront: isFront),
-                    borderRadius: BorderRadius.circular(16),
+                  child: GestureDetector(
+                    onTap: () {
+                      context.read<CreateStaffAccountPart2Cubit>().removeImage(
+                        isFront: isFront,
+                      );
+                    },
+                    behavior: HitTestBehavior.opaque,
                     child: Container(
                       decoration: const BoxDecoration(
                         color: AppColors.white,
@@ -238,13 +240,6 @@ class _CreateStaffAccountPart2ScreenState
                 ),
               ),
             ),
-            if (state.submitting)
-              Positioned.fill(
-                child: Container(
-                  color: Colors.black45,
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-              ),
           ],
         );
       },
