@@ -1,5 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/booking_status.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
@@ -13,22 +14,26 @@ class BookingListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return bookings.length != 0
-        ? ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: bookings.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child:
-                  status.id == BookingStatus.processingId
-                      ? bookingCardNotYetPaid(bookings[index])
-                      : bookingCard(bookings[index]),
-            );
-          },
-        )
-        : Center(child: Text("Danh sách trống", style: AppFonts.text18));
+    if (bookings.isEmpty) {
+      return SizedBox(
+        height: 300,
+        child: Center(child: Text("Danh sách trống", style: AppFonts.text18)),
+      );
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: bookings.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+          child:
+              status.id == BookingStatus.processingId
+                  ? bookingCardNotYetPaid(bookings[index])
+                  : bookingCard(bookings[index]),
+        );
+      },
+    );
   }
 
   Widget bookingCardNotYetPaid(Booking booking) {
@@ -158,26 +163,30 @@ class BookingListScreen extends StatelessWidget {
           SizedBox(height: 30),
           Row(
             children: [
-              Expanded(
-                flex: 4,
-                child: customButton(
-                  onPressed: () {
-                    // TODO:
-                  },
-                  text: "Đặt cọc",
-                  colorButton: Color(0xFFF5CD3E),
-                ),
-              ),
+              check == true
+                  ? Expanded(
+                    flex: 4,
+                    child: customButton(
+                      onPressed: () {
+                        DialogHelper.showConfirmDialog(body: Text("asdad"));
+                      },
+                      text: "Đặt cọc",
+                      colorButton: Color(0xFFF5CD3E),
+                    ),
+                  )
+                  : Expanded(flex: 4, child: Container()),
               SizedBox(width: 10),
-              Expanded(
-                flex: 6,
-                child: customButton(
-                  onPressed: () {
-                    // TODO:
-                  },
-                  text: "Thanh toán hết",
-                ),
-              ),
+              check == true
+                  ? Expanded(
+                    flex: 6,
+                    child: customButton(
+                      onPressed: () {
+                        // TODO:
+                      },
+                      text: "Thanh toán hết",
+                    ),
+                  )
+                  : Expanded(flex: 4, child: Container()),
               SizedBox(width: 10),
               Expanded(
                 flex: 3,
