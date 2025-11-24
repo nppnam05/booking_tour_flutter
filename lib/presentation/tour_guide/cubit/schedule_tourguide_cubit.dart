@@ -1,33 +1,32 @@
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_sate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/schedule_tourguide.dart';
-import 'schedule_tourguide_sate.dart';
-import '../participants_screen.dart';
 
 class ScheduleTourguideCubit extends Cubit<ScheduleTourguideState> {
-  static final bookingRepository = getIt<BookingRepository>();
+  final BookingRepository bookingRepository = getIt<BookingRepository>();
+  final AuthCubit authCubit = getIt<AuthCubit>();
 
   ScheduleTourguideCubit() : super(ScheduleTourguideInitial());
 
-  Future<void> loadSchedules({  int staffId  = 2}) async {
+  Future<void> loadSchedules() async {
     emit(ScheduleTourguideLoading());
 
-    final result = await bookingRepository.getSchedulesByStaff(
-      staffId: staffId,
-    );
+    final user = authCubit.state.id;
+    if (user == null) {
+      emit(ScheduleTourguideError("Không tìm thấy thông tin đăng nhập"));
+      return;
+    }
+
+    final staffId = authCubit.state.id;
+
+    final result =
+        await bookingRepository.getSchedulesByStaff(staffId: staffId);
 
     result.fold(
       (failure) => emit(ScheduleTourguideError(failure.message)),
       (schedules) => emit(ScheduleTourguideLoaded(schedules)),
-    );
-  }
-
-  void goToParticipants(BuildContext context, ScheduleTourguide schedule) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => ParticipantsScreen(schedule: schedule)),
     );
   }
 }

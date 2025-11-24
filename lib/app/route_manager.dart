@@ -1,10 +1,13 @@
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_home/accountant_home_screen.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/accountant_manage_schedule_screen.dart';
-import 'package:booking_tour_flutter/presentation/admin/account%20management/account_management_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/account_management_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part1_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/create_staff_account_part2_screen.dart';
 import 'package:booking_tour_flutter/presentation/admin/detail_staff_account/detail_staff_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/update_staff_account/update_staff_account_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/income_statistics/income_statistics_screen.dart';
+import 'package:booking_tour_flutter/presentation/admin/tourguide_rating/tourguide_rating_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/auth_otp_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp_change_password/auth_otp_change_password_screen.dart';
 import 'package:booking_tour_flutter/presentation/auth/change_password/change_password_screen.dart';
@@ -14,6 +17,9 @@ import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/change_schedule/change_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/detail_paid_schedule_screen.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/review_schedule_screen.dart';
+import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/kiem_tra_nguoi_tham_gia_screen.dart';
+import 'package:booking_tour_flutter/presentation/reception/lich_trinh_chua_hoan_thanh/lich_trinh_chua_hoan_thanh_screen.dart';
+import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/xac_nhan_so_nguoi_tham_gia_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_screen.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/lich_trinh/danh_sach_lich_trinh/schedule_tourmanager_screen.dart';
@@ -112,6 +118,17 @@ class RouteName {
       "create_staff_account_part2_screen";
   static final accountantManageScheduleScreen =
       "accountant_manage_schedule_screen";
+
+  //reception
+  static final lichTrinhChuaHoanThanh = "lichTrinhChuaHoanThanh";
+  static final kiemTraNguoiThamGia = "kiemTraNguoiThamGia";
+  static final xacNhanSoNguoiThamGia = "xacNhanSoNguoiThamGia";
+
+  static final updateStaffAccountScreen = "update_staff_account_screen";
+  
+  static final  income_statistics = "income_statistic";
+
+  static final tourguideRating = "tourguide_rating";
 }
 
 class RouteManager {
@@ -170,15 +187,26 @@ class RouteManager {
     RouteName.paySchedule: (context) => PayScheduleScreen(),
     RouteName.update_password_user: (context) => UpdatePasswordScreen(),
     RouteName.main_user: (context) => MainUser(),
+    RouteName.income_statistics: (context) => IncomeStatisticScreen(),
+
 
     RouteName.accountant_home: (context) => AccountantHomeScreen(),
     RouteName.accountManagement: (context) => AccountManagementScreen(),
-    RouteName.detailStaffScreen: (context) => DetailStaffScreen(),
+    RouteName.detailStaffScreen: (context) => const DetailStaffScreen(),
     RouteName.createStaffAccountPart1Screen:
         (context) => CreateStaffAccountPart1Screen(),
     RouteName.createStaffAccountPart2Screen:
         (context) => CreateStaffAccountPart2Screen(),
     RouteName.accountantManageScheduleScreen:
         (context) => AccountantManageScheduleScreen(),
+
+    RouteName.lichTrinhChuaHoanThanh:
+        (context) => LichTrinhChuaHoanThanhScreen(),
+    RouteName.kiemTraNguoiThamGia: (context) => KiemTraNguoiThamGiaScreen(),
+    RouteName.xacNhanSoNguoiThamGia: (context) => XacNhanSoNguoiThamGiaScreen(),
+    RouteName.updateStaffAccountScreen: (context) => UpdateStaffAccountScreen(),
+
+        RouteName.tourguideRating: (context) => const TourguideRatingScreen(),
+
   };
 }

@@ -5,22 +5,29 @@ class CreateStaffAccountPart2State {
   final String? frontPath;
   final String? backPath;
   final bool submitting;
+  final String? errorMessage;
 
   const CreateStaffAccountPart2State({
     this.frontPath,
     this.backPath,
     this.submitting = false,
+    this.errorMessage,
   });
 
   CreateStaffAccountPart2State copyWith({
-    String? frontPath,
-    String? backPath,
+    Object? frontPath = _undefined,
+    Object? backPath = _undefined,
     bool? submitting,
+    String? errorMessage,
   }) {
     return CreateStaffAccountPart2State(
-      frontPath: frontPath ?? this.frontPath,
-      backPath: backPath ?? this.backPath,
+      frontPath:
+          frontPath == _undefined ? this.frontPath : frontPath as String?,
+      backPath: backPath == _undefined ? this.backPath : backPath as String?,
       submitting: submitting ?? this.submitting,
+      errorMessage: errorMessage,
     );
   }
 }
+
+const _undefined = Object();

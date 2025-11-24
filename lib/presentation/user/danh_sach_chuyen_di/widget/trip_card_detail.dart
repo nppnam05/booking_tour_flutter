@@ -57,13 +57,13 @@ class _TripCardDetailState extends State<TripCardDetail> {
                 topRight: Radius.circular(12),
               ),
               child: Image.network(
-                widget.trip.tourImages.first,
-                height: 150,
+                widget.trip.tourImages.firstOrNull ?? "",
+                height: 180,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    height: 150,
+                    height: 180,
                     color: AppColors.backgroundDisable,
                     child: const Icon(Icons.image_not_supported),
                   );
@@ -123,7 +123,7 @@ class _TripCardDetailState extends State<TripCardDetail> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            widget.trip.provinces.first.name,
+                            widget.trip.provinces.firstOrNull?.name ?? "",
                             style: const TextStyle(
                               fontSize: AppFonts.fontSize14,
                               fontWeight: FontWeight.w600,

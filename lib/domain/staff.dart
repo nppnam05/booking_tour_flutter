@@ -10,10 +10,9 @@ class Staff {
   final DateTime dateOfBirth;
   final DateTime startWorkingDate;
   final DateTime cccdIssueDate;
-  final String cccdFrontPath;
-  final String cccBackPath;
+  final String cccD_front_path;
+  final String cccD_back_path;
   final DateTime endWorkingDate;
-
 
   final User user;
   final Role role;
@@ -27,11 +26,11 @@ class Staff {
     required this.dateOfBirth,
     required this.startWorkingDate,
     required this.cccdIssueDate,
-    required this.cccdFrontPath ,
-    required this.cccBackPath,
+    required this.cccD_front_path,
+    required this.cccD_back_path,
     required this.endWorkingDate,
     required this.user,
-    required this.role
+    required this.role,
   });
 
   static Staff empty() {
@@ -44,11 +43,43 @@ class Staff {
       dateOfBirth: DateTime.now(),
       startWorkingDate: DateTime.now(),
       cccdIssueDate: DateTime.now(),
-      cccdFrontPath: '',
-      cccBackPath: '',
+      cccD_front_path: '',
+      cccD_back_path: '',
       endWorkingDate: DateTime.now(),
       user: User.empty(),
-      role: Role.empty()
+      role: Role.empty(),
+    );
+  }
+
+  Staff copyWith({
+    int? userId,
+    String? code,
+    bool? isActive,
+    String? cccd,
+    String? address,
+    DateTime? dateOfBirth,
+    DateTime? startWorkingDate,
+    DateTime? cccdIssueDate,
+    String? cccD_front_path,
+    String? cccD_back_path,
+    DateTime? endWorkingDate,
+    User? user,
+    Role? role,
+  }) {
+    return Staff(
+      userId: userId ?? this.userId,
+      code: code ?? this.code,
+      isActive: isActive ?? this.isActive,
+      cccd: cccd ?? this.cccd,
+      address: address ?? this.address,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      startWorkingDate: startWorkingDate ?? this.startWorkingDate,
+      cccdIssueDate: cccdIssueDate ?? this.cccdIssueDate,
+      cccD_front_path: cccD_front_path ?? this.cccD_front_path,
+      cccD_back_path: cccD_back_path ?? this.cccD_back_path,
+      endWorkingDate: endWorkingDate ?? this.endWorkingDate,
+      user: user ?? this.user,
+      role: role ?? this.role,
     );
   }
 }

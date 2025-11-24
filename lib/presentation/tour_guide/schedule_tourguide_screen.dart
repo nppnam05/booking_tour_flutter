@@ -1,11 +1,10 @@
-
-import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_cubit.dart';
-import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_sate.dart';
-import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
-import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_cubit.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/cubit/schedule_tourguide_sate.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/schedule_tourguide_card.dart';
+import 'package:booking_tour_flutter/presentation/tour_guide/participants_screen.dart';
 
 class ScheduleTourguideScreen extends StatelessWidget {
   const ScheduleTourguideScreen({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class ScheduleTourguideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ScheduleTourguideCubit()..loadSchedules( ),
+      create: (_) => ScheduleTourguideCubit()..loadSchedules(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Danh sách lịch trình'),
@@ -26,8 +25,9 @@ class ScheduleTourguideScreen extends StatelessWidget {
               if (state.schedules.isEmpty) {
                 return const Center(child: Text('Không có lịch trình nào.'));
               }
+
               return ListView.builder(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 itemCount: state.schedules.length,
                 itemBuilder: (context, index) {
                   final schedule = state.schedules[index];
@@ -36,11 +36,14 @@ class ScheduleTourguideScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => ParticipantsScreen(schedule: schedule),
+                          builder: (_) =>
+                              ParticipantsScreen(schedule: schedule),
                         ),
                       );
                     },
-                    child: ScheduleTourguideCard(scheduleTourguide: schedule),
+                    child: ScheduleTourguideCard(
+                      scheduleTourguide: schedule,
+                    ),
                   );
                 },
               );
@@ -52,19 +55,21 @@ class ScheduleTourguideScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Lỗi: ${state.message}'),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
                         context.read<ScheduleTourguideCubit>().loadSchedules();
                       },
-                      child: Text('Thử lại'),
+                      child: const Text('Thử lại'),
                     ),
                   ],
                 ),
               );
             }
 
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           },
         ),
       ),

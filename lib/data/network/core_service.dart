@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
+import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
@@ -35,6 +37,19 @@ part 'core_service.g.dart';
 abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
+
+  @GET("/Schedule/Reception")
+  Future<RestResponse> getScheduleReception();
+
+  @PUT("/UserCompletedSchedule")
+  Future<RestResponse> updateUserCompletedScheduleCountPeople(
+    @Body() Map<String, dynamic> body,
+  );
+
+  @GET("/UserCompletedSchedule/schedule/{scheduleid}")
+  Future<RestResponse> getUserCompletedScheduleByScheduleId(
+    @Path("scheduleid") int scheduleId,
+  );
 
   @GET("/Booking/bySchedule/{scheduleId}")
   Future<RestResponse> getBookingByScheduleId(@Path("scheduleId") int scheduleId);
@@ -189,7 +204,7 @@ abstract class CoreService {
     @Path("staffId") required int staffId,
   });
 
-  @GET("/UserCompletedSchedule/{scheduleId}")
+  @GET("/UserCompletedSchedule/schedule/{scheduleId}")
   Future<RestResponse> getUserCompletedSchedule({
     @Path("scheduleId") required int scheduleId,
   });
@@ -285,6 +300,12 @@ abstract class CoreService {
   @POST("/Favorite")
   Future<RestResponse> postFavorite(@Body() GetReviewsRequest request);
 
+  @GET("/ActualCash/actualcash-month")
+  Future<RestResponse> getIncomeMonth();
+
+  @GET("/ActualCash/actualcash-year")
+  Future<RestResponse> getIncomeYear();
+
   @GET("/Schedule/Accountant")
   Future<RestResponse> getScheduleForAccountant();
 
@@ -296,4 +317,37 @@ abstract class CoreService {
 
   @PUT("/Notification")
   Future<RestResponse> notifaiIsRead(@Body() ReadReviewRequets request);
+
+  @GET("/Staff/getstaffs-byroleid/{roleId}")
+  Future<RestResponse> getAllStaff(@Path("roleId") int roleId);
+
+  @GET("/Role")
+  Future<RestResponse> getAllRoles();
+
+  @POST("/Staff")
+  Future<RestResponse> createNewStaff(@Body() NewStaffRequest request);
+
+  @PUT("/Staff")
+  Future<RestResponse> updateStaff(@Body() UpdateStaffRequest request);
+
+  @DELETE("/Staff/{id}")
+  Future<RestResponse> deleteStaff(@Path("id") int id);
+
+  @GET("/Schedule/Staff")
+  Future<RestResponse> getSchedulesByStaff({
+    @Query("staffId") required int staffId,
+    @Query("filter") String? filter,
+    @Query("provinceId") int? provinceId,
+    @Query("placeId") int? placeId,
+    @Query("startDate") DateTime? startDate,
+    @Query("endDate") DateTime? endDate,
+    @Query("stars") int? stars,
+  });
+  @GET("/Staff/{id}")
+  Future<RestResponse> getStaffById(@Path("id") int id);
+
+  @GET('/Review/getReviewOfSchedule')
+  Future<HttpResponse<dynamic>> getReviewsByScheduleId(
+    @Query('scheduleId') int scheduleId,
+  );
 }

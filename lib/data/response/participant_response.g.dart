@@ -6,27 +6,42 @@ part of 'participant_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ActualcashData _$ActualcashDataFromJson(Map<String, dynamic> json) =>
+    ActualcashData(
+      id: (json['id'] as num?)?.toInt(),
+      money: (json['money'] as num?)?.toInt(),
+      bookingId: (json['bookingId'] as num?)?.toInt(),
+      createdAt: json['createdAt'] as String?,
+    );
+
+Map<String, dynamic> _$ActualcashDataToJson(ActualcashData instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'money': instance.money,
+      'bookingId': instance.bookingId,
+      'createdAt': instance.createdAt,
+    };
+
 UserCompletedScheduleResponse _$UserCompletedScheduleResponseFromJson(
   Map<String, dynamic> json,
 ) => UserCompletedScheduleResponse(
-  startDate: json['startDate'] as String?,
-  endDate: json['endDate'] as String?,
-  code: json['code'] as String?,
-  name: json['name'] as String?,
-  avatarPath: json['avatarPath'] as String?,
+  countPeople: (json['countPeople'] as num?)?.toInt(),
+  actualcashs:
+      json['actualcashs'] == null
+          ? null
+          : ActualcashData.fromJson(
+            json['actualcashs'] as Map<String, dynamic>,
+          ),
   booking:
-      (json['booking'] as List<dynamic>?)
-          ?.map((e) => BookingResponse.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      json['booking'] == null
+          ? null
+          : BookingResponse.fromJson(json['booking'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$UserCompletedScheduleResponseToJson(
   UserCompletedScheduleResponse instance,
 ) => <String, dynamic>{
-  'startDate': instance.startDate,
-  'endDate': instance.endDate,
-  'code': instance.code,
-  'name': instance.name,
-  'avatarPath': instance.avatarPath,
+  'countPeople': instance.countPeople,
+  'actualcashs': instance.actualcashs,
   'booking': instance.booking,
 };
