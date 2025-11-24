@@ -1,4 +1,6 @@
 import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
@@ -74,7 +76,7 @@ class DetailStaffScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: AppColors.backgroundAppBarTheme,
           title: const Text('Chi tiết nhân viên'),
-          leading: BackButton(color: Colors.white),
+          leading: BackButton(color: AppColors.white),
           elevation: 0,
         ),
         body: const Center(child: Text('Không tìm thấy dữ liệu nhân viên')),
@@ -88,7 +90,7 @@ class DetailStaffScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.backgroundAppBarTheme,
         title: const Text('Chi tiết nhân viên'),
-        leading: BackButton(color: Colors.white),
+        leading: BackButton(color: AppColors.white),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -101,27 +103,24 @@ class DetailStaffScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 34,
                     backgroundColor: AppColors.backgroundAppBarTheme,
-                    child: Text(
-                      staffData.user.avatarPath,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: const Icon(
+                      Icons.person,
+                      size: 28,
+                      color: AppColors.white,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     staffData.user.name,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: AppFonts.fontSize18,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     staffData.role.title,
-                    style: const TextStyle(color: Colors.black54),
+                    style: const TextStyle(color: AppColors.gray),
                   ),
                   const SizedBox(height: 6),
                   Container(
@@ -130,7 +129,7 @@ class DetailStaffScreen extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.white,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Text(
@@ -173,11 +172,12 @@ class DetailStaffScreen extends StatelessWidget {
                   'Ngày vào làm',
                   formatDate(staffData.startWorkingDate),
                 ),
-                _infoRow(
-                  Icons.calendar_today,
-                  'Ngày nghỉ việc',
-                  formatDate(staffData.endWorkingDate),
-                ),
+                if (!staffData.isActive)
+                  _infoRow(
+                    Icons.calendar_today,
+                    'Ngày nghỉ việc',
+                    formatDate(staffData.endWorkingDate),
+                  ),
                 _infoRow(
                   Icons.workspace_premium,
                   'Cấp bậc',
@@ -253,9 +253,41 @@ class DetailStaffScreen extends StatelessWidget {
                           message: "Bạn có chắc chắn muốn xóa tài khoản này?",
                           confirmText: "Xóa",
                           cancelText: "Hủy",
-                        ).then((value) {
+                        ).then((value) async {
                           if (value) {
-                            // TODO: hàm xóa nhân viên
+                            final cubit =
+                                context.read<AccountManagementCubit>();
+                            final success = await cubit.deleteStaff(
+                              staffData.userId,
+                            );
+
+                            if (!context.mounted) return;
+
+                            if (success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Xóa nhân viên thành công'),
+                                ),
+                              );
+                              Navigator.of(context).popUntil(
+                                (route) =>
+                                    route.settings.name ==
+                                    RouteName.accountManagement,
+                              );
+                            } else {
+                              final error =
+                                  context
+                                      .read<AccountManagementCubit>()
+                                      .state
+                                      .error;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    error ?? 'Xóa nhân viên thất bại',
+                                  ),
+                                ),
+                              );
+                            }
                           }
                         });
                       },
