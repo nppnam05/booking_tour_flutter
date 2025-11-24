@@ -21,8 +21,6 @@ class UserCompletedScheduleFixResponse {
 
   factory UserCompletedScheduleFixResponse.fromJson(Map<String, dynamic> json) =>
       _$UserCompletedScheduleFixResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserCompletedScheduleFixResponseToJson(this);
 }
 
 extension UserCompletedScheduleResponseMapper on UserCompletedScheduleFixResponse {

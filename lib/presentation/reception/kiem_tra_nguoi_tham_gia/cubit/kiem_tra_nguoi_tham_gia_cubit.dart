@@ -24,4 +24,12 @@ class KiemTraNguoiThamGiaCubit extends Cubit<KiemTraNguoiThamGiaState> {
       );
     });
   }
+
+  Future<void> deleteUserCompletedSchedule(int id) async {
+    var result = await bookingRepository.deleteUserCompletedSchedule(id: id);
+
+    result.fold((e){}, (ok){
+      //emit(state);
+    });
+  }
 }

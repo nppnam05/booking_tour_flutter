@@ -9,6 +9,7 @@ import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
+import 'package:booking_tour_flutter/data/request/user_completed_schedule/create_user_completed_schedule_request.dart';
 import 'package:booking_tour_flutter/data/response/add_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/delete_activity_response.dart';
@@ -18,6 +19,7 @@ import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
 import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
+import 'package:booking_tour_flutter/data/response/user_completed_schedule_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_location_activity_request.dart';
 import 'package:booking_tour_flutter/domain/requests/add_schedule_request.dart';
@@ -35,6 +37,12 @@ part 'core_service.g.dart';
 abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
+
+  @POST("/UserCompletedSchedule")
+  Future<RestResponse> createUserCompletedSchedule(@Body() CreateUserCompletedScheduleFixRequest userCompletedSchedule);
+ 
+  @DELETE("/UserCompletedSchedule/{id}")
+  Future<RestResponse> deleteUserCompletedSchedule(@Path("id") int id);
 
   @GET("/Schedule/Reception")
   Future<RestResponse> getScheduleReception();

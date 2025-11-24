@@ -27,11 +27,10 @@ class XacNhanSoNguoiThamGiaScreen extends StatelessWidget {
               SizedBox(height: 50),
               DeleteButtonWidget(
                 onDelete: () async {
-                  String text = "";
                   final input = controller.text.trim();
-                  if (!input.isEmpty && int.parse(controller.text) <= state.userCompletedSchedule.booking!.numPeople) {
-                    if (controller.text != "0"){
-                      text = "đã tham gia";
+                  final countPeople = int.parse(input);
+                  if (!input.isEmpty && countPeople <= state.userCompletedSchedule.booking!.numPeople && countPeople >= 0 ) {
+                    String text = "đã tham gia";
                       final confirm = await DialogNoti.confirm(
                         context: context,
                         title: "Thông báo",
@@ -44,22 +43,6 @@ class XacNhanSoNguoiThamGiaScreen extends StatelessWidget {
 
                       await _cubit.updateUserCompleted(state.userCompletedSchedule.booking!.id, int.parse(controller.text));
                       Navigator.pop(context);
-                      
-                    } else {
-                      text = "chưa tham gia";
-                      final confirm = await DialogNoti.confirm(
-                        context: context,
-                        title: "Thông báo",
-                        message:
-                            "Xác nhận khách hàng ${state.userCompletedSchedule.booking!.user.name} \n  ${text} chuyến đi.",
-                        highlightPhrases: [text],
-                      );
-                      if (!confirm) return;
-
-                      await _cubit.updateUserCompleted(state.userCompletedSchedule.booking!.id, int.parse(controller.text));
-                      Navigator.pop(context);
-                     
-                    }
                   }
                   else{
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vui lòng nhập đúng số người tham gia!")));
@@ -163,7 +146,7 @@ class XacNhanSoNguoiThamGiaScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${(userCompletedSchedule.booking!.schedule.finalPrice * userCompletedSchedule.booking!.numPeople) - (userCompletedSchedule.actualcashs!.money)}",
+                        "${(userCompletedSchedule.booking!.schedule.finalPrice * userCompletedSchedule.booking!.numPeople) - (userCompletedSchedule.booking!.totalPrice)}",
                         style: AppFonts.text14.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
