@@ -12,7 +12,10 @@ ReviewResponse _$ReviewResponseFromJson(
   id: (json['id'] as num?)?.toInt(),
   rating: (json['rating'] as num?)?.toInt(),
   content: json['content'] as String?,
-  createdAt: json['createdAt'] as String?,
+  createdAt:
+      json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
   user:
       json['user'] == null
           ? null
@@ -34,7 +37,7 @@ Map<String, dynamic> _$ReviewResponseToJson(ReviewResponse instance) =>
       'id': instance.id,
       'rating': instance.rating,
       'content': instance.content,
-      'createdAt': instance.createdAt,
+      'createdAt': instance.createdAt?.toIso8601String(),
       'user': instance.user,
       'guides': instance.guides,
       'booking': instance.booking,
