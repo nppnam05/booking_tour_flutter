@@ -233,10 +233,10 @@ class _CreateStaffAccountPart2ScreenState
                                           ),
                                         ),
                                       );
-                                      navigator.popUntil(
-                                        (route) =>
-                                            route.settings.name ==
-                                            RouteName.accountManagement,
+                                      navigator.pushNamedAndRemoveUntil(
+                                        RouteName.mainAdminScreen,
+                                        (route) => false,
+                                        arguments: 1,
                                       );
                                       AppNavigator.currentContext
                                           .read<AccountManagementCubit>()
