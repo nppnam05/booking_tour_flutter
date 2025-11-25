@@ -14,33 +14,10 @@ class FavoriteTourScreen extends StatefulWidget {
 }
 
 class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
-  late final FavoriteCubit _cubit;
-  bool _hasLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _cubit = FavoriteCubit();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_hasLoaded) {
-      final userId = context.read<AuthCubit>().userId;
-      _cubit.loadFavorites(userId: userId);
-      _hasLoaded = true;
-    }
-  }
-
-  @override
-  void dispose() {
-    _cubit.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final FavoriteCubit _cubit = context.read<FavoriteCubit>();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -84,7 +61,7 @@ class _FavoriteTourScreenState extends State<FavoriteTourScreen> {
                   onTap: () {
                     Navigator.pushNamed(
                       context,
-                      'danh_sach_lich_trinh_user', 
+                      'danh_sach_lich_trinh_user',
                       arguments: {
                         'tourId': favorite.tourId,
                         'userId': favorite.userId,
