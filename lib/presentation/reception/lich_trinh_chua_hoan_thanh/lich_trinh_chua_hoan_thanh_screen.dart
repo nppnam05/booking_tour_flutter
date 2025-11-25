@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/schedule_reception.dart';
 import 'package:booking_tour_flutter/domain/user_completed_schedule.dart';
 import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_cubit.dart';
@@ -68,12 +69,12 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
   ) {
     
     // lay booking ra theo id lich trinh
-    final userCompletedForThisSchedule = state.userCompletedSchedule[scheduleReception.id] ?? [];
+    final userCompletedForThisSchedule = state.booking[scheduleReception.id] ?? [];
     print("hehehe ${userCompletedForThisSchedule.length}");
 
     // lay sl nguoi da coc, thanh toan
-    int countByStatus(List<UserCompletedSchedule> list, int statusId) {
-      return list.where((item) => item.booking?.status.id == statusId).length;
+    int countByStatus(List<Booking> list, int statusId) {
+      return list.where((item) => item.status.id == statusId).length;
     }
 
     int datCoc = countByStatus(userCompletedForThisSchedule, 2);
@@ -139,7 +140,7 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                           children: [
                             Icon(Icons.park, size: 20, color: AppColors.button),
                             Text(
-                              scheduleReception.tour.title,
+                              "${scheduleReception.tour.title.substring(0, 20)} ...",
                               style: AppFonts.text14.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),

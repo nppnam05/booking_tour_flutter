@@ -7,6 +7,7 @@ class ScheduleTourmanager {
   final DateTime startDate;
   final DateTime endDate;
   final DateTime openDate;
+  final int bookedSlot;
   final int maxSlot;
   final int finalPrice;
   final String gatheringTime;
@@ -23,6 +24,7 @@ class ScheduleTourmanager {
     required this.startDate,
     required this.endDate,
     required this.openDate,
+    required this.bookedSlot,
     required this.maxSlot,
     required this.finalPrice,
     required this.gatheringTime,
@@ -41,6 +43,7 @@ class ScheduleTourmanager {
       startDate: DateTime.now(),
       endDate: DateTime.now(),
       openDate: DateTime.now(),
+      bookedSlot: 0,
       maxSlot: 0,
       finalPrice: 0,
       gatheringTime: "00:00",

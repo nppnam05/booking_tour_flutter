@@ -33,24 +33,18 @@ class _SelectSingleProvinceFieldState extends State<SelectSingleProvinceField> {
     _selectedProvince = widget.initialProvince;
   }
 
-  Future<void> _chooseProvince() async {
-    var provinces = await BookingDialog.selectMultiProvince(
-      initProvinces: _selectedProvince != null ? [_selectedProvince!] : [],
-    );
+ Future<void> _chooseProvince() async {
+  var province = await BookingDialog.selectSingleProvince(
+    initProvince: _selectedProvince,
+  );
 
-    if (provinces == null || provinces.isEmpty) {
-      setState(() {
-        _selectedProvince = null;
-      });
-      widget.onChange(null);
-      return;
-    }
+  setState(() {
+    _selectedProvince = province;
+  });
 
-    setState(() {
-      _selectedProvince = provinces.first;
-    });
-    widget.onChange(_selectedProvince);
-  }
+  widget.onChange(province);
+}
+
 
   @override
   Widget build(BuildContext context) {

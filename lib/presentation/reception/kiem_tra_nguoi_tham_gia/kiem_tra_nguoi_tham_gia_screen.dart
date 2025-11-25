@@ -2,7 +2,7 @@ import 'package:booking_tour_flutter/app/app_navigator.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
-import 'package:booking_tour_flutter/domain/user_completed_schedule.dart';
+import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_cubit.dart';
 import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_state.dart';
 import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/cubit/xac_nhan_so_nguoi_tham_gia_cubit.dart';
@@ -14,7 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class KiemTraNguoiThamGiaScreen extends StatelessWidget {
   KiemTraNguoiThamGiaScreen({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     final _cubit = context.read<KiemTraNguoiThamGiaCubit>();
@@ -25,10 +25,10 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
         appBar: AppBar(title: Text("Kiểm tra người tham gia")),
         body: BlocBuilder<KiemTraNguoiThamGiaCubit, KiemTraNguoiThamGiaState>(
           builder: (context, state) {
-            if(state.isLoading == true){
-              return Center(child: LoadingDialog(),);
+            if (state.isLoading == true) {
+              return Center(child: LoadingDialog());
             }
-            return buildListPeople(_cubit,state.userCompletedSchedule);
+            return buildListPeople(_cubit, state.booking);
           },
         ),
         backgroundColor: AppColors.secondary,
@@ -36,13 +36,16 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
     );
   }
 
-  Widget buildListPeople(KiemTraNguoiThamGiaCubit cubit, List<UserCompletedSchedule> userCompletedSchedules) {
+  Widget buildListPeople(
+    KiemTraNguoiThamGiaCubit cubit,
+    List<Booking> booking,
+  ) {
     return ListView.builder(
-      itemCount: userCompletedSchedules.length,
+      itemCount: booking.length,
       itemBuilder: (context, index) {
-        final userCompletedSchedule = userCompletedSchedules[index];
-        if (userCompletedSchedule.booking!.status.id != 1) {
-          return buildCard(cubit,context, userCompletedSchedule);
+        final bookings = booking[index];
+        if (bookings.status.id != 1) {
+          return buildCard(cubit, context, bookings);
         }
       },
     );
@@ -51,7 +54,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
   Widget buildCard(
     KiemTraNguoiThamGiaCubit cubit,
     BuildContext context,
-    UserCompletedSchedule userCompletedSchedule,
+    Booking bookings,
   ) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
@@ -64,7 +67,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (userCompletedSchedule.booking!.status.id == 2) ...[
+                if (bookings.status.id == 2) ...[
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.amber,
@@ -73,7 +76,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: Text(
-                        "${userCompletedSchedule.booking!.status.name}",
+                        "${bookings.status.name}",
                         style: AppFonts.text14.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -81,7 +84,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-                if (userCompletedSchedule.booking!.status.id == 3) ...[
+                if (bookings.status.id == 3) ...[
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.green,
@@ -90,7 +93,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: Text(
-                        "${userCompletedSchedule.booking!.status.name}",
+                        "${bookings.status.name}",
                         style: AppFonts.text14.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -108,7 +111,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                   height: 60,
                   child: ClipOval(
                     child: Image.network(
-                      userCompletedSchedule.booking!.user.avatarPath,
+                      bookings.user.avatarPath,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(color: Colors.black);
@@ -129,7 +132,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          userCompletedSchedule.booking!.user.name,
+                          bookings.user.name,
                           style: AppFonts.text14.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -144,12 +147,16 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
                         Text(
-                          "${(userCompletedSchedule.booking!.schedule.finalPrice * userCompletedSchedule.booking!.numPeople) - (userCompletedSchedule.booking!.totalPrice)}",
+                          bookings.status.id == 2
+                              ? "${(bookings.schedule.finalPrice * bookings.numPeople) - ((bookings.schedule.finalPrice * bookings.numPeople) * (bookings.schedule.desposit / 100))}"
+                              : "0",
                           style: AppFonts.text14.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
                         Text(
                           " vnd",
                           style: AppFonts.text14.copyWith(
@@ -167,29 +174,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${userCompletedSchedule.booking!.numPeople}",
-                          style: AppFonts.text14.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          " người",
-                          style: AppFonts.text14.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Số người đang tham gia: ",
-                          style: AppFonts.text14.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "${userCompletedSchedule.countPeople}",
+                          "${bookings.numPeople}",
                           style: AppFonts.text14.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -211,7 +196,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          userCompletedSchedule.booking!.phone,
+                          bookings.phone,
                           style: AppFonts.text14.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -226,7 +211,7 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (userCompletedSchedule.countPeople == 0) ...[
+                if (cubit.isUserParticipated(bookings.id)) ...[
                   DeleteButtonWidget(
                     onDelete: () async {
                       String text = "huỷ tham gia";
@@ -234,31 +219,32 @@ class KiemTraNguoiThamGiaScreen extends StatelessWidget {
                         context: context,
                         title: "Thông báo huỷ tham gia",
                         message:
-                            "Xác nhận khách hàng ${userCompletedSchedule.booking!.user.name} \n  ${text} chuyến đi.",
+                            "Xác nhận khách hàng ${bookings.user.name} \n ${text} chuyến đi.",
                         highlightPhrases: [text],
                       );
                       if (!confirm) return;
-                      cubit.deleteUserCompletedSchedule(userCompletedSchedule.booking!.id);
+                      await cubit.deleteUserCompletedSchedule(bookings.id);
+                      cubit.syncBooking(bookings.schedule.id);
                     },
                     text: "Xác nhận chưa tham gia",
                     backgroundColor: AppColors.delete,
                   ),
                 ],
-                if(userCompletedSchedule.countPeople != 0) ... [
+                if (!cubit.isUserParticipated(bookings.id)) ...[
                   DeleteButtonWidget(
                     onDelete: () async {
-                      context.read<XacNhanSoNguoiThamGiaCubit>().setUserCompletedSchedule(userCompletedSchedule);
+                      context
+                          .read<XacNhanSoNguoiThamGiaCubit>()
+                          .setUserCompletedSchedule(bookings);
                       await Navigator.pushNamed(
                         AppNavigator.currentContext,
                         RouteName.xacNhanSoNguoiThamGia,
                       );
-                      cubit.syncBooking(userCompletedSchedule.booking!.schedule.id);
                     },
                     text: "Xác nhận tham gia",
                     backgroundColor: AppColors.button,
                   ),
                 ],
-                
               ],
             ),
           ],

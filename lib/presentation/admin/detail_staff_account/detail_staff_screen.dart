@@ -1,71 +1,19 @@
+import 'package:booking_tour_flutter/app/dependency_injection/format_date_number.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
+import 'package:booking_tour_flutter/presentation/admin/account_management/widget/permission_dialog.dart';
 import 'package:booking_tour_flutter/presentation/widgets/bk_button.dart';
 import 'package:booking_tour_flutter/presentation/widgets_dialog/dialog_noti.dart';
 import 'package:flutter/material.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
-
-class Staff {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String role;
-  final String email;
-  final String phone;
-  final String dob;
-  final String address;
-  final String idNumber;
-  final String idIssueDate;
-  final String joinDate;
-  final String jobStartDate;
-  final String rank;
-  final bool active;
-
-  Staff({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.role,
-    required this.email,
-    required this.phone,
-    required this.dob,
-    required this.address,
-    required this.idNumber,
-    required this.idIssueDate,
-    required this.joinDate,
-    required this.jobStartDate,
-    required this.rank,
-    required this.active,
-  });
-
-  String get fullName => '$firstName $lastName';
-  String get initials {
-    String a = firstName.isNotEmpty ? firstName[0] : '';
-    String b = lastName.isNotEmpty ? lastName[0] : '';
-    return (a + b).toUpperCase();
-  }
-}
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:booking_tour_flutter/domain/staff.dart';
 
 class DetailStaffScreen extends StatelessWidget {
-  final Staff staff;
+  final Staff? staff;
 
-  DetailStaffScreen({super.key, Staff? staff})
-    : staff =
-          staff ??
-          Staff(
-            id: 'NV2024001',
-            firstName: 'Nguyễn Thị',
-            lastName: 'Anh',
-            role: 'Quản lý chuyến đi',
-            email: 'nguyenanh@tourcompany.vn',
-            phone: '0987654321',
-            dob: '15/03/1992',
-            address: '123 Nguyễn Huệ, Q1, TP.HCM',
-            idNumber: '079123456789',
-            idIssueDate: '20/02/2024',
-            joinDate: '01/01/2023',
-            jobStartDate: '01/01/2023',
-            rank: 'Quản lý',
-            active: true,
-          );
+  const DetailStaffScreen({super.key, this.staff});
 
   Widget _sectionCard({required String title, required List<Widget> children}) {
     return Container(
@@ -75,7 +23,11 @@ class DetailStaffScreen extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+          BoxShadow(
+            color: AppColors.gray.withOpacity(0.3),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
@@ -85,10 +37,10 @@ class DetailStaffScreen extends StatelessWidget {
               CircleAvatar(
                 radius: 14,
                 backgroundColor: AppColors.backgroundAppBarTheme,
-                child: Icon(Icons.person, size: 16, color: Colors.white),
+                child: Icon(Icons.person, size: 16, color: AppColors.white),
               ),
               const SizedBox(width: 8),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
@@ -121,63 +73,80 @@ class DetailStaffScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusText = staff.active ? 'Đang hoạt động' : 'Tạm khóa';
+    final selectedStaff =
+        staff ?? context.watch<AccountManagementCubit>().state.selectedStaff;
+
+    if (selectedStaff == null) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundAppBarTheme,
+          title: const Text('Chi tiết nhân viên'),
+          leading: BackButton(color: AppColors.white),
+          elevation: 0,
+        ),
+        body: const Center(child: Text('Không tìm thấy dữ liệu nhân viên')),
+      );
+    }
+
+    final staffData = selectedStaff;
+    final statusText = staffData.isActive ? 'Đang hoạt động' : 'Tạm khóa';
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundAppBarTheme,
         title: const Text('Chi tiết nhân viên'),
-        leading: BackButton(color: Colors.white),
+        leading: BackButton(color: AppColors.white),
         elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 12),
-            Center(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 34,
-                    backgroundColor: AppColors.backgroundAppBarTheme,
-                    child: Text(
-                      staff.initials,
+            Container(
+              decoration: BoxDecoration(color: AppColors.gray.withOpacity(0.3)),
+              child: Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: AppColors.backgroundAppBarTheme,
+                      child: const Icon(
+                        Icons.person,
+                        size: 28,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      staffData.user.name,
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+                        fontSize: AppFonts.fontSize18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    staff.fullName,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                    const SizedBox(height: 4),
+                    Text(
+                      staffData.role.title,
+                      style: const TextStyle(color: AppColors.gray),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    staff.role,
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Text(
+                        'ID: ${staffData.user.id}',
+                        style: const TextStyle(color: AppColors.gray),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Text(
-                      'ID: ${staff.id}',
-                      style: const TextStyle(color: Colors.black45),
-                    ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 14),
@@ -186,12 +155,20 @@ class DetailStaffScreen extends StatelessWidget {
             _sectionCard(
               title: 'Thông tin cá nhân',
               children: [
-                _infoRow(Icons.email, 'Email', staff.email),
-                _infoRow(Icons.phone, 'Số điện thoại', staff.phone),
-                _infoRow(Icons.cake, 'Ngày sinh', staff.dob),
-                _infoRow(Icons.location_on, 'Địa chỉ', staff.address),
-                _infoRow(Icons.badge, 'CCCD/CMND', staff.idNumber),
-                _infoRow(Icons.date_range, 'Ngày cấp CCCD', staff.idIssueDate),
+                _infoRow(Icons.email, 'Email', staffData.user.email),
+                _infoRow(Icons.phone, 'Số điện thoại', staffData.user.phone),
+                _infoRow(
+                  Icons.cake,
+                  'Ngày sinh',
+                  formatDate(staffData.dateOfBirth),
+                ),
+                _infoRow(Icons.location_on, 'Địa chỉ', staffData.address),
+                _infoRow(Icons.badge, 'CCCD/CMND', staffData.cccd),
+                _infoRow(
+                  Icons.date_range,
+                  'Ngày cấp CCCD',
+                  formatDate(staffData.cccdIssueDate),
+                ),
               ],
             ),
 
@@ -199,39 +176,52 @@ class DetailStaffScreen extends StatelessWidget {
             _sectionCard(
               title: 'Thông tin công việc',
               children: [
-                _infoRow(Icons.calendar_today, 'Ngày vào làm', staff.joinDate),
                 _infoRow(
                   Icons.calendar_today,
-                  'Ngày nghỉ việc',
-                  staff.jobStartDate,
+                  'Ngày vào làm',
+                  formatDate(staffData.startWorkingDate),
                 ),
-                _infoRow(Icons.workspace_premium, 'Cấp bậc', staff.rank),
+                if (!staffData.isActive)
+                  _infoRow(
+                    Icons.calendar_today,
+                    'Ngày nghỉ việc',
+                    formatDate(staffData.endWorkingDate),
+                  ),
+                _infoRow(
+                  Icons.workspace_premium,
+                  'Cấp bậc',
+                  staffData.role.title,
+                ),
                 _infoRow(Icons.check_circle_outline, 'Trạng thái', statusText),
               ],
             ),
 
-            // Đánh giá (nếu là hướng dẫn viên mới có)
-            _sectionCard(
-              title: 'Đánh giá',
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Xem đánh giá',
-                      style: TextStyle(color: AppColors.backgroundAppBarTheme),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.black26,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            // Đánh giá (chỉ hiển thị nếu là hướng dẫn viên)
+            if (staffData.role.title.toLowerCase() == 'tour guide')
+              _sectionCard(
+                title: 'Đánh giá',
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Xem đánh giá',
+                        style: TextStyle(
+                          color: AppColors.backgroundAppBarTheme,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: AppColors.backgroundDisable,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
 
-            const SizedBox(height: 12),
+            if (staffData.role.title.toLowerCase() == 'hướng dẫn viên')
+              const SizedBox(height: 12),
 
             //  các nút chức năng
             Padding(
@@ -239,17 +229,130 @@ class DetailStaffScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: BkButton(onPressed: () {}, title: 'Phân quyền'),
+                    child: BkButton(
+                      onPressed: () {
+                        final currentState =
+                            context.read<AccountManagementCubit>().state;
+                        final availableRoles =
+                            currentState.roles
+                                .where(
+                                  (role) => role.title.toLowerCase() != 'user',
+                                )
+                                .toList();
+
+                        final roleTitles =
+                            availableRoles.map((role) => role.title).toList();
+
+                        showDialog(
+                          context: context,
+                          builder:
+                              (_) => PermissionDialog(
+                                currentRole: staffData.role.title,
+                                roles: roleTitles,
+                                onConfirm: (selectedRole) async {
+                                  final selectedRoleObj = availableRoles
+                                      .firstWhere(
+                                        (role) => role.title == selectedRole,
+                                        orElse: () => availableRoles.first,
+                                      );
+
+                                  final success = await context
+                                      .read<AccountManagementCubit>()
+                                      .updateStaffRole(
+                                        staffData,
+                                        selectedRoleObj.id,
+                                      );
+
+                                  if (!context.mounted) return;
+
+                                  if (success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Cập nhật quyền thành công',
+                                        ),
+                                      ),
+                                    );
+                                    if (context.mounted) {
+                                      final updatedStaff = staffData.copyWith(
+                                        role: selectedRoleObj,
+                                      );
+                                      context
+                                          .read<AccountManagementCubit>()
+                                          .setSelectedStaff(updatedStaff);
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Cập nhật quyền thất bại',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                        );
+                      },
+                      title: 'Phân quyền',
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: BkButton(
-                      title: 'Tạm khóa',
-                      backgroundColor: AppColors.orange,
+                      title: staffData.isActive ? 'Tạm khóa' : 'Mở khóa',
+                      backgroundColor:
+                          staffData.isActive
+                              ? AppColors.orange
+                              : AppColors.backgroundAppBarTheme,
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Tạm khóa')),
-                        );
+                        DialogNoti.confirm(
+                          context: context,
+                          title:
+                              staffData.isActive
+                                  ? "Xác nhận tạm khóa"
+                                  : "Xác nhận mở khóa",
+                          message:
+                              staffData.isActive
+                                  ? "Bạn có chắc chắn muốn tạm khóa tài khoản này?"
+                                  : "Bạn có chắc chắn muốn mở khóa tài khoản này?",
+                          confirmText:
+                              staffData.isActive ? "Tạm khóa" : "Mở khóa",
+                          cancelText: "Hủy",
+                        ).then((value) async {
+                          if (value) {
+                            final newStatus = !staffData.isActive;
+                            final success = await context
+                                .read<AccountManagementCubit>()
+                                .updateStaffStatus(staffData, newStatus);
+
+                            if (!context.mounted) return;
+
+                            if (success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    newStatus
+                                        ? 'Tài khoản đã được mở khóa'
+                                        : 'Tài khoản đã bị tạm khóa',
+                                  ),
+                                ),
+                              );
+                              final updatedStaff = staffData.copyWith(
+                                isActive: newStatus,
+                              );
+                              context
+                                  .read<AccountManagementCubit>()
+                                  .setSelectedStaff(updatedStaff);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Cập nhật trạng thái thất bại'),
+                                ),
+                              );
+                            }
+                          }
+                        });
                       },
                     ),
                   ),
@@ -259,41 +362,18 @@ class DetailStaffScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: BkButton(
-                      title: 'Xóa nhân viên',
-                      backgroundColor: AppColors.delete,
-                      onPressed: () {
-                        DialogNoti.confirm(
-                          context: context,
-                          title: "Xác nhận xóa",
-                          message: "Bạn có chắc chắn muốn xóa tài khoản này?",
-                          confirmText: "Xóa",
-                          cancelText: "Hủy",
-                        ).then((value) {
-                          if (value) {
-                            // TODO: hàm xóa nhân viên
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: BkButton(
-                      title: 'Cập nhật',
-                      backgroundColor: AppColors.borderButton,
-                      onPressed: () {
-                        // TODO: đến màn hình cập nhật
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Cập nhật')),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              child: BkButton(
+                title: 'Cập nhật',
+                backgroundColor: AppColors.borderButton,
+                onPressed: () {
+                  context.read<AccountManagementCubit>().setSelectedStaff(
+                        staffData,
+                      );
+                  Navigator.pushNamed(
+                    context,
+                    'update_staff_account_screen',
+                  );
+                },
               ),
             ),
 

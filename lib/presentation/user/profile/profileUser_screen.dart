@@ -3,6 +3,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.da
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
+import 'package:booking_tour_flutter/presentation/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/profile_cubit.dart';
@@ -162,7 +163,7 @@ class _ProfileUserScreenState extends State<ProfileUserScreen> {
                 buildItem(
                   icon: Icons.logout,
                   title: 'Đăng Xuất',
-                  subtitle: 'đăng xuất khỏi app',
+                  subtitle: 'Đăng xuất khỏi app', 
                   onTap: () {
                     // đăng xuất
                     var cubitAuth = context.read<AuthCubit>();

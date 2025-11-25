@@ -11,16 +11,15 @@ part 'user_completed_schedule_response.g.dart';
 class UserCompletedScheduleFixResponse {
   final int? countPeople;
   final BookingResponse? booking;
-  final ActualcashResponse? actualcashs;
 
   UserCompletedScheduleFixResponse({
     this.countPeople,
     this.booking,
-    this.actualcashs
   });
 
   factory UserCompletedScheduleFixResponse.fromJson(Map<String, dynamic> json) =>
       _$UserCompletedScheduleFixResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$UserCompletedScheduleFixResponseToJson(this);
 }
 
 extension UserCompletedScheduleResponseMapper on UserCompletedScheduleFixResponse {
@@ -28,7 +27,6 @@ extension UserCompletedScheduleResponseMapper on UserCompletedScheduleFixRespons
     return UserCompletedSchedule(
       countPeople: countPeople ?? 0,
       booking: booking!.map(),
-      actualcashs: actualcashs!.map()
     );
   }
 }
