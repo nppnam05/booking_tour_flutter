@@ -208,11 +208,14 @@ class PayScheduleScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                schedule.tour.title,
-                style: AppFonts.text28.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Expanded(
+                child: Text(
+                  schedule.tour.title,
+                  style: AppFonts.text28.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  softWrap: true,
                 ),
               ),
             ],

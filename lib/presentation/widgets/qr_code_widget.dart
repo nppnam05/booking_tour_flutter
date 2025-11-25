@@ -122,7 +122,7 @@ class _CountDownWidgetState extends State<_CountDownWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Text(
-        "Nếu sau ${FormatterHelper.formatDuration(Duration(seconds: secondsLeft))} tiếng bạn chưa thanh toán thì chuyến đi của bạn sẽ bị hủy",
+        "Nếu sau ${FormatterHelper.formatDuration(Duration(seconds: secondsLeft))} bạn chưa thanh toán thì chuyến đi của bạn sẽ bị hủy",
         style: AppFonts.text18,
       ),
     );
