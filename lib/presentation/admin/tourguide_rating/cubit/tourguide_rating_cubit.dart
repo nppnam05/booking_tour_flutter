@@ -1,32 +1,38 @@
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/domain/staff.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'tourguide_rating_state.dart';
 
 class TourguideRatingCubit extends Cubit<TourguideRatingState> {
   final BookingRepository _repository;
-  final int staffId = 2; // Hard-coded for now
+  int? _staffId; 
+
   TourguideRatingCubit(this._repository) : super(TourguideRatingInitial());
 
- Future<void> loadStaffInfo() async {
-  try {
-    final result = await _repository.getStaffById(id: staffId);
-
-    result.fold(
-      (failure) => print("Failed to load staff: ${failure.message}"),
-      (staffData) {
-        final current = state;
-        if (current is TourguideRatingLoaded) {
-          emit(current.copyWith(staff: staffData));
-        }
-      },
-    );
-  } catch (e) {
-    print("Error loading staff: $e");
+ 
+  void setStaffId(int staffId) {
+    _staffId = staffId;
   }
-}
 
+  Future<void> loadStaffInfo() async {
+    if (_staffId == null) return; 
+
+    try {
+      final result = await _repository.getStaffById(id: _staffId!);
+
+      result.fold(
+        (failure) => print("Failed to load staff: ${failure.message}"),
+        (staffData) {
+          final current = state;
+          if (current is TourguideRatingLoaded) {
+            emit(current.copyWith(staff: staffData));
+          }
+        },
+      );
+    } catch (e) {
+      print("Error loading staff: $e");
+    }
+  }
 
   Future<void> loadSchedules({
     String? filter,
@@ -36,11 +42,13 @@ class TourguideRatingCubit extends Cubit<TourguideRatingState> {
     DateTime? endDate,
     int? stars,
   }) async {
+    if (_staffId == null) return; // ✅ Kiểm tra staffId
+
     emit(TourguideRatingLoading());
 
     try {
       final result = await _repository.getSchedulesByStaffWithFilter(
-        staffId: staffId,
+        staffId: _staffId!, // ✅ Dùng staffId từ biến
         filter: filter,
         provinceId: provinceId,
         startDate: startDate,
@@ -60,10 +68,9 @@ class TourguideRatingCubit extends Cubit<TourguideRatingState> {
               startDate: startDate,
               endDate: endDate,
               stars: stars,
-              staff: null, // Will be loaded separately
+              staff: null,
             ),
           );
-          // Load staff info after schedules
           loadStaffInfo();
         },
       );

@@ -1,43 +1,69 @@
-// lib/presentation/admin/schedule_review_detail/cubit/schedule_review_detail_cubit.dart
-import 'package:booking_tour_flutter/data/booking_repository.dart';
-import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';  // ✅ Import đúng
+import 'package:booking_tour_flutter/presentation/admin/schedulereviewdetail/cubit/schedule_review_detail_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'schedule_review_detail_state.dart';
+import 'package:booking_tour_flutter/data/booking_repository.dart';
+import 'package:booking_tour_flutter/domain/schedule_staff.dart';
 
-class ScheduleReviewDetailCubit extends Cubit<ScheduleReviewDetailState> {
-  final BookingRepository _repository;
-  final ScheduleTourguide schedule;  // ✅ Dùng ScheduleTourguide
+class ReviewDetailCubit extends Cubit<ReviewDetailState> {
+  final BookingRepository _bookingRepository;
 
-  ScheduleReviewDetailCubit(this._repository, this.schedule)
-      : super(ScheduleReviewDetailInitial());
+  ReviewDetailCubit(this._bookingRepository) : super(ReviewDetailInitial());
 
-  Future<void> loadReviews() async {
-    emit(ScheduleReviewDetailLoading());
+  Future<void> loadReviews(ScheduleStaff schedule) async {
+    emit(ReviewDetailLoading());
 
     try {
-      final result = await _repository.getReviewsByScheduleId(
-        scheduleId: schedule.id,  // ✅ schedule.id có sẵn rồi!
+      final result = await _bookingRepository.getReviewsByScheduleId(
+        scheduleId: schedule.id,
       );
 
       result.fold(
-        (failure) => emit(ScheduleReviewDetailError(failure.message)),
-        (reviews) => emit(ScheduleReviewDetailLoaded(
-          reviews: reviews,
-          schedule: schedule,
-        )),
+        (failure) {
+          emit(ReviewDetailError(failure.message));
+        },
+        (reviews) {
+          // Tính toán averageRating và totalReviews
+          final totalReviews = reviews.length;
+          final totalStars = reviews.fold<int>(0, (sum, review) => sum + review.rating);
+          final averageRating = totalReviews > 0 ? totalStars / totalReviews : 0.0;
+
+          emit(ReviewDetailLoaded(
+            cityName: schedule.tour.title,
+            startDate: schedule.startDate,
+            endDate: schedule.endDate,
+            averageRating: averageRating,
+            totalReviews: totalReviews,
+            allReviews: reviews,  // ✅ Fixed: Removed List<reviews>
+            filteredReviews: reviews,
+            selectedStarFilter: 0,
+          ));
+        },
       );
     } catch (e) {
-      emit(ScheduleReviewDetailError('Đã có lỗi xảy ra: ${e.toString()}'));
+      emit(ReviewDetailError('Có lỗi xảy ra: ${e.toString()}'));
     }
   }
 
-  void filterByStar(int? star) {
-    final currentState = state;
-    if (currentState is ScheduleReviewDetailLoaded) {
-      emit(currentState.copyWith(
-        selectedStarFilter: star,
-        clearFilter: star == null,
-      ));
+  void filterByStar(int stars) {
+    if (state is ReviewDetailLoaded) {
+      final currentState = state as ReviewDetailLoaded;
+      
+      if (currentState.selectedStarFilter == stars) {
+        // Bỏ filter
+        emit(currentState.copyWith(
+          selectedStarFilter: 0,
+          filteredReviews: currentState.allReviews,
+        ));
+      } else {
+        // Apply filter
+        final filtered = currentState.allReviews
+            .where((review) => review.rating == stars)
+            .toList();
+        
+        emit(currentState.copyWith(
+          selectedStarFilter: stars,
+          filteredReviews: filtered,
+        ));
+      }
     }
   }
 }
