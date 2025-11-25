@@ -1,4 +1,4 @@
-import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_request.dart';
 import 'package:booking_tour_flutter/domain/user.dart';
 
 class TourGuide {
@@ -64,7 +64,7 @@ class TourGuide {
       user: user ?? this.user,
     );
   }
-  
+
   static TourGuide empty() {
     return TourGuide(
       userId: 0,
@@ -85,21 +85,10 @@ class TourGuide {
 }
 
 extension TourGuideExtension on TourGuide {
-  TourGuideResponse toResponse() {
-    return TourGuideResponse(
+  TourGuideRequest toRequest() {
+    return TourGuideRequest(
       userId: userId,
-      code: code,
-      isActive: isActive,
-      cccd: cccd,
-      address: address,
-      dateOfBirth: dateOfBirth.toIso8601String(),
-      startWorkingDate: startWorkingDate.toIso8601String(),
-      cccdIssueDate: cccdIssueDate.toIso8601String(),
-      CCCD_front_path: cccdFrontPath,
-      CCCD_back_path: cccBackPath,
-      endWorkingDate: endWorkingDate.toIso8601String(),
       ischecked: ischecked,
-      user: user.toResponse(), 
     );
   }
 }

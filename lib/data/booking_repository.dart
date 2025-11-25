@@ -13,7 +13,7 @@ import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/create_user_request.dart';
 import 'package:booking_tour_flutter/data/request/login_email_request.dart';
-import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart';
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
@@ -37,6 +37,7 @@ import 'package:booking_tour_flutter/data/response/schedule_assignment_tourguide
 import 'package:booking_tour_flutter/data/response/schedule_detail_response.dart'
     hide LocationActivityResponse;
 import 'package:booking_tour_flutter/data/response/schedule_reception_response.dart';
+import 'package:booking_tour_flutter/data/response/schedule_review_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_staff_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
@@ -44,6 +45,7 @@ import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response
 import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
+import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
 import 'package:booking_tour_flutter/data/response/user_completed_schedule_response.dart';
 import 'package:booking_tour_flutter/data/response/user_response.dart';
 import 'package:booking_tour_flutter/data/response/trip_manager_response.dart';
@@ -68,6 +70,7 @@ import 'package:booking_tour_flutter/domain/schedule_assignment.dart';
 import 'package:booking_tour_flutter/domain/schedule_detail.dart'
     hide Activity, LocationActivity;
 import 'package:booking_tour_flutter/domain/schedule_reception.dart';
+import 'package:booking_tour_flutter/domain/schedule_review.dart';
 import 'package:booking_tour_flutter/domain/schedule_staff.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
@@ -97,8 +100,10 @@ import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 
 abstract class BookingRepository {
-  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(int scheduleId);
-  
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
+    int scheduleId,
+  );
+
   Future<Either<Failure, List<ScheduleReception>>> getScheduleReception();
 
   Future<Either<Failure, UserCompletedSchedule>>
@@ -163,7 +168,7 @@ abstract class BookingRepository {
 
   Future<Either<Failure, bool>> checkAssignment({
     required int scheduleId,
-    required List<TourGuideResponse> tourGuides,
+    required List<TourGuideRequest> tourGuides,
   });
 
   Future<Either<Failure, List<TourGuide>>> getTourGuides({
@@ -344,7 +349,7 @@ abstract class BookingRepository {
     int? stars,
   });
 
-  Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
+  Future<Either<Failure, List<ScheduleReview>>> getReviewsByScheduleId({
     required int scheduleId,
   });
 }
@@ -783,7 +788,7 @@ class BookingRepositoryImp implements BookingRepository {
   @override
   Future<Either<Failure, bool>> checkAssignment({
     required int scheduleId,
-    required List<TourGuideResponse> tourGuides,
+    required List<TourGuideRequest> tourGuides,
   }) async {
     try {
       var response = await _coreService.checkAssignment(scheduleId, tourGuides);
@@ -1868,8 +1873,8 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-  @override
-Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
+@override
+Future<Either<Failure, List<ScheduleReview>>> getReviewsByScheduleId({
   required int scheduleId,
 }) async {
   try {
@@ -1892,7 +1897,7 @@ Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
     }
     
     var reviews = dataList
-        .map((json) => ReviewResponse.fromJson(json as Map<String, dynamic>))
+        .map((json) => ScheduleReviewResponse.fromJson(json as Map<String, dynamic>)) 
         .map((response) => response.map())
         .toList();
     
@@ -1903,19 +1908,26 @@ Future<Either<Failure, List<Review>>> getReviewsByScheduleId({
 }
   
   @override
-  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(int scheduleId) async {
-    try{
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
+    int scheduleId,
+  ) async {
+    try {
       var responses = await _coreService.getBookingByScheduleId(scheduleId);
 
       var jsons = responses.data as List<dynamic>;
 
-      var bookingResponse = jsons.map((json) => BookingResponse.fromJson(json as Map<String, dynamic> )).toList();
+      var bookingResponse =
+          jsons
+              .map(
+                (json) =>
+                    BookingResponse.fromJson(json as Map<String, dynamic>),
+              )
+              .toList();
 
       var booking = bookingResponse.map((b) => b.map()).toList();
 
       return Right(booking);
-    }
-    catch(e){
+    } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
