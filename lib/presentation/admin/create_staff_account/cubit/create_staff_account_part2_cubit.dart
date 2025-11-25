@@ -93,7 +93,7 @@ class CreateStaffAccountPart2Cubit extends Cubit<CreateStaffAccountPart2State> {
     );
 
     final request = NewStaffRequest(
-      code: part1Data.account ?? "",
+      code: "",
       isActive: true,
       cccd: part1Data.cccd ?? "",
       address: part1Data.address ?? "",

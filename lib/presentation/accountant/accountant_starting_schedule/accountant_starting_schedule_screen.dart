@@ -1,3 +1,6 @@
+import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/booking_status.dart';
+import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/cubit/accountant_manage_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_starting_schedule/cubit/accountant_starting_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_starting_schedule/cubit/accountant_starting_schedule_state.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_starting_schedule/widgets/account_schedule_item.dart';
@@ -27,8 +30,20 @@ class AccountantStartingScheduleScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: AccountantScheduleItem(
-                  schedule: state.schedules.elementAt(index),
+                child: InkWell(
+                  onTap: () async {
+                    var accountManagementScheduleCubit = context.read<AccountantManageScheduleCubit>();
+                    accountManagementScheduleCubit.setBooking(state.schedules[index]);
+
+                    await accountManagementScheduleCubit.loadData();
+                    accountManagementScheduleCubit.setStatus(status: BookingStatus(id: 1, name: ""));
+
+
+                    await Navigator.pushNamed(context, RouteName.accountantManageScheduleScreen);
+                  },
+                  child: AccountantScheduleItem(
+                    schedule: state.schedules.elementAt(index),
+                  ),
                 ),
               );
             },

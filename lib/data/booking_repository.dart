@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
@@ -8,6 +7,7 @@ import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/booking/update_status_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/change_password_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
@@ -18,6 +18,7 @@ import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
+import 'package:booking_tour_flutter/data/request/user_completed_schedule/create_user_completed_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
@@ -42,7 +43,6 @@ import 'package:booking_tour_flutter/data/response/schedule_staff_response.dart'
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
-import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
@@ -94,15 +94,30 @@ import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:booking_tour_flutter/domain/income_month.dart';
 import 'package:booking_tour_flutter/domain/income_year.dart';
 import 'package:booking_tour_flutter/data/response/income_month_response.dart';
-import 'package:booking_tour_flutter/data/response/income_year_response.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-import 'package:retrofit/retrofit.dart';
 
 abstract class BookingRepository {
+  Future<Either<Failure, bool>> updateStatusBooking(
+    UpdateStatusBookingRequest updateStatusBookingRequest,
+  );
+
   Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
     int scheduleId,
   );
+  Future<Either<Failure, bool>> updateStatusBooking(
+    UpdateStatusBookingRequest updateStatusBookingRequest,
+  );
+
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
+    int scheduleId,
+  );
+
+  Future<Either<Failure, int>> createUserCompletedSchedule({
+    required CreateUserCompletedScheduleFixRequest userCompletedSchedule,
+  });
+
+  Future<Either<Failure, bool>> deleteUserCompletedSchedule({required int id});
 
   Future<Either<Failure, List<ScheduleReception>>> getScheduleReception();
 
@@ -1085,21 +1100,6 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, Booking>> deleteBooking(int bookingId) async {
-    try {
-      var responses = await _coreService.deleteBooking(bookingId);
-
-      var data = responses.data as Map<String, dynamic>;
-
-      var result = BookingResponse.fromJson(data);
-
-      return Right(result.map());
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
   Future<Either<Failure, bool>> createReview({
     required int userId,
     required int scheduleId,
@@ -1873,40 +1873,46 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
-@override
-Future<Either<Failure, List<ScheduleReview>>> getReviewsByScheduleId({
-  required int scheduleId,
-}) async {
-  try {
-    var response = await _coreService.getReviewsByScheduleId(scheduleId);
-    
-    var rawData = response.data;
-    
-    List<dynamic> dataList;
-    
-    if (rawData is Map<String, dynamic>) {
-      if (rawData.containsKey('data') && rawData['data'] is List) {
-        dataList = rawData['data'] as List<dynamic>;
+
+  @override
+  Future<Either<Failure, List<ScheduleReview>>> getReviewsByScheduleId({
+    required int scheduleId,
+  }) async {
+    try {
+      var response = await _coreService.getReviewsByScheduleId(scheduleId);
+
+      var rawData = response.data;
+
+      List<dynamic> dataList;
+
+      if (rawData is Map<String, dynamic>) {
+        if (rawData.containsKey('data') && rawData['data'] is List) {
+          dataList = rawData['data'] as List<dynamic>;
+        } else {
+          throw Exception('Invalid response format');
+        }
+      } else if (rawData is List) {
+        dataList = rawData;
       } else {
         throw Exception('Invalid response format');
       }
-    } else if (rawData is List) {
-      dataList = rawData;
-    } else {
-      throw Exception('Invalid response format');
+
+      var reviews =
+          dataList
+              .map(
+                (json) => ScheduleReviewResponse.fromJson(
+                  json as Map<String, dynamic>,
+                ),
+              )
+              .map((response) => response.map())
+              .toList();
+
+      return Right(reviews);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
     }
-    
-    var reviews = dataList
-        .map((json) => ScheduleReviewResponse.fromJson(json as Map<String, dynamic>)) 
-        .map((response) => response.map())
-        .toList();
-    
-    return Right(reviews);
-  } catch (e) {
-    return Left(ErrorHandler.handle(e).failure);
   }
-}
-  
+
   @override
   Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
     int scheduleId,
@@ -1927,6 +1933,64 @@ Future<Either<Failure, List<ScheduleReview>>> getReviewsByScheduleId({
       var booking = bookingResponse.map((b) => b.map()).toList();
 
       return Right(booking);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteUserCompletedSchedule({
+    required int id,
+  }) async {
+    try {
+      final response = await _coreService.deleteUserCompletedSchedule(id);
+      return Right(response.data ?? false);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> createUserCompletedSchedule({
+    required CreateUserCompletedScheduleFixRequest userCompletedSchedule,
+  }) async {
+    try {
+      var request = await _coreService.createUserCompletedSchedule(
+        userCompletedSchedule,
+      );
+      return Right(request.data as int);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateStatusBooking(
+    UpdateStatusBookingRequest updateStatusBookingRequest,
+  ) async {
+    try {
+      var responses = await _coreService.updateStatusBooking(
+        updateStatusBookingRequest,
+      );
+
+      var json = responses.data as Map<String, dynamic>;
+
+      return Right(true);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Booking>> deleteBooking(int bookingId) async {
+    try {
+      var responses = await _coreService.deleteBooking(bookingId);
+
+      var data = responses.data as Map<String, dynamic>;
+
+      var result = BookingResponse.fromJson(data);
+
+      return Right(result.map());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

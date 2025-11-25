@@ -22,7 +22,6 @@ class CreateStaffAccountPart1Screen extends StatefulWidget {
 class _CreateStaffAccountPart1ScreenState
     extends State<CreateStaffAccountPart1Screen> {
   final _formKey = GlobalKey<FormState>();
-  final accountCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
   final confirmCtrl = TextEditingController();
 
@@ -65,7 +64,6 @@ class _CreateStaffAccountPart1ScreenState
 
   @override
   void dispose() {
-    accountCtrl.dispose();
     passwordCtrl.dispose();
     confirmCtrl.dispose();
     nameCtrl.dispose();
@@ -160,19 +158,19 @@ class _CreateStaffAccountPart1ScreenState
                       children: [
                         _sectionTitle("Thông tin tài khoản"),
                         const SizedBox(height: 8),
-
-                        // Tài khoản
+                        // Email
                         TextInput(
-                          controller: accountCtrl,
-                          hintText: 'Tài khoản',
-                          labelText: 'Tài khoản',
+                          controller: emailCtrl,
+                          hintText: 'Email',
+                          labelText: 'Email',
                           validator: (v) {
                             if (v == null || v.isEmpty) {
-                              return 'Vui lòng nhập tài khoản';
+                              return 'Vui lòng nhập email';
                             }
                             return null;
                           },
                         ),
+
                         const SizedBox(height: 8),
 
                         ToggleInputField(
@@ -208,12 +206,8 @@ class _CreateStaffAccountPart1ScreenState
                           AccountManagementState
                         >(
                           builder: (context, accountState) {
-                            final roles =
-                                accountState.roles
-                                    .where(
-                                      (r) => r.title.toLowerCase() != 'user',
-                                    )
-                                    .toList();
+                            final roles = accountState.roles;
+
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -445,7 +439,6 @@ class _CreateStaffAccountPart1ScreenState
                                   );
 
                               part1Cubit.saveData(
-                                account: accountCtrl.text.trim(),
                                 password: passwordCtrl.text.trim(),
                                 name: nameCtrl.text.trim(),
                                 cccd: cccdCtrl.text.trim(),

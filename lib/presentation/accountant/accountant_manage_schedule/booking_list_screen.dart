@@ -3,6 +3,7 @@ import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dar
 import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/booking_status.dart';
+import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/cubit/accountant_manage_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,7 +11,12 @@ import 'package:flutter/widgets.dart';
 class BookingListScreen extends StatelessWidget {
   final BookingStatus status;
   final List<Booking> bookings;
-  BookingListScreen({required this.status, required this.bookings});
+  final AccountantManageScheduleCubit cubit;
+  BookingListScreen({
+    required this.status,
+    required this.bookings,
+    required this.cubit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +103,7 @@ class BookingListScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                     SizedBox(width: 20),
-                    Text("${booking.email}", style: AppFonts.text18),
+                    Expanded(child: Text("${booking.email}", style: AppFonts.text18)),
                   ],
                 ),
                 SizedBox(height: 30),
@@ -163,38 +169,56 @@ class BookingListScreen extends StatelessWidget {
           SizedBox(height: 30),
           Row(
             children: [
-              check == true
-                  ? Expanded(
-                    flex: 4,
-                    child: customButton(
-                      onPressed: () {
-                        DialogHelper.showConfirmDialog(
-                          body: itemDialog(booking),
-                        );
-                      },
-                      text: "Đặt cọc",
-                      colorButton: Color(0xFFF5CD3E),
-                    ),
-                  )
-                  : Expanded(flex: 4, child: Container()),
+              Expanded(
+                flex: 4,
+                child: customButton(
+                  onPressed: () async {
+                    var check = await DialogHelper.showConfirmDialog(
+                      body: itemDialogPayDeposit(booking),
+                    );
+
+                    if (check) {
+                      cubit.updateStatusBooking(
+                        id: booking.id,
+                        statusId: BookingStatus.depositId,
+                      );
+                    }
+                  },
+                  text: "Đặt cọc",
+                  colorButton: Color(0xFFF5CD3E),
+                ),
+              ),
               SizedBox(width: 10),
-              check == true
-                  ? Expanded(
-                    flex: 6,
-                    child: customButton(
-                      onPressed: () {
-                        // TODO:
-                      },
-                      text: "Thanh toán hết",
-                    ),
-                  )
-                  : Expanded(flex: 4, child: Container()),
+              Expanded(
+                flex: 6,
+                child: customButton(
+                  onPressed: () async {
+                    var check = await DialogHelper.showConfirmDialog(
+                      body: itemDialogPay(booking),
+                    );
+
+                    if (check) {
+                      cubit.updateStatusBooking(
+                        id: booking.id,
+                        statusId: BookingStatus.payId,
+                      );
+                    }
+                  },
+                  text: "Thanh toán hết",
+                ),
+              ),
               SizedBox(width: 10),
               Expanded(
                 flex: 3,
                 child: customButton(
-                  onPressed: () {
-                    // TODO:
+                  onPressed: () async {
+                    var check = await DialogHelper.showConfirmDialog(
+                      body: Center(child: Text("Bạn có chắc chắn muốn xóa booking này không", style: AppFonts.text16,)),
+                    );
+
+                    if (check) {
+                      cubit.deleteBooking(bookingId: booking.id);
+                    }
                   },
                   text: "Xóa",
                   colorButton: Color(0xFFFA6565),
@@ -207,22 +231,16 @@ class BookingListScreen extends StatelessWidget {
     );
   }
 
-  Widget itemDialog(Booking booking) {
+  Widget itemDialogPayDeposit(Booking booking) {
     return Column(
       children: [
         Row(
           children: [
             Text("Bạn ", style: AppFonts.text18),
-            booking.totalPrice / booking.numPeople !=
-                    booking.schedule.finalPrice
-                ? Text(
-                  "xác nhận đã đặt cọc",
-                  style: AppFonts.text18.copyWith(color: Color(0xFFF5CD3E)),
-                )
-                : Text(
-                  "Xác nhận thanh toán hết",
-                  style: AppFonts.text18.copyWith(color: Color(0xFF3DE22E)),
-                ),
+            Text(
+              "xác nhận đã đặt cọc",
+              style: AppFonts.text18.copyWith(color: Color(0xFFF5CD3E)),
+            ),
           ],
         ),
         Padding(
@@ -300,10 +318,107 @@ class BookingListScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Tổng tiền:", style: AppFonts.text18),
-                        Text(
-                          "${booking.totalPrice}",
-                          style: AppFonts.text18,
-                        ),
+                        Text("${booking.totalPrice}", style: AppFonts.text18),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget itemDialogPay(Booking booking) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text("Bạn ", style: AppFonts.text18),
+            Text(
+              "Xác nhận thanh toán hết",
+              style: AppFonts.text18.copyWith(color: Color(0xFF3DE22E)),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/profile.png",
+                        width: 30,
+                        height: 30,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 20),
+                      Text("${booking.user.name}", style: AppFonts.text18),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/email.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Text("${booking.email}", style: AppFonts.text18),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/phone.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.phone}", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/group_of_people.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.numPeople} Người", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFF5F5),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Tổng tiền:", style: AppFonts.text18),
+                        Text("${booking.totalPrice}", style: AppFonts.text18),
                       ],
                     ),
                   ],
@@ -362,7 +477,7 @@ class BookingListScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                     SizedBox(width: 20),
-                    Text("${booking.email}", style: AppFonts.text18),
+                    Expanded(child: Text("${booking.email}", style: AppFonts.text18)),
                   ],
                 ),
                 SizedBox(height: 30),

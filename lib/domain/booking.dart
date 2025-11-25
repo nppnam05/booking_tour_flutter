@@ -55,4 +55,38 @@ class Booking {
       qr: "",
     );
   }
+
+  Booking copyWith({
+    int? id,
+    int? numPeople,
+    String? code,
+    String? email,
+    String? phone,
+    int? totalPrice,
+    int? countChangeLeft,
+    DateTime? createdAt,
+    bool? payType,
+    BookingStatus? status,
+    ScheduleTourmanager? schedule,
+    User? user,
+    DateTime? expiredAt,
+    String? qr,
+  }) {
+    return Booking(
+      id: id ?? this.id,
+      numPeople: numPeople ?? this.numPeople,
+      code: code ?? this.code,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      totalPrice: totalPrice ?? this.totalPrice,
+      countChangeLeft: countChangeLeft ?? this.countChangeLeft,
+      createdAt: createdAt ?? this.createdAt,
+      payType: payType ?? this.payType,
+      status: status ?? this.status,
+      schedule: schedule ?? this.schedule,
+      user: user ?? this.user,
+      expiredAt: expiredAt ?? this.expiredAt,
+      qr: qr ?? this.qr,
+    );
+  }
 }
