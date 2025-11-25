@@ -1,4 +1,5 @@
 import 'package:booking_tour_flutter/app/route_manager.dart';
+import 'package:booking_tour_flutter/domain/booking_status.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/cubit/accountant_manage_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_starting_schedule/cubit/accountant_starting_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/accountant/accountant_starting_schedule/cubit/accountant_starting_schedule_state.dart';
@@ -35,6 +36,8 @@ class AccountantStartingScheduleScreen extends StatelessWidget {
                     accountManagementScheduleCubit.setBooking(state.schedules[index]);
 
                     await accountManagementScheduleCubit.loadData();
+                    accountManagementScheduleCubit.setStatus(status: BookingStatus(id: 1, name: ""));
+
 
                     await Navigator.pushNamed(context, RouteName.accountantManageScheduleScreen);
                   },

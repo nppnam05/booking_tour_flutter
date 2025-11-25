@@ -477,7 +477,7 @@ class BookingListScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                     SizedBox(width: 20),
-                    Text("${booking.email}", style: AppFonts.text18),
+                    Expanded(child: Text("${booking.email}", style: AppFonts.text18)),
                   ],
                 ),
                 SizedBox(height: 30),

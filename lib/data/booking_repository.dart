@@ -105,6 +105,13 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
     int scheduleId,
   );
+  Future<Either<Failure, bool>> updateStatusBooking(
+    UpdateStatusBookingRequest updateStatusBookingRequest,
+  );
+
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
+    int scheduleId,
+  );
 
   Future<Either<Failure, int>> createUserCompletedSchedule({
     required CreateUserCompletedScheduleFixRequest userCompletedSchedule,
@@ -305,7 +312,7 @@ abstract class BookingRepository {
     required int scheduleId,
   });
 
-  Future<Either<Failure, bool>> deleteBooking(int bookingId);
+  Future<Either<Failure, Booking>> deleteBooking(int bookingId);
 
   Future<Either<Failure, void>> createReview({
     required int userId,
@@ -1087,19 +1094,6 @@ class BookingRepositoryImp implements BookingRepository {
       var result = BookingResponse.fromJson(data);
 
       return Right(result.map());
-    } catch (e) {
-      return Left(ErrorHandler.handle(e).failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, bool>> deleteBooking(int bookingId) async {
-    try {
-      var responses = await _coreService.deleteBooking(bookingId);
-
-      var data = responses.data as bool;
-
-      return Right(data);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
@@ -1982,6 +1976,21 @@ class BookingRepositoryImp implements BookingRepository {
       var json = responses.data as Map<String, dynamic>;
 
       return Right(true);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Booking>> deleteBooking(int bookingId) async {
+    try {
+      var responses = await _coreService.deleteBooking(bookingId);
+
+      var data = responses.data as Map<String, dynamic>;
+
+      var result = BookingResponse.fromJson(data);
+
+      return Right(result.map());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
