@@ -38,18 +38,18 @@ class ViScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 _buidInformation(state.user),
 
-                SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.only(left: 15, right: 15),
-                  child: Text(
-                    "Lưu ý: số tiền này của bạn sẽ được trừ vào lần sau nếu như bạn đặt và sẽ được giảm giá 5% số tiền của chuyến đi đó",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
+                SizedBox(height: 15),
+                // Padding(
+                //   padding: EdgeInsets.only(left: 15, right: 15),
+                //   child: Text(
+                //     "Lưu ý: số tiền này của bạn sẽ được trừ vào lần sau nếu như bạn đặt và sẽ được giảm giá 5% số tiền của chuyến đi đó",
+                //     style: TextStyle(color: Colors.blue),
+                //   ),
+                // ),
 
                 _buildTextFeild(state, state.user, context, controller),
 
-                SizedBox(height: 50),
+                SizedBox(height: 15),
                 _buildButton(
                   branchController,
                   accountController,

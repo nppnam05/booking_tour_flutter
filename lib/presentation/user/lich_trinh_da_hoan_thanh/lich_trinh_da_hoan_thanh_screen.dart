@@ -97,7 +97,7 @@ class LichTrinhDaHoanThanhScreen extends StatelessWidget {
                     size: 20,
                     color: AppColors.backgroundAppBarTheme,
                   ),
-                  Text(" ${schedule.tour.title}", style: AppFonts.text20),
+                  Expanded(child: Text(" ${schedule.tour.title}", style: AppFonts.text20, overflow: TextOverflow.ellipsis,)),
                 ],
               ),
 
