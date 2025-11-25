@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/booking/update_status_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/login_email_request.dart';
@@ -37,6 +38,9 @@ part 'core_service.g.dart';
 abstract class CoreService {
   @factoryMethod
   factory CoreService(Dio dio) = _CoreService;
+
+  @PUT("/Booking/updateStatusBooking")
+  Future<RestResponse> updateStatusBooking(@Body() UpdateStatusBookingRequest body);
 
   @GET("/Schedule/Reception")
   Future<RestResponse> getScheduleReception();

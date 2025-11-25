@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/cubit/accountant_manage_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part1_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part2_cubit.dart';
@@ -55,7 +56,7 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => CreateStaffAccountPart1Cubit()),
         BlocProvider(create: (_) => CreateStaffAccountPart2Cubit()),
         BlocProvider(create: (_) => IncomeCubit(getIt<BookingRepository>())),
-        
+        BlocProvider(create: (_) => AccountantManageScheduleCubit())
       ],
 
       child: child,

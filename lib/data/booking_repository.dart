@@ -8,6 +8,7 @@ import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/booking/update_status_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/change_password_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
@@ -98,6 +99,9 @@ import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 
 abstract class BookingRepository {
+
+  Future<Either<Failure, bool>> updateStatusBooking(UpdateStatusBookingRequest updateStatusBookingRequest);
+  
   Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
     int scheduleId,
   );
@@ -295,7 +299,7 @@ abstract class BookingRepository {
     required int scheduleId,
   });
 
-  Future<Either<Failure, Booking>> deleteBooking(int bookingId);
+  Future<Either<Failure, bool>> deleteBooking(int bookingId);
 
   Future<Either<Failure, void>> createReview({
     required int userId,
@@ -1083,15 +1087,13 @@ class BookingRepositoryImp implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, Booking>> deleteBooking(int bookingId) async {
+  Future<Either<Failure, bool>> deleteBooking(int bookingId) async {
     try {
       var responses = await _coreService.deleteBooking(bookingId);
 
-      var data = responses.data as Map<String, dynamic>;
+      var data = responses.data as bool;
 
-      var result = BookingResponse.fromJson(data);
-
-      return Right(result.map());
+      return Right(data);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
@@ -1933,4 +1935,19 @@ class BookingRepositoryImp implements BookingRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+  
+  @override
+  Future<Either<Failure, bool>> updateStatusBooking(UpdateStatusBookingRequest updateStatusBookingRequest) async {
+    try{
+      var responses = await _coreService.updateStatusBooking(updateStatusBookingRequest);
+      
+      var json = responses.data as Map<String, dynamic>;
+
+      return Right(true);
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
 }
