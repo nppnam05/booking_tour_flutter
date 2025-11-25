@@ -105,13 +105,6 @@ abstract class BookingRepository {
   Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
     int scheduleId,
   );
-  Future<Either<Failure, bool>> updateStatusBooking(
-    UpdateStatusBookingRequest updateStatusBookingRequest,
-  );
-
-  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
-    int scheduleId,
-  );
 
   Future<Either<Failure, int>> createUserCompletedSchedule({
     required CreateUserCompletedScheduleFixRequest userCompletedSchedule,

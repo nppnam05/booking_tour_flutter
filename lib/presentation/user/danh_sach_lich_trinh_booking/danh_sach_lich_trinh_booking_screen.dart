@@ -86,7 +86,7 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
                   children: [
                     Icon(booking.status.icon, color: booking.status.color),
                     Text(
-                      "${booking.status.name} ...",
+                      booking.status.name,
                       style: AppFonts.text16.copyWith(
                         color: booking.status.color,
                       ),
@@ -115,64 +115,69 @@ class DanhSachLichTrinhBookingScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.park,
-                              size: 20,
-                              color: AppColors.backgroundAppBarTheme,
-                            ),
-                            Text(
-                              " ${booking.schedule.tour.title}",
-                              style: AppFonts.text16.copyWith(
-                                fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.park,
+                                size: 20,
+                                color: AppColors.backgroundAppBarTheme,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.how_to_vote,
-                              size: 20,
-                              color: AppColors.delete,
-                            ),
-                            Text(
-                              " ${booking.totalPrice}",
-                              style: AppFonts.text16.copyWith(
-                                fontWeight: FontWeight.bold,
+                              Expanded(
+                                child: Text(
+                                  " ${booking.schedule.tour.title}",
+                                  style: AppFonts.text16.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            Text(
-                              " / ${booking.numPeople * booking.schedule.finalPrice}",
-                              style: AppFonts.text16.copyWith(
-                                fontWeight: FontWeight.bold,
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.how_to_vote,
+                                size: 20,
+                                color: AppColors.delete,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.people,
-                              size: 20,
-                              color: AppColors.textHightLight,
-                            ),
-                            Text(
-                              " ${booking.numPeople}",
-                              style: AppFonts.text16.copyWith(
-                                fontWeight: FontWeight.bold,
+                              Text(
+                                " ${booking.totalPrice}",
+                                style: AppFonts.text16.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              Text(
+                                " / ${booking.numPeople * booking.schedule.finalPrice}",
+                                style: AppFonts.text16.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.people,
+                                size: 20,
+                                color: AppColors.textHightLight,
+                              ),
+                              Text(
+                                " ${booking.numPeople}",
+                                style: AppFonts.text16.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
