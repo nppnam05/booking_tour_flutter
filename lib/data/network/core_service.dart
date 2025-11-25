@@ -2,6 +2,7 @@ import 'package:booking_tour_flutter/data/request/admin/new_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/admin/update_staff_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/booking_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/booking/change_booking_request.dart';
+import 'package:booking_tour_flutter/data/request/booking/update_status_booking_request.dart';
 import 'package:booking_tour_flutter/data/request/check_account_request.dart';
 import 'package:booking_tour_flutter/data/request/create_review_request.dart';
 import 'package:booking_tour_flutter/data/request/login_email_request.dart';
@@ -45,6 +46,9 @@ abstract class CoreService {
  
   @DELETE("/UserCompletedSchedule/{id}")
   Future<RestResponse> deleteUserCompletedSchedule(@Path("id") int id);
+
+  @PUT("/Booking/updateStatusBooking")
+  Future<RestResponse> updateStatusBooking(@Body() UpdateStatusBookingRequest body);
 
   @GET("/Schedule/Reception")
   Future<RestResponse> getScheduleReception();
