@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   if (kDebugMode) print("Background: ${message.notification?.title}");
+  
 }
 
 void main() async {
