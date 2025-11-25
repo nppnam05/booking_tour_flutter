@@ -208,7 +208,11 @@ class RouteManager {
     RouteName.updateStaffAccountScreen: (context) => UpdateStaffAccountScreen(),
 
     RouteName.tourguideRating: (context) => const TourguideRatingScreen(),
-    RouteName.mainAdminScreen: (context) => const MainAdmin(),
+    RouteName.mainAdminScreen: (context) {
+      final initialIndex =
+          ModalRoute.of(context)?.settings.arguments as int? ?? 0;
+      return MainAdmin(initialIndex: initialIndex);
+    },
     RouteName.tourguideRating: (context) {
       
       final int? staffId = ModalRoute.of(context)?.settings.arguments as int?;

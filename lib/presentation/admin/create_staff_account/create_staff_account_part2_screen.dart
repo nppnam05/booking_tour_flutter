@@ -234,8 +234,9 @@ class _CreateStaffAccountPart2ScreenState
                                         ),
                                       );
                                       navigator.pushNamedAndRemoveUntil(
-                                        RouteName.accountManagement,
+                                        RouteName.mainAdminScreen,
                                         (route) => false,
+                                        arguments: 1,
                                       );
                                       AppNavigator.currentContext
                                           .read<AccountManagementCubit>()
