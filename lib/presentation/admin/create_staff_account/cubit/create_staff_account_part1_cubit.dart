@@ -9,7 +9,6 @@ class CreateStaffAccountPart1Cubit extends Cubit<CreateStaffAccountPart1State> {
   }
 
   void saveData({
-    required String account,
     required String password,
     required String name,
     required String cccd,
@@ -24,7 +23,6 @@ class CreateStaffAccountPart1Cubit extends Cubit<CreateStaffAccountPart1State> {
   }) {
     emit(
       state.copyWith(
-        account: account,
         password: password,
         name: name,
         cccd: cccd,
