@@ -22,6 +22,7 @@ import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assign
 import 'package:booking_tour_flutter/presentation/tour_manager/add_tour/cubit/add_tour_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/book_a_schedule/cubit/book_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/danh_sach_lich_trinh_booking/cubit/danh_sach_lich_trinh_booking_cubit.dart';
+import 'package:booking_tour_flutter/presentation/user/favorite/cubit/favorite_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/pay/cubit/pay_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/schedule_detail/cubit/schedule_detail_cubit.dart';
 import 'package:booking_tour_flutter/presentation/user/thong_bao/cubit/thong_bao_cubit.dart';
@@ -58,7 +59,8 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => CreateStaffAccountPart1Cubit()),
         BlocProvider(create: (_) => CreateStaffAccountPart2Cubit()),
         BlocProvider(create: (_) => IncomeCubit(getIt<BookingRepository>())),
-        BlocProvider(create: (_) => AccountantManageScheduleCubit())
+        BlocProvider(create: (_) => AccountantManageScheduleCubit()),
+        BlocProvider(create: (_) => FavoriteCubit()),
       ],
 
       child: child,
