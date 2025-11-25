@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:booking_tour_flutter/app/app_encode_helper.dart';
 import 'package:booking_tour_flutter/data/network/dio/error_handler.dart';
@@ -44,7 +43,6 @@ import 'package:booking_tour_flutter/data/response/schedule_staff_response.dart'
 import 'package:booking_tour_flutter/data/response/schedule_tourguide_response.dart';
 import 'package:booking_tour_flutter/data/response/schedule_tourmanager_response.dart'
     hide ProvinceResponse;
-import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/staff_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_assignment_response.dart';
 import 'package:booking_tour_flutter/data/response/tour_guide_response.dart';
@@ -96,12 +94,17 @@ import 'package:booking_tour_flutter/domain/fake_post.dart';
 import 'package:booking_tour_flutter/domain/income_month.dart';
 import 'package:booking_tour_flutter/domain/income_year.dart';
 import 'package:booking_tour_flutter/data/response/income_month_response.dart';
-import 'package:booking_tour_flutter/data/response/income_year_response.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-import 'package:retrofit/retrofit.dart';
 
 abstract class BookingRepository {
+  Future<Either<Failure, bool>> updateStatusBooking(
+    UpdateStatusBookingRequest updateStatusBookingRequest,
+  );
+
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
+    int scheduleId,
+  );
   Future<Either<Failure, bool>> updateStatusBooking(
     UpdateStatusBookingRequest updateStatusBookingRequest,
   );
