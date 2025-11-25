@@ -64,19 +64,9 @@ class AccountantManageScheduleScreen extends StatelessWidget {
                   ),
                   child: TabBar(
                     onTap: (index) {
-                      if (index == 0) {
-                        cubit.setStatus(
-                          status: BookingStatus.copyWith(id: index + 1),
-                        );
-                      } else if (index == 1) {
-                        cubit.setStatus(
-                          status: BookingStatus.copyWith(id: index + 1),
-                        );
-                      } else if (index == 2) {
-                        cubit.setStatus(
-                          status: BookingStatus.copyWith(id: index + 1),
-                        );
-                      }
+                      cubit.setStatus(
+                        status: BookingStatus.copyWith(id: index + 1),
+                      );
                     },
                     indicatorPadding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.zero,
