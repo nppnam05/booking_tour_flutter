@@ -1,7 +1,9 @@
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/theme/app_font.dart';
+import 'package:booking_tour_flutter/app/dialog_helper.dart';
 import 'package:booking_tour_flutter/domain/booking.dart';
 import 'package:booking_tour_flutter/domain/booking_status.dart';
+import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/cubit/accountant_manage_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,26 +11,35 @@ import 'package:flutter/widgets.dart';
 class BookingListScreen extends StatelessWidget {
   final BookingStatus status;
   final List<Booking> bookings;
-  BookingListScreen({required this.status, required this.bookings});
+  final AccountantManageScheduleCubit cubit;
+  BookingListScreen({
+    required this.status,
+    required this.bookings,
+    required this.cubit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return bookings.length != 0
-        ? ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: bookings.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child:
-                  status.id == BookingStatus.processingId
-                      ? bookingCardNotYetPaid(bookings[index])
-                      : bookingCard(bookings[index]),
-            );
-          },
-        )
-        : Center(child: Text("Danh sách trống", style: AppFonts.text18));
+    if (bookings.isEmpty) {
+      return SizedBox(
+        height: 300,
+        child: Center(child: Text("Danh sách trống", style: AppFonts.text18)),
+      );
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: bookings.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+          child:
+              status.id == BookingStatus.processingId
+                  ? bookingCardNotYetPaid(bookings[index])
+                  : bookingCard(bookings[index]),
+        );
+      },
+    );
   }
 
   Widget bookingCardNotYetPaid(Booking booking) {
@@ -92,7 +103,7 @@ class BookingListScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                     SizedBox(width: 20),
-                    Text("${booking.email}", style: AppFonts.text18),
+                    Expanded(child: Text("${booking.email}", style: AppFonts.text18)),
                   ],
                 ),
                 SizedBox(height: 30),
@@ -161,8 +172,17 @@ class BookingListScreen extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: customButton(
-                  onPressed: () {
-                    // TODO:
+                  onPressed: () async {
+                    var check = await DialogHelper.showConfirmDialog(
+                      body: itemDialogPayDeposit(booking),
+                    );
+
+                    if (check) {
+                      cubit.updateStatusBooking(
+                        id: booking.id,
+                        statusId: BookingStatus.depositId,
+                      );
+                    }
                   },
                   text: "Đặt cọc",
                   colorButton: Color(0xFFF5CD3E),
@@ -172,8 +192,17 @@ class BookingListScreen extends StatelessWidget {
               Expanded(
                 flex: 6,
                 child: customButton(
-                  onPressed: () {
-                    // TODO:
+                  onPressed: () async {
+                    var check = await DialogHelper.showConfirmDialog(
+                      body: itemDialogPay(booking),
+                    );
+
+                    if (check) {
+                      cubit.updateStatusBooking(
+                        id: booking.id,
+                        statusId: BookingStatus.payId,
+                      );
+                    }
                   },
                   text: "Thanh toán hết",
                 ),
@@ -182,8 +211,14 @@ class BookingListScreen extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: customButton(
-                  onPressed: () {
-                    // TODO:
+                  onPressed: () async {
+                    var check = await DialogHelper.showConfirmDialog(
+                      body: Center(child: Text("Bạn có chắc chắn muốn xóa booking này không", style: AppFonts.text16,)),
+                    );
+
+                    if (check) {
+                      cubit.deleteBooking(bookingId: booking.id);
+                    }
                   },
                   text: "Xóa",
                   colorButton: Color(0xFFFA6565),
@@ -193,6 +228,206 @@ class BookingListScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget itemDialogPayDeposit(Booking booking) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text("Bạn ", style: AppFonts.text18),
+            Text(
+              "xác nhận đã đặt cọc",
+              style: AppFonts.text18.copyWith(color: Color(0xFFF5CD3E)),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/profile.png",
+                        width: 30,
+                        height: 30,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 20),
+                      Text("${booking.user.name}", style: AppFonts.text18),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/email.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Text("${booking.email}", style: AppFonts.text18),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/phone.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.phone}", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/group_of_people.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.numPeople} Người", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFF5F5),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Tổng tiền:", style: AppFonts.text18),
+                        Text("${booking.totalPrice}", style: AppFonts.text18),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget itemDialogPay(Booking booking) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text("Bạn ", style: AppFonts.text18),
+            Text(
+              "Xác nhận thanh toán hết",
+              style: AppFonts.text18.copyWith(color: Color(0xFF3DE22E)),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/profile.png",
+                        width: 30,
+                        height: 30,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 20),
+                      Text("${booking.user.name}", style: AppFonts.text18),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/email.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Text("${booking.email}", style: AppFonts.text18),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/phone.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.phone}", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/images/group_of_people.png",
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 20),
+                  Text("${booking.numPeople} Người", style: AppFonts.text18),
+                ],
+              ),
+              SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFF5F5),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Tổng tiền:", style: AppFonts.text18),
+                        Text("${booking.totalPrice}", style: AppFonts.text18),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

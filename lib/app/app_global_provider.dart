@@ -1,9 +1,11 @@
+import 'package:booking_tour_flutter/presentation/accountant/accountant_manage_schedule/cubit/accountant_manage_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/account_management/cubit/account_management_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part1_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/create_staff_account/cubit/create_staff_account_part2_cubit.dart';
 import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
 import 'package:booking_tour_flutter/data/booking_repository.dart';
 import 'package:booking_tour_flutter/presentation/admin/income_statistics/cubit/income_statistic_cubit.dart';
+import 'package:booking_tour_flutter/presentation/admin/schedulereviewdetail/cubit/schedule_review_detail_cubit.dart';
 import 'package:booking_tour_flutter/presentation/admin/tourguide_rating/cubit/tourguide_rating_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:booking_tour_flutter/presentation/auth/auth_otp/cubit/auth_otp_cubit.dart';
@@ -13,6 +15,7 @@ import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_cubit.dart';
+import 'package:booking_tour_flutter/presentation/reception/lich_trinh_chua_hoan_thanh/cubit/lich_trinh_chua_hoan_thanh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/cubit/xac_nhan_so_nguoi_tham_gia_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/schedule_assignment/cubit/schedule_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';
@@ -55,7 +58,7 @@ class AppGlobalProvider extends StatelessWidget {
         BlocProvider(create: (_) => CreateStaffAccountPart1Cubit()),
         BlocProvider(create: (_) => CreateStaffAccountPart2Cubit()),
         BlocProvider(create: (_) => IncomeCubit(getIt<BookingRepository>())),
-        
+        BlocProvider(create: (_) => AccountantManageScheduleCubit())
       ],
 
       child: child,

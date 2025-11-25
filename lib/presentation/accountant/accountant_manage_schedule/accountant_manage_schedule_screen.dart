@@ -10,27 +10,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountantManageScheduleScreen extends StatelessWidget {
-  final _cubit = AccountantManageScheduleCubit()..loadData();
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _cubit,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Quản lý lịch trình",
-            style: AppFonts.text24.copyWith(color: AppColors.white),
-          ),
+    final _cubit = context.read<AccountantManageScheduleCubit>();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Quản lý lịch trình",
+          style: AppFonts.text24.copyWith(color: AppColors.white),
         ),
-        body: BlocBuilder<
-          AccountantManageScheduleCubit,
-          AccountantManageScheduleState
-        >(
-          builder: (context, state) {
-            return columnOfWidget(_cubit);
-          },
-        ),
+      ),
+      body: BlocBuilder<
+        AccountantManageScheduleCubit,
+        AccountantManageScheduleState
+      >(
+        builder: (context, state) {
+          return columnOfWidget(_cubit);
+        },
       ),
     );
   }
@@ -68,15 +65,15 @@ class AccountantManageScheduleScreen extends StatelessWidget {
                   child: TabBar(
                     onTap: (index) {
                       if (index == 0) {
-                        _cubit.setStatus(
+                        cubit.setStatus(
                           status: BookingStatus.copyWith(id: index + 1),
                         );
                       } else if (index == 1) {
-                        _cubit.setStatus(
+                        cubit.setStatus(
                           status: BookingStatus.copyWith(id: index + 1),
                         );
                       } else if (index == 2) {
-                        _cubit.setStatus(
+                        cubit.setStatus(
                           status: BookingStatus.copyWith(id: index + 1),
                         );
                       }
@@ -107,16 +104,19 @@ class AccountantManageScheduleScreen extends StatelessWidget {
           child: TabBarView(
             children: [
               BookingListScreen(
-                status: _cubit.getStatus(),
-                bookings: _cubit.getBookingProcessing(),
+                status: cubit.getStatus(),
+                bookings: cubit.getBookingProcessing(),
+                cubit: cubit,
               ),
               BookingListScreen(
-                status: _cubit.getStatus(),
-                bookings: _cubit.getBookingdeposit(),
+                status: cubit.getStatus(),
+                bookings: cubit.getBookingDeposit(),
+                cubit: cubit,
               ),
               BookingListScreen(
-                status: _cubit.getStatus(),
-                bookings: _cubit.getBookingPay(),
+                status: cubit.getStatus(),
+                bookings: cubit.getBookingPay(),
+                cubit: cubit,
               ),
             ],
           ),
