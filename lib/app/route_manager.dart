@@ -129,7 +129,7 @@ class RouteName {
 
   static final income_statistics = "income_statistic";
 
-  static final tourguideRating = "tourguide_rating";
+  static final tourguideRating = "tourguide_rating_screen";
   static final mainAdminScreen = "main_admin_screen";
 }
 
@@ -208,6 +208,15 @@ class RouteManager {
     RouteName.updateStaffAccountScreen: (context) => UpdateStaffAccountScreen(),
 
     RouteName.tourguideRating: (context) => const TourguideRatingScreen(),
-    RouteName.mainAdminScreen: (context) => const MainAdmin(),
+    RouteName.mainAdminScreen: (context) {
+      final initialIndex =
+          ModalRoute.of(context)?.settings.arguments as int? ?? 0;
+      return MainAdmin(initialIndex: initialIndex);
+    },
+    RouteName.tourguideRating: (context) {
+      
+      final int? staffId = ModalRoute.of(context)?.settings.arguments as int?;
+      return const TourguideRatingScreen();
+    },
   };
 }

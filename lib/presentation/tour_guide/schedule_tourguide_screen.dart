@@ -1,3 +1,5 @@
+import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart';
+import 'package:booking_tour_flutter/presentation/auth/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +13,15 @@ class ScheduleTourguideScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Lấy AuthCubit từ context
+    final authCubit = context.read<AuthCubit>();
+  
+
     return BlocProvider(
-      create: (_) => ScheduleTourguideCubit()..loadSchedules(),
+      create: (_) => ScheduleTourguideCubit(
+        authCubit: authCubit,
+        bookingRepository: getIt(),
+      )..loadSchedules(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Danh sách lịch trình'),

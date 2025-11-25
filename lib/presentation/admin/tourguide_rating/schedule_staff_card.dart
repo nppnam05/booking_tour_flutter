@@ -1,5 +1,9 @@
 import 'package:booking_tour_flutter/domain/schedule_staff.dart';
+import 'package:booking_tour_flutter/presentation/admin/schedulereviewdetail/cubit/schedule_review_detail_cubit.dart';
+import 'package:booking_tour_flutter/presentation/admin/schedulereviewdetail/schedule_review_detail_screen.dart';
+import 'package:booking_tour_flutter/app/dependency_injection/configure_injectable.dart'; // ✅ Import getIt
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleStaffCard extends StatelessWidget {
@@ -18,7 +22,18 @@ class ScheduleStaffCard extends StatelessWidget {
     final avgRating = schedule.averageRating;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => ReviewDetailCubit(getIt())
+                ..loadReviews(schedule), 
+              child: ReviewDetailScreen(schedule: schedule),
+            ),
+          ),
+        );
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -101,7 +116,7 @@ class ScheduleStaffCard extends StatelessWidget {
                       }),
                       const SizedBox(width: 8),
                       Text(
-                        '${avgRating.toStringAsFixed(1)} (${schedule.totalReviews} đánh giá )',
+                        '${avgRating.toStringAsFixed(1)} (${schedule.totalReviews} đánh giá)',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

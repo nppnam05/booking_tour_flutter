@@ -9,10 +9,28 @@ class AccountantManageScheduleState {
   final List<Booking> bookingDeposit;
   final List<Booking> bookingPay;
 
+  AccountantManageScheduleState({
+    required this.status,
+    required this.scheduleTourmanager,
+    required this.bookingProcessing,
+    required this.bookingDeposit,
+    required this.bookingPay,
+  });
 
-  AccountantManageScheduleState({required this.status, required this.scheduleTourmanager, required this.bookingProcessing, required this.bookingDeposit, required this.bookingPay});
-
-  AccountantManageScheduleState copyWith({BookingStatus? status, ScheduleTourmanager? scheduleTourmanager, List<Booking>? bookingProcessing, List<Booking>? bookingdeposit, List<Booking>? bookingPay }){
-    return AccountantManageScheduleState(status: status ?? this.status, scheduleTourmanager: scheduleTourmanager ?? this.scheduleTourmanager, bookingProcessing: bookingProcessing ?? this.bookingProcessing, bookingDeposit: bookingdeposit ?? this.bookingDeposit, bookingPay: bookingPay ?? this.bookingPay);
+  AccountantManageScheduleState copyWith({
+    int? bookingId,
+    BookingStatus? status,
+    ScheduleTourmanager? scheduleTourmanager,
+    List<Booking>? bookingProcessing,
+    List<Booking>? bookingDeposit,
+    List<Booking>? bookingPay,
+  }) {
+    return AccountantManageScheduleState(
+      status: status ?? this.status,
+      scheduleTourmanager: scheduleTourmanager ?? this.scheduleTourmanager,
+      bookingProcessing: bookingProcessing ?? this.bookingProcessing,
+      bookingDeposit: bookingDeposit ?? this.bookingDeposit,
+      bookingPay: bookingPay ?? this.bookingPay,
+    );
   }
 }

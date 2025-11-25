@@ -54,7 +54,7 @@ class LoginScreen extends StatelessWidget {
             case 1:
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RouteName.accountManagement,
+                RouteName.mainAdminScreen,
                 (route) => false,
               );
               return;
