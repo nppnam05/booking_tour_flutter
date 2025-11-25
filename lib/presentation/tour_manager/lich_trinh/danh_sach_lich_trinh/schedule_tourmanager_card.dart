@@ -1,3 +1,4 @@
+import 'package:booking_tour_flutter/app/dependency_injection/theme/app_color.dart';
 import 'package:booking_tour_flutter/app/route_manager.dart';
 import 'package:booking_tour_flutter/domain/schedule_tourmanager.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class ScheduleTourmanagerCard extends StatelessWidget {
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        color: const Color(0xFFE0F2F1),
+        color: AppColors.white,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
@@ -40,20 +41,38 @@ class ScheduleTourmanagerCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      shedule_tour_manager.tour.tourImages.first,
-                      width: 110,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: 110,
-                          height: 80,
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.image, color: Colors.grey),
-                        );
-                      },
-                    ),
+                    child:
+                        (shedule_tour_manager.tour.tourImages.isNotEmpty &&
+                                shedule_tour_manager.tour.tourImages.first
+                                    .toString()
+                                    .isNotEmpty)
+                            ? Image.network(
+                              shedule_tour_manager.tour.tourImages.first
+                                  .toString(),
+                              width: 110,
+                              height: 80,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: 110,
+                                  height: 80,
+                                  color: AppColors.gray.withOpacity(0.3),
+                                  child: const Icon(
+                                    Icons.image,
+                                    color: AppColors.gray,
+                                  ),
+                                );
+                              },
+                            )
+                            : Container(
+                              width: 110,
+                              height: 80,
+                              color: AppColors.gray.withOpacity(0.3),
+                              child: const Icon(
+                                Icons.image,
+                                color: AppColors.gray,
+                              ),
+                            ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

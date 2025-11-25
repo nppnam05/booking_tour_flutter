@@ -198,26 +198,35 @@ class DetailStaffScreen extends StatelessWidget {
 
             // Đánh giá (chỉ hiển thị nếu là hướng dẫn viên)
             if (staffData.role.title.toLowerCase() == 'tour guide')
-              _sectionCard(
-                title: 'Đánh giá',
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Xem đánh giá',
-                        style: TextStyle(
-                          color: AppColors.backgroundAppBarTheme,
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    'tourguide_rating_screen',
+                    arguments: staffData.userId, // Truyền staffId qua arguments
+                  );
+                },
+                child: _sectionCard(
+                  title: 'Đánh giá',
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Xem đánh giá',
+                          style: TextStyle(
+                            color: AppColors.backgroundAppBarTheme,
+                          ),
                         ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: AppColors.backgroundDisable,
-                      ),
-                    ],
-                  ),
-                ],
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: AppColors.backgroundDisable,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
 
             if (staffData.role.title.toLowerCase() == 'hướng dẫn viên')
@@ -367,12 +376,9 @@ class DetailStaffScreen extends StatelessWidget {
                 backgroundColor: AppColors.borderButton,
                 onPressed: () {
                   context.read<AccountManagementCubit>().setSelectedStaff(
-                        staffData,
-                      );
-                  Navigator.pushNamed(
-                    context,
-                    'update_staff_account_screen',
+                    staffData,
                   );
+                  Navigator.pushNamed(context, 'update_staff_account_screen');
                 },
               ),
             ),

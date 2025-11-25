@@ -19,7 +19,7 @@ import 'package:booking_tour_flutter/data/response/fake_post_response.dart';
 import 'package:booking_tour_flutter/data/response/location_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/put_activity_response.dart';
 import 'package:booking_tour_flutter/data/response/rest_response.dart';
-import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_response.dart';
+import 'package:booking_tour_flutter/data/request/tour_guide/tour_guide_request.dart';
 import 'package:booking_tour_flutter/data/response/update_location_activities_response.dart';
 import 'package:booking_tour_flutter/data/response/user_completed_schedule_response.dart';
 import 'package:booking_tour_flutter/domain/requests/add_activity_request.dart';
@@ -60,7 +60,9 @@ abstract class CoreService {
   );
 
   @GET("/Booking/bySchedule/{scheduleId}")
-  Future<RestResponse> getBookingByScheduleId(@Path("scheduleId") int scheduleId);
+  Future<RestResponse> getBookingByScheduleId(
+    @Path("scheduleId") int scheduleId,
+  );
 
   @POST("/User/login-or-create-byemail")
   Future<RestResponse> loginByEmail(@Body() LoginEmailRequest login);
@@ -103,13 +105,13 @@ abstract class CoreService {
   @POST("/Guide/{scheduleId}")
   Future<RestResponse> checkAssignment(
     @Path("scheduleId") int scheduleId,
-    @Body() List<TourGuideResponse> body,
+    @Body() List<TourGuideRequest> body,
   );
 
-  @GET("/Guide/BySchedule/{idschedule}")
-  Future<RestResponse> getTourGuideAssignmentByScheduleId(
-    @Path("idschedule") int idschedule,
-  );
+  // @GET("/Guide/BySchedule/{idschedule}")
+  // Future<RestResponse> getTourGuideAssignmentByScheduleId(
+  //   @Path("idschedule") int idschedule,
+  // );
 
   @GET("/Staff/tourguide/assignment/{idschedule}")
   Future<RestResponse> getTourGuideAssignmentById(

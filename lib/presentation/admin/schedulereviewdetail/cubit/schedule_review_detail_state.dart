@@ -1,58 +1,76 @@
-// lib/presentation/admin/schedule_review_detail/cubit/schedule_review_detail_state.dart
-import 'package:booking_tour_flutter/domain/review.dart';
-import 'package:booking_tour_flutter/domain/schedule_tourguide.dart';  // ✅ Import đúng
+import 'package:equatable/equatable.dart';
+import 'package:booking_tour_flutter/domain/schedule_review.dart';
 
-abstract class ScheduleReviewDetailState {}
-
-class ScheduleReviewDetailInitial extends ScheduleReviewDetailState {}
-
-class ScheduleReviewDetailLoading extends ScheduleReviewDetailState {}
-
-class ScheduleReviewDetailLoaded extends ScheduleReviewDetailState {
-  final List<Review> reviews;
-  final ScheduleTourguide schedule;  // ✅ Dùng ScheduleTourguide
-  final int? selectedStarFilter;
-
-  ScheduleReviewDetailLoaded({
-    required this.reviews,
-    required this.schedule,
-    this.selectedStarFilter,
-  });
-
-  List<Review> get filteredReviews {
-    if (selectedStarFilter == null) return reviews;
-    return reviews.where((r) => r.rating == selectedStarFilter).toList();
-  }
-
-  double get averageRating {
-    if (reviews.isEmpty) return 0;
-    return reviews.fold<double>(0, (sum, r) => sum + r.rating) / reviews.length;
-  }
-
-  Map<int, int> get ratingDistribution {
-    final distribution = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
-    for (var review in reviews) {
-      distribution[review.rating] = (distribution[review.rating] ?? 0) + 1;
-    }
-    return distribution;
-  }
-
-  ScheduleReviewDetailLoaded copyWith({
-    List<Review>? reviews,
-    ScheduleTourguide? schedule,
-    int? selectedStarFilter,
-    bool clearFilter = false,
-  }) {
-    return ScheduleReviewDetailLoaded(
-      reviews: reviews ?? this.reviews,
-      schedule: schedule ?? this.schedule,
-      selectedStarFilter: clearFilter ? null : (selectedStarFilter ?? this.selectedStarFilter),
-    );
-  }
+abstract class ReviewDetailState extends Equatable {
+  @override
+  List<Object?> get props => [];
 }
 
-class ScheduleReviewDetailError extends ScheduleReviewDetailState {
+class ReviewDetailInitial extends ReviewDetailState {}
+
+class ReviewDetailLoading extends ReviewDetailState {}
+
+class ReviewDetailLoaded extends ReviewDetailState {
+  final String cityName;
+  final DateTime startDate;
+  final DateTime endDate;
+  final double averageRating;
+  final int totalReviews;
+  final List<ScheduleReview> allReviews;
+  final List<ScheduleReview> filteredReviews;
+  final int selectedStarFilter;
+
+  ReviewDetailLoaded({
+    required this.cityName,
+    required this.startDate,
+    required this.endDate,
+    required this.averageRating,
+    required this.totalReviews,
+    required this.allReviews,
+    required this.filteredReviews,
+    this.selectedStarFilter = 0,
+  });
+
+  ReviewDetailLoaded copyWith({
+    String? cityName,
+    DateTime? startDate,
+    DateTime? endDate,
+    double? averageRating,
+    int? totalReviews,
+    List<ScheduleReview>? allReviews,
+    List<ScheduleReview>? filteredReviews,
+    int? selectedStarFilter,
+  }) {
+    return ReviewDetailLoaded(
+      cityName: cityName ?? this.cityName,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      averageRating: averageRating ?? this.averageRating,
+      totalReviews: totalReviews ?? this.totalReviews,
+      allReviews: allReviews ?? this.allReviews,
+      filteredReviews: filteredReviews ?? this.filteredReviews,
+      selectedStarFilter: selectedStarFilter ?? this.selectedStarFilter,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        cityName,
+        startDate,
+        endDate,
+        averageRating,
+        totalReviews,
+        allReviews,
+        filteredReviews,
+        selectedStarFilter,
+      ];
+}
+
+class ReviewDetailError extends ReviewDetailState {
   final String message;
 
-  ScheduleReviewDetailError(this.message);
+  ReviewDetailError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
