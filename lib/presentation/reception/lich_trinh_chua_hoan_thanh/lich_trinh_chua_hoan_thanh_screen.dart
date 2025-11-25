@@ -94,7 +94,7 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: Row(
               children: [
                 Container(
@@ -113,98 +113,102 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Expanded(
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Mã: ",
-                              style: AppFonts.text14.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              scheduleReception.code,
-                              style: AppFonts.text14.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Icon(Icons.park, size: 20, color: AppColors.button),
-                            Text(
-                              "${scheduleReception.tour.title.substring(0, 20)} ...",
-                              style: AppFonts.text14.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 144, 184, 102),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Thanh toán hết: ",
-                                      style: AppFonts.text14.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${thanhToan}",
-                                      style: AppFonts.text14.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Mã: ",
+                                style: AppFonts.text14.copyWith(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 5),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 100, 204, 199),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Đã cọc ",
-                                      style: AppFonts.text14.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${datCoc}",
-                                      style: AppFonts.text14.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                scheduleReception.code,
+                                style: AppFonts.text14.copyWith(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Icon(Icons.park, size: 20, color: AppColors.button),
+                              Text(
+                                "${scheduleReception.tour.title.substring(0, 20)} ...",
+                                style: AppFonts.text14.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(255, 144, 184, 102),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Thanh toán: ",
+                                          style: AppFonts.text14.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${thanhToan}",
+                                          style: AppFonts.text14.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(255, 100, 204, 199),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Đã cọc ",
+                                          style: AppFonts.text14.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${datCoc}",
+                                          style: AppFonts.text14.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                   ),
                 ),
               ],

@@ -31,8 +31,7 @@ class XacNhanSoNguoiThamGiaScreen extends StatelessWidget {
               DeleteButtonWidget(
                 onDelete: () async {
                   final input = controller.text.trim();
-                  final countPeople = int.parse(input);
-                  if (!input.isEmpty && countPeople <= state.booking.numPeople && countPeople >= 0 ) {
+                  if (!input.isEmpty && int.parse(controller.text) <= state.booking.numPeople) {
                     String text = "đã tham gia";
                       final confirm = await DialogNoti.confirm(
                         context: context,
