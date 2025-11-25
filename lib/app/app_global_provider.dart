@@ -15,6 +15,7 @@ import 'package:booking_tour_flutter/presentation/profile/change_schedule/cubit/
 import 'package:booking_tour_flutter/presentation/profile/detail_paid_schedule/cubit/detail_paid_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/profile/review_schedule/cubit/review_schedule_cubit.dart';
 import 'package:booking_tour_flutter/presentation/reception/kiem_tra_nguoi_tham_gia/cubit/kiem_tra_nguoi_tham_gia_cubit.dart';
+import 'package:booking_tour_flutter/presentation/reception/lich_trinh_chua_hoan_thanh/cubit/lich_trinh_chua_hoan_thanh_cubit.dart';
 import 'package:booking_tour_flutter/presentation/reception/xac_nhan_so_nguoi_tham_gia/cubit/xac_nhan_so_nguoi_tham_gia_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/schedule_assignment/cubit/schedule_assignment_cubit.dart';
 import 'package:booking_tour_flutter/presentation/tour_manager/tour_guide_assignment/cubit/tour_guide_assignment_cubit.dart';

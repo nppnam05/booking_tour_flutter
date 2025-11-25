@@ -8,20 +8,49 @@ class KiemTraNguoiThamGiaCubit extends Cubit<KiemTraNguoiThamGiaState> {
   final bookingRepository = getIt<BookingRepository>();
 
   KiemTraNguoiThamGiaCubit()
-    : super(KiemTraNguoiThamGiaState(userCompletedSchedule: []));
+    : super(KiemTraNguoiThamGiaState(userCompletedSchedule: [], booking: []));
 
   Future<void> syncBooking(int scheduleId) async {
-    var result = await bookingRepository.getUserCompletedScheduleByScheduleId(
+    emit(state.copyWith(isLoading: true));
+
+    var result1 = await bookingRepository.getUserCompletedScheduleByScheduleId(
       scheduleId: scheduleId,
     );
+    var result2 = await bookingRepository.getBookingsByScheduleId(scheduleId);
 
-    result.fold((fail) {}, (userCompletedSchedule) {
-      emit(
-        state.copyWith(
-          userCompletedSchedule: userCompletedSchedule,
-          isLoading: false,
-        ),
+    result1.fold((fail) {}, (userCompletedSchedule) {
+      result2.fold((e) {}, (booking) {
+        emit(
+          state.copyWith(
+            userCompletedSchedule: userCompletedSchedule,
+            booking: booking,
+            isLoading: false,
+          ),
+        );
+      });
+    });
+  }
+
+  bool isUserParticipated(int bookingId) {
+    final userCompleted = getUserCompletedScheduleByBookingId(bookingId);
+    return userCompleted != null && (userCompleted.countPeople ?? 0) > 0;
+  }
+
+  UserCompletedSchedule? getUserCompletedScheduleByBookingId(int bookingId) {
+    try {
+      return state.userCompletedSchedule.firstWhere(
+        (item) => item.booking?.id == bookingId,
       );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> deleteUserCompletedSchedule(int id) async {
+    var result = await bookingRepository.deleteUserCompletedSchedule(id: id);
+
+    result.fold((e) {}, (ok) {
+      //emit(state);
     });
   }
 }

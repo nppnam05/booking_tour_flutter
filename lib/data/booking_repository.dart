@@ -19,6 +19,7 @@ import 'package:booking_tour_flutter/data/request/user/get_helpfull_request.dart
 import 'package:booking_tour_flutter/data/request/user/get_reviews_request.dart';
 import 'package:booking_tour_flutter/data/request/user/read_review_requets.dart';
 import 'package:booking_tour_flutter/data/request/user/update_password_request.dart';
+import 'package:booking_tour_flutter/data/request/user_completed_schedule/create_user_completed_schedule_request.dart';
 import 'package:booking_tour_flutter/data/request/verify_otp_request.dart';
 import 'package:booking_tour_flutter/data/response/activity_response.dart';
 import 'package:booking_tour_flutter/data/response/assignment_response.dart';
@@ -104,9 +105,12 @@ abstract class BookingRepository {
 
   Future<Either<Failure, bool>> updateStatusBooking(UpdateStatusBookingRequest updateStatusBookingRequest);
   
-  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(
-    int scheduleId,
-  );
+  Future<Either<Failure, List<Booking>>> getBookingsByScheduleId(int scheduleId);
+  
+
+  Future<Either<Failure, int>> createUserCompletedSchedule({required CreateUserCompletedScheduleFixRequest userCompletedSchedule});
+
+  Future<Either<Failure, bool>> deleteUserCompletedSchedule({required int id});
 
   Future<Either<Failure, List<ScheduleReception>>> getScheduleReception();
 
@@ -1929,7 +1933,29 @@ Future<Either<Failure, List<ScheduleReview>>> getReviewsByScheduleId({
       var booking = bookingResponse.map((b) => b.map()).toList();
 
       return Right(booking);
-    } catch (e) {
+    }
+    catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, bool>> deleteUserCompletedSchedule({required int id}) async {
+    try{
+      final response = await _coreService.deleteUserCompletedSchedule(id);
+      return Right(response.data ?? false);
+    }catch(e){
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  
+  @override
+  Future<Either<Failure, int>> createUserCompletedSchedule({required CreateUserCompletedScheduleFixRequest userCompletedSchedule}) async {
+    try{
+      var request = await _coreService.createUserCompletedSchedule(userCompletedSchedule);
+      return Right(request.data as int);
+    }catch(e){
       return Left(ErrorHandler.handle(e).failure);
     }
   }
