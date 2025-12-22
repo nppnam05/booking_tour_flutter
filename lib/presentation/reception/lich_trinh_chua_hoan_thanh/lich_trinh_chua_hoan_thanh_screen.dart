@@ -14,11 +14,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LichTrinhChuaHoanThanhCubit()..syncScheduleReception(),
+      create:
+          (context) => LichTrinhChuaHoanThanhCubit()..syncScheduleReception(),
       child: Scaffold(
         appBar: AppBar(title: Text("Lịch trình chưa hoàn thành")),
         body: BlocListener<
@@ -30,9 +30,11 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
           },
           listener: (context, state) {
             if (state.scheduleReception.isNotEmpty) {
-              context.read<LichTrinhChuaHoanThanhCubit>().syncUserCompletedScheduleBySchedule(
-                state.scheduleReception.map((s) => s.id).toList(),
-              );
+              context
+                  .read<LichTrinhChuaHoanThanhCubit>()
+                  .syncUserCompletedScheduleBySchedule(
+                    state.scheduleReception.map((s) => s.id).toList(),
+                  );
             }
           },
           child: BlocBuilder<
@@ -67,9 +69,9 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
     BuildContext context,
     ScheduleReception scheduleReception,
   ) {
-    
     // lay booking ra theo id lich trinh
-    final userCompletedForThisSchedule = state.booking[scheduleReception.id] ?? [];
+    final userCompletedForThisSchedule =
+        state.booking[scheduleReception.id] ?? [];
     print("hehehe ${userCompletedForThisSchedule.length}");
 
     // lay sl nguoi da coc, thanh toan
@@ -82,8 +84,13 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.read<KiemTraNguoiThamGiaCubit>().syncBooking(scheduleReception.id);
-        Navigator.pushNamed(AppNavigator.currentContext, RouteName.kiemTraNguoiThamGia);
+        context.read<KiemTraNguoiThamGiaCubit>().syncBooking(
+          scheduleReception.id,
+        );
+        Navigator.pushNamed(
+          AppNavigator.currentContext,
+          RouteName.kiemTraNguoiThamGia,
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -117,98 +124,111 @@ class LichTrinhChuaHoanThanhScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Mã: ",
-                                style: AppFonts.text14.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Mã: ",
+                              style: AppFonts.text14.copyWith(
+                                fontWeight: FontWeight.bold,
                               ),
-                              Text(
-                                scheduleReception.code,
-                                style: AppFonts.text14.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            ),
+                            Text(
+                              scheduleReception.code,
+                              style: AppFonts.text14.copyWith(
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Icon(Icons.park, size: 20, color: AppColors.button),
-                              Text(
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(Icons.park, size: 20, color: AppColors.button),
+                            Expanded(
+                              child: Text(
                                 "${scheduleReception.tour.title.substring(0, 20)} ...",
+                                overflow: TextOverflow.ellipsis,
                                 style: AppFonts.text14.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 144, 184, 102),
-                                    borderRadius: BorderRadius.circular(10),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    144,
+                                    184,
+                                    102,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Thanh toán: ",
-                                          style: AppFonts.text14.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Thanh toán: ",
+                                        style: AppFonts.text14.copyWith(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        Text(
-                                          "${thanhToan}",
-                                          style: AppFonts.text14.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      ),
+                                      Text(
+                                        "${thanhToan}",
+                                        style: AppFonts.text14.copyWith(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 5),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 100, 204, 199),
-                                    borderRadius: BorderRadius.circular(10),
+                            ),
+                            SizedBox(width: 5),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    100,
+                                    204,
+                                    199,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Đã cọc ",
-                                          style: AppFonts.text14.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Đã cọc ",
+                                        style: AppFonts.text14.copyWith(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        Text(
-                                          "${datCoc}",
-                                          style: AppFonts.text14.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      ),
+                                      Text(
+                                        "${datCoc}",
+                                        style: AppFonts.text14.copyWith(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
